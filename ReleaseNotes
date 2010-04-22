@@ -1,0 +1,18 @@
+19apr10abu
+(c) Software Lab. Alexander Burger
+
+
+         Release Notes for picoLisp-3.0.3
+         ================================
+
+A. The underlined display of transient symbols in the documentation is changed
+   back to double quotes, to allow an easier copy/paste of example code
+   fragments.
+
+B. The function 'not' is included in the group of flow- and logic-functions
+   which store non-NIL results of their conditional expressions in '@' (see the
+   chapter "@ Result" in "doc/ref.html"). This makes it consistent with 'nand'
+   and 'nor'.
+
+C. The line editor "lib/led.l" cycles with TAB also through path names (in
+   addition to internal symbols).
