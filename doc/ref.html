@@ -286,7 +286,8 @@ from the cell's start address. Therefore, the bit pattern of a symbol will be:
 <p>A property is a key-value-pair, represented as a cell in the symbol's tail.
 This is called a "property list". The property list may be terminated by a
 number representing the symbol's name. In the following example, a symbol with
-the name <code>"abc"</code> has three properties:
+the name <code>"abc"</code> has three properties: A KEY/VAL cell, a cell with
+only a KEY, and another KEY/VAL cell.
 
 <pre><code>
             Symbol
@@ -308,10 +309,11 @@ the name <code>"abc"</code> has three properties:
             +-----+-----+                       +-----+-----+
 </code></pre>
 
-<p>Each property in a symbol's tail is either a symbol (then it represents a
-boolean value), or a cell with the property key in its CDR and the property
-value in its CAR. In both cases, the key should be a symbol, because searches in
-the property list are performed using pointer comparisons.
+<p>Each property in a symbol's tail is either a symbol (like the single KEY
+above, then it represents a boolean value), or a cell with the property key in
+its CDR and the property value in its CAR. In both cases, the key should be a
+symbol, because searches in the property list are performed using pointer
+comparisons.
 
 <p>The name of a symbol is stored as a number at the end of the tail. It
 contains the characters of the name in UTF-8 encoding, using between one and
