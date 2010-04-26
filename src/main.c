@@ -1,4 +1,4 @@
-/* 22apr10abu
+/* 26apr10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -230,6 +230,15 @@ any doHeap(any x) {
    for (x = Avail;  x;  x = car(x))
       ++n;
    return boxCnt(n / CELLS);
+}
+
+// (adr 'var) -> num
+// (adr 'num) -> var
+any doAdr(any x) {
+   x = cdr(x);
+   if (isNum(x = EVAL(car(x))))
+      return (any)(unDig(x) * WORD);
+   return box(num(x) / WORD);
 }
 
 // (env ['lst] | ['sym 'val] ..) -> lst
@@ -996,32 +1005,33 @@ any doFile(any ex __attribute__((unused))) {
    return Pop(c1);
 }
 
-// (dir ['any]) -> lst
+// (dir ['any] ['flg]) -> lst
 any doDir(any x) {
    any y;
    DIR *dp;
    struct dirent *p;
    cell c1;
 
-   if (isNil(x = evSym(cdr(x))))
+   if (isNil(y = evSym(x = cdr(x))))
       dp = opendir(".");
    else {
-      char nm[pathSize(x)];
+      char nm[pathSize(y)];
 
-      pathString(x, nm);
+      pathString(y, nm);
       dp = opendir(nm);
    }
    if (!dp)
       return Nil;
+   x = cdr(x),  x = EVAL(car(x));
    do {
       if (!(p = readdir(dp))) {
          closedir(dp);
          return Nil;
       }
-   } while (p->d_name[0] == '.');
+   } while (isNil(x) && p->d_name[0] == '.');
    Push(c1, y = cons(mkStr(p->d_name), Nil));
    while (p = readdir(dp))
-      if (p->d_name[0] != '.')
+      if (!isNil(x) || p->d_name[0] != '.')
          y = cdr(y) = cons(mkStr(p->d_name), Nil);
    closedir(dp);
    return Pop(c1);

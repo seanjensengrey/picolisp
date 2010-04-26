@@ -1,4 +1,4 @@
-# 19apr10abu
+# 26apr10abu
 # (c) Software Lab. Alexander Burger
 
 # Line editor
@@ -390,7 +390,7 @@
                (extract
                   '((X)
                      (and (pre? S X) (pack P X)) )
-                  (dir P) ) ) ) ) )
+                  (dir P T) ) ) ) ) )
    (setq "LPos" 1  "HPos" 0)
    (_getLine "Line1" (or "skipFun" delim?))
    (prinl (cdr *Tsm)) )

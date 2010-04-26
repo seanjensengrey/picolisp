@@ -1,4 +1,4 @@
-# 17mar10abu
+# 26apr10abu
 # (c) Software Lab. Alexander Burger
 
 ### Global return labels ###
@@ -504,6 +504,19 @@
    ld E A
    shl E 4  # Make short number
    or E CNT
+   ret
+
+# (adr 'var) -> num
+# (adr 'num) -> var
+(code 'doAdr 2)
+   ld E ((E CDR))  # Eval arg
+   eval
+   num E  # 'num' argument?
+   if nz  # Yes
+      off E 7  # Make 'var'
+      ret
+   end
+   or E CNT  # Make 'num'
    ret
 
 # (env ['lst] | ['sym 'val] ..) -> lst
@@ -2388,10 +2401,12 @@
    end
    ret
 
-# (dir ['any]) -> lst
+# (dir ['any] ['flg]) -> lst
 (code 'doDir 2)
+   push X
    push Z
-   ld E ((E CDR))  # Get arg
+   ld X (E CDR)  # Args
+   ld E (X)  # Get 'any'
    call evSymE_E  # Evaluate to a symbol
    cmp E Nil  # NIL?
    if eq  # Yes
@@ -2404,15 +2419,22 @@
    null A  # OK?
    jz 10  # No
    ld Z A  # Get directory pointer
+   ld X (X CDR)  # Eval 'flg'
+   ld E (X)
+   eval
+   ld X E  # into X
    do
       cc readdir(Z)  # Find first directory entry
       null A  # OK?
       if z  # No
 10       ld E Nil  # Return NIL
          pop Z
+         pop X
          ret
       end
       lea E (A D_NAME)  # Pointer to name entry
+      cmp X Nil  # flg?
+   while eq  # Yes
       ld B (E)  # First char
       cmp B (char ".")  # Skip dot names
    until ne
@@ -2428,10 +2450,12 @@
       null A  # OK?
    while nz  # Yes
       lea E (A D_NAME)  # Pointer to name entry
+      cmp X Nil  # flg?
+      jne 20  # Yes
       ld B (E)  # First char
       cmp B (char ".")  # Ignore dot names
       if ne
-         call mkStrE_E  # Make transient symbol
+20       call mkStrE_E  # Make transient symbol
          call consE_A  # Cons next cell
          ld (A) E
          ld (A CDR) Nil
@@ -2443,6 +2467,7 @@
    drop
    cc closedir(Z)  # Close directory
    pop Z
+   pop X
    ret
 
 # (cmd ['any]) -> sym

@@ -21,6 +21,24 @@ href="refA.html#accept">accept</a></code>.
 -> "127.0.0.1"
 </code></pre>
 
+<dt><a name="adr"><code>(adr 'var) -> num</code></a>
+<dt><code>(adr 'num) -> var</code>
+<dd>Converts, in the first form, a variable <code>var</code> (a symbol or a
+cell) into <code>num</code> (a pointer). A symbol will result in a negative
+number, and a cell in a positive number. The second form converts a pointer back
+into the original <code>var</code>.
+
+<pre><code>
+: (setq X (box 7))
+-> $53063416137450
+: (adr X)
+-> -2961853431592
+: (adr @)
+-> $53063416137450
+: (val @)
+-> 7
+</code></pre>
+
 <dt><a name="*Allow"><code>*Allow</code></a>
 <dd>A global variable holding allowed access patterns. If its value is
 non-<code>NIL</code>, it should contain a list where the CAR is an <code><a

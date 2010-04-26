@@ -1,4 +1,4 @@
-# 18mar10abu
+# 25apr10abu
 # (c) Software Lab. Alexander Burger
 
 (de task (Key . Prg)
@@ -337,7 +337,7 @@
 
 (de show ("X" . @)
    (let *Dbg NIL
-      (setq "X" (apply get (rest) "X"))
+      (setq "X" (pass get "X"))
       (when (sym? "X")
          (print "X" (val "X"))
          (prinl)

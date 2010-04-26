@@ -1,4 +1,4 @@
-# 17mar10abu
+# 26apr10abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Globals 0)
@@ -123,6 +123,7 @@
    initSym NIL       "alarm"     doAlarm
    initSym NIL       "protect"   doProtect
    initSym NIL       "heap"      doHeap
+   initSym NIL       "adr"       doAdr
    initSym NIL       "env"       doEnv
    initSym NIL       "up"        doUp
    initSym NIL       "quit"      doQuit

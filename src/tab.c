@@ -1,4 +1,4 @@
-/* 14nov09abu
+/* 26apr10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -10,6 +10,7 @@ static symInit Symbols[] = {
    {doAbs, "abs"},
    {doAccept, "accept"},
    {doAdd, "+"},
+   {doAdr, "adr"},
    {doAlarm, "alarm"},
    {doAll, "all"},
    {doAnd, "and"},

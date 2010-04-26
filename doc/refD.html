@@ -656,11 +656,11 @@ href="refE.html#equal/2">equal/2</a></code>.
 -> T
 </code></pre>
 
-<dt><a name="dir"><code>(dir ['any]) -> lst</code></a>
+<dt><a name="dir"><code>(dir ['any] ['flg]) -> lst</code></a>
 <dd>Returns a list of all filenames in the directory <code>any</code>. Names
-starting with a dot '<code>.</code>' are ignored. See also <code><a
-href="refC.html#cd">cd</a></code> and <code><a
-href="refI.html#info">info</a></code>.
+starting with a dot '<code>.</code>' are ignored, unless <code>flg</code> is
+non-<code>NIL</code>. See also <code><a href="refC.html#cd">cd</a></code> and
+<code><a href="refI.html#info">info</a></code>.
 
 <pre><code>
 : (filter '((F) (tail '(. c) (chop F))) (dir "src/"))

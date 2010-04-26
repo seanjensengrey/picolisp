@@ -1,4 +1,4 @@
-# 31jan10abu
+# 26apr10abu
 # (c) Software Lab. Alexander Burger
 
 ### alarm ###
@@ -18,6 +18,11 @@
 ### quit ###
 (test "Quit" (catch '("Quit") (quit "Quit")))
 
+
+### adr ###
+(let (X (box 7)  L (123))
+   (test 7 (val (adr (adr X))))
+   (test 123 (car (adr (adr L)))) )
 
 ### env ###
 (test NIL (env))
@@ -82,11 +87,13 @@
 
 ### dir ###
 (call 'mkdir "-p" (tmp "dir"))
+(out (tmp "dir/.abc"))
 (out (tmp "dir/a"))
 (out (tmp "dir/b"))
 (out (tmp "dir/c"))
 
 (test '("a" "b" "c") (sort (dir (tmp "dir"))))
+(test '("." ".." ".abc" "a" "b" "c") (sort (dir (tmp "dir") T)))
 
 
 ### cmd ###

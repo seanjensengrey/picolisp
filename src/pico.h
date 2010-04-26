@@ -1,4 +1,4 @@
-/* 17mar10abu
+/* 26apr10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -398,6 +398,7 @@ void zapZero(any);
 any doAbs(any);
 any doAccept(any);
 any doAdd(any);
+any doAdr(any);
 any doAlarm(any);
 any doAll(any);
 any doAnd(any);
