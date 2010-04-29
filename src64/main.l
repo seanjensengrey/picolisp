@@ -1,4 +1,4 @@
-# 26apr10abu
+# 27apr10abu
 # (c) Software Lab. Alexander Burger
 
 ### Global return labels ###
@@ -513,7 +513,7 @@
    eval
    num E  # 'num' argument?
    if nz  # Yes
-      off E 7  # Make 'var'
+      off E CNT  # Make 'var'
       ret
    end
    or E CNT  # Make 'num'

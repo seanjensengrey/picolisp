@@ -1,4 +1,4 @@
-/* 14apr10abu
+/* 28apr10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -860,6 +860,8 @@ void popInFiles(void) {
                sighandler(NULL);
          }
    }
+   else if (InFile)
+      InFile->next = Chr;
    Env.get = Env.inFrames->get;
    Chr =
       (InFile = InFiles[(Env.inFrames = Env.inFrames->link)? Env.inFrames->fd : STDIN_FILENO])?
@@ -2015,6 +2017,7 @@ any doPipe(any ex) {
          dup2(pfd[1], STDOUT_FILENO),  close(pfd[1]);
       wrOpen(ex, Nil, &f.out);
       pushOutFiles(&f.out);
+      OutFile->tty = NO;
       val(Run) = Nil;
       EVAL(cadr(ex));
       bye(0);

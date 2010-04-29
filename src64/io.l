@@ -1,4 +1,4 @@
-# 14apr10abu
+# 28apr10abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -1754,6 +1754,12 @@
                call sighandler0
             end
          loop
+      end
+   else
+      ld A (InFile)  # Current InFile?
+      null A
+      if nz  # Yes
+         ld (A III) (Chr)  # Save Chr in next
       end
    end
    ld (EnvGet_A) (C III)  # Retrieve 'get'
@@ -4044,6 +4050,7 @@
       ld E Nil  # Standard output
       call wrOpenEXY
       call pushOutFilesY
+      ld ((OutFile) II) 0  # Clear 'tty'
       ld (Run) Nil  # Switch off all tasks
       ld E ((X CDR))  # Get 'exe'
       eval  # Evaluate it
