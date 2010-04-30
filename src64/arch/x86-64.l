@@ -1,4 +1,4 @@
-# 07mar10abu
+# 30apr10abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -56,7 +56,7 @@
    (setq Src (chop Src))
    (when (= "$" (pop 'Src))
       (and (= "~" (car Src)) (pop 'Src))
-      (format (pack Src)) ) )
+      (format Src) ) )
 
 (de target (Adr F)
    (if
@@ -67,7 +67,7 @@
             (and
                (match '(@L "_" @N) (chop Adr))  # Local jump "foo_22"
                (= @L (chop *Label))
-               (format (pack @N)) ) ) )
+               (format @N) ) ) )
       Adr
       (ifn F
          (pack Adr "@plt")

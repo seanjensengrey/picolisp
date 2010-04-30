@@ -1,4 +1,4 @@
-# 21apr10abu
+# 30apr10abu
 # (c) Software Lab. Alexander Burger
 
 # *Home *Gate *Host *Port *Port1 *Http1 *Chunked
@@ -249,7 +249,7 @@
             ((match '(~(chop "User-Agent: ") . @X) L)
                (setq *Agent @X) )
             ((match '(~(chop "Content-@ength: ") . @X) L)
-               (setq *ContLen (format (pack @X))) )
+               (setq *ContLen (format @X)) )
             ((match '(~(chop "Content-@ype: multipart/form-data; boundary=") . @X) L)
                (setq
                   *MPartLim (append '(- -) @X)
@@ -295,7 +295,7 @@
             (ht:Pack
                (ifn (match '(@V ":" @N ":" @Z) "Var")
                   "Var"
-                  (setq @N (format (pack @N)))
+                  (setq @N (format @N))
                   @V ) ) ) )
       (when @Z
          (setq Val
@@ -330,7 +330,7 @@
 (de htArg (Lst)
    (case (car Lst)
       ("$" (intern (ht:Pack (cdr Lst))))
-      ("+" (format (pack (cdr Lst))))
+      ("+" (format (cdr Lst)))
       ("-" (extern (ht:Pack (cdr Lst))))
       ("_" (mapcar htArg (split (cdr Lst) "_")))
       (T (ht:Pack Lst)) ) )

@@ -1,4 +1,4 @@
-19apr10abu
+30apr10abu
 (c) Software Lab. Alexander Burger
 
 
@@ -16,3 +16,14 @@ B. The function 'not' is included in the group of flow- and logic-functions
 
 C. The line editor "lib/led.l" cycles with TAB also through path names (in
    addition to internal symbols).
+
+D. The 'format' number <-> string conversion function now also accepts a list
+   argument. This is like as if 'pack' were built-in. Where
+
+      (format (pack Lst))
+
+   had to be written, now
+
+      (format Lst)
+
+   will also do.

@@ -1,4 +1,4 @@
-/* 01mar10abu
+/* 30apr10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -562,14 +562,13 @@ double numToDouble(any x) {
 }
 
 // (format 'num ['cnt ['sym1 ['sym2]]]) -> sym
-// (format 'sym ['cnt ['sym1 ['sym2]]]) -> num
+// (format 'sym|lst ['cnt ['sym1 ['sym2]]]) -> num
 any doFormat(any ex) {
    int scl, sep, ign;
    any x, y;
    cell c1;
 
    x = cdr(ex),  Push(c1, EVAL(car(x)));
-   NeedAtom(ex,data(c1));
    x = cdr(x),  y = EVAL(car(x));
    scl = isNil(y)? 0 : xCnt(ex, y);
    sep = '.';
@@ -584,9 +583,21 @@ any doFormat(any ex) {
          ign = symChar(name(y));
       }
    }
-   data(c1) = isNum(data(c1))?
-      numToSym(data(c1), scl, sep, ign) :
-      symToNum(name(data(c1)), scl, sep, ign) ?: Nil;
+   if (isNum(data(c1)))
+      data(c1) = numToSym(data(c1), scl, sep, ign);
+   else {
+      int i;
+      any nm;
+      cell c2;
+
+      if (isSym(data(c1)))
+         nm = name(data(c1));
+      else {
+         nm = NULL,  pack(data(c1), &i, &nm, &c2);
+         nm = nm? data(c2) : Nil;
+      }
+      data(c1) = symToNum(nm, scl, sep, ign) ?: Nil;
+   }
    return Pop(c1);
 }
 

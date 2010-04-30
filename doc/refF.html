@@ -396,12 +396,13 @@ only be called immediately after <code><a href="refT.html#task">task</a></code>.
 </code></pre>
 
 <dt><a name="format"><code>(format 'num ['cnt ['sym1 ['sym2]]]) -> sym</code></a>
-<dt><code>(format 'sym ['cnt ['sym1 ['sym2]]]) -> num</code>
-<dd>Converts a number <code>num</code> to a string, or a string <code>sym</code>
-to a number. In both cases, optionally a precision <code>cnt</code>, a
-decimal-separator <code>sym1</code> and a thousands-separator <code>sym2</code>
-can be supplied. Returns <code>NIL</code> if the conversion is unsuccessful. See
-also <code><a href="ref.html#num-io">Numbers</a></code>.
+<dt><code>(format 'sym|lst ['cnt ['sym1 ['sym2]]]) -> num</code>
+<dd>Converts a number <code>num</code> to a string, or a string
+<code>sym|lst</code> to a number. In both cases, optionally a precision
+<code>cnt</code>, a decimal-separator <code>sym1</code> and a
+thousands-separator <code>sym2</code> can be supplied. Returns <code>NIL</code>
+if the conversion is unsuccessful. See also <code><a
+href="ref.html#num-io">Numbers</a></code>.
 
 <pre><code>
 : (format 123456789)                   # Integer conversion
@@ -415,6 +416,8 @@ also <code><a href="ref.html#num-io">Numbers</a></code>.
 
 : (format "123456789")                 # String to number
 -> 123456789
+: (format (1 "23" (4 5 6)))
+-> 123456
 : (format "1234567.89" 4)              # scaled to four digits
 -> 12345678900
 : (format "1.234.567,89")              # separators not recognized

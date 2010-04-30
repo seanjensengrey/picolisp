@@ -1,4 +1,4 @@
-# 02mar10abu
+# 30apr10abu
 # (c) Software Lab. Alexander Burger
 
 ### Destructive primitives ###
@@ -1765,7 +1765,7 @@
    ret
 
 # (format 'num ['cnt ['sym1 ['sym2]]]) -> sym
-# (format 'sym ['cnt ['sym1 ['sym2]]]) -> num
+# (format 'sym|lst ['cnt ['sym1 ['sym2]]]) -> num
 (code 'doFormat 2)
    push X
    push Y
@@ -1776,8 +1776,6 @@
    link
    push E  # <L I> 'num' | 'sym'
    link
-   atom E  # Need atom
-   jz atomErrEX
    ld Y (Y CDR)  # Second arg
    ld E (Y)
    eval  # Eval 'cnt'
@@ -1816,14 +1814,28 @@
    end
    pop (Sep3)  # Get Sep3
    pop (Sep0)  # and Sep0
-   pop A  # Get scale
    ld E (L I)  # Get 'num' | 'sym'
    num E  # Number?
    if nz  # Yes
+      pop A  # Get scale
       call fmtNumAE_E  # Convert to string
    else
-      ld X (E TAIL)
-      call nameX_X  # Get name
+      sym E  # Symbol?
+      if nz  # Yes
+         ld X (E TAIL)
+         call nameX_X  # Get name
+      else
+         link
+         push ZERO  # <L II> Number safe
+         push ZERO  # <L I> Result
+         ld C 4  # Build name
+         ld X S
+         link
+         call packECX_CX
+         ld X (L I)  # Get result
+         drop
+      end
+      pop A  # Get scale
       call symToNumXA_FE  # Convert to number
       if nc  # Failed
          ld E Nil

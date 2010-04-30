@@ -1,4 +1,4 @@
-# 27feb10abu
+# 30apr10abu
 # (c) Software Lab. Alexander Burger
 
 # *Allow *Tmp
@@ -261,9 +261,9 @@
          (= 3
             (length (setq S (split (chop S) C))) )
          (date
-            (format (pack (car S)))                # Year
-            (or (format (pack (cadr S))) 0)        # Month
-            (or (format (pack (caddr S))) 0) ) )   # Day
+            (format (car S))               # Year
+            (or (format (cadr S)) 0)       # Month
+            (or (format (caddr S)) 0) ) )  # Day
       (and
          (format S)
          (date
@@ -292,9 +292,9 @@
       (and
          (match *DateFmt (chop S))
          (date
-            (format (pack @Y))
-            (or (format (pack @M)) 0)
-            (or (format (pack @D)) 0) ) ) ) )
+            (format @Y)
+            (or (format @M) 0)
+            (or (format @D) 0) ) ) ) )
 
 (de expDat (S)
    (use (@Y @M @D X)
@@ -312,18 +312,18 @@
                @M (head 2 (nth (car S) 3))
                @Y (nth (car S) 5) ) ) )
       (and
-         (setq @D (format (pack @D)))
+         (setq @D (format @D))
          (date
             (nond
                (@Y (car (date (date))))
-               ((setq X (format (pack @Y))))
+               ((setq X (format @Y)))
                ((>= X 100)
                   (+ X
                      (* 100 (/ (car (date (date))) 100)) ) )
                (NIL X) )
             (nond
                (@M (cadr (date (date))))
-               ((setq X (format (pack @M))) 0)
+               ((setq X (format @M)) 0)
                ((n0 X) (cadr (date (date))))
                (NIL X) )
             @D ) ) ) )
@@ -369,10 +369,10 @@
             (head 2 (car S))
             (head 2 (nth (car S) 3))
             (nth (car S) 5) ) ) )
-   (when (format (pack (car S)))
+   (when (format (car S))
       (time @
-         (or (format (pack (cadr S))) 0)
-         (or (format (pack (caddr S))) 0) ) ) )
+         (or (format (cadr S)) 0)
+         (or (format (caddr S)) 0) ) ) )
 
 (de stamp (Dat Tim)
    (default  Dat (date)  Tim (time T))
