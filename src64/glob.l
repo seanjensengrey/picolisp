@@ -1,4 +1,4 @@
-# 26apr10abu
+# 02may10abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Globals 0)
@@ -531,6 +531,8 @@
 : EnvBrk       word  0        # Breakpoint
                align 8        # Padding
 : EnvEnd
+
+initData
 
 : OrgTermio skip TERMIOS         # Original termio structure
 : Flock     skip FLOCK           # File lock structure

@@ -1,4 +1,4 @@
-# 28apr10abu
+# 05may10abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -1680,11 +1680,14 @@
    ld C (EnvParseC)
    call symByteCX_FACX  # Extract next byte
    if z  # Done
-      ld A (EnvParseEOF)  # Yes
-      ld B (hex "FF")  # Fill upper bits
-      ror A 8  # Get next eof byte in B
+      ld A (EnvParseEOF)  # Get parser trail bytes
+      shr A 8  # More bytes?
       ld (EnvParseEOF) A
-      sxt  # Extend B
+      if nz  # Yes
+         zxt  # Return next byte
+      else
+         sub A 1  # Return -1
+      end
    end
    ld (Chr) A
    ld (EnvParseX) X  # Save status
@@ -3693,11 +3696,10 @@
    link
    ld (EnvParseX) E  # Set new parser status
    ld (EnvParseC) 0
+   ld E 0
    null C  # Token?
    if z  # No
-      ld E (hex "FFFFFFFFFF5D0A00")  # linefeed, ']', EOF
-   else
-      ld E -1
+      ld E (hex "5D0A00")  # linefeed, ']', EOF
    end
    ld (EnvParseEOF) E
    ld (EnvGet_A) getParse_A  # Set 'get' status
@@ -3776,7 +3778,7 @@
       link
       ld (EnvParseX) E  # Set new parser status
       ld (EnvParseC) 0
-      ld (EnvParseEOF) (hex "FFFFFFFFFFFF2000")  # Blank, EOF
+      ld (EnvParseEOF) (hex "2000")  # Blank, EOF
       ld (EnvGet_A) getParse_A  # Set 'get' status
       ld (Chr) 0
       call getParse_A  # Skip first char

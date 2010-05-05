@@ -1,4 +1,4 @@
-# 06mar10abu
+# 05may10abu
 # (c) Software Lab. Alexander Burger
 
 
@@ -81,8 +81,8 @@
 
    Move Instructions:
       ld dst src           # Load 'dst' from 'src'
-      ld2 src              # Load 'A' from two bytes 'src' (signed)
-      ld4 src              # Load 'A' from four bytes 'src' (signed)
+      ld2 src              # Load 'A' from two bytes 'src' (unsigned)
+      ld4 src              # Load 'A' from four bytes 'src' (unsigned)
       ldc dst src          # Load if Carry 'dst' from 'src'
       ldnc dst src         # Load if not Carry 'dst' from 'src'
       ldz dst src          # Load if Zero 'dst' from 'src'
@@ -121,8 +121,6 @@
       div src              # Division of 'D' by 'src' into 'A', 'C'
 
       zxt                  # Zero-extend 'B' to 'A'
-      sxt                  # Sign-extend 'B' to 'A'
-      int                  # Sign-extend 32 bits to 64 bits in 'A'
 
       setc                 # Set Carry flag
       clrc                 # Clear Carry flag

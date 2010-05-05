@@ -1,4 +1,4 @@
-# 08mar10abu
+# 05may10abu
 # (c) Software Lab. Alexander Burger
 
 # *LittleEndian *Registers optimize
@@ -401,9 +401,9 @@
       (eval/ret)
       (exec (reg (read)))
       (hx2 (read))
-      (init)
+      (initCode)
+      (initData)
       (initSym (read) (read) (operand (read)))
-      (int)
       (jc (address) "*Mode")
       (jcz (address) "*Mode")
       (jeq (address) "*Mode")
@@ -465,7 +465,6 @@
       (st4 (destination) "*Mode")
       (sub (destination) "*Mode" (source) "*Mode")
       (subc (destination) "*Mode" (source) "*Mode")
-      (sxt)
       (sym (source) "*Mode")
       (test (destination) "*Mode" (source) "*Mode")
       (tuck (source) "*Mode")

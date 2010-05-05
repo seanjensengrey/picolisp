@@ -1,4 +1,4 @@
-# 27apr10abu
+# 05may10abu
 # (c) Software Lab. Alexander Burger
 
 ### Global return labels ###
@@ -28,7 +28,7 @@
 
 ### Main entry point ###
 (code 'main)
-   init
+   initCode
    # Locate home directory
    ld X (AV)  # Command line vector
    do
@@ -1424,9 +1424,11 @@
             ld4 (C)
             add C 4  # Size of int
          end
-         int  # Integer
-         ld E A
-         null E  # Negative?
+         ld E (hex "FFFFFFFF")  # Sign-extend integer
+         and E A  # into E
+         ld A (hex "80000000")
+         xor E A
+         sub E A  # Negative?
          if ns  # No
             shl E 4  # Make short number
             or E CNT

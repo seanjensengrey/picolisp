@@ -1,4 +1,4 @@
-# 08mar10abu
+# 05may10abu
 # (c) Software Lab. Alexander Burger
 
 # 6 bytes in little endian format
@@ -860,7 +860,7 @@
             else
                do
                   ld2 (Buf)  # Get file number (byte order doesn't matter)
-                  cmp A -1  # End marker?
+                  cmp A (hex "FFFF")  # End marker?
                   if eq  # Yes
                      cc fprintf((stderr) RolbLog)  # Rollback incomplete transaction
                      call rewindLog  # Rewind transaction log
@@ -876,7 +876,7 @@
                         null A  # Any?
                         jz jnlErrX  # No
                         ld2 (Buf)  # Get file number (byte order doesn't matter)
-                        cmp A -1  # End marker?
+                        cmp A (hex "FFFF")  # End marker?
                      while ne  # No
                         call dbfBuf_AF  # Read file number from 'Buf' to 'DbFile'
                         jc jnlErrX  # No local file

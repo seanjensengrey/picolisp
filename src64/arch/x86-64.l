@@ -1,4 +1,4 @@
-# 30apr10abu
+# 05may10abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -218,10 +218,10 @@
          (prinst "mov" "%r10" Dst) ) ) )
 
 (asm ld2 (Src S)
-   (prinst "movswq" (src Src S) "%rax") )
+   (prinst "movzwq" (src Src S) "%rax") )
 
 (asm ld4 (Src S)
-   (prinst "movslq" (src Src S) "%rax") )
+   (prinst "movl" (src Src S) "%eax") )  # Clears upper word of %rax
 
 (de _cmov (Cmd Jmp)
    (setq Dst (dst Dst D)  Src (src Src S))
@@ -376,12 +376,6 @@
 
 (asm zxt ()  # 8 bit -> 64 bit
    (prinst "movzx" "%al" "%rax") )
-
-(asm sxt ()  # 8 bit -> 64 bit
-   (prinst "movsx" "%al" "%rax") )
-
-(asm int ()  # 32 bit -> 64 bit
-   (prinst "movsx" "%eax" "%rax") )
 
 
 (asm setc ()
@@ -709,7 +703,7 @@
    (prinst "jnz" "ret")                # Yes: Return
    (prinst "test" "$0x08" "%bl")       # Symbol?
    (prinst "jz" 'evListE_E)            # No: Evaluate list
-   (prinst "movq" "(%rbx)" "%rbx")     # Get value
+   (prinst "mov" "(%rbx)" "%rbx")      # Get value
    (prinst "ret") )
 
 (asm exec (Reg)
@@ -751,7 +745,9 @@
 
 
 # System
-(asm init ()
+(asm initData ())
+
+(asm initCode ()
    (prinst "xor" "%r12" "%r12")  # Init NULL register
    (prinst "mov" "(%rsi)" "%r10")  # Get command
    (ifn *FPic

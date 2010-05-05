@@ -1,4 +1,4 @@
-# 30sep09abu
+# 05may10abu
 # (c) Software Lab. Alexander Burger
 
 # (port ['T] 'cnt|(cnt . cnt) ['var]) -> cnt
@@ -88,7 +88,6 @@
       end
       call needVarEX  # Need variable
       ld2 (Addr SIN_PORT)  # Get port
-      and A (hex "FFFF")  # Unsigned
       cc ntohs(A)  # Convert to host byte order
       shl A 4  # Make short number
       or A CNT
