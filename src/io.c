@@ -1,4 +1,4 @@
-/* 28apr10abu
+/* 12may10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -2232,19 +2232,23 @@ void print1(any x) {
    else if (isNil(x))
       outString("NIL");
    else if (isSym(x)) {
-      int c, d;
+      int c;
+      any y;
 
-      if (!(c = symByte(name(x))))
+      if (!(c = symByte(y = name(x))))
          Env.put('$'),  outWord(num(x)/sizeof(cell));
       else if (isExt(x))
          Env.put('{'),  outSym(c),  Env.put('}');
-      else if (hashed(x, ihash(name(x)), Intern)) {
-         do {
-            d = symByte(NULL);
-            if (strchr(Delim, c)  ||  c == '.' && !d)
-               Env.put('\\');
-            Env.put(c);
-         } while (c = d);
+      else if (hashed(x, ihash(y), Intern)) {
+         if (unDig(y) == '.')
+            Env.put('\\'),  Env.put('.');
+         else {
+            do {
+               if (strchr(Delim, c))
+                  Env.put('\\');
+               Env.put(c);
+            } while (c = symByte(NULL));
+         }
       }
       else {
          bool tsm = isCell(val(Tsm)) && Env.put == putStdout && OutFile->tty;
@@ -2253,7 +2257,7 @@ void print1(any x) {
             Env.put('"');
          else {
             outName(car(val(Tsm)));
-            c = symByte(name(x));
+            c = symByte(y);
          }
          do {
             if (c == '\\'  ||  c == '^'  ||  !tsm && c == '"')

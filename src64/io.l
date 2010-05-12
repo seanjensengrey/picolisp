@@ -1,4 +1,4 @@
-# 05may10abu
+# 12may10abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -1619,7 +1619,7 @@
          add A Z  # Fetch byte
          ld B (A VII)  # from buffer
          cmp B 10  # Newline?
-         if z  # Yes
+         if eq  # Yes
             add (Z IV) 1  # Increment line
          end
          zxt  # Extend into A
@@ -4557,35 +4557,27 @@
       ld Y Intern
       call isInternEXY_F  # Internal symbol?
       if eq  # Yes
-         ld C 0
-         call symByteCX_FACX  # Get first byte
-         do
-            memb Delim "(DelimEnd-Delim)"  # Delimiter?
-            if eq  # Yes
-               push A  # Save char
-               ld B (char "\\")  # Print backslash
-               call (EnvPutB)
-               pop A
-            else
-               cmp B (char ".")  # Dot?
+         cmp X (hex "2E2")  # Dot?
+         if eq  # Yes
+            ld B (char "\\")  # Print backslash
+            call (EnvPutB)
+            ld B (char ".")  # Print dot
+            call (EnvPutB)
+         else
+            ld C 0
+            call symByteCX_FACX  # Get first byte
+            do
+               memb Delim "(DelimEnd-Delim)"  # Delimiter?
                if eq  # Yes
-                  call symByteCX_FACX  # Next byte?
-                  if z  # No
-                     ld B (char "\\")  # Print backslash
-                     call (EnvPutB)
-                     ld B (char ".")  # Print dot
-                     call (EnvPutB)
-                     break T  # Done
-                  end
                   push A  # Save char
-                  ld B (char ".")  # Print dot
+                  ld B (char "\\")  # Print backslash
                   call (EnvPutB)
                   pop A
                end
-            end
-            call (EnvPutB)  # Put byte
-            call symByteCX_FACX  # Next byte
-         until z  # Done
+               call (EnvPutB)  # Put byte
+               call symByteCX_FACX  # Next byte
+            until z  # Done
+         end
       else  # Else transient symbol
          ld Y 0  # 'tsm' flag in Y
          atom (Tsm)  # Transient symbol markup?

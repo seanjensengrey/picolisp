@@ -1,4 +1,4 @@
-# 02may10abu
+# 12may10abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Globals 0)
@@ -16,6 +16,7 @@
                word  0
 
 : Stack0       word  0           # Initial stack pointer
+: Link         word  0           # Saved link register
 : Catch        word  0           # Catch frames
 : Termio       word  0           # Raw mode terminal I/O
 : Time         word  0           # Pointer to time structure

@@ -1,0 +1,13 @@
+# 11may10abu
+# (c) Software Lab. Alexander Burger
+
+./mkAsm x86-32 linux Linux base "" ../dbg.l version.l glob.l main.l sys/linux.code.l gc.l apply.l flow.l sym.l subr.l big.l io.l db.l net.l err.l
+as -o x86-32.linux.base.o x86-32.linux.base.s
+gcc -o ../bin/emu32 -rdynamic -lc -lm -ldl x86-32.linux.base.o
+strip ../bin/emu32
+
+#./mkAsm x86-32 linux Linux ext "" ../dbg.l -fpic ext.l
+
+#./mkAsm x86-32 linux Linux ht "" ../dbg.l -fpic ht.l
+
+mv x86-32.linux.* /tmp

@@ -1,4 +1,4 @@
-# 30apr10abu
+# 10may10abu
 # (c) Software Lab. Alexander Burger
 
 ### Destructive primitives ###
@@ -866,7 +866,8 @@
          xchg A E
          shr A 4  # Normalize
          mul E  # Multiply
-         if nc  # Only lower word
+         null C  # Only lower word?
+         if z  # Yes
             test A (hex "F000000000000000")  # Fit in short number?
             if z  # Yes
                shl A 4  # Make short number

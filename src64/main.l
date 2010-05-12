@@ -1,4 +1,4 @@
-# 05may10abu
+# 12may10abu
 # (c) Software Lab. Alexander Burger
 
 ### Global return labels ###
@@ -1382,7 +1382,10 @@
    cc (Y) X  # Call C-function
    ld E (Z -II)  # Get result specification
    ld C 0  # No pointer yet
+   push (Link)  # Save L
+   ld (Link) L
    call natRetACE_CE  # Extract return value
+   pop (Link)
    ld (Z -II) E  # Save result
    lea Y (Z -III)  # Clean up allocated C args
    do
@@ -1598,6 +1601,8 @@
 
 (code 'lisp 0)
    begin 6  # Function name in A, arguments in C, E, X, Y and Z
+   push L  # Save C frame pointer
+   ld L (Link)  # Restore link register
    link  # Apply args
    push ZERO  # Space for 'fun'
    xchg C E  # First arg
@@ -1637,6 +1642,7 @@
       neg A  # Yes
    end
    drop
+   pop L  # Restore C frame pointer
    return 6
 
 (code 'execE 0)

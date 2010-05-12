@@ -1,4 +1,4 @@
-30apr10abu
+12may10abu
 (c) Software Lab. Alexander Burger
 
 
@@ -27,3 +27,18 @@ D. The 'format' number <-> string conversion function now also accepts a list
       (format Lst)
 
    will also do.
+
+E. There is a partially implemented 32-bit emulator of the 64-bit version in
+   "src64/arch/x86-32.l". It is intended as a demonstration of how to port the
+   assembler to a different CPU (not a very suitable demonstration, though), and
+   a way to thest 64-bit programs on a 32-bit machine. If it ever works, it will
+   be deadly slow, though.
+
+   In case somebody likes to grit his teeth on it, an exprimental executable
+   "bin/emu32" can be built with
+
+      (cd src64; ./mkEmu32)
+
+   Be warned, however, it builds something which doesn't run. Most instructions
+   that return CPU flags, and 128-bit multiplication/division are not right yet.
+   Besides this, there are probably a lot of bugs.

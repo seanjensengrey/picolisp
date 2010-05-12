@@ -1,4 +1,4 @@
-# 05may10abu
+# 11may10abu
 # (c) Software Lab. Alexander Burger
 
 
@@ -80,7 +80,7 @@
       nop                  # No operation
 
    Move Instructions:
-      ld dst src           # Load 'dst' from 'src'
+      ld dst src           # Load 'dst' from 'src' [---]
       ld2 src              # Load 'A' from two bytes 'src' (unsigned)
       ld4 src              # Load 'A' from four bytes 'src' (unsigned)
       ldc dst src          # Load if Carry 'dst' from 'src'
@@ -117,8 +117,8 @@
       rcl dst src          # Rotate 'dst' with Carry left by 'src' bits
       rcr dst src          # Rotate 'dst' with Carry right by 'src' bits
 
-      mul src              # Multiplication of 'A' and 'src' into 'D'
-      div src              # Division of 'D' by 'src' into 'A', 'C'
+      mul src              # Multiplication of 'A' and 'src' into 'D' [...]
+      div src              # Division of 'D' by 'src' into 'A', 'C' [...]
 
       zxt                  # Zero-extend 'B' to 'A'
 
@@ -128,15 +128,15 @@
       clrz                 # Clear Zero flag
 
    Comparisons:
-      cmp dst src          # Compare 'dst' with 'src'
+      cmp dst src          # Compare 'dst' with 'src' [z.c]
       cmp4 src             # Compare four bytes in 'A' with 'src'
       cmpm dst src end     # Compare 'dst' with with memory between 'src' and 'end'
       cmpn dst src cnt     # Compare 'cnt' bytes 'dst' with 'src'
       slen dst src         # Set 'dst' to the string length of 'src'
       memb src cnt         # Find B in 'cnt' bytes of memory
-      null src             # Compare 'src' with 0
-      zero src             # 'z' if ZERO
-      nul4                 # Compare four bytes in 'A' with 0
+      null src             # Compare 'src' with 0 [zs.]
+      zero src             # Test if ZERO [z..]
+      nul4                 # Compare four bytes in 'A' with 0 [zs.]
 
    Byte addressing:
       set dst src          # Set 'dst' byte to 'src'
@@ -167,8 +167,8 @@
       return src           # Return to C-function
 
    Stack Manipulations:
-      push src             # Push 'src'
-      pop dst              # Pop 'dst'
+      push src             # Push 'src' [---]
+      pop dst              # Pop 'dst' [---]
       link                 # Setup frame
       tuck src             # Extend frame
       drop                 # Drop frame
