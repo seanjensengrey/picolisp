@@ -1,4 +1,4 @@
-# 30apr10abu
+# 14may10abu
 # (c) Software Lab. Alexander Burger
 
 ### format ###
@@ -145,6 +145,7 @@
 ### sqrt ###
 (test 8 (sqrt 64))
 (test 31 (sqrt 1000))
+(test 32 (sqrt 1000 T))
 (test 100000000000000000000
    (sqrt 10000000000000000000000000000000000000000) )
 (test NIL (sqrt NIL))

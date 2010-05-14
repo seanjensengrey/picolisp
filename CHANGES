@@ -1,4 +1,5 @@
 * XXjun10 picoLisp-3.0.3
+   'sqrt' optionally rounds
    'format' also accepts 'lst' argument
    'adr' function
    'dir' can also return '.'-files

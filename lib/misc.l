@@ -1,4 +1,4 @@
-# 30apr10abu
+# 14may10abu
 # (c) Software Lab. Alexander Burger
 
 # *Allow *Tmp
@@ -40,7 +40,7 @@
                (set (link @) (name (read))) ) ) ) ) )
 
 ### Math ###
-(de sqrt (N)
+(de sqrt (N F)
    (cond
       ((lt0 N) (quit "Bad argument" N))
       (N
@@ -54,6 +54,7 @@
                   (inc 'B A) )
                (setq B (>> 1 B)  A (>> 2 A))
                (T (=0 A)) )
+            (and F (> N B) (inc 'B))
             B ) ) ) )
 
 # (Knuth Vol.2, p.442)
