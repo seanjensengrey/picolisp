@@ -1,4 +1,4 @@
-# 10may10abu
+# 19may10abu
 # (c) Software Lab. Alexander Burger
 
 ### Destructive primitives ###
@@ -1082,7 +1082,7 @@
       shr A 4  # Normalize
    end
    do
-      add C 1  # Increment counter
+      inc C  # Increment counter
       shr A 1  # More bits?
    until z  # No
    # Subtract divisor's bit count
@@ -1090,7 +1090,7 @@
    if nz  # Yes
       shr E 4  # Normalize
       do
-         sub C 1  # Decrement counter
+         dec C  # Decrement counter
          shr E 1  # More bits?
       until z  # No
    else
@@ -1109,12 +1109,12 @@
          shr E 4  # Normalize
       end
       do
-         sub C 1  # Decrement counter
+         dec C  # Decrement counter
          shr E 1  # More bits?
       until z  # No
    end
    push C  # <L -I> Shift offsets
-   add C 1
+   inc C
    push C  # <L -II>
    sub (L -I) 1  # Any shift?
    if ns  # Yes
@@ -1158,7 +1158,7 @@
             add B (hex "10")  # Increment short
             ld (L III) A
          else
-            add (A DIG) 1  # Increment digit
+            inc (A DIG)  # Increment digit
          end
       end
       ld A (L I)  # Divisor
@@ -1446,7 +1446,7 @@
             pop C
             test (L -III) 1  # Fraction?
             if nz  # Yes
-               sub (L -I) 1  # Decrement Scale
+               dec (L -I)  # Decrement Scale
             end
          end
       end
@@ -1634,14 +1634,14 @@
          ld E A
          ld A (Y)  # Length of highest word
          do
-            add E 1  # Increment length
+            inc E  # Increment length
             ld C 0  # Divide by 10
             div 10
             null A  # Done?
          until z  # Yes
          test (L -III) 1  # Sign?
          if nz  # Yes
-            add E 1  # Space for '-'
+            inc E  # Space for '-'
          end
          shl E 4  # Make short number
          or E CNT
@@ -1667,7 +1667,7 @@
          div 10
          null A  # Done?
       while nz  # No
-         add E 1  # Increment length
+         inc E  # Increment length
       loop
       pop C  # Restore name index
       sub E (L -I)  # Scale
@@ -1680,7 +1680,7 @@
          do
             cmp (L -I) -1   # Scale
          while lt
-            add (L -I) 1  # Increment scale
+            inc (L -I)  # Increment scale
             ld B (char "0")  # Ouput zeroes
             call byteSymBCX_CX
          loop
@@ -1762,7 +1762,7 @@
          end
       end
    end
-   sub (L -I) 1  # Decrement scale
+   dec (L -I)  # Decrement scale
    ret
 
 # (format 'num ['cnt ['sym1 ['sym2]]]) -> sym
@@ -2082,7 +2082,7 @@
       test E SIGN
       if nz
          off E SIGN
-         add B 1
+         inc B
       end
       link
       push ZERO  # <L II> Safe
@@ -2139,7 +2139,7 @@
       test E SIGN
       if nz
          off E SIGN
-         add B 1
+         inc B
       end
       link
       push ZERO  # <L II> Safe
@@ -2204,7 +2204,7 @@
       test E SIGN
       if nz
          off E SIGN
-         add B 1
+         inc B
       end
       link
       push ZERO  # <L II> Safe
@@ -2330,7 +2330,7 @@
             call shruA_A  # Non-destructive
             ld (L I) A
             do
-               sub (L -I) 1  # Shift count?
+               dec (L -I)  # Shift count?
             while nz
                call halfA_A  # Shift right (destructive)
                ld (L I) A
@@ -2339,7 +2339,7 @@
             call shluA_A  # Non-destructive
             ld (L I) A
             do
-               add (L -I) 1  # Shift count?
+               inc (L -I)  # Shift count?
             while nz
                call twiceA_A  # Shift left (destructive)
                ld (L I) A
@@ -2672,7 +2672,7 @@
    push E  # Save it
    ld Y (Y CDR)  # Second arg
    call evCntXY_FE  # Get cnt2
-   add E 1  # Seed % (cnt2 + 1 - cnt1) + cnt1
+   inc E  # Seed % (cnt2 + 1 - cnt1) + cnt1
    sub E (S)
    ld A (Seed 4)  # Get high halfword
    ld C 0

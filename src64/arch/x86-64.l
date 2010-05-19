@@ -1,4 +1,4 @@
-# 11may10abu
+# 19may10abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -318,6 +318,16 @@
       (dstSrc "sbb" Dst Src)
       (prinst "sbb" Src (car Dst))
       (prinst "sbb" "%r12" (cdr Dst)) ) )
+
+(asm inc (Dst D)
+   (if (pre? "%" (setq Dst (dst Dst D)))
+      (prinst "inc" Dst)
+      (prinst "incq" Dst) ) )
+
+(asm dec (Dst D)
+   (if (pre? "%" (setq Dst (dst Dst D)))
+      (prinst "dec" Dst)
+      (prinst "decq" Dst) ) )
 
 (asm not (Dst D)
    (if (pre? "%" (setq Dst (dst Dst D)))

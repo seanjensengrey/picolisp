@@ -1,11 +1,11 @@
-/* 26apr10abu
+/* 19may10abu
  * (c) Software Lab. Alexander Burger
  */
 
 #include "pico.h"
 
 /* Globals */
-int Signal, Repl, Chr, Slot, Spkr, Mic, Hear, Tell, Children, ExtN;
+int Repl, Chr, Slot, Spkr, Mic, Hear, Tell, Children, ExtN;
 char **AV, *AV0, *Home;
 child *Child;
 heap *Heaps;
@@ -19,11 +19,13 @@ outFile *OutFile, **OutFiles;
 int (*getBin)(void);
 void (*putBin)(int);
 any TheKey, TheCls, Thrown;
-any Alarm, Line, Zero, One, Intern[IHASH], Transient[IHASH], Extern[EHASH];
+any Alarm, Sigio, Line, Zero, One;
+any Intern[IHASH], Transient[IHASH], Extern[EHASH];
 any ApplyArgs, ApplyBody, DbVal, DbTail;
 any Nil, DB, Meth, Quote, T;
 any Solo, PPid, Pid, At, At2, At3, This, Dbg, Zap, Ext, Scl, Class;
 any Run, Hup, Sig1, Sig2, Up, Err, Msg, Uni, Led, Tsm, Adr, Fork, Bye;
+sig_atomic_t Signal[SIGIO+1];
 
 static int TtyPid;
 static word2 USec;
@@ -79,32 +81,41 @@ void sighandler(any ex) {
 
    if (!Env.protect) {
       Env.protect = 1;
-      switch (Signal) {
-      case SIGHUP:
-         Signal = 0,  run(val(Hup));
-         break;
-      case SIGINT:
-         Signal = 0;
-         if (Repl < 2)
-            brkLoad(ex ?: Nil);
-         break;
-      case SIGUSR1:
-         Signal = 0,  run(val(Sig1));
-         break;
-      case SIGUSR2:
-         Signal = 0,  run(val(Sig2));
-         break;
-      case SIGALRM:
-         Signal = 0,  run(Alarm);
-         break;
-      case SIGTERM:
-         for (flg = NO, i = 0; i < Children; ++i)
-            if (Child[i].pid  &&  kill(Child[i].pid, SIGTERM) == 0)
-               flg = YES;
-         if (!flg)
-            Signal = 0,  bye(0);
-         break;
-      }
+      do {
+         if (Signal[SIGIO]) {
+            --Signal[0], --Signal[SIGIO];
+            /* ... */
+         }
+         else if (Signal[SIGUSR1]) {
+            --Signal[0], --Signal[SIGUSR1];
+            run(val(Sig1));
+         }
+         else if (Signal[SIGUSR2]) {
+            --Signal[0], --Signal[SIGUSR2];
+            run(val(Sig2));
+         }
+         else if (Signal[SIGALRM]) {
+            --Signal[0], --Signal[SIGALRM];
+            run(Alarm);
+         }
+         else if (Signal[SIGINT]) {
+            --Signal[0], --Signal[SIGINT];
+            if (Repl < 2)
+               brkLoad(ex ?: Nil);
+         }
+         else if (Signal[SIGHUP]) {
+            --Signal[0], --Signal[SIGHUP];
+            run(val(Hup));
+         }
+         else if (Signal[SIGTERM]) {
+            for (flg = NO, i = 0; i < Children; ++i)
+               if (Child[i].pid  &&  kill(Child[i].pid, SIGTERM) == 0)
+                  flg = YES;
+            if (flg)
+               break;
+            Signal[0] = 0,  bye(0);
+         }
+      } while (*Signal);
       Env.protect = 0;
    }
 }
@@ -113,14 +124,14 @@ static void sig(int n) {
    if (TtyPid)
       kill(TtyPid, n);
    else
-      Signal = n;
+      ++Signal[n], ++Signal[0];
 }
 
 static void sigTerm(int n) {
    if (TtyPid)
       kill(TtyPid, n);
    else
-      Signal = SIGTERM;
+      ++Signal[SIGTERM], ++Signal[0];
 }
 
 static void sigChld(int n __attribute__((unused))) {
@@ -700,7 +711,7 @@ static any evList2(any foo, any ex) {
    for (;;) {
       if (isNil(val(foo)))
          undefined(foo,ex);
-      if (Signal)
+      if (*Signal)
          sighandler(ex);
       if (isNum(foo = val(foo))) {
          foo = evSubr(foo,ex);
@@ -722,7 +733,7 @@ any evList(any ex) {
    if (!isSym(foo = car(ex))) {
       if (isNum(foo))
          return ex;
-      if (Signal)
+      if (*Signal)
          sighandler(ex);
       if (isNum(foo = evList(foo)))
          return evSubr(foo,ex);
@@ -731,7 +742,7 @@ any evList(any ex) {
    for (;;) {
       if (isNil(val(foo)))
          undefined(foo,ex);
-      if (Signal)
+      if (*Signal)
          sighandler(ex);
       if (isNum(foo = val(foo)))
          return evSubr(foo,ex);
@@ -1117,7 +1128,7 @@ static void init(int ac, char *av[]) {
    Env.put = putStdout;
    initOutFile(STDERR_FILENO);
    OutFile = initOutFile(STDOUT_FILENO);
-   Env.task = Alarm = Line = Nil;
+   Env.task = Alarm = Sigio = Line = Nil;
    setrlimit(RLIMIT_STACK, &ULim);
    Tio = tcgetattr(STDIN_FILENO, &OrgTermio) == 0;
    ApplyArgs = cons(cons(consSym(Nil,Nil), Nil), Nil);
@@ -1130,6 +1141,7 @@ static void init(int ac, char *av[]) {
    iSignal(SIGUSR2, sig);
    iSignal(SIGALRM, sig);
    iSignal(SIGTERM, sig);
+   iSignal(SIGIO, sig);
    signal(SIGCHLD, sigChld);
    signal(SIGPIPE, SIG_IGN);
    signal(SIGTTIN, SIG_IGN);

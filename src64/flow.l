@@ -1,4 +1,4 @@
-# 19apr10abu
+# 19may10abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -235,7 +235,7 @@
    ld Y (EnvBind)  # and bindings
    do
       ld A (Y)  # End of bindings in A
-      add (L -II) 1  # Increment 'n'
+      inc (L -II)  # Increment 'n'
       sub (Y -I) (L -I)  # Decrement 'eswp' by 'cnt'
       if c  # First pass
          add Y I
@@ -247,7 +247,7 @@
          until eq  # No
          cmp X At  # Lambda frame?
          if eq  # Yes
-            sub C 1  # Decrement local 'cnt'
+            dec C  # Decrement local 'cnt'
             break z  # Done
          end
       end
@@ -279,7 +279,7 @@
                add Y II
                cmp Y A  # More?
             until eq  # No
-            sub C 1  # Traversed 'n' frames?
+            dec C  # Traversed 'n' frames?
          while nz  # No
             ld Y (A I)  # Bind link
             null Y  # More bindings?
@@ -307,7 +307,7 @@
       ld A C  # in A
       ld Y (EnvBind)  # Bindings
       do
-         sub A 1  # 'n-1' times
+         dec A  # 'n-1' times
       while nz
          ld Y ((Y) I)  # Follow link
       loop
@@ -321,7 +321,7 @@
             cmp A Y  # More?
          until lt  # No
       end
-      sub C 1  # Decrement 'n'
+      dec C  # Decrement 'n'
    until z  # Done
    pop Y
    drop
@@ -366,7 +366,7 @@
       ld Y (EnvBind)  # and bindings
       do
          ld A (Y)  # End of bindings in A
-         add (L -II) 1  # Increment 'n'
+         inc (L -II)  # Increment 'n'
          sub (Y -I) (L -I)  # Decrement 'eswp' by 'cnt'
          if c  # First pass
             add Y I
@@ -378,7 +378,7 @@
             until eq  # No
             cmp X At  # Lambda frame?
             if eq  # Yes
-               sub C 1  # Decrement local 'cnt'
+               dec C  # Decrement local 'cnt'
                break z  # Done
             end
          end
@@ -415,7 +415,7 @@
                   add Y II
                   cmp Y A  # More?
                until eq  # No
-               sub C 1  # Traversed 'n' frames?
+               dec C  # Traversed 'n' frames?
             while nz  # No
                ld Y (A I)  # Bind link
                null Y  # More bindings?
@@ -448,7 +448,7 @@
          ld A C  # in A
          ld Y (EnvBind)  # Bindings
          do
-            sub A 1  # 'n-1' times
+            dec A  # 'n-1' times
          while nz
             ld Y ((Y) I)  # Follow link
          loop
@@ -462,7 +462,7 @@
                cmp A Y  # More?
             until lt  # No
          end
-         sub C 1  # Decrement 'n'
+         dec C  # Decrement 'n'
       until z  # Done
       pop Y
       drop
@@ -2168,7 +2168,7 @@
             ld Y X  # Loop body
             call loopY_FE
          while nz
-            sub (S) 1  # Decrement count
+            dec (S)  # Decrement count
          until z
          pop A  # Drop count
       else
@@ -2676,7 +2676,7 @@
       ld Y (X)  # Get 'sym|lst'
       ld X (X CDR)
       ld Z (X CDR)  # Get 'prg'
-      add (EnvTrace) 1  # Increment trace level
+      inc (EnvTrace)  # Increment trace level
       ld C (EnvTrace)  # Get it
       call traceCY  # Print trace information
       ld C trc1  # Print " :"
@@ -2717,7 +2717,7 @@
       ld (OutFile) ((OutFiles) II)  # Set output channel again
       ld (EnvPutB) putStdoutB
       ld C (EnvTrace)  # Get trace level
-      sub (EnvTrace) 1  # Decrement it
+      dec (EnvTrace)  # Decrement it
       call traceCY  # Print trace information
       ld C trc2  # Print " = "
       call outStringC
@@ -2844,7 +2844,7 @@
          call errno_A
          cmp A EINTR  # Interrupted?
          jne waitPidErrX  # No
-         nul (Signal)  # Signal?
+         null (Signal)  # Signal?
          if nz  # Yes
             call sighandlerX
          end
@@ -3110,7 +3110,7 @@
       do
          sub A VI  # Decrement pointer
          ld (A) 0  # Clear 'pid'
-         sub E 1  # Done?
+         dec E  # Done?
       until z  # Yes
       pop E  # Get 'pid'
    end

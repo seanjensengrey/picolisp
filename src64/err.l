@@ -1,4 +1,4 @@
-# 08mar10abu
+# 19may10abu
 # (c) Software Lab. Alexander Burger
 
 # Debug print routine
@@ -81,6 +81,7 @@
    ld (ExtN) 0
    ld (EnvBrk) 0
    ld (Alarm) Nil
+   ld (Sigio) Nil
    ld (LineX) ZERO
    ld (LineC) -1
    lea Y (S 240)  # Pointer to outFrame
@@ -180,22 +181,22 @@
             ld E 0  # 'n'
             ld Z Y  # Bindings in Z
             do
-               add E 1  # Increment 'n'
-               add A 1  # Done?
+               inc E  # Increment 'n'
+               inc A  # Done?
             while nz  # No
                ld Z ((Z) I)  # Follow link
                null Z  # Any?
             while nz  # Yes
                cmp (Z -I) A  # Env swap nesting?
                if lt  # Yes
-                  sub A 1  # Adjust
+                  dec A  # Adjust
                end
             loop
             do
                ld A E  # Get 'n'
                ld Z Y  # Bindings
                do
-                  sub A 1  # 'n-1' times
+                  dec A  # 'n-1' times
                while nz
                   ld Z ((Z) I)  # Follow link
                loop
@@ -212,7 +213,7 @@
                      cmp A Z  # More?
                   until lt  # No
                end
-               sub E 1  # Decrement 'n'
+               dec E  # Decrement 'n'
             until z  # Done
          end
          cmp Y (X III)  #  Reached last bind frame?

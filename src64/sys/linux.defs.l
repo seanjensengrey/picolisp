@@ -1,4 +1,4 @@
-# 09sep09abu
+# 19may10abu
 # (c) Software Lab. Alexander Burger
 
 # errno
@@ -96,6 +96,8 @@
 (equ SIGTSTP 20)
 (equ SIGTTIN 21)
 (equ SIGTTOU 22)
+(equ SIGIO 29)
+(equ SIGNALS 30)  # Highest used signal number plus 1
 
 # wait
 (equ WNOHANG 1)

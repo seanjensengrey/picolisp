@@ -1,4 +1,4 @@
-/* 26apr10abu
+/* 19may10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -236,7 +236,7 @@ typedef struct catchFrame {
 #define Touch(ex,x)     if (isExt(x)) db(ex,x,2)
 
 /* Globals */
-extern int Signal, Repl, Chr, Slot, Spkr, Mic, Hear, Tell, Children, ExtN;
+extern int Repl, Chr, Slot, Spkr, Mic, Hear, Tell, Children, ExtN;
 extern char **AV, *AV0, *Home;
 extern child *Child;
 extern heap *Heaps;
@@ -250,11 +250,13 @@ extern outFile *OutFile, **OutFiles;
 extern int (*getBin)(void);
 extern void (*putBin)(int);
 extern any TheKey, TheCls, Thrown;
-extern any Alarm, Line, Zero, One, Intern[IHASH], Transient[IHASH], Extern[EHASH];
+extern any Alarm, Sigio, Line, Zero, One;
+extern any Intern[IHASH], Transient[IHASH], Extern[EHASH];
 extern any ApplyArgs, ApplyBody, DbVal, DbTail;
 extern any Nil, DB, Meth, Quote, T;
 extern any Solo, PPid, Pid, At, At2, At3, This, Dbg, Zap, Ext, Scl, Class;
 extern any Run, Hup, Sig1, Sig2, Up, Err, Msg, Uni, Led, Tsm, Adr, Fork, Bye;
+extern sig_atomic_t Signal[SIGIO+1];  // SIGIO is highest used signal number
 
 /* Prototypes */
 void *alloc(void*,size_t);

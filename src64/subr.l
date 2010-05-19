@@ -1,4 +1,4 @@
-# 15feb10abu
+# 19may10abu
 # (c) Software Lab. Alexander Burger
 
 # (car 'var) -> any
@@ -866,7 +866,7 @@
       ld Y (L I)  # Retrieve 'lst'
       ld X (Y)  # Keep CAR
       do
-         sub E 1  # Decrement count
+         dec E  # Decrement count
       while nz
          ld Y (Y CDR)  # Next cell?
          atom Y
@@ -941,7 +941,7 @@
             atom Y  # Find end of 'lst'
          while z
             ld Y (Y CDR)
-            sub X 1  # Decrement 'cnt'
+            dec X  # Decrement 'cnt'
          loop
          do
             sub X 1  # 'cnt' > 0?
@@ -963,12 +963,12 @@
                ld Y (E CDR)  # Find last cell
                atom Y
             while z
-               add X 1  # Increment 'cnt'
+               inc X  # Increment 'cnt'
                ld E Y
             loop
          end
          do
-            add X 1  # Increment 'cnt'
+            inc X  # Increment 'cnt'
          while s
             call cons_A  # Cons 'any' with NIL
             ld (A) (L I)
@@ -1275,7 +1275,7 @@
                ld E Nil
             else
                do
-                  sub C 1  # nth
+                  dec C  # nth
                while nz
                   ld E (E CDR)
                loop
@@ -1303,7 +1303,7 @@
                else
                   ld C (L II)  # Get list
                   do
-                     sub E 1  # nth
+                     dec E  # nth
                   while nz
                      ld C (C CDR)
                   loop
@@ -1723,7 +1723,7 @@
                ld (C CDR) (X CDR)  # Swap first two cells
                ld (X CDR) C
                do
-                  sub E 1  # Done?
+                  dec E  # Done?
                while nz  # No
                   ld A (C CDR)  # More cells?
                   atom A
@@ -1854,7 +1854,7 @@
             if s  # Yes
                ld Y E
                do
-                  add X 1  # Increment 'cnt' by length
+                  inc X  # Increment 'cnt' by length
                   ld Y (Y CDR)
                   atom Y
                until nz
@@ -1870,7 +1870,7 @@
             tuck Y  # <L I> Result
             link
             do
-               sub X 1  # Counted down?
+               dec X  # Counted down?
             while nz  # No
                ld E (E CDR)  # List done?
                atom E
@@ -1943,12 +1943,12 @@
             if s  # Yes
                do
                   ld E (E CDR)
-                  add X 1  # Take -nth
+                  inc X  # Take -nth
                until z
             else
                ld Y (E CDR)  # Traverse CDR
                do
-                  sub X 1  # Decrement 'cnt'
+                  dec X  # Decrement 'cnt'
                while nz
                   atom Y  # End of list?
                while z  # No
@@ -2634,7 +2634,7 @@
          or E CNT
          jmp 90  # Found
       end
-      add C 1  # Increment result
+      inc C  # Increment result
       ld Y (Y CDR)  # Next item
       cmp Z Y  # Hit head?
    until eq  # Yes
@@ -2661,7 +2661,7 @@
    do
       atom E  # Any?
    while z  # Yes
-      add C 1  # Increment result
+      inc C  # Increment result
       ld A X  # Get 'lst1'
       push E
       call equalAE_F  # Same rest?
@@ -2985,7 +2985,7 @@
       ld Z 0  # Calculate length in Z
       ld Y X
       do
-         add Z 1  # Increment length
+         inc Z  # Increment length
          ld Y (Y CDR)  # Next cell?
          atom Y
       until nz  # No
@@ -3002,7 +3002,7 @@
             ld Y X  # Offset Y
             do
                ld Y (Y CDR)
-               sub C 1
+               dec C
             until z
             ld A ((Y))  # Compare CAAR
             ld E (L II)  # with 'any'
@@ -3028,7 +3028,7 @@
             ld Y X  # Offset Y
             do
                ld Y (Y CDR)
-               sub C 1
+               dec C
             until z
             ld A ((Y))  # Compare CAAR
             ld E (L II)  # with 'any'
@@ -3496,7 +3496,7 @@
                      ld X E
                      ld C 0  # Index count
                      do
-                        add C 1  # Increment
+                        inc C  # Increment
                         ld A ((L IV))  # Found car(alt)?
                         ld E (X)
                         ld X (X CDR)

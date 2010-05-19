@@ -1,4 +1,4 @@
-# 12may10abu
+# 19may10abu
 # (c) Software Lab. Alexander Burger
 
 ### Global return labels ###
@@ -55,7 +55,7 @@
             if ne  # No
 10             sub Z Y  # Length
                ld C Z  # Keep in Z
-               add C 1  # Space for null byte
+               inc C  # Space for null byte
                cc malloc(C)
                ld (Home) A  # Set 'Home'
                movn (A) (Y) Z  # Copy path including "/"
@@ -118,6 +118,8 @@
    call iSignalCE  # for SIGALRM
    ld C SIGTERM
    call iSignalCE  # for SIGTERM
+   ld C SIGIO
+   call iSignalCE  # for SIGIO
    ld E sigTerm  # Install terminating signal handler for SIGINT
    ld C SIGINT
    call iSignalCE
@@ -255,71 +257,86 @@
       ld (EnvProtect) 1
       push A
       push C
-      ld B (Signal)  # Which signal?
-      cmp B SIGHUP
-      if eq
-         set (Signal) 0  # Clear signal
-         ld E (Hup)  # Run 'Hup'
-         call execE
-      else
-         cmp B SIGINT
-         if eq
-            set (Signal) 0  # Clear signal
-            nul (PRepl)  # Child of REPL process?
-            if z  # No
-               null E  # Runtime expression?
-               ldz E Nil  # No: Default to NIL
-               call brkLoadE_E  # Enter debug breakpoint
-            end
+      do
+         null (Signal (* I SIGIO))  # Test signals
+         if nz
+            dec (Signal)  # Decrement signal counters
+            dec (Signal (* I SIGIO))
+            ld E (Sigio)  # Run 'Sigio'
+            call execE
          else
-            cmp B SIGUSR1
-            if eq
-               set (Signal) 0  # Clear signal
+            null (Signal (* I SIGUSR1))
+            if nz
+               dec (Signal)
+               dec (Signal (* I SIGUSR1))
                ld E (Sig1)  # Run 'Sig1'
                call execE
             else
-               cmp B SIGUSR2
-               if eq
-                  set (Signal) 0  # Clear signal
+               null (Signal (* I SIGUSR2))
+               if nz
+                  dec (Signal)
+                  dec (Signal (* I SIGUSR2))
                   ld E (Sig2)  # Run 'Sig2'
                   call execE
                else
-                  cmp B SIGALRM
-                  if eq
-                     set (Signal) 0  # Clear signal
+                  null (Signal (* I SIGALRM))
+                  if nz
+                     dec (Signal)
+                     dec (Signal (* I SIGALRM))
                      ld E (Alarm)  # Run 'Alarm'
                      call execE
                   else
-                     cmp B SIGTERM
-                     if eq
-                        push X
-                        ld X (Child)  # Iterate children
-                        ld C (Children)  # Count
-                        ld E 0  # Flag
-                        do
-                           sub C VI  # More?
-                        while ge  # Yes
-                           null (X)  # 'pid'?
-                           if nz  # Yes
-                              cc kill((X) SIGTERM)  # Try to terminate
-                              nul4  # OK?
-                              ldz E 1  # Yes: Set flag
-                           end
-                           add X VI  # Increment by sizeof(child)
-                        loop
-                        pop X
-                        null E  # Still terminated any child?
+                     null (Signal (* I SIGINT))
+                     if nz
+                        dec (Signal)
+                        dec (Signal (* I SIGINT))
+                        nul (PRepl)  # Child of REPL process?
                         if z  # No
-                           set (Signal) 0
-                           ld E 0  # Exit OK
-                           jmp byeE
+                           null E  # Runtime expression?
+                           ldz E Nil  # No: Default to NIL
+                           call brkLoadE_E  # Enter debug breakpoint
+                        end
+                     else
+                        null (Signal (* I SIGHUP))
+                        if nz
+                           dec (Signal)
+                           dec (Signal (* I SIGHUP))
+                           ld E (Hup)  # Run 'Hup'
+                           call execE
+                        else
+                           null (Signal (* I SIGTERM))
+                           if nz
+                              push X
+                              ld X (Child)  # Iterate children
+                              ld C (Children)  # Count
+                              ld E 0  # Flag
+                              do
+                                 sub C VI  # More?
+                              while ge  # Yes
+                                 null (X)  # 'pid'?
+                                 if nz  # Yes
+                                    cc kill((X) SIGTERM)  # Try to terminate
+                                    nul4  # OK?
+                                    ldz E 1  # Yes: Set flag
+                                 end
+                                 add X VI  # Increment by sizeof(child)
+                              loop
+                              pop X
+                              null E  # Still terminated any child?
+                              if z  # No
+                                 ld (Signal) 0
+                                 ld E 0  # Exit OK
+                                 jmp byeE
+                              end
+                           end
                         end
                      end
                   end
                end
             end
          end
-      end
+         null (Signal)  # More signals?
+      until z  # No
       pop C
       pop A
       ld (EnvProtect) 0
@@ -332,7 +349,9 @@
    if nz  # Yes
       cc kill((TtyPid) A)
    else
-      ld (Signal) B
+      shl A 3  # Signal index
+      inc (A Signal)
+      inc (Signal)
    end
    return 1
 
@@ -342,7 +361,8 @@
    if nz  # Yes
       cc kill((TtyPid) SIGTERM)
    else
-      set (Signal) SIGTERM
+      inc (Signal (* I SIGTERM))
+      inc (Signal)
    end
    return 0
 
@@ -471,9 +491,9 @@
 (code 'doProtect 2)
    push X
    ld X (E CDR)  # Get 'prg'
-   add (EnvProtect) 1
+   inc (EnvProtect)
    prog X  # Run 'prg'
-   sub (EnvProtect) 1
+   dec (EnvProtect)
    pop X
    ret
 
@@ -497,7 +517,7 @@
    do
       null C  # Any?
    while nz  # Yes
-      add A 1  # Increment count
+      inc A  # Increment count
       ld C (C)  # Follow link
    loop
    div CELLS  # (C is zero)
@@ -633,7 +653,7 @@
          cmp X (Y)  # Found symbol?
          if eq  # Yes
             lea Z (Y I)  # Point to saved value
-            sub C 1  # Decrement count
+            dec C  # Decrement count
             jz 10  # Done
          end
          add Y II
@@ -1092,7 +1112,7 @@
    sym C  # Symbol?
    if nz  # Yes
 10    do  # C is a symbol
-         nul (Signal)  # Signal?
+         null (Signal)  # Signal?
          if nz  # Yes
             push E
             call sighandlerE
@@ -1155,14 +1175,14 @@
       if eq  # Yes
          ld C Y  # Keep pointer to slash
       end
-      add Y 1  # Increment buffer pointer
+      inc Y  # Increment buffer pointer
    loop
    cmp Y Z  # At start of buffer?
    jz 90  # Yes
    nul (Y 1)  # At end of buffer?
    jz 90  # Yes
    set (Y) 0  # Replace colon with null byte
-   add Y 1  # Point to token
+   inc Y  # Point to token
    null C  # Contained '/'?
    ld C S  # Pointer to lib name
    if z  # No
@@ -1176,7 +1196,7 @@
       null A
       if nz  # Yes
          do
-            add A 1  # Find end
+            inc A  # Find end
             nul (A)
          until z
          sub A (Home)  # Calculate length
@@ -1354,7 +1374,7 @@
                      sub C 1  # Done?
                   while ns  # No
                      ld (Z) B  # Store byte in buffer
-                     add Z 1  # Increment buffer pointer
+                     inc Z  # Increment buffer pointer
                   loop
                   break T
                end
@@ -1363,8 +1383,8 @@
                ld A (E)  # Next byte value
                shr A 4  # in B
                ld (Z) B  # Store in buffer
-               add Z 1  # Increment buffer pointer
-               sub C 1  # Buffer full?
+               inc Z  # Increment buffer pointer
+               dec C  # Buffer full?
             until z  # Yes
             pop E  # Get allocated memory
          end
@@ -1498,7 +1518,7 @@
                      null C  # Pointer?
                      if nz  # Yes
                         ld B (C)
-                        add C 1  # Size of byte
+                        inc C  # Size of byte
                      end
                      zxt  # Byte
                      ld E A
@@ -1527,7 +1547,7 @@
                            if nz
                               shr Z 4  # Normalize
                               do
-                                 sub Z 1  # Decrement count
+                                 dec Z  # Decrement count
                               while nz
                                  ld E (X)  # Repeat last type
                                  call natRetACE_CE  # Next item
@@ -1569,7 +1589,7 @@
    zxt
    or B B  # Any?
    if nz  # Yes
-      add C 1
+      inc C
       cmp B 128  # Single byte?
       if ge  # No
          test B (hex "20")  # Two bytes?
@@ -1583,7 +1603,7 @@
             push A
             ld B (C)  # Fetch second byte
             zxt
-            add C 1
+            inc C
             and B (hex "3F")  # 10xxxxxx
             or A (S)  # Combine
             shl A 6  # xxxxxxxxxx000000
@@ -1591,7 +1611,7 @@
          end
          ld B (C)  # Fetch last byte
          zxt
-         add C 1
+         inc C
          and B (hex "3F")  # 10xxxxxx
          or (S) A  # Combine
          pop A  # Get result
@@ -1628,7 +1648,7 @@
    do
       ld B (E)
       call byteSymBCX_CX  # Pack byte
-      add E 1  # Next byte
+      inc E  # Next byte
       nul (E)  # Any?
    until z
    ld X (S VI)  # Get name
@@ -1923,7 +1943,7 @@
    ld4 (C TM_MDAY)  # Get day
    ld X A
    ld4 (C TM_MON)  # month
-   add A 1
+   inc A
    ld Y A
    ld4 (C TM_YEAR)  # and year
    add A 1900
@@ -2069,7 +2089,7 @@
                   if lt  # Yes
                      add Y 3  # month += 3
                   else
-                     add Z 1  # Increment year
+                     inc Z  # Increment year
                      sub Y 9  # month -= 9
                   end
                   shl X 4  # Make short day
@@ -2373,7 +2393,7 @@
       until ne
       push Z
       ld Z E  # Pointer to rest
-      sub Z 1  # without slash in Z
+      dec Z  # without slash in Z
       call mkStrE_E  # Make string
       call consE_C  # Cons
       ld (C) E
@@ -2490,7 +2510,7 @@
    push Z
    call bufStringE_SZ  # Write to stack buffer
    slen C S  # String length in C
-   add C 1  # plus null byte
+   inc C  # plus null byte
    movn ((AV0)) (S) C  # Copy to system buffer
    ld S Z  # Drop buffer
    pop Z

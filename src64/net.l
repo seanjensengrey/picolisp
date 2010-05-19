@@ -1,4 +1,4 @@
-# 05may10abu
+# 19may10abu
 # (c) Software Lab. Alexander Burger
 
 # (port ['T] 'cnt|(cnt . cnt) ['var]) -> cnt
@@ -55,7 +55,7 @@
       cc bind(C Addr SOCKADDR_IN)  # Try to bind socket
       nul4  # OK?
    while s  # No
-      add E 1  # Next port in range
+      inc E  # Next port in range
       cmp E (S)  # Exceeded limit?
       if gt  # Yes
          cc close(C)  # Close socket
@@ -129,7 +129,7 @@
          ret
       end
       cc usleep(100000)  # Sleep 100 milliseconds
-      sub C 1  # Done?
+      dec C  # Done?
    until z  # Yes
    cc fcntl(E F_SETFL pop)  # Restore socket status flags
    setz  # Return 'z'
@@ -329,7 +329,7 @@
    cmp Z (BufEnd)  # End of buffer data?
    jeq udpOvflErr  # Yes
    ld (Z) B  # Store byte
-   add Z 1  # Increment pointer
+   inc Z  # Increment pointer
    ret
 
 # vi:et:ts=3:sw=3

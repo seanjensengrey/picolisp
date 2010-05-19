@@ -1,4 +1,4 @@
-# 01apr10abu
+# 19may10abu
 # (c) Software Lab. Alexander Burger
 
 ### Hypertext I/O functions ###
@@ -38,7 +38,7 @@ align 8  asciz "<hr>"
          ld B (X)  # Compare bytes
          cmp B (Y)  # Equal?
       while eq  # Yes
-         add X 1  # End of HtOk string?
+         inc X  # End of HtOk string?
          nul (X)
          if z  # Yes: Found
             slen C Y  # Length of the remaining string
@@ -50,7 +50,7 @@ align 8  asciz "<hr>"
             pop X
             ret  # 'z' or 'nz'
          end
-         add Y 1  # End of data?
+         inc Y  # End of data?
          nul (Y)
       until z  # Yes
       pop Y
@@ -89,7 +89,7 @@ align 8  asciz "<hr>"
                do
                   ld B (Y)  # Output partial string
                   call envPutB
-                  add Y 1  # till end pointer in E
+                  inc Y  # till end pointer in E
                   cmp Y E
                until eq
             else
@@ -127,12 +127,12 @@ align 8  asciz "<hr>"
                               call envPutB  # Output it
                               test C (hex "80")  # Double byte?
                               if nz  # Yes
-                                 add Y 1  # Next
+                                 inc Y  # Next
                                  ld B (Y)  # Output second byte
                                  call envPutB
                                  test C (hex "20")  # Triple byte?
                                  if nz  # Yes
-                                    add Y 1  # Next
+                                    inc Y  # Next
                                     ld B (Y)  # Output third byte
                                     call envPutB
                                  end
@@ -142,7 +142,7 @@ align 8  asciz "<hr>"
                      end
                   end
                end
-               add Y 1  # Increment string pointer
+               inc Y  # Increment string pointer
             end
          loop
          ld S Z  # Drop buffer
@@ -339,7 +339,7 @@ align 8  asciz "<hr>"
 (code 'headCX_FX 0)  # E
    ld E X  # Save X
    do
-      add C 1  # Point to next char
+      inc C  # Point to next char
       nul (C)  # Any?
    while nz  # Yes
       ld A ((X) TAIL)  # Get next character symbol
@@ -456,10 +456,10 @@ align 8  asciz "<hr>"
          call getChar_A  # Read first char
          cmp A 128  # Double byte?
          if ge  # Yes
-            sub E 1  # Decrement count
+            dec E  # Decrement count
             cmp A 2048  # Triple byte?
             if ge  # Yes
-               sub E 1  # Decrement count
+               dec E  # Decrement count
             end
          end
          sub E 1  # Less than zero?
@@ -486,10 +486,10 @@ align 8  asciz "<hr>"
                call getChar_A
                cmp A 128  # Double byte?
                if ge  # Yes
-                  sub E 1  # Decrement count
+                  dec E  # Decrement count
                   cmp A 2048  # Triple byte?
                   if ge  # Yes
-                     sub E 1  # Decrement count
+                     dec E  # Decrement count
                   end
                end
                sub E 1  # Less than zero?
@@ -601,7 +601,7 @@ skip CHUNK  # <Y III> Chunk buffer
    else
       ld A (Y I)  # Call saved 'get'
       call (A)
-      sub (Y) 1  # Decrement count
+      dec (Y)  # Decrement count
       if z
          ld A (Y I)  # Call saved 'get'
          call (A)
@@ -666,8 +666,8 @@ skip CHUNK  # <Y III> Chunk buffer
    do
       ld B (X)  # Next byte from chunk buffer
       call envPutB  # Output
-      add X 1  # Increment pointer
-      sub (Y) 1  # Decrement 'Cnt'
+      inc X  # Increment pointer
+      dec (Y)  # Decrement 'Cnt'
    until z
    ld B 13  # Output 'return'
    call envPutB
@@ -684,7 +684,7 @@ skip CHUNK  # <Y III> Chunk buffer
    lea X (Y III)  # X on chunk buffer
    add X (Y)  # Count index
    ld (X) B  # Store byte
-   add (Y) 1  # Increment count
+   inc (Y)  # Increment count
    cmp (Y) CHUNK   # Max reached?
    if eq  # Yes
       call wrChunkY  # Write buffer

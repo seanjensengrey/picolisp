@@ -1,4 +1,4 @@
-# 13oct09abu
+# 19may10abu
 # (c) Software Lab. Alexander Burger
 
 # Mark data
@@ -57,7 +57,7 @@
       null A  # Enough free cells?
       jeq gc  # No: Collect garbage
       ld A (A)
-      sub C 1
+      dec C
    until z
    ret
 
@@ -85,13 +85,15 @@
       do
          or (X CDR) 1  # Set mark bit
          add X II  # Next cell
-         sub C 1  # Done?
+         dec C  # Done?
       until z  # Yes
       ld X (X)  # Next heap
       null X  # Done?
    until eq  # Yes
    ### Mark ###
    ld E (Alarm)  # Mark globals
+   call markE
+   ld E (Sigio)
    call markE
    ld E (LineX)
    call markE
@@ -322,7 +324,7 @@
             if nz  # Yes
                ld (Z) X  # Link avail
                ld X Z
-               sub C 1
+               dec C
             end
             sub Z II
             cmp Z Y  # Done?
@@ -348,7 +350,7 @@
             if nz  # Yes
                ld (Z) X  # Link avail
                ld X Z
-               sub C 1
+               dec C
             end
             sub Z II
             cmp Z Y  # Done?

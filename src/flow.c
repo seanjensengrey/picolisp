@@ -1,4 +1,4 @@
-/* 19apr10abu
+/* 19may10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -1548,7 +1548,7 @@ any doCall(any ex) {
       while (waitpid(pid, &res, WUNTRACED) < 0) {
          if (errno != EINTR)
             err(ex, NULL, "wait pid");
-         if (Signal)
+         if (*Signal)
             sighandler(ex);
       }
       tcsetpgrp(0,getpgrp());

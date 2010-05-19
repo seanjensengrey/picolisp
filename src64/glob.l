@@ -1,4 +1,4 @@
-# 12may10abu
+# 19may10abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Globals 0)
@@ -46,6 +46,7 @@
 : StrX         word  0           # String status
 : StrC         word  0
 : Alarm        word  Nil         # Alarm handler
+: Sigio        word  Nil         # Sigio handler
 : LineX        word  ZERO        # Console line
 : LineC        word  -1
 : GcCount      word  CELLS       # Collector count
@@ -55,6 +56,9 @@
 
 : Penv         word  Nil         # Pilog environment
 : Pnl          word  Nil
+
+# Signals
+: Signal       skip  (* I SIGNALS)
 
 # Database
 : DBs          word  0           # Scaled number of DB files
@@ -551,7 +555,6 @@ initData
 :: _dot_ asciz "."
 
 # Bytes
-:: Signal   byte 0            # Signal flag
 :: Tio      byte 0            # Terminal I/O
 :: Flg      byte 0            # General flag value
 

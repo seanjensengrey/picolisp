@@ -1,4 +1,4 @@
-# 12may10abu
+# 19may10abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -199,7 +199,7 @@
          setz  # Return 'z'
          ret
       end
-      nul (Signal)  # Signal?
+      null (Signal)  # Signal?
       if nz  # Yes
          call sighandler0
       end
@@ -232,7 +232,7 @@
          setz  # Return 'z'
          ret
       end
-      nul (Signal)  # Signal?
+      null (Signal)  # Signal?
       if nz  # Yes
          call sighandler0
       end
@@ -248,7 +248,7 @@
          call errno_A
          cmp A EINTR  # Interrupted?
          jne Retz  # No: Return 'z'
-         nul (Signal)  # Signal?
+         null (Signal)  # Signal?
          if nz  # Yes
             call sighandler0
          end
@@ -285,7 +285,7 @@
                call errno_A
                cmp A EINTR  # Interrupted?
                jne Retz  # No: Return 'z'
-               nul (Signal)  # Signal?
+               null (Signal)  # Signal?
                if nz  # Yes
                   call sighandler0
                end
@@ -301,7 +301,7 @@
       end
       cmp A EINTR  # Interrupted?
       jne Retz  # No: Return 'z'
-      nul (Signal)  # Signal?
+      null (Signal)  # Signal?
       if nz  # Yes
          call sighandler0
       end
@@ -326,7 +326,7 @@
          cmp A EINTR  # Interrupted?
          jne wrBytesErr  # No
       end
-      nul (Signal)  # Signal?
+      null (Signal)  # Signal?
       if nz  # Yes
          call sighandler0
       end
@@ -434,7 +434,7 @@
       jz retc  # EOF (c)
       ld A 0  # 'ix'
    end
-   add (Z I) 1  # Increment 'ix'
+   inc (Z I)  # Increment 'ix'
    add A Z  # Fetch byte (nc)
    ld B (A VII)  # from buffer
    ret  # nc
@@ -565,7 +565,7 @@
                call (GetBinZ_FB)  # Next byte?
                jc 90  # No
                call byteNumBCX_CX
-               sub E 1  # Decrement count
+               dec E  # Decrement count
             until z
             call (GetBinZ_FB)  # Next count?
             jc 90  # No
@@ -580,7 +580,7 @@
          call (GetBinZ_FB)  # Next byte?
          jc 90  # No
          call byteNumBCX_CX  # (B is zero (not DOT) if Zero)
-         sub E 1  # Decrement count
+         dec E  # Decrement count
       until z
 20    ld E (L I)  # Get result
       big X  # Big number?
@@ -600,7 +600,7 @@
                call (GetBinZ_FB)  # Next byte?
                jc 90  # No
                call byteSymBCX_CX
-               sub E 1  # Decrement count
+               dec E  # Decrement count
             until z
             call (GetBinZ_FB)  # Next count?
             jc 90  # No
@@ -615,7 +615,7 @@
          call (GetBinZ_FB)  # Next byte?
          jc 90  # No
          call byteSymBCX_CX
-         sub E 1  # Decrement count
+         dec E  # Decrement count
       until z
 30    ld X (L I)  # Get name
       pop A  # Get tag
@@ -676,7 +676,7 @@
    ld A E  # Output next byte
    call (PutBinBZ)
    shr E 8  # Shift to next
-   sub C 1  # Decrement count
+   dec C  # Decrement count
    ret
 
 # Binary print short number
@@ -694,7 +694,7 @@
       ld A E  # Next data byte
       shr E 8
       call (PutBinBZ)  # Output data byte
-      sub C 1  # More?
+      dec C  # More?
    until z  # No
    ret
 
@@ -734,7 +734,7 @@
       addc E E  # Any significant bits in short number?
       if nz  # Yes
          do
-            add A 1  # Increment count
+            inc A  # Increment count
             shr E 8  # More bytes?
          until z  # No
       end
@@ -748,7 +748,7 @@
          call (PutBinBZ)  # Output tag byte
          do
             call prByteCEXY  # Output next data bye
-            sub (S) 1  # More?
+            dec (S)  # More?
          until z  # No
       else
          sub A 63  # Adjust count
@@ -758,7 +758,7 @@
          push 63  # <S> and first 63 data bytes
          do
             call prByteCEXY  # Output next data bye
-            sub (S) 1  # More?
+            dec (S)  # More?
          until z  # No
          do
             cmp (S I) 255  # Count greater or equal 255?
@@ -768,7 +768,7 @@
             call (PutBinBZ)  # Output count byte
             do
                call prByteCEXY  # Output next data bye
-               sub (S) 1  # More?
+               dec (S)  # More?
             until z  # No
             sub (S I) 255  # Decrement counter
          loop
@@ -851,7 +851,7 @@
             shr E 4  # Any significant bits in short name?
             if nz  # Yes
                do
-                  add A 1  # Increment count
+                  inc A  # Increment count
                   shr E 8  # More bytes?
                until z  # No
             end
@@ -865,7 +865,7 @@
                do
                   call symByteCX_FACX  # Next data byte
                   call (PutBinBZ)  # Output it
-                  sub E 1  # More?
+                  dec E  # More?
                until z  # No
             else
                ld A (* 4 63)  # Output first tag byte
@@ -878,7 +878,7 @@
                do
                   call symByteCX_FACX  # Next data byte
                   call (PutBinBZ)  # Output it
-                  sub E 1  # More?
+                  dec E  # More?
                until z  # No
                do
                   cmp (S) 255  # Count greater or equal 255?
@@ -889,7 +889,7 @@
                   do
                      call symByteCX_FACX  # Next data byte
                      call (PutBinBZ)  # Output it
-                     sub E 1  # More?
+                     dec E  # More?
                   until z  # No
                   sub (S) 255  # Decrement counter
                loop
@@ -946,7 +946,7 @@
 # Family IPC
 (code 'putTellBZ 0)
    ld (Z) B  # Store byte
-   add Z 1  # Increment pointer
+   inc Z  # Increment pointer
    lea A ((TellBuf) (- PIPE_BUF 1))  # Reached (TellBuf + PIPE_BUF - 1)?
    cmp Z A
    jeq tellErr  # Yes
@@ -956,14 +956,14 @@
    ld (TellBuf) Z  # Set global buffer
    add Z 2  # 2 bytes space for count
    set (Z) BEG  # Begin a list
-   add Z 1
+   inc Z
    ret
 
 (code 'tellEndZ)
    push X
    push Y
    set (Z) END  # Close list
-   add Z 1
+   inc Z
    ld X (TellBuf)  # Get buffer
    ld E Z  # Calculate total size
    sub E X
@@ -1078,7 +1078,7 @@
          call symByteCX_FACX
       while nz
          ld (Z) B  # Store next byte
-         add Z 1
+         inc Z
          test Z 7  # Buffer full?
          if z  # Yes
             sub S 8  # Extend buffer
@@ -1107,14 +1107,14 @@
          cmp B (char "+")  # Plus?
          if eq
             ld (Z) B  # Store "+"
-            add Z 1
+            inc Z
             call symByteCX_FACX  # Second byte
          end
          cmp B (char "@")  # Home path?
          if ne
             do
                ld (Z) B  # Store byte
-               add Z 1
+               inc Z
                test Z 7  # Buffer full?
                if z  # Yes
                   sub S 8  # Extend buffer
@@ -1131,14 +1131,14 @@
                do
                   ld B (E)
                   ld (Z) B  # Store next byte
-                  add Z 1
+                  inc Z
                   test Z 7  # Buffer full?
                   if z  # Yes
                      sub S 8  # Extend buffer
                      movm (S) (S 8) (Z)
                      sub Z 8  # Reset buffer pointer
                   end
-                  add E 1
+                  inc E
                   nul (E)  # More?
                until z  # No
             end
@@ -1147,7 +1147,7 @@
                call symByteCX_FACX
             while nz
                ld (Z) B  # Store next byte
-               add Z 1
+               inc Z
                test Z 7  # Buffer full?
                if z  # Yes
                   sub S 8  # Extend buffer
@@ -1294,7 +1294,7 @@
                ld C (C)  # Next frame
                null C  # Any?
                jz badFdErrEX  # No
-               sub A 1  # Found frame?
+               dec A  # Found frame?
             until z  # Yes
             ld A (C I)  # Get fd from frame
          end
@@ -1325,7 +1325,7 @@
                call errno_A
                cmp A EINTR  # Interrupted?
                jne openErrEX  # No
-               nul (Signal)  # Signal?
+               null (Signal)  # Signal?
                if nz  # Yes
                   call sighandlerX
                end
@@ -1434,7 +1434,7 @@
                ld C (C)  # Next frame
                null C  # Any?
                jz badFdErrEX  # No
-               sub A 1  # Found frame?
+               dec A  # Found frame?
             until z  # Yes
             ld A (C I)  # Get fd from frame
          end
@@ -1465,7 +1465,7 @@
                call errno_A
                cmp A EINTR  # Interrupted?
                jne openErrEX  # No
-               nul (Signal)  # Signal?
+               null (Signal)  # Signal?
                if nz  # Yes
                   call sighandlerX
                end
@@ -1579,7 +1579,7 @@
             call errno_A
             cmp A EINTR  # Interrupted?
             jne openErrEX  # No
-            nul (Signal)  # Signal?
+            null (Signal)  # Signal?
             if nz  # Yes
                call sighandlerX
             end
@@ -1615,12 +1615,12 @@
             jz 90  # Return -1
             ld A 0  # 'ix'
          end
-         add (Z I) 1  # Increment 'ix'
+         inc (Z I)  # Increment 'ix'
          add A Z  # Fetch byte
          ld B (A VII)  # from buffer
          cmp B 10  # Newline?
          if eq  # Yes
-            add (Z IV) 1  # Increment line
+            inc (Z IV)  # Increment line
          end
          zxt  # Extend into A
       else
@@ -1686,7 +1686,7 @@
       if nz  # Yes
          zxt  # Return next byte
       else
-         sub A 1  # Return -1
+         dec A  # Return -1
       end
    end
    ld (Chr) A
@@ -1752,7 +1752,7 @@
             call errno_A
             cmp A EINTR  # Interrupted?
             jne closeErrX
-            nul (Signal)  # Signal?
+            null (Signal)  # Signal?
             if nz  # Yes
                call sighandler0
             end
@@ -1805,7 +1805,7 @@
             call errno_A
             cmp A EINTR  # Interrupted?
             jne closeErrX
-            nul (Signal)  # Signal?
+            null (Signal)  # Signal?
             if nz  # Yes
                call sighandler0
             end
@@ -2633,7 +2633,7 @@
             st4 (S)  # Store 'fd'
             ld A POLLIN  # Poll input
             st2 (S POLL_EVENTS)  # Store 'events'
-            add Z 1  # Increment count
+            inc Z  # Increment count
          end
       end
       ld Y (Run)  # Get '*Run'
@@ -2671,7 +2671,7 @@
                   st4 (S)  # Store 'fd'
                   ld A POLLIN  # Poll input
                   st2 (S POLL_EVENTS)  # Store 'events'
-                  add Z 1  # Increment count
+                  inc Z  # Increment count
                end
             end
          end
@@ -2692,7 +2692,7 @@
                   st4 (S)  # Store 'Hear'
                   ld A POLLIN  # Poll input
                   st2 (S POLL_EVENTS)  # Store 'events'
-                  add Z 1  # Increment count
+                  inc Z  # Increment count
                end
             end
          end
@@ -2704,7 +2704,7 @@
          st4 (S)  # Store 'Spkr'
          ld A POLLIN  # Poll input
          st2 (S POLL_EVENTS)  # Store 'events'
-         add Z 1  # Increment count
+         inc Z  # Increment count
       end
       ld Y (Child)  # Iterate children
       ld E (Children)  # Count
@@ -2718,7 +2718,7 @@
             st4 (S)
             ld A POLLIN  # Poll input
             st2 (S POLL_EVENTS)  # Store 'events'
-            add Z 1  # Increment count
+            inc Z  # Increment count
             null (Y IV)  # Child's buffer count?
             if nz  # Yes
                sub S POLLFD  # Create 'poll' structure
@@ -2726,7 +2726,7 @@
                st4 (S)
                ld A POLLOUT  # Poll output
                st2 (S POLL_EVENTS)  # Store 'events'
-               add Z 1  # Increment count
+               inc Z  # Increment count
             end
          end
          add Y VI  # Increment by sizeof(child)
@@ -2743,7 +2743,7 @@
             ld (Run) Nil  # Clear '*Run'
             jmp selectErrX
          end
-         nul (Signal)  # Signal?
+         null (Signal)  # Signal?
          if nz  # Yes
             call sighandlerX
          end
@@ -2948,7 +2948,7 @@
 20       ld Y (Y CDR)
       loop
       pop X  # Restore context
-      nul (Signal)  # Signal?
+      null (Signal)  # Signal?
       if nz  # Yes
          call sighandlerX
       end
@@ -3038,7 +3038,7 @@
          cmp A EINTR  # Interrupted?
          jne wrSyncErrX  # No
       end
-      nul (Signal)  # Signal?
+      null (Signal)  # Signal?
       if nz  # Yes
          call sighandlerX
       end
@@ -3364,7 +3364,7 @@
             add C (Z IV)  # Index
             cmp B (C)  # Bytes match?
             if eq  # Yes
-               add (Z IV) 1  # Increment index
+               inc (Z IV)  # Increment index
                nul (C 1)  # End of string?
                break nz  # No
                call (EnvGet_A)  # Skip next input byte
@@ -3375,11 +3375,11 @@
             break z  # Yes
             lea C (Z (+ V 1))  # Offset pointer to second byte
             do
-               sub (Z IV) 1  # Decrement index
+               dec (Z IV)  # Decrement index
             while nz
                cmpn (Z V) (C) (Z IV)  # Compare stack buffer
             while nz
-               add C 1  # Increment offset
+               inc C  # Increment offset
             loop
          loop
          ld Z (Z)  # Next in chain
@@ -3539,7 +3539,7 @@
             pop C
             shr E 4  # Normalize
             do
-               sub E 1  # Decrement count
+               dec E  # Decrement count
             while nz
                call (EnvGet_A)  # Get next
                call eolA_F  # End of line?
@@ -3590,7 +3590,7 @@
             eval  # Eval next arg
             shr E 4  # Normalize
             do
-               sub E 1  # Decrement count
+               dec E  # Decrement count
             while nz
                call (EnvGet_A)  # Get next
                call eolA_F  # End of line?
@@ -4122,7 +4122,7 @@
          ld E Nil  # Return NIL
          jmp 90
       end
-      nul (Signal)  # Signal?
+      null (Signal)  # Signal?
       if nz  # Yes
          call sighandlerX
       end
@@ -4265,7 +4265,7 @@
             add C (Z IV)  # Index
             cmp B (C)  # Bytes match?
             if eq  # Yes
-               add (Z IV) 1  # Increment index
+               inc (Z IV)  # Increment index
                nul (C 1)  # End of string?
                if nz  # No
                   null X  # Current max?
@@ -4285,7 +4285,7 @@
                   while ge  # No
                      ld B (C)
                      call (EnvPutB)  # Output bytes
-                     add C 1
+                     inc C
                      sub E 1
                   loop
                end
@@ -4297,11 +4297,11 @@
             break z  # Yes
             lea C (Z (+ V 1))  # Offset pointer to second byte
             do
-               sub (Z IV) 1  # Decrement index
+               dec (Z IV)  # Decrement index
             while nz
                cmpn (Z V) (C) (Z IV)  # Compare stack buffer
             while nz
-               add C 1  # Increment offset
+               inc C  # Increment offset
             loop
             cmp X Z  # On current max?
             if eq  # Yes
@@ -4336,8 +4336,8 @@
             do
                ld B (C)
                call (EnvPutB)  # Output bytes
-               add C 1
-               sub E 1  # Done?
+               inc C
+               dec E  # Done?
             until z  # Yes
             pop E
             pop A
@@ -4349,10 +4349,10 @@
             lea C (Y V)  # Buffer of output max
             sub E (X IV)  # Diff to current max index
             do  # Done?
-               while ge  # No
+            while ge  # No
                ld B (C)
                call (EnvPutB)  # Output bytes
-               add C 1
+               inc C
                sub E 1
             loop
          end
@@ -4395,7 +4395,7 @@
       end
       add X E  # Buffer index
       ld (X) B  # Store byte
-      add E 1  # Increment ix
+      inc E  # Increment ix
       ld (Y I) E  # Store 'ix'
       cmp B 10  # Linefeed?
       if eq  # Yes
@@ -4485,7 +4485,7 @@
 (code 'outStringC)
    do
       ld B (C)  # Next char
-      add C 1
+      inc C
       or B B  # Null?
    while ne  # No
       call (EnvPutB)
@@ -4517,7 +4517,7 @@
    ret
 
 (code 'printE 0)
-   nul (Signal)  # Signal?
+   null (Signal)  # Signal?
    if nz  # Yes
       call sighandler0
    end
@@ -4697,7 +4697,7 @@
    ret
 
 (code 'prinE 0)
-   nul (Signal)  # Signal?
+   null (Signal)  # Signal?
    if nz  # Yes
       call sighandler0
    end
@@ -4923,7 +4923,7 @@
       ld B (Y)  # Next byte from buffer
       call byteNumBCX_CX
       add Y Z  # Add direction offset
-      sub (S) 1  # Decrement count
+      dec (S)  # Decrement count
    until z
    ld E (L I)  # Get result
    big E  # Bignum?
