@@ -1,4 +1,4 @@
-# 19may10abu
+# 20may10abu
 # (c) Software Lab. Alexander Burger
 
 ### Global return labels ###
@@ -482,6 +482,30 @@
    ld (Alarm) (Y CDR)
    ld E A  # Get old alarm
    shl E 4  # Make short number
+   or E CNT
+   pop Y
+   pop X
+   ret
+
+# (sigio 'cnt [. prg]) -> cnt
+(code 'doSigio 2)
+   push X
+   push Y
+   ld X E
+   ld Y (E CDR)  # Y on args
+   call evCntXY_FE  # Get fd
+   ld Y (Y CDR)  # 'prg'
+   ld (Sigio) Y  # Save in 'Sigio'
+   atom Y  # Any?
+   if z  # Yes
+      ld A (Pid)  # Get process ID
+      shr A 4  # Normalize
+      cc fcntl(E F_SETOWN A)  # Receive SIGIO events
+      cc fcntl(E F_GETFL 0)  # Get file status flags
+      or A (| O_NONBLOCK O_ASYNC)
+      cc fcntl(E F_SETFL A)  # Set file status flags
+   end
+   shl E 4  # Return fd
    or E CNT
    pop Y
    pop X

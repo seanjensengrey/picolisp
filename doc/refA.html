@@ -177,7 +177,11 @@ href="refR.html#rc">rc</a></code>.
 <dd>Sets an alarm timer scheduling <code>prg</code> to be executed after
 <code>cnt</code> seconds, and returns the number of seconds remaining until any
 previously scheduled alarm was due to be delivered. Calling <code>(alarm
-0)</code> will cancel an alarm.
+0)</code> will cancel an alarm. See also <code><a
+href="refA.html#abort">abort</a></code>, <code><a
+href="refS.html#sigio">sigio</a></code>, <code><a
+href="refH.html#*Hup">*Hup</a></code> and <code><a
+href="refS.html#*Sig1">*Sig[12]</a></code>.
 
 <pre><code>
 : (prinl (tim$ (time) T)) (alarm 10 (prinl (tim$ (time) T)))

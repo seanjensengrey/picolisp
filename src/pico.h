@@ -1,4 +1,4 @@
-/* 19may10abu
+/* 20may10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -688,6 +688,7 @@ any doSet(any);
 any doSetCol(any);
 any doSetq(any);
 any doShift(any);
+any doSigio(any);
 any doSize(any);
 any doSkip(any);
 any doSort(any);

@@ -1,4 +1,4 @@
-/* 19may10abu
+/* 20may10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -84,7 +84,7 @@ void sighandler(any ex) {
       do {
          if (Signal[SIGIO]) {
             --Signal[0], --Signal[SIGIO];
-            /* ... */
+            run(Sigio);
          }
          else if (Signal[SIGUSR1]) {
             --Signal[0], --Signal[SIGUSR1];
@@ -196,6 +196,20 @@ any doAlarm(any x) {
    int n = alarm((int)evCnt(x,cdr(x)));
    Alarm = cddr(x);
    return boxCnt(n);
+}
+
+// (sigio 'cnt [. prg]) -> cnt
+any doSigio(any ex) {
+   any x;
+   int fd;
+
+   x = cdr(ex),  x = EVAL(car(x));
+   fd = (int)xCnt(ex,x);
+   if (isCell(Sigio = cddr(ex))) {
+      fcntl(fd, F_SETOWN, unBox(val(Pid)));
+      fcntl(fd, F_SETFL, fcntl(fd, F_GETFL, 0) | O_NONBLOCK|O_ASYNC);
+   }
+   return x;
 }
 
 // (protect . prg) -> any

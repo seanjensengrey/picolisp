@@ -1,4 +1,4 @@
-# 19may10abu
+# 20may10abu
 # (c) Software Lab. Alexander Burger
 
 # errno
@@ -47,7 +47,9 @@
 (equ F_GETLK 5)
 (equ F_SETLK 6)
 (equ F_SETLKW 7)
+(equ F_SETOWN 8)
 (equ O_NONBLOCK 2048)
+(equ O_ASYNC 8192)
 
 # stat
 (equ STAT 144)    # File status structure

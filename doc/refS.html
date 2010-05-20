@@ -31,9 +31,8 @@ href="refS.html#scl">scl</a></code>.
 will be executed when a SIGUSR1 signal (or a SIGUSR2 signal, respectively) is
 sent to the current process. See also <code><a
 href="refA.html#alarm">alarm</a></code>, <code><a
-href="refR.html#*Run">*Run</a></code>, <code><a
-href="refH.html#*Hup">*Hup</a></code> and <code><a
-href="refE.html#*Err">*Err</a></code>.
+href="refS.html#sigio">sigio</a></code> and <code><a
+href="refH.html#*Hup">*Hup</a></code>.
 
 <pre><code>
 : (de *Sig1 (msg 'SIGUSR1))
@@ -435,6 +434,15 @@ href="refS.html#show">show</a></code>.
    sup {2-2}
  @Item={3-2}
 -> NIL
+</code></pre>
+
+<dt><a name="sigio"><code>(sigio 'cnt [. prg]) -> cnt</code></a>
+<dd>Sets a signal handler <code>prg</code> for SIGIO on the file descriptor
+<code>cnt</code>. See also <code><a href="refA.html#alarm">alarm</a></code>,
+<code><a href="refH.html#*Hup">*Hup</a></code> and <code><a
+href="refS.html#*Sig1">*Sig[12]</a></code>.
+
+<pre><code>
 </code></pre>
 
 <dt><a name="size"><code>(size 'any) -> cnt</code></a>

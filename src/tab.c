@@ -1,4 +1,4 @@
-/* 26apr10abu
+/* 20may10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -296,6 +296,7 @@ static symInit Symbols[] = {
    {doSetCol, "=:"},
    {doSetq, "setq"},
    {doShift, ">>"},
+   {doSigio, "sigio"},
    {doSize, "size"},
    {doSkip, "skip"},
    {doSort, "sort"},

@@ -1,4 +1,4 @@
-# 19may10abu
+# 20may10abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Globals 0)
@@ -126,6 +126,7 @@
    # System functions
    initSym NIL       "raw"       doRaw
    initSym NIL       "alarm"     doAlarm
+   initSym NIL       "sigio"     doSigio
    initSym NIL       "protect"   doProtect
    initSym NIL       "heap"      doHeap
    initSym NIL       "adr"       doAdr
