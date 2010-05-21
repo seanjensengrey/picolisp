@@ -443,6 +443,20 @@ href="refS.html#show">show</a></code>.
 href="refS.html#*Sig1">*Sig[12]</a></code>.
 
 <pre><code>
+# First session
+: (sigio (setq *SigSock (port T 4444))  # Register signal handler at UDP port
+   (while (udp *SigSock)                # Queue all received data
+      (fifo '*SigQueue @) ) )
+-> 3
+
+# Second session
+: (for I 7 (udp "localhost" 4444 I))  # Send numbers to first session
+
+# First session
+: (fifo '*SigQueue)
+-> 1
+: (fifo '*SigQueue)
+-> 2
 </code></pre>
 
 <dt><a name="size"><code>(size 'any) -> cnt</code></a>
