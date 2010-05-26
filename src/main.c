@@ -1,8 +1,12 @@
-/* 20may10abu
+/* 26may10abu
  * (c) Software Lab. Alexander Burger
  */
 
 #include "pico.h"
+
+#ifdef __CYGWIN__
+#define O_ASYNC FASYNC
+#endif
 
 /* Globals */
 int Repl, Chr, Slot, Spkr, Mic, Hear, Tell, Children, ExtN;
