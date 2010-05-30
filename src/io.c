@@ -1,4 +1,4 @@
-/* 19may10abu
+/* 30may10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -2069,9 +2069,13 @@ any doClose(any ex) {
    any x;
    int fd;
 
-   x = cdr(ex),  x = EVAL(car(x));
-   if (close(fd = (int)xCnt(ex,x)))
-      return Nil;
+   x = cdr(ex),  x = EVAL(car(x)),  fd = (int)xCnt(ex,x);
+   while (close(fd)) {
+      if (errno != EINTR)
+         return Nil;
+      if (*Signal)
+         sighandler(ex);
+   }
    closeInFile(fd),  closeOutFile(fd);
    return x;
 }

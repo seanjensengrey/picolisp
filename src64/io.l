@@ -1,4 +1,4 @@
-# 19may10abu
+# 30may10abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -4118,7 +4118,7 @@
    while s  # No
       call errno_A
       cmp A EINTR  # Interrupted?
-      if nz  # No
+      if ne  # No
          ld E Nil  # Return NIL
          jmp 90
       end
@@ -4150,15 +4150,26 @@
    eval
    ld C E  # Keep in E
    call xCntCX_FC  # Get fd
-   cc close(C)  # Close it
-   nul4  # OK?
-   ldnz E Nil
-   if z  # Yes
-      ld A C  # Close InFile
-      call closeInFileA
-      ld A C  # Close OutFile
-      call closeOutFileA
-   end
+   do
+      cc close(C)  # Close it
+      nul4  # OK?
+   while nz  # No
+      call errno_A
+      cmp A EINTR  # Interrupted?
+      if ne  # No
+         ld E Nil  # Return NIL
+         pop X
+         ret
+      end
+      null (Signal)  # Signal?
+      if nz  # Yes
+         call sighandlerX
+      end
+   loop
+   ld A C  # Close InFile
+   call closeInFileA
+   ld A C  # Close OutFile
+   call closeOutFileA
    pop X
    ret
 
