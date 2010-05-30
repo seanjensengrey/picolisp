@@ -1,4 +1,4 @@
-# 30apr10abu
+# 30may10abu
 # (c) Software Lab. Alexander Burger
 
 # *Home *Gate *Host *Port *Port1 *Http1 *Chunked
@@ -139,8 +139,7 @@
          (in S
             (cond
                ((not (setq L (line)))
-                  (close S)
-                  (task S)
+                  (task (close S))
                   (off S)
                   (throw "http") )
                ((match '("G" "E" "T" " " "/" @U " " "H" "T" "T" "P" "/" "1" "." @H) L)
@@ -171,15 +170,13 @@
                                  ("C" "O" "N" "N" "E" "C" "T") ) ) )
                         (httpStat 501 "Method Not Implemented" "Allow: GET, POST")
                         (httpStat 400 "Bad Request") ) )
-                  (close S)
-                  (task S)
+                  (task (close S))
                   (off S)
                   (throw "http") ) )
             (if (<> *ConId *SesId)
                (if *ConId
                   (out S (http404))
-                  (close S)
-                  (task S)
+                  (task (close S))
                   (off S) )
                (setq
                   L (split @U "?")
@@ -219,7 +216,7 @@
                            (apply script L *Url)
                            (http404) ) )
                      (T (httpEcho *Url "application/octet-stream" 1 T)) ) ) ) ) )
-      (and S (=0 *Http1) (close S) (task S)) ) )
+      (and S (=0 *Http1) (task (close S))) ) )
 
 (de _htHead ()
    (use (L @X @Y)

@@ -436,10 +436,11 @@ href="refS.html#show">show</a></code>.
 -> NIL
 </code></pre>
 
-<dt><a name="sigio"><code>(sigio 'cnt [. prg]) -> cnt</code></a>
+<dt><a name="sigio"><code>(sigio ['cnt [. prg]]) -> cnt | prg</code></a>
 <dd>Sets a signal handler <code>prg</code> for SIGIO on the file descriptor
-<code>cnt</code>. See also <code><a href="refA.html#alarm">alarm</a></code>,
-<code><a href="refH.html#*Hup">*Hup</a></code> and <code><a
+<code>cnt</code>. If called without arguments, the currently installed handler
+is returned. See also <code><a href="refA.html#alarm">alarm</a></code>, <code><a
+href="refH.html#*Hup">*Hup</a></code> and <code><a
 href="refS.html#*Sig1">*Sig[12]</a></code>.
 
 <pre><code>

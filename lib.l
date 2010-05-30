@@ -1,4 +1,4 @@
-# 27may10abu
+# 30may10abu
 # (c) Software Lab. Alexander Burger
 
 (de task (Key . Prg)
@@ -48,8 +48,7 @@
    (macro
       (task (pipe (pr (prog . "@Prg")))
          (setq "@Var" (in @ (rd)))
-         (close @)
-         (task @) ) )
+         (task (close @)) ) )
    "@Var" )
 
 (de recur recurse
