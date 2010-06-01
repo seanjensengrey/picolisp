@@ -1,4 +1,4 @@
-# 19may10abu
+# 01jun10abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -267,13 +267,13 @@
    (dstDst "xchg" (dst Dst D) (src Dst2 D2)) )
 
 (asm movm (Dst D Src S End E)
-   (setq Dst (dst Dst D))
-   (prinst (if (pre? "%" Dst) "mov" "lea") Dst "%rdi")
+   (lea Dst D "%rdi")
    (lea Src S "%rsi")
    (lea End E "%rcx")
    (prinst "sub" "%rsi" "%rcx")
+   (prinst "shr" "$3" "%rcx")
    (prinst "cld")
-   (prinst "rep movsb") )
+   (prinst "rep movsq") )
 
 (asm movn (Dst D Src S Cnt C)
    (lea Dst D "%rdi")
@@ -408,13 +408,13 @@
    (prinst "cmp" (src Src S) "%eax") )
 
 (asm cmpm (Dst D Src S End E)
-   (setq Dst (dst Dst D))
-   (prinst (if (pre? "%" Dst) "mov" "lea") Dst "%rsi")
+   (lea Dst D "%rdi")
    (lea Src S "%rdi")
    (lea End E "%rcx")
    (prinst "sub" "%rsi" "%rcx")
+   (prinst "shr" "$3" "%rcx")
    (prinst "cld")
-   (prinst "repnz cmpsb") )
+   (prinst "repnz cmpsq") )
 
 (asm cmpn (Dst D Src S Cnt C)
    (setq Dst (dst Dst D))

@@ -1,4 +1,4 @@
-# 19may10abu
+# 01jun10abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -2485,7 +2485,7 @@
    ld X (X CDR)  # X on body
    eval  # Evaluate tag
    sub S "(EnvEnd-Env)"  # Build catch frame
-   movn (S) (Env) "(EnvEnd-Env)"  # Save environment
+   movm (S) (Env) (EnvEnd)  # Save environment
    push ZERO  # 'fin'
    push E  # 'tag'
    push (Catch)  # Link
@@ -2536,7 +2536,7 @@
 (code 'doFinally 2)
    push X
    sub S "(EnvEnd-Env)"  # Build catch frame
-   movn (S) (Env) "(EnvEnd-Env)"  # Save environment
+   movm (S) (Env) (EnvEnd)  # Save environment
    ld X (E CDR)
    push (X)  # 'exe' -> 'fin'
    ld X (X CDR)

@@ -1,4 +1,4 @@
-# 19may10abu
+# 01jun10abu
 # (c) Software Lab. Alexander Burger
 
 # *LittleEndian *Registers optimize
@@ -209,7 +209,7 @@
             (T X) ) )
       ((asoq (car X) *Registers)
          (cons (car X) (operand (cadr X))) )
-      ((memq (car X) '(+ - * */ / % >> & | short char hex oct))
+      ((memq (car X) '(+ - * */ / % >> & | pack short char hex oct))
          (apply (car X) (mapcar operand (cdr X))) )
       (T (cons (car X) (operand (cadr X)))) ) )
 

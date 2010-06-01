@@ -1,4 +1,4 @@
-# 19may10abu
+# 01jun10abu
 # (c) Software Lab. Alexander Burger
 
 
@@ -91,7 +91,7 @@
       st2 dst              # Store two bytes from 'A' into 'dst'
       st4 dst              # Store four bytes from 'A' into 'dst'
       xchg dst dst         # Exchange 'dst's
-      movm dst src end     # Move memory between 'src' and 'end' to 'dst'
+      movm dst src end     # Move (aligned) memory 'src'..'end' to 'dst'
       movn dst src cnt     # Move 'cnt' bytes from 'src' to 'dst'
       mset dst cnt         # Set 'cnt' bytes of memory to B
 
@@ -132,7 +132,7 @@
    Comparisons:
       cmp dst src          # Compare 'dst' with 'src' [z.c]
       cmp4 src             # Compare four bytes in 'A' with 'src'
-      cmpm dst src end     # Compare 'dst' with with memory between 'src' and 'end'
+      cmpm dst src end     # Compare (aligned) memory 'dst' with 'src'..'end'
       cmpn dst src cnt     # Compare 'cnt' bytes 'dst' with 'src'
       slen dst src         # Set 'dst' to the string length of 'src'
       memb src cnt         # Find B in 'cnt' bytes of memory
