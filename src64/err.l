@@ -1,4 +1,4 @@
-# 01jun10abu
+# 02jun10abu
 # (c) Software Lab. Alexander Burger
 
 # Debug print routine
@@ -247,7 +247,7 @@
       while nz  # Yes
          call popCtlFiles  # Clean up
       loop
-      movm (Env) (X III) (X (pack III "+EnvEnd-Env"))  # Restore environment
+      load (Env) (EnvEnd) (X III)  # Restore environment
       ld E (X II)  # 'fin'
       eval  # Evaluate 'finally' expression
       cmp X (S)  # Reached target catch frame?

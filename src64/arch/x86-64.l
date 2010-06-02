@@ -1,4 +1,4 @@
-# 01jun10abu
+# 02jun10abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -266,15 +266,6 @@
 (asm xchg (Dst D Dst2 D2)
    (dstDst "xchg" (dst Dst D) (src Dst2 D2)) )
 
-(asm movm (Dst D Src S End E)
-   (lea Dst D "%rdi")
-   (lea Src S "%rsi")
-   (lea End E "%rcx")
-   (prinst "sub" "%rsi" "%rcx")
-   (prinst "shr" "$3" "%rcx")
-   (prinst "cld")
-   (prinst "rep movsq") )
-
 (asm movn (Dst D Src S Cnt C)
    (lea Dst D "%rdi")
    (lea Src S "%rsi")
@@ -288,6 +279,33 @@
    (prinst "mov" (src Cnt C) "%rcx")
    (prinst "cld")
    (prinst "rep stosb") )
+
+(asm movm (Dst D Src S End E)
+   (lea Dst D "%rdi")
+   (lea Src S "%rsi")
+   (lea End E "%rcx")
+   (prinst "sub" "%rsi" "%rcx")
+   (prinst "shr" "$3" "%rcx")
+   (prinst "cld")
+   (prinst "rep movsq") )
+
+(asm save (Src S End E Dst D)
+   (lea Src S "%rsi")
+   (lea End E "%rcx")
+   (lea Dst D "%rdi")
+   (prinst "sub" "%rsi" "%rcx")
+   (prinst "shr" "$3" "%rcx")
+   (prinst "cld")
+   (prinst "rep movsq") )
+
+(asm load (Dst D End E Src S)
+   (lea Dst D "%rdi")
+   (lea End E "%rcx")
+   (lea Src S "%rsi")
+   (prinst "sub" "%rdi" "%rcx")
+   (prinst "shr" "$3" "%rcx")
+   (prinst "cld")
+   (prinst "rep movsq") )
 
 
 # Arithmetics
@@ -406,15 +424,6 @@
 
 (asm cmp4 (Src S)
    (prinst "cmp" (src Src S) "%eax") )
-
-(asm cmpm (Dst D Src S End E)
-   (lea Dst D "%rdi")
-   (lea Src S "%rdi")
-   (lea End E "%rcx")
-   (prinst "sub" "%rsi" "%rcx")
-   (prinst "shr" "$3" "%rcx")
-   (prinst "cld")
-   (prinst "repnz cmpsq") )
 
 (asm cmpn (Dst D Src S Cnt C)
    (setq Dst (dst Dst D))

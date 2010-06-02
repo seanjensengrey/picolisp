@@ -1,4 +1,4 @@
-# 06mar10abu
+# 02jun10abu
 # (c) Software Lab. Alexander Burger
 
 
@@ -288,6 +288,7 @@
       EXT-Block:  |   Link       n| Data
                   +-------------+-+----
                   0              BLK
+
 
       dbFile:  # Size VIII (64 bytes)
          -->   fd       # File descriptor

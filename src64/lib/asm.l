@@ -1,4 +1,4 @@
-# 01jun10abu
+# 02jun10abu
 # (c) Software Lab. Alexander Burger
 
 # *LittleEndian *Registers optimize
@@ -390,7 +390,6 @@
       (clrz)
       (cmp (destination) "*Mode" (source) "*Mode")
       (cmp4 (source) "*Mode")
-      (cmpm (destination) "*Mode" (source) "*Mode" (source) "*Mode")
       (cmpn (destination) "*Mode" (source) "*Mode" (source) "*Mode")
       (cnt (source) "*Mode")
       (dbg)
@@ -433,6 +432,7 @@
       (ldz (destination) "*Mode" (source) "*Mode")
       (lea (destination) "*Mode" (source) "*Mode")
       (link)
+      (load (destination) "*Mode" (destination) "*Mode" (source) "*Mode")
       (memb (source) "*Mode" (source) "*Mode")
       (movm (destination) "*Mode" (source) "*Mode" (source) "*Mode")
       (movn (destination) "*Mode" (source) "*Mode" (source) "*Mode")
@@ -456,6 +456,7 @@
       (return (operand (read)))
       (rol (destination) "*Mode" (source) "*Mode")
       (ror (destination) "*Mode" (source) "*Mode")
+      (save (source) "*Mode" (source) "*Mode" (destination) "*Mode")
       (set (destination) "*Mode" (source) "*Mode")
       (setc)
       (setz)

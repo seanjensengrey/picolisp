@@ -1,4 +1,4 @@
-# 01jun10abu
+# 02jun10abu
 # (c) Software Lab. Alexander Burger
 
 ### Global return labels ###
@@ -1425,7 +1425,7 @@
    ld X S  # Start of args
    ld C L  # Top of args
    sub C X  # Bytes
-   sub S C  # Duplicate
+   sub S C  # Duplicate args
    movm (S) (X) (L)
    ld Y (Z)  # Get function pointer
    cc (Y) X  # Call C-function
