@@ -1,4 +1,4 @@
-# 02jun10abu
+# 09jun10abu
 # (c) Software Lab. Alexander Burger
 
 # Debug print routine
@@ -79,7 +79,7 @@
    end
    ld (Chr) 0  # Init globals
    ld (ExtN) 0
-   ld (EnvBrk) 0
+   ld (Break) 0
    ld (Alarm) Nil
    ld (Sigio) Nil
    ld (LineX) ZERO
@@ -159,7 +159,11 @@
    ld (EnvYoke) 0
    ld (EnvTrace) 0
    ld L 0  # Init link register
-   ld S (Stack0)  # and stack pointer
+   ld S (Stack0)  # stack pointer
+   lea A (S 4096)  # and stack limit
+   sub A (StkSize)
+   ld (StkLimit) A
+   ld (Stacks) 0  # Free all stack segments
    jmp restart  # Restart interpreter
 : ErrTok asciz "!? "
 : Dashes asciz " -- "
@@ -364,6 +368,16 @@
 : ProtErr asciz "Protected symbol"
 
 ### Error messages ###
+(code 'stkErrE)
+   ld X E
+(code 'stkErrX)
+   ld E 0
+(code 'stkErrEX)
+   ld Y StkErr
+   ld (StkLimit) 0  # Temporarily without stack limit
+   jmp errEXYZ
+: StkErr asciz "Stack overflow"
+
 (code 'argErrAX)
    ld E A
 (code 'argErrEX)
@@ -440,10 +454,23 @@
    jmp errEXYZ
 : RenErr asciz "Can't rename"
 
-(code 'makeErrEX)
+(code 'makeErrX)
+   ld E 0
    ld Y MakeErr
    jmp errEXYZ
 : MakeErr asciz "Not making"
+
+(code 'reentErrEX)
+   ld Y ReentErr
+   jmp errEXYZ
+: ReentErr asciz "Reentrant coroutine"
+
+(code 'yieldErrX)
+   ld E 0
+(code 'yieldErrEX)
+   ld Y YieldErr
+   jmp errEXYZ
+: YieldErr asciz "No coroutine"
 
 (code 'msgErrYX)
    ld A Y

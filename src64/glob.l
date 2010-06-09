@@ -1,4 +1,4 @@
-# 20may10abu
+# 08jun10abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Globals 0)
@@ -16,6 +16,9 @@
                word  0
 
 : Stack0       word  0           # Initial stack pointer
+: Stacks       word  0           # Stack segment bitmask
+: StkSize      word  STACK       # Stack segment size
+: StkLimit     word  0           # Stack limit: StackN-StkSize+4096
 : Link         word  0           # Saved link register
 : Catch        word  0           # Catch frames
 : Termio       word  0           # Raw mode terminal I/O
@@ -49,6 +52,7 @@
 : Sigio        word  Nil         # Sigio handler
 : LineX        word  ZERO        # Console line
 : LineC        word  -1
+: Break        word  0           # Breakpoint
 : GcCount      word  CELLS       # Collector count
 : Sep0         word  (char ".")  # Decimal separator
 : Sep3         word  (char ",")  # Thousand separator
@@ -129,6 +133,7 @@
    initSym NIL       "sigio"     doSigio
    initSym NIL       "protect"   doProtect
    initSym NIL       "heap"      doHeap
+   initSym NIL       "stack"      doStack
    initSym NIL       "adr"       doAdr
    initSym NIL       "env"       doEnv
    initSym NIL       "up"        doUp
@@ -232,6 +237,8 @@
    initSym NIL       "catch"     doCatch
    initSym NIL       "throw"     doThrow
    initSym NIL       "finally"   doFinally
+   initSym NIL       "co"        doCo
+   initSym NIL       "yield"     doYield
    initSym NIL       "!"         doBreak
    initSym NIL       "e"         doE
    initSym NIL       "$"         doTrace
@@ -525,18 +532,17 @@
 : EnvNext      word  0        # Next vararg
 : EnvApply     word  0        # Apply frames
 : EnvMeth      word  0        # Method frames
-: EnvTask      word  Nil      # Task list
 : EnvMake      word  0        # 'make' env
 : EnvYoke      word  0
+: EnvMid  # Must be aligned
+: EnvCo7       word  0        # Coroutines
+: EnvTask      word  Nil      # Task list
 : EnvParseX    word  0        # Parser status
 : EnvParseC    word  0
 : EnvParseEOF  word  -1
-: EnvSort      word  0        # Sort function
 : EnvProtect   word  0        # Signal protection
 : EnvTrace     word  0        # Trace level
-: EnvBrk       word  0        # Breakpoint
-               align 8        # Padding
-: EnvEnd
+: EnvEnd  # Must be aligned
 
 initData
 

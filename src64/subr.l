@@ -1,4 +1,4 @@
-# 19may10abu
+# 04jun10abu
 # (c) Software Lab. Alexander Burger
 
 # (car 'var) -> any
@@ -1099,7 +1099,7 @@
    push X
    ld X E
    null (EnvMake)  # In 'make'?
-   jz makeErrEX  # No
+   jz makeErrX  # No
    push Y
    ld Y (E CDR)  # Y on args
    atom Y  # Any?
@@ -1133,7 +1133,7 @@
    push X
    ld X E
    null (EnvMake)  # In 'make'?
-   jz makeErrEX  # No
+   jz makeErrX  # No
    push Y
    ld Y (E CDR)  # Y on args
    do
@@ -1164,7 +1164,7 @@
    push X
    ld X E
    null (EnvMake)  # In 'make'?
-   jz makeErrEX  # No
+   jz makeErrX  # No
    push Y
    ld Y (E CDR)  # Y on args
    do
@@ -1188,7 +1188,7 @@
    push X
    ld X E
    null (EnvMake)  # In 'make'?
-   jz makeErrEX  # No
+   jz makeErrX  # No
    push Y
    ld Y (E CDR)  # Y on args
    do
@@ -3844,7 +3844,6 @@
    atom E  # List?
    if z  # Yes
       push Z
-      push (EnvSort)  # Save sort function
       link
       push E  # Save 'lst'
       ld E ((Y CDR))  # Eval 'fun'
@@ -3852,10 +3851,10 @@
       ld A Nil  # Init local elements
       cmp E Nil  # User function?
       if eq  # No
-         ld (EnvSort) cmpDfltA_F  # Use default sort function
+         ld Z cmpDfltA_F  # Use default sort function
          xchg E (S)  # <L VII> out[1]
       else
-         ld (EnvSort) cmpUserAX_F  # Use user supplied sort function
+         ld Z cmpUserAX_F  # Use user supplied sort function
          xchg E (S)  # 'fun'
          push A
          push A  # <L VIII> Apply args
@@ -3877,7 +3876,7 @@
          atom (L V)  # in[1] list?
          if z  # Yes
             ld A Y  # in
-            call (EnvSort)  # Less?
+            call (Z)  # Less?
             if ge  # No
                lea Y (L V)  # &in[1]
             end
@@ -3907,7 +3906,7 @@
                end
                ld (L II) Y  # last[0] = p
                lea A (L II)  # last
-               call (EnvSort)  # Less?
+               call (Z)  # Less?
                if lt  # Yes
                   xchg (L -I) (L -II)  # Exchange tail[0] and tail[1]
                end
@@ -3921,25 +3920,25 @@
                   ld (L II) Y  # last[0] = p
                   ld (L V) (Y CDR)  # in[1] = cdr(in[1])
                   lea A (L II)  # last
-                  call (EnvSort)  # Less?
+                  call (Z)  # Less?
                   if lt  # Yes
                      xchg (L -I) (L -II)  # Exchange tail[0] and tail[1]
                   end
                else  # Both in[0] and in[1] are lists
                   lea A (L II)  # last
                   ld (A) (L IV)  # last[0] = in[0]
-                  call (EnvSort)  # Less?
+                  call (Z)  # Less?
                   if lt  # Yes
                      lea A (L II)  # last
                      ld (A) (L V)  # last[0] = in[1]
-                     call (EnvSort)  # Less?
+                     call (Z)  # Less?
                      if ge  # No
                         ld Y (L V)  # p = in[1]
                         ld (L I) Y
                         ld (L V) (Y CDR)  # in[1] = cdr(in[1])
                      else
                         lea A (L IV)  # in
-                        call (EnvSort)  # Less?
+                        call (Z)  # Less?
                         if lt  # Yes
                            ld Y (L IV)  # p = in[0]
                            ld (L I) Y
@@ -3954,14 +3953,14 @@
                   else
                      lea A (L II)  # last
                      ld (A) (L V)  # last[0] = in[1]
-                     call (EnvSort)  # Less?
+                     call (Z)  # Less?
                      if lt  # Yes
                         ld Y (L IV)  # p = in[0]
                         ld (L I) Y
                         ld (L IV) (Y CDR)  # in[0] = cdr(in[0])
                      else
                         lea A (L IV)  # in
-                        call (EnvSort)  # Less?
+                        call (Z)  # Less?
                         if lt  # Yes
                            ld Y (L IV)  # p = in[0]
                            ld (L I) Y
@@ -3984,7 +3983,6 @@
       until nz
       ld E (L VI)  # Return out[0]
       drop
-      pop (EnvSort)
       pop Z
    end
    pop Y
@@ -3998,6 +3996,7 @@
 
 (code 'cmpUserAX_F 0)
    push Y
+   push Z
    lea Z (L VIII)  # Point Z to apply args
    ld (Z) ((A I))  # Copy CAR of second item
    ld (Z I) ((A))  # and CAR of first item
@@ -4007,6 +4006,7 @@
    if ne
       setc  # Set carry if "less"
    end
+   pop Z
    pop Y
    ret
 

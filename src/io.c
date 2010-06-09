@@ -1,4 +1,4 @@
-/* 30may10abu
+/* 03jun10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -1229,6 +1229,8 @@ any token(any x, int c) {
             byteSym(Chr, &i, &y);
          }
          y = Pop(c1);
+         if (unDig(y) == ('L'<<16 | 'I'<<8 | 'N'))
+            return Nil;
          if (x = findHash(y, h = Intern + ihash(y)))
             return x;
          x = consSym(Nil,y);

@@ -1,4 +1,4 @@
-/* 30may10abu
+/* 04jun10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -29,6 +29,7 @@ any ApplyArgs, ApplyBody, DbVal, DbTail;
 any Nil, DB, Meth, Quote, T;
 any Solo, PPid, Pid, At, At2, At3, This, Dbg, Zap, Ext, Scl, Class;
 any Run, Hup, Sig1, Sig2, Up, Err, Msg, Uni, Led, Tsm, Adr, Fork, Bye;
+bool Break;
 sig_atomic_t Signal[SIGIO+1];
 
 static int TtyPid;
@@ -476,7 +477,7 @@ void err(any ex, any x, char *fmt, ...) {
             }
    }
    Chr = ExtN = 0;
-   Env.brk = NO;
+   Break = NO;
    Alarm = Line = Nil;
    f.pid = 0,  f.fd = STDERR_FILENO,  pushOutFiles(&f);
    if (InFile && InFile->name) {

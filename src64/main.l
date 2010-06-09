@@ -1,4 +1,4 @@
-# 02jun10abu
+# 08jun10abu
 # (c) Software Lab. Alexander Burger
 
 ### Global return labels ###
@@ -56,7 +56,7 @@
 10             sub Z Y  # Length
                ld C Z  # Keep in Z
                inc C  # Space for null byte
-               cc malloc(C)
+               call allocC_A
                ld (Home) A  # Set 'Home'
                movn (A) (Y) Z  # Copy path including "/"
                add Z (Home)  # Pointer to null byte
@@ -73,6 +73,7 @@
    or A CNT
    ld (Pid) A
    ld (Stack0) S  # Save top level stack pointer
+   lea (StkLimit) (S (- 4096 STACK))  # Set stack limit
    ld L 0  # Init link register
    call heapAlloc  # Allocate initial heap
    ld E Nil  # Init internal symbols
@@ -208,11 +209,17 @@
    ret
 
 # Allocate memory
+(code 'allocC_A 0)
+   cc malloc(C)  # Allocate memory of size C
+   null A  # OK?
+   jz NoMemory  # No
+   ret
 (code 'allocAE_A 0)
    cc realloc(A E)  # Reallocate pointer in A to size E
    null A  # OK?
    jnz Ret  # Return
-   ld X Alloc  # Else no memory
+: NoMemory
+   ld X Alloc  # No memory
    jmp giveupX
 : Alloc asciz "No memory"
 
@@ -422,7 +429,8 @@
    if nz  # Yes
       null (Termio)  # Already in raw mode?
       if z  # No
-         cc malloc(TERMIOS)  # Allocate space for termio structure
+         ld C TERMIOS  # Allocate space for termio structure
+         call allocC_A
          ld (Termio) A  # Save it
          ld C A  # Pointer in C
          movn (C) (OrgTermio) TERMIOS  # Copy original termio structure
@@ -553,6 +561,31 @@
    ld E A
    shl E 4  # Make short number
    or E CNT
+   ret
+
+# (stack ['cnt]) -> cnt
+(code 'doStack 2)
+   push X
+   ld X E
+   ld E (E CDR)  # Arg?
+   atom E
+   if z  # Yes
+      null (Stacks)  # Stack segments allocated?
+      if z  # No
+         ld E (E)  # Eval 'cnt'
+         call evCntEX_FE
+         shl E 20  # [MB]
+         ld (StkSize) E  # Set new stack size
+         lea A ((Stack0) 4096)  # and stack limit
+         sub A E
+         ld (StkLimit) A
+         jmp 10
+      end
+   end
+   ld E (StkSize)  # Return current stack size
+10 shr E 16  # Make short number in MB
+   or E CNT
+   pop X
    ret
 
 # (adr 'var) -> num
@@ -996,6 +1029,8 @@
    push X
    push Y
    push Z
+   cmp S (StkLimit)  # Stack check
+   jlt stkErrE
    ld X (E CDR)  # Get CDR
    ld Y (C)  # Parameter list in Y
    ld Z (C CDR)  # Body in Z
@@ -1390,7 +1425,7 @@
             ld E (E CDR)  # Ignore variable
             ld C ((E))  # Get buffer size
             shr C 4  # Normalize
-            cc malloc(C)  # Allocate buffer
+            call allocC_A  # Allocate buffer
             push A  # Save it
             ld Z A  # Buffer pointer in Z
             do

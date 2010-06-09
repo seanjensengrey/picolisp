@@ -1,4 +1,4 @@
-/* 19may10abu
+/* 04jun10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -1397,8 +1397,8 @@ static struct {  // bindFrame
 } Brk;
 
 any brkLoad(any x) {
-   if (!Env.brk && isatty(STDIN_FILENO) && isatty(STDOUT_FILENO)) {
-      Env.brk = YES;
+   if (!Break && isatty(STDIN_FILENO) && isatty(STDOUT_FILENO)) {
+      Break = YES;
       Brk.cnt = 3;
       Brk.bnd[0].sym = Up,  Brk.bnd[0].val = val(Up),  val(Up) = x;
       Brk.bnd[1].sym = Run,  Brk.bnd[1].val = val(Run),  val(Run) = Nil;
@@ -1412,7 +1412,7 @@ any brkLoad(any x) {
       val(Run) = Brk.bnd[1].val;
       x = val(Up),  val(Up) = Brk.bnd[0].val;
       Env.bind = Brk.link;
-      Env.brk = NO;
+      Break = NO;
    }
    return x;
 }
@@ -1431,7 +1431,7 @@ any doE(any ex) {
    inFrame *in;
    cell c1, at, key;
 
-   if (!Env.brk)
+   if (!Break)
       err(ex, NULL, "No Break");
    Push(c1,val(Dbg)),  val(Dbg) = Nil;
    Push(at, val(At)),  val(At) = Brk.bnd[2].val;

@@ -1,4 +1,4 @@
-# 19may10abu
+# 09jun10abu
 # (c) Software Lab. Alexander Burger
 
 # Mark data
@@ -105,7 +105,7 @@
    call markE
    ld E (Transient I)
    call markE
-   ### Mark stack ###
+   ### Mark stack(s) ###
    ld Y L
    do
       null Y  # End of stack?
@@ -143,6 +143,35 @@
       call markE
       ld Y (Y)  # Next frame
    loop
+   ld Y (Stack0)  # Search through stack segments
+   ld C (Stacks)  # Segment bitmask
+   do
+      sub Y (StkSize)  # Next segment
+      shr C 1  # In use?
+      if c  # Yes
+         null (Y -II)  # Active?
+         continue z  # Yes
+         push Y
+         push C
+         ld Y ((Y -II))  # Else get saved L
+         do
+            null Y  # End of stack?
+         while ne  # No
+            ld Z (Y)  # Keep end of frame in Z
+            do
+               add Y I  # End of frame?
+               cmp Y Z
+            while ne  # No
+               ld E (Y)  # Next item
+               call markE  # Mark it
+            loop
+            ld Y (Y)  # Next frame
+         loop
+         pop C
+         pop Y
+         continue T
+      end
+   until z
    # Mark externals
    ld Y Extern
    ld Z 0  # Clear TOS
@@ -298,6 +327,39 @@
       loop
    loop
 50 ### Clean up ###
+   ld Y (Stack0)  # Search through stack segments
+   ld C (Stacks)  # Segment bitmask
+   ld A 1
+   do
+      sub Y (StkSize)  # Next segment
+      shr C 1  # In use?
+      if c  # Yes
+         test ((Y -I)) 1  # 'tag' symbol gone?
+         if nz  # Yes
+            xor (Stacks) A  # Clear in segment bitmask
+         else
+            null (Y -II)  # Active?
+            if nz  # No
+               ld X (Y (pack -II "-(EnvMid-EnvApply)"))  # Saved apply stack
+               do
+                  null X  # End of stack?
+               while ne  # No
+                  ld Z (X)  # Keep end of frame in Z
+                  add X II
+                  do
+                     off (X) 1  # Clear
+                     add X II  # Next gc mark
+                     cmp X Z  # End of frame?
+                  until ge  # Yes
+                  ld X (Z I)  # Next frame
+               loop
+            end
+         end
+         jmp 60
+      end
+   while nz
+60    add A A
+   loop
    ld Y (EnvApply)  # Apply stack
    do
       null Y  # End of stack?
@@ -309,7 +371,7 @@
          add Y II  # Next gc mark
          cmp Y Z  # End of frame?
       until ge  # Yes
-      ld Y (Z)  # Next frame
+      ld Y (Z I)  # Next frame
    loop
    ### Sweep ###
    ld X 0  # Avail list
