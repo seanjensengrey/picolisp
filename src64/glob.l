@@ -1,4 +1,4 @@
-# 08jun10abu
+# 10jun10abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Globals 0)
@@ -534,12 +534,12 @@
 : EnvMeth      word  0        # Method frames
 : EnvMake      word  0        # 'make' env
 : EnvYoke      word  0
-: EnvMid  # Must be aligned
-: EnvCo7       word  0        # Coroutines
-: EnvTask      word  Nil      # Task list
 : EnvParseX    word  0        # Parser status
 : EnvParseC    word  0
 : EnvParseEOF  word  -1
+: EnvMid  # Must be aligned
+: EnvCo7       word  0        # Coroutines
+: EnvTask      word  Nil      # Task list
 : EnvProtect   word  0        # Signal protection
 : EnvTrace     word  0        # Trace level
 : EnvEnd  # Must be aligned

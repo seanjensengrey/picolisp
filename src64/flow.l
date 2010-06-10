@@ -1,4 +1,4 @@
-# 09jun10abu
+# 10jun10abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -2579,28 +2579,28 @@
             push (StkLimit)  # and 'lim'
             push (EnvCo7)  # Link
             ld (EnvCo7) S  # Close coroutine frame
-            save (Env) (EnvMid) (S III)  # Save environment
+            ld Z S  # Point Z to main frame
+            save (Env) (EnvMid) (Z III)  # Save environment
 : resumeCoroutine
             ld S (Y -II)  # Restore stack pointer
             ld (Y -II) 0  # Mark as active
             lea A (Y 4096)  # Set stack limit
             sub A (StkSize)
             ld (StkLimit) A
-            push (EnvApply)  # Save current routine's apply stack
-            ld C (EnvBind)  # Current routine's bindings
             load (Env) (EnvMid) (Y (pack -II "-(EnvMid-Env)"))  # Restore environment
             ld X (EnvBind)  # Reversed bindings
+            ld C (Z III)  # Main bindings
             do
                null X  # More reversed bindings?
             while nz  # Yes
                ld Y (X)  # Link address in Y
                null (X -I)  # Env swap zero?
                if z  # Yes
-                  lea Z (Y -II)  # End of bindings in Z
+                  lea A (Y -II)  # End of bindings in A
                   do
-                     xchg ((Z)) (Z I)  # Exchange symbol value with saved value
-                     sub Z II
-                     cmp Z X  # More?
+                     xchg ((A)) (A I)  # Exchange symbol value with saved value
+                     sub A II
+                     cmp A X  # More?
                   until lt  # No
                end
                ld A (Y I)  # Get down link
@@ -2609,21 +2609,25 @@
                ld X A
             loop
             ld (EnvBind) C  # Set local bindings
-            pop C  # Get main routine's apply stack
-            ld X (EnvApply)  # Local apply stack
-            null X  # Any?
-            if z  # No
-               ld (EnvApply) C  # Set local apply stack
-            else
-               ld X (X)  # End if frame in X
-               do
-                  ld A (X I)  # Get link
-                  null A  # More?
-               while ne  # No
-                  ld X A  # Follow link
-               loop
-               ld (X I) C  # Clear link
-            end
+            ld X EnvInFrames  # Pointer to input frames
+            ld C (Z (pack III "+(EnvMid-EnvInFrames)"))  # Local input frames
+            call joinLocalCX  # Join locals
+            ld X EnvOutFrames  # Pointer to output frames
+            ld C (Z (pack III "+(EnvMid-EnvOutFrames)"))  # Local output frames
+            call joinLocalCX  # Join locals
+            ld X EnvCtlFrames  # Pointer to ctlput frames
+            ld C (Z (pack III "+(EnvMid-EnvCtlFrames)"))  # Local ctlput frames
+            call joinLocalCX  # Join locals
+            ld X EnvMeth  # Pointer to method frames
+            ld C (Z (pack III "+(EnvMid-EnvMeth)"))  # Local method frames
+            call joinLocalCX  # Join locals
+            ld X EnvApply  # Local apply stack
+            do
+               null (X)  # Any?
+            while nz  # Yes
+               ld X ((X))  # Follow link
+            loop
+            ld (X) (Z (pack III "+(EnvMid-EnvApply)"))  # Join
             pop X  # Get saved L
             null X  # Any?
             if nz  # Yes
@@ -2714,7 +2718,7 @@
    push Y
    push Z
    ld X E
-   ld Z (EnvCo7)  # Get coroutine
+   ld Z (EnvCo7)  # Get main
    null Z  # Any?
    jz yieldErrX  # No
    ld Y (E CDR)
@@ -2761,23 +2765,26 @@
    end
    push L  # End of segment
    push Y  # Save taget coroutine
-   ld X (EnvApply)  # Get apply stack
-   null X  # Any?
-   if nz  # Yes
-      cmp X (Z (pack III "+(EnvMid-EnvApply)"))  # Local apply stack?
-      if eq  # No
-         ld (EnvApply) 0  # Clear it
-      else
-         ld X (X)  # End of frame in X
-         do
-            ld A (X I)  # Get link
-            cmp A (Z (pack III "+(EnvMid-EnvApply)"))  # Reached main routine's stack?
-         while ne  # No
-            ld X A  # Follow link
-         loop
-         ld (X I) 0  # Clear link
-      end
-   end
+   ld X EnvApply  # Pointer to apply stack
+   do
+      ld A (X)
+      cmp A (Z (pack III "+(EnvMid-EnvApply)"))  # Local apply stack?
+   while ne  # Yes
+      lea X ((A) I)  # Get link
+   loop
+   ld (X) 0  # Cut off
+   ld X EnvMeth  # Pointer to method frames
+   ld C (Z (pack III "+(EnvMid-EnvMeth)"))  # Local method frames
+   call cutLocalCX  # Cut off locals
+   ld X EnvCtlFrames  # Pointer to ctlput frames
+   ld C (Z (pack III "+(EnvMid-EnvCtlFrames)"))  # Local ctlput frames
+   call cutLocalCX  # Cut off locals
+   ld X EnvOutFrames  # Pointer to output frames
+   ld C (Z (pack III "+(EnvMid-EnvOutFrames)"))  # Local output frames
+   call cutLocalCX  # Cut off locals
+   ld X EnvInFrames  # Pointer to input frames
+   ld C (Z (pack III "+(EnvMid-EnvInFrames)"))  # Local input frames
+   call cutLocalCX  # Cut off locals
    ld C 0  # Back link
    ld X (EnvBind)  # Reverse bindings
    null X  # Any?
@@ -2809,7 +2816,7 @@
    null Y  # Target coroutine?
    jnz resumeCoroutine  # Yes
    ld S Z  # Set stack pointer
-   load (Env) (EnvMid) (S III)  # Restore environment
+   load (Env) (EnvMid) (Z III)  # Restore environment
    pop (EnvCo7)  # Restore coroutine link
    pop (StkLimit)  # 'lim'
    add S (pack I "+(EnvMid-Env)")  # Clean up
@@ -2818,6 +2825,26 @@
    pop Y
    pop X
    ret
+
+(code 'cutLocalCX 0)
+   do
+      cmp C (X)  # More locals?
+      if eq  # No
+         ld (X) 0  # Cut off
+         ret
+      end
+      ld X (X)  # Next frame
+   loop
+
+(code 'joinLocalCX 0)
+   do
+      null (X)  # More locals?
+      if z  # No
+         ld (X) C  # Join
+         ret
+      end
+      ld X (X)  # Next frame
+   loop
 
 # (! . exe) -> any
 (code 'doBreak 2)
