@@ -1,4 +1,4 @@
-# 19may10abu
+# 10jun10abu
 # (c) Software Lab. Alexander Burger
 
 ### Destructive primitives ###
@@ -1513,6 +1513,8 @@
    ld (S) 1  # Init to '1'
    ld X S  # Keep pointer to incrementor in X
    sub S A  # <S III> Accumulator
+   cmp S (StkLimit)  # Stack check
+   jlt stkErr
    ld (S) 0  # Init to '0'
    push S # <S II> Top of accumulator
    push X  # <S I> Pointer to incrementor

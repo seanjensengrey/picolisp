@@ -1,4 +1,4 @@
-# 04jun10abu
+# 10jun10abu
 # (c) Software Lab. Alexander Burger
 
 # (car 'var) -> any
@@ -1758,6 +1758,8 @@
    if z  # Yes
       push (E)  # Save CAR
       ld E (E CDR)  # Trim CDR
+      cmp S (StkLimit)  # Stack check
+      jlt stkErr
       call trimE_E
       cmp E Nil  # All trimmed?
       if eq  # Yes
@@ -2886,6 +2888,8 @@
       if z  # Yes
          push E
          ld E (E)  # Count CAR
+         cmp S (StkLimit)  # Stack check
+         jlt stkErr
          call sizeCE_C
          pop E
       end
@@ -3112,6 +3116,8 @@
                push E  # and Data
                ld C (C CDR)  # Get CDRs
                ld E (E CDR)
+               cmp S (StkLimit)  # Stack check
+               jlt stkErr
                call matchCE_F  # Match?
                pop E
                pop C
@@ -3125,6 +3131,8 @@
                push C  # Save pattern
                push E  # and Data
                ld C (C CDR)  # CDR of pattern
+               cmp S (StkLimit)  # Stack check
+               jlt stkErr
                call matchCE_F  # Match with data?
                pop E
                pop C
@@ -3135,6 +3143,8 @@
                push C  # Save pattern
                push E  # and Data
                ld E (E CDR)  # CDR of data
+               cmp S (StkLimit)  # Stack check
+               jlt stkErr
                call matchCE_F  # Match with pattern?
                pop E
                pop C
@@ -3155,6 +3165,8 @@
       push (E CDR)
       ld C (C)  # Get CARs
       ld E (E)
+      cmp S (StkLimit)  # Stack check
+      jlt stkErr
       call matchCE_F  # Match?
       pop E
       pop C
@@ -3216,6 +3228,8 @@
    end
    push E  # <S> Save
    ld E (E)  # Recurse on CAR
+   cmp S (StkLimit)  # Stack check
+   jlt stkErr
    call fillE_FE  # Modified?
    if z  # Yes
       pop C  # Get pattern
@@ -3223,6 +3237,8 @@
       push E  # <L I> Modified CAR
       link
       ld E (C CDR)  # Recurse on CDR
+      cmp S (StkLimit)  # Stack check
+      jlt stkErr
       call fillE_FE
       call consE_A  # Cons result
       ld (A) (L I)
@@ -3233,6 +3249,8 @@
       ret
    end
    ld E ((S) CDR)  # Recurse on CDR
+   cmp S (StkLimit)  # Stack check
+   jlt stkErr
    call fillE_FE  # Modified?
    if z  # Yes
       call consE_A  # Cons result
@@ -3386,6 +3404,8 @@
          push Z
          ld Y (Y)  # car(x1)
          ld Z (Z)  # car(x2)
+         cmp S (StkLimit)  # Stack check
+         jlt stkErr
          call unifyCEYZ_F  # Match?
          pop Z
          pop Y
@@ -3394,6 +3414,8 @@
          if eq  # Yes
             ld Y (Y CDR)  # cdr(x1)
             ld Z (Z CDR)  # cdr(x2)
+            cmp S (StkLimit)  # Stack check
+            jlt stkErr
             call unifyCEYZ_F  # Match?
             if eq  # Yes
                pop A  # Drop pilog environment
@@ -3716,6 +3738,8 @@
                      ld A ((Z) CDR)
                      ld C (A)  # n = cadar(y)
                      ld E (A CDR)  # x = cddar(y)
+                     cmp S (StkLimit)  # Stack check
+                     jlt stkErr
                      jmp lupCE_E
                   end
                end
@@ -3729,6 +3753,8 @@
       push C  # Save parameters
       push E
       ld E (E)  # lup(n, car(x))
+      cmp S (StkLimit)  # Stack check
+      jlt stkErr
       call lupCE_E
       pop A
       pop C
@@ -3736,6 +3762,8 @@
       push E  # Save
       link
       ld E (A CDR)  # lup(n, cdr(x))
+      cmp S (StkLimit)  # Stack check
+      jlt stkErr
       call lupCE_E
       call consE_A  # Cons
       ld (A) (L I)
@@ -3769,12 +3797,16 @@
       end
       push E  # Save list
       ld E (E)  # Recurse on CAR
+      cmp S (StkLimit)  # Stack check
+      jlt stkErr
       call uniFillE_E
       pop A  # Get list
       link
       push E  # Save result
       link
       ld E (A CDR)  # Recurse on CDR
+      cmp S (StkLimit)  # Stack check
+      jlt stkErr
       call uniFillE_E
       call consE_A  # Return cell
       ld (A) (L I)

@@ -1,4 +1,4 @@
-# 09jun10abu
+# 10jun10abu
 # (c) Software Lab. Alexander Burger
 
 # Debug print routine
@@ -238,18 +238,34 @@
       loop
       do
          cmp (EnvInFrames) (X IV)  # Open input frames?
-      while nz  # Yes
+      while ne  # Yes
          call popInFiles  # Clean up
       loop
       do
          cmp (EnvOutFrames) (X V)  # Open output frames?
-      while nz  # Yes
+      while ne  # Yes
          call popOutFiles  # Clean up
       loop
       do
          cmp (EnvCtlFrames) (X VI)  # Open control frames?
-      while nz  # Yes
+      while ne  # Yes
          call popCtlFiles  # Clean up
+      loop
+      ld Z (EnvCo7)  # Get coroutines
+      do
+         cmp Z (X "EnvCo7-Env")  # Skipped?
+      while ne  # Yes
+         ld C (Stack0)  # Find stack segment
+         ld A 1
+         do
+            sub C (StkSize)  # Next segment
+            cmp C (Z II)  # Found 'seg'?
+         while ne  # No
+            add A A
+         loop
+         not A  # Clear in segment bitmask
+         and (Stacks) A
+         ld Z (Z)  # Next coroutine
       loop
       load (Env) (EnvEnd) (X III)  # Restore environment
       ld E (X II)  # 'fin'
@@ -368,6 +384,8 @@
 : ProtErr asciz "Protected symbol"
 
 ### Error messages ###
+(code 'stkErr)
+   ld E 0
 (code 'stkErrE)
    ld X E
 (code 'stkErrX)

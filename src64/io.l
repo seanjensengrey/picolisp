@@ -1,4 +1,4 @@
-# 30may10abu
+# 10jun10abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -1082,6 +1082,8 @@
          test Z 7  # Buffer full?
          if z  # Yes
             sub S 8  # Extend buffer
+            cmp S (StkLimit)  # Stack check
+            jlt stkErr
             movm (S) (S 8) (Z)
             sub Z 8  # Reset buffer pointer
          end
@@ -1111,7 +1113,7 @@
             call symByteCX_FACX  # Second byte
          end
          cmp B (char "@")  # Home path?
-         if ne
+         if ne  # No
             do
                ld (Z) B  # Store byte
                inc Z
@@ -2017,6 +2019,8 @@
 : DelimEnd
 
 (code 'rdList_E)
+   cmp S (StkLimit)  # Stack check
+   jlt stkErr
    call (EnvGet_A)  # Skip paren
    do
       ld C (char "#")
@@ -2731,6 +2735,8 @@
          end
          add Y VI  # Increment by sizeof(child)
       loop
+      cmp S (StkLimit)  # Stack check
+      jlt stkErrX
       call msec_A  # Get milliseconds
       ld E A  # into E
       do
@@ -4528,6 +4534,8 @@
    ret
 
 (code 'printE 0)
+   cmp S (StkLimit)  # Stack check
+   jlt stkErr
    null (Signal)  # Signal?
    if nz  # Yes
       call sighandler0
@@ -4708,6 +4716,8 @@
    ret
 
 (code 'prinE 0)
+   cmp S (StkLimit)  # Stack check
+   jlt stkErr
    null (Signal)  # Signal?
    if nz  # Yes
       call sighandler0
@@ -4920,6 +4930,8 @@
       add Y Z  # Point to last byte
       sub S E  # Buffer
    end
+   cmp S (StkLimit)  # Stack check
+   jlt stkErr
    ld C (C)  # Get 'fd' of InFile
    ld X S  # Buffer pointer
    push E  # <S> Count

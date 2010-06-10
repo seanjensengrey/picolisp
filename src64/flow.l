@@ -665,6 +665,8 @@
    ld Y (C)  # Parameter list in Y
    ld Z (C CDR)  # Body in Z
    push (EnvBind)  # Build bind frame
+   cmp S (StkLimit)  # Stack check
+   jlt stkErr
    link
    push (At)  # Bind At
    push At
@@ -824,6 +826,8 @@
          ld Z A  # Set class list
          ld E (A)  # Class symbol
          push A
+         cmp S (StkLimit)  # Stack check
+         jlt stkErr
          call methodEY_FCYZ  # Found method definition?
          pop A
          jeq ret  # 'z'
@@ -1041,6 +1045,8 @@
             push E  # object
             push X  # and list
             ld E (X)  # Recurse
+            cmp S (StkLimit)  # Stack check
+            jlt stkErr
             call isaCE_F  # Match?
             pop X
             pop E
@@ -1328,6 +1334,8 @@
       end
       push X
       ld X (X)  # Recurse on superclass
+      cmp S (StkLimit)  # Stack check
+      jlt stkErr
       call extraXY_FCYZ  # Found?
       pop X
       jeq ret  # Yes
@@ -2610,16 +2618,16 @@
             loop
             ld (EnvBind) C  # Set local bindings
             ld X EnvInFrames  # Pointer to input frames
-            ld C (Z (pack III "+(EnvMid-EnvInFrames)"))  # Local input frames
+            ld C (Z (pack III "+(EnvInFrames-Env)"))  # Local input frames
             call joinLocalCX  # Join locals
             ld X EnvOutFrames  # Pointer to output frames
-            ld C (Z (pack III "+(EnvMid-EnvOutFrames)"))  # Local output frames
+            ld C (Z (pack III "+(EnvOutFrames-Env)"))  # Local output frames
             call joinLocalCX  # Join locals
             ld X EnvCtlFrames  # Pointer to ctlput frames
-            ld C (Z (pack III "+(EnvMid-EnvCtlFrames)"))  # Local ctlput frames
+            ld C (Z (pack III "+(EnvCtlFrames-Env)"))  # Local ctlput frames
             call joinLocalCX  # Join locals
             ld X EnvMeth  # Pointer to method frames
-            ld C (Z (pack III "+(EnvMid-EnvMeth)"))  # Local method frames
+            ld C (Z (pack III "+(EnvMeth-Env)"))  # Local method frames
             call joinLocalCX  # Join locals
             ld X EnvApply  # Local apply stack
             do
@@ -2627,7 +2635,7 @@
             while nz  # Yes
                ld X ((X))  # Follow link
             loop
-            ld (X) (Z (pack III "+(EnvMid-EnvApply)"))  # Join
+            ld (X) (Z (pack III "+(EnvApply-Env)"))  # Join
             pop X  # Get saved L
             null X  # Any?
             if nz  # Yes
@@ -2768,22 +2776,22 @@
    ld X EnvApply  # Pointer to apply stack
    do
       ld A (X)
-      cmp A (Z (pack III "+(EnvMid-EnvApply)"))  # Local apply stack?
+      cmp A (Z (pack III "+(EnvApply-Env)"))  # Local apply stack?
    while ne  # Yes
       lea X ((A) I)  # Get link
    loop
    ld (X) 0  # Cut off
    ld X EnvMeth  # Pointer to method frames
-   ld C (Z (pack III "+(EnvMid-EnvMeth)"))  # Local method frames
+   ld C (Z (pack III "+(EnvMeth-Env)"))  # Local method frames
    call cutLocalCX  # Cut off locals
    ld X EnvCtlFrames  # Pointer to ctlput frames
-   ld C (Z (pack III "+(EnvMid-EnvCtlFrames)"))  # Local ctlput frames
+   ld C (Z (pack III "+(EnvCtlFrames-Env)"))  # Local ctlput frames
    call cutLocalCX  # Cut off locals
    ld X EnvOutFrames  # Pointer to output frames
-   ld C (Z (pack III "+(EnvMid-EnvOutFrames)"))  # Local output frames
+   ld C (Z (pack III "+(EnvOutFrames-Env)"))  # Local output frames
    call cutLocalCX  # Cut off locals
    ld X EnvInFrames  # Pointer to input frames
-   ld C (Z (pack III "+(EnvMid-EnvInFrames)"))  # Local input frames
+   ld C (Z (pack III "+(EnvInFrames-Env)"))  # Local input frames
    call cutLocalCX  # Cut off locals
    ld C 0  # Back link
    ld X (EnvBind)  # Reverse bindings

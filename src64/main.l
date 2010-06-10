@@ -1,4 +1,4 @@
-# 08jun10abu
+# 10jun10abu
 # (c) Software Lab. Alexander Burger
 
 ### Global return labels ###
@@ -810,12 +810,16 @@
       push (E CDR)
       ld A (A)  # Recurse on CARs
       ld E (E)
+      cmp S (StkLimit)  # Stack check
+      jlt stkErr
       call equalAE_F  # Equal?
       pop E  # Retrieve CDRs
       pop A
       break ne  # No: 'ne'
       atom A  # A's CDR atomic?
       if nz  # Yes
+         cmp S (StkLimit)  # Stack check
+         jlt stkErr
          call equalAE_F  # Compare with E's CDR
          break T
       end
@@ -956,6 +960,8 @@
       push E
       ld A (A)
       ld E (E)
+      cmp S (StkLimit)  # Stack check
+      jlt stkErr
       call compareAE_F  # Same?
       pop E
       pop A
@@ -964,6 +970,8 @@
       ld E (E CDR)
       atom A  # End of A?
       if nz  # Yes
+         cmp S (StkLimit)  # Stack check
+         jlt stkErr
          call compareAE_F  # Compare CDRs
          break T
       end
@@ -1201,6 +1209,8 @@
    end
    push E
    ld E C
+   cmp S (StkLimit)  # Stack check
+   jlt stkErr
    call evListE_E
    ld C E
    pop E

@@ -1,4 +1,4 @@
-# 19may10abu
+# 10jun10abu
 # (c) Software Lab. Alexander Burger
 
 ### Compare long names ###
@@ -1180,6 +1180,8 @@
       do  # List
          push (E CDR)  # Save rest
          ld E (E)  # Recurse on CAR
+         cmp S (StkLimit)  # Stack check
+         jlt stkErr
          call packECX_CX
          pop E  # Done?
          atom E
@@ -3188,6 +3190,8 @@
             jne Ret  # No
             push X
             ld X ((X))  # Try in superclass(es)
+            cmp S (StkLimit)  # Stack check
+            jlt stkErr
             call metaCX_E
             pop X
             cmp E Nil  # found?
