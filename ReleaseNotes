@@ -1,4 +1,4 @@
-14may10abu
+11jun10abu
 (c) Software Lab. Alexander Burger
 
 
@@ -27,3 +27,14 @@ D. The 'format' number <-> string conversion function now also accepts a list
       (format Lst)
 
    will also do.
+
+E. PicoLisp now supports coroutines (multiple independent execution contexts),
+   though only in the 64-bit version. More about that in
+   "doc/ref.html#coroutines".
+
+F. The stack is now checked at runtime (also only in the 64-bit version). This
+   became necessary because coroutines require separate stack segments. Until
+   now (and still in the 32-bit version) the stack could grow until the
+   operating system sent a segmentation violation signal. With the stack checks,
+   a controlled error handler is entered upon stack overflow. The stack segment
+   size can be manipulated with the new 'stack' function.
