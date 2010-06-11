@@ -2646,7 +2646,7 @@
                while nz  # No
                   ld Y (A)  # Next frame
                loop
-               ld (Y) L  # Link to main stack
+               ld (Y) (Z (pack III "+(EnvMid-EnvCo)"))  # Link to main stack
                ld L X
             end
             pop Z
