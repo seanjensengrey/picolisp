@@ -2758,18 +2758,21 @@
    end
    ld E (L I)  # Get result
    drop
-   ld C (Z (pack III "+(EnvMid-EnvCo)"))  # Main routine's link
-   cmp L C  # Local stack?
-   ldz L 0
-   if ne  # Yes
-      ld X (L)  # Pointer to link
-      do
-         ld A (X)  # Get link
-         cmp A C  # Reached main routine's link?
-      while ne  # No
-         ld X A  # Follow link
-      loop
-      ld (X) 0  # Clear link
+   null L  # Stack?
+   if nz  # Yes
+      ld C (Z (pack III "+(EnvMid-EnvCo)"))  # Main routine's link
+      cmp L C  # Local stack?
+      ldz L 0
+      if ne  # Yes
+         ld X (L)  # Pointer to link
+         do
+            ld A (X)  # Get link
+            cmp A C  # Reached main routine's link?
+         while ne  # No
+            ld X A  # Follow link
+         loop
+         ld (X) 0  # Clear link
+      end
    end
    push L  # End of segment
    push Y  # Save taget coroutine
