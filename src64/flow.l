@@ -2818,21 +2818,24 @@
    end
    ld (EnvBind) C  # Store back link in coroutine's env
    pop Y  # Restore taget coroutine
-   ld X (Z II)  # Get segment
+   ld X (Z II)  # Get 'seg'
    ld (X -II) S  # Save stack pointer
    save (EnvCo) (EnvMid) (X (pack -II "-(EnvMid-EnvCo)"))  # Save environment
    null Y  # Target coroutine?
-   jnz resumeCoroutine  # Yes
-   ld S Z  # Set stack pointer
-   load (EnvCo) (EnvMid) (Z III)  # Restore environment
-   pop (EnvCo7)  # Restore coroutine link
-   pop (StkLimit)  # 'lim'
-   add S (pack I "+(EnvMid-EnvCo)")  # Clean up
-   pop L
-   pop Z
-   pop Y
-   pop X
-   ret
+   if z  # No
+      ld S Z  # Set stack pointer
+      load (EnvCo) (EnvMid) (Z III)  # Restore environment
+      pop (EnvCo7)  # Restore coroutine link
+      pop (StkLimit)  # 'lim'
+      add S (pack I "+(EnvMid-EnvCo)")  # Clean up
+      pop L
+      pop Z
+      pop Y
+      pop X
+      ret
+   end
+   ld (Z II) Y  # Set new 'seg'
+   jmp resumeCoroutine  # Resume
 
 (code 'cutLocalCX 0)
    do
