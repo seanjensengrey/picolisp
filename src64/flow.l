@@ -2597,7 +2597,7 @@
             ld (StkLimit) A
             load (EnvCo) (EnvMid) (Y (pack -II "-(EnvMid-EnvCo)"))  # Restore environment
             ld X (EnvBind)  # Reversed bindings
-            ld C (Z III)  # Main bindings
+            ld C (Z (pack III "+(EnvBind-EnvCo)"))  # Main bindings
             do
                null X  # More reversed bindings?
             while nz  # Yes
@@ -2798,7 +2798,7 @@
    null X  # Any?
    if nz  # Yes
       do
-         cmp X (Z III)  # Reached main routine's bindings?
+         cmp X (Z (pack III "+(EnvBind-EnvCo)"))  # Reached main routine's bindings?
       while ne  # No
          ld Y X  # Keep bind frame in Y
          null (X -I)  # Env swap zero?
