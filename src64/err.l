@@ -1,4 +1,4 @@
-# 10jun10abu
+# 11jun10abu
 # (c) Software Lab. Alexander Burger
 
 # Debug print routine
@@ -10,11 +10,11 @@
    push F  # And flags
    push (OutFile)  # Save output channel
    ld (OutFile) ((OutFiles) II)  # Set to OutFiles[2] (stderr)
-   push (EnvPutB)  # Save 'put'
-   ld (EnvPutB) putStdoutB  # Set new
+   push (PutB)  # Save 'put'
+   ld (PutB) putStdoutB  # Set new
    call printE  # Print argument
    call newline  # and a newline
-   pop (EnvPutB)  # Restore 'put'
+   pop (PutB)  # Restore 'put'
    pop (OutFile)  # and output channel
    pop F
    pop A
@@ -95,14 +95,14 @@
       null C
       if nz  # Yes
          ld B (char "[")  # Output location
-         call (EnvPutB)
+         call (PutB)
          call outStringC  # Print filename
          ld B (char ":")  # Separator ':'
-         call (EnvPutB)
+         call (PutB)
          ld A (Y V)  # Get 'src'
          call outWordA  # Print line number
          ld B (char "]")
-         call (EnvPutB)
+         call (PutB)
          call space
       end
    end
@@ -253,7 +253,7 @@
       loop
       ld Z (EnvCo7)  # Get coroutines
       do
-         cmp Z (X "EnvCo7-Env")  # Skipped?
+         cmp Z (X "EnvCo7-EnvCo")  # Skipped?
       while ne  # Yes
          ld C (Stack0)  # Find stack segment
          ld A 1

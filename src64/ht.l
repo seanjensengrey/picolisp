@@ -1,4 +1,4 @@
-# 19may10abu
+# 11jun10abu
 # (c) Software Lab. Alexander Burger
 
 ### Hypertext I/O functions ###
@@ -521,8 +521,8 @@ align 8  asciz "<hr>"
 
 (data 'Chunk 0)
 word 0      # <Y> Chunk size count
-word 0      # <Y I> Saved EnvGet_A function
-word 0      # <Y II> Saved EnvPutB function
+word 0      # <Y I> Saved Get_A function
+word 0      # <Y II> Saved PutB function
 skip CHUNK  # <Y III> Chunk buffer
 
 : Newlines asciz "0\\r\\n\\r\\n"
@@ -626,11 +626,11 @@ skip CHUNK  # <Y III> Chunk buffer
    else
       push Y
       ld Y Chunk  # Get Chunk
-      ld (Y I) (EnvGet_A)  # Save current 'get'
-      ld (EnvGet_A) getChunked_A  # Set new
+      ld (Y I) (Get_A)  # Save current 'get'
+      ld (Get_A) getChunked_A  # Set new
       call chunkSize
       prog X  # Run 'prg'
-      ld (EnvGet_A) (Y I)  # Restore 'get'
+      ld (Get_A) (Y I)  # Restore 'get'
       ld (Chr) 0  # Clear look ahead char
       pop Y
    end
@@ -655,7 +655,7 @@ skip CHUNK  # <Y III> Chunk buffer
    jmp envPutB
 
 (code 'wrChunkY 0)  # X
-   ld (EnvPutB) (Y II)  # Restore 'put'
+   ld (PutB) (Y II)  # Restore 'put'
    ld A (Y)  # Get count
    call outHexA  # Print as hex
    ld B 13  # Output 'return'
@@ -673,8 +673,8 @@ skip CHUNK  # <Y III> Chunk buffer
    call envPutB
    ld B 10  # Output 'newline'
    call envPutB
-   ld (Y II) (EnvPutB)  # Save 'put'
-   ld (EnvPutB) putChunkedB  # Set new
+   ld (Y II) (PutB)  # Save 'put'
+   ld (PutB) putChunkedB  # Set new
    ret
 
 (code 'putChunkedB 0)
@@ -707,14 +707,14 @@ skip CHUNK  # <Y III> Chunk buffer
       push Y
       ld Y Chunk  # Get Chunk
       ld (Y) 0  # Clear count
-      ld (Y II) (EnvPutB)  # Save current 'put'
-      ld (EnvPutB) putChunkedB  # Set new
+      ld (Y II) (PutB)  # Save current 'put'
+      ld (PutB) putChunkedB  # Set new
       prog X  # Run 'prg'
       null (Y)  # Count?
       if nz  # Yes
          call wrChunkY  # Write rest
       end
-      ld (EnvPutB) (Y II)  # Restore 'put'
+      ld (PutB) (Y II)  # Restore 'put'
       ld C Newlines  # Output termination string
       call outStringC
       pop Y

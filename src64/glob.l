@@ -1,4 +1,4 @@
-# 10jun10abu
+# 11jun10abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Globals 0)
@@ -7,11 +7,6 @@
 :: Home        word  0           # Home directory
 :: Heaps       word  0           # Heap list
 :: Avail       word  0           # Avail list
-:: Chr         word  0           # Single-char buffer
-:: EnvPutB     word  0           # Character output function
-:: EnvGet_A    word  0           # Character input function
-:: InFile      word  0           # Input file
-:: OutFile     word  0           # Output file
 :: Buf         word  0           # General 16-byte buffer
                word  0
 
@@ -523,7 +518,13 @@
 : GcMarkEnd
 
 # Structures
-: Env                      # <Catch III> Environment
+: EnvCo  # Coroutine environment
+:: Chr         word  0        # Single-char buffer
+:: PutB        word  0        # Character output function
+:: Get_A       word  0        # Character input function
+:: InFile      word  0        # Input file
+:: OutFile     word  0        # Output file
+: Env  # <Catch III> environment
 : EnvBind      word  0        # <III> Bind frames (first item in Env)
 : EnvInFrames  word  0        # <IV> Input frames
 : EnvOutFrames word  0        # <V> Output frames

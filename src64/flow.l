@@ -1,11 +1,11 @@
-# 10jun10abu
+# 11jun10abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
    push (OutFile)  # Save output channel
    ld (OutFile) ((OutFiles) II)  # Set to OutFiles[2] (stderr)
-   push (EnvPutB)  # Save 'put'
-   ld (EnvPutB) putStdoutB  # Set new
+   push (PutB)  # Save 'put'
+   ld (PutB) putStdoutB  # Set new
    push C  # Save optional class
    ld C HashBlank  # Print comment
    call outStringC
@@ -18,7 +18,7 @@
    end
    ld C Redefined  # Print message
    call outStringC
-   pop (EnvPutB)  # Restore 'put'
+   pop (PutB)  # Restore 'put'
    pop (OutFile)  # and output channel
    ret
 : HashBlank asciz "# "
@@ -2572,7 +2572,7 @@
       push Y
       push Z
       push L
-      sub S "EnvMid-Env"  # Space for env
+      sub S "EnvMid-EnvCo"  # Space for env
       ld Y (Stack0)  # Search through stack segments
       ld C (Stacks)  # Segment bitmask
       do
@@ -2588,14 +2588,14 @@
             push (EnvCo7)  # Link
             ld (EnvCo7) S  # Close coroutine frame
             ld Z S  # Point Z to main frame
-            save (Env) (EnvMid) (Z III)  # Save environment
+            save (EnvCo) (EnvMid) (Z III)  # Save environment
 : resumeCoroutine
             ld S (Y -II)  # Restore stack pointer
             ld (Y -II) 0  # Mark as active
             lea A (Y 4096)  # Set stack limit
             sub A (StkSize)
             ld (StkLimit) A
-            load (Env) (EnvMid) (Y (pack -II "-(EnvMid-Env)"))  # Restore environment
+            load (EnvCo) (EnvMid) (Y (pack -II "-(EnvMid-EnvCo)"))  # Restore environment
             ld X (EnvBind)  # Reversed bindings
             ld C (Z III)  # Main bindings
             do
@@ -2618,16 +2618,16 @@
             loop
             ld (EnvBind) C  # Set local bindings
             ld X EnvInFrames  # Pointer to input frames
-            ld C (Z (pack III "+(EnvInFrames-Env)"))  # Local input frames
+            ld C (Z (pack III "+(EnvInFrames-EnvCo)"))  # Local input frames
             call joinLocalCX  # Join locals
             ld X EnvOutFrames  # Pointer to output frames
-            ld C (Z (pack III "+(EnvOutFrames-Env)"))  # Local output frames
+            ld C (Z (pack III "+(EnvOutFrames-EnvCo)"))  # Local output frames
             call joinLocalCX  # Join locals
-            ld X EnvCtlFrames  # Pointer to ctlput frames
-            ld C (Z (pack III "+(EnvCtlFrames-Env)"))  # Local ctlput frames
+            ld X EnvCtlFrames  # Pointer to control frames
+            ld C (Z (pack III "+(EnvCtlFrames-EnvCo)"))  # Local control frames
             call joinLocalCX  # Join locals
             ld X EnvMeth  # Pointer to method frames
-            ld C (Z (pack III "+(EnvMeth-Env)"))  # Local method frames
+            ld C (Z (pack III "+(EnvMeth-EnvCo)"))  # Local method frames
             call joinLocalCX  # Join locals
             ld X EnvApply  # Local apply stack
             do
@@ -2635,7 +2635,7 @@
             while nz  # Yes
                ld X ((X))  # Follow link
             loop
-            ld (X) (Z (pack III "+(EnvApply-Env)"))  # Join
+            ld (X) (Z (pack III "+(EnvApply-EnvCo)"))  # Join
             pop X  # Get saved L
             null X  # Any?
             if nz  # Yes
@@ -2670,7 +2670,7 @@
       push (StkLimit)  # and 'lim'
       push (EnvCo7)  # Link
       ld (EnvCo7) S  # Close coroutine frame
-      save (Env) (EnvMid) (S III)  # Save environment
+      save (EnvCo) (EnvMid) (S III)  # Save environment
       ld (EnvMake) 0  # Init local 'make' env
       ld (EnvYoke) 0
       lea A (Y 4096)  # Calculate stack limit
@@ -2679,15 +2679,15 @@
       ld S Y  # Set stack pointer
       push E  # Save 'tag'
       push 0  # Mark 'stk' as active
-      sub S "EnvMid-Env"  # Space for 'env'
+      sub S "EnvMid-EnvCo"  # Space for 'env'
       ld X (X CDR)  # Run 'prg'
       prog X
       xor (Stacks) Z  # Not yielded: Mark segment as unused
       ld S (EnvCo7)  # Restore stack pointer
-      load (Env) (EnvMid) (S III)  # Restore environment
+      load (EnvCo) (EnvMid) (S III)  # Restore environment
       pop (EnvCo7)  # Restore coroutine link
       pop (StkLimit)  # 'lim'
-      add S (pack I "+(EnvMid-Env)")  # Clean up
+      add S (pack I "+(EnvMid-EnvCo)")  # Clean up
       pop L
       pop Z
       pop Y
@@ -2758,7 +2758,7 @@
    end
    ld E (L I)  # Get result
    drop
-   ld C (Z (pack III "+(EnvMid-Env)"))  # Main routine's link
+   ld C (Z (pack III "+(EnvMid-EnvCo)"))  # Main routine's link
    cmp L C  # Local stack?
    ldz L 0
    if ne  # Yes
@@ -2776,22 +2776,22 @@
    ld X EnvApply  # Pointer to apply stack
    do
       ld A (X)
-      cmp A (Z (pack III "+(EnvApply-Env)"))  # Local apply stack?
+      cmp A (Z (pack III "+(EnvApply-EnvCo)"))  # Local apply stack?
    while ne  # Yes
       lea X ((A) I)  # Get link
    loop
    ld (X) 0  # Cut off
    ld X EnvMeth  # Pointer to method frames
-   ld C (Z (pack III "+(EnvMeth-Env)"))  # Local method frames
+   ld C (Z (pack III "+(EnvMeth-EnvCo)"))  # Local method frames
    call cutLocalCX  # Cut off locals
-   ld X EnvCtlFrames  # Pointer to ctlput frames
-   ld C (Z (pack III "+(EnvCtlFrames-Env)"))  # Local ctlput frames
+   ld X EnvCtlFrames  # Pointer to control frames
+   ld C (Z (pack III "+(EnvCtlFrames-EnvCo)"))  # Local control frames
    call cutLocalCX  # Cut off locals
    ld X EnvOutFrames  # Pointer to output frames
-   ld C (Z (pack III "+(EnvOutFrames-Env)"))  # Local output frames
+   ld C (Z (pack III "+(EnvOutFrames-EnvCo)"))  # Local output frames
    call cutLocalCX  # Cut off locals
    ld X EnvInFrames  # Pointer to input frames
-   ld C (Z (pack III "+(EnvInFrames-Env)"))  # Local input frames
+   ld C (Z (pack III "+(EnvInFrames-EnvCo)"))  # Local input frames
    call cutLocalCX  # Cut off locals
    ld C 0  # Back link
    ld X (EnvBind)  # Reverse bindings
@@ -2820,14 +2820,14 @@
    pop Y  # Restore taget coroutine
    ld X (Z II)  # Get segment
    ld (X -II) S  # Save stack pointer
-   save (Env) (EnvMid) (X (pack -II "-(EnvMid-Env)"))  # Save environment
+   save (EnvCo) (EnvMid) (X (pack -II "-(EnvMid-EnvCo)"))  # Save environment
    null Y  # Target coroutine?
    jnz resumeCoroutine  # Yes
    ld S Z  # Set stack pointer
-   load (Env) (EnvMid) (Z III)  # Restore environment
+   load (EnvCo) (EnvMid) (Z III)  # Restore environment
    pop (EnvCo7)  # Restore coroutine link
    pop (StkLimit)  # 'lim'
-   add S (pack I "+(EnvMid-Env)")  # Clean up
+   add S (pack I "+(EnvMid-EnvCo)")  # Clean up
    pop L
    pop Z
    pop Y
@@ -2969,8 +2969,8 @@
       push Z
       push (OutFile)  # Save output channel
       ld (OutFile) ((OutFiles) II)  # Set to OutFiles[2] (stderr)
-      push (EnvPutB)  # Save 'put'
-      ld (EnvPutB) putStdoutB  # Set new
+      push (PutB)  # Save 'put'
+      ld (PutB) putStdoutB  # Set new
       ld Y (X)  # Get 'sym|lst'
       ld X (X CDR)
       ld Z (X CDR)  # Get 'prg'
@@ -3009,11 +3009,11 @@
          end
       end
       call newline
-      ld (EnvPutB) (S)  # Restore 'put'
+      ld (PutB) (S)  # Restore 'put'
       ld (OutFile) (S I)  # and output channel
       prog Z  # Run 'prg'
       ld (OutFile) ((OutFiles) II)  # Set output channel again
-      ld (EnvPutB) putStdoutB
+      ld (PutB) putStdoutB
       ld C (EnvTrace)  # Get trace level
       dec (EnvTrace)  # Decrement it
       call traceCY  # Print trace information
@@ -3021,7 +3021,7 @@
       call outStringC
       call printE_E  # Print result
       call newline
-      pop (EnvPutB)  # Restore 'put'
+      pop (PutB)  # Restore 'put'
       pop (OutFile)  # and output channel
       pop Z
       pop Y

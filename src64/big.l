@@ -1,4 +1,4 @@
-# 10jun10abu
+# 11jun10abu
 # (c) Software Lab. Alexander Burger
 
 ### Destructive primitives ###
@@ -1603,7 +1603,7 @@
          test (L -III) 1  # Sign?
          if nz  # Yes
             ld B (char "-")  # Output sign
-            call (EnvPutB)
+            call (PutB)
          end
          ld A (Y)  # Output highest word
          call outWordA
@@ -1618,7 +1618,7 @@
                div E
                push C  # Save remainder
                add B (char "0")  # Output next digit
-               call (EnvPutB)
+               call (PutB)
                cmp E 1  # Done?
             while ne  # No
                ld C 0  # Divide digit scale by 10

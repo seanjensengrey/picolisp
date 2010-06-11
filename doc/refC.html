@@ -543,6 +543,42 @@ copied, while atoms are returned unchanged.
 -> T
 </code></pre>
 
+<dt><a name="co"><code>(co 'sym [. prg]) -> any</code></a>
+<dd>(64-bit version only) Starts, resumes or stops a <a
+href="ref.html#coroutines">coroutine</a> with the tag given by <code>sym</code>.
+If <code>prg</code> is not given, a coroutine with that tag will be stopped.
+Otherwise, if a coroutine running with that tag is found (pointer equality is
+used for comparison), its execution is resumed. Else a new coroutine with that
+tag is initialized and started. <code>prg</code> will be executed until it
+either terminates normally, or until <code><a
+href="refY.html#yield">yield</a></code> is called. In the latter case
+<code>co</code> returns, or transfers control to some other, already running,
+coroutine. Trying to start more than 64 coroutines will result in a stack
+overflow error. Also, a coroutine cannot resume itself directly or indirectly.
+See also <code><a href="refS.html#stack">stack</a></code>, <code><a
+href="refC.html#catch">catch</a></code> and <code><a
+href="refT.html#throw">throw</a></code>.
+
+<pre><code>
+: (de pythag (N)   # A generator function
+   (if (=T N)
+      (co 'rt)  # Stop
+      (co 'rt
+         (for X N
+            (for Y (range X N)
+               (for Z (range Y N)
+                  (when (= (+ (* X X) (* Y Y)) (* Z Z))
+                     (yield (list X Y Z)) ) ) ) ) ) ) )
+
+: (pythag 20)
+-> (3 4 5)
+: (pythag 20)
+-> (5 12 13)
+: (pythag 20)
+-> (6 8 10)
+
+</code></pre>
+
 <dt><a name="count"><code>(count 'tree) -> num</code></a>
 <dd>Returns the number of nodes in a database tree. See also <code><a
 href="refT.html#tree">tree</a></code> and <code><a

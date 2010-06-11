@@ -68,6 +68,7 @@ href="faq.html">Frequently Asked Questions (FAQ)</a>.
       </ul>
    <li><a href="#ev">Evaluation</a>
    <li><a href="#int">Interrupt</a>
+   <li><a href="#coroutines">Coroutines</a>
    <li><a href="#errors">Error Handling</a>
    <li><a href="#atres">@ Result</a>
    <li><a href="#cmp">Comparing</a>
@@ -1097,6 +1098,53 @@ function, these extra arguments will be ignored. Missing arguments default to
 
 
 <p><hr>
+<h3><a name="coroutines">Coroutines</a></h3>
+
+<p>Coroutines are independent execution contexts. They may have multiple entry
+and exit points, and preserve their environment between invocations.
+
+<p>They are available only in the 64-bit version.
+
+<p>A coroutine is identified by a tag. This tag can be passed to other
+functions, and (re)invoked as needed. In this regard coroutines are similar to
+"continuations" in other languages.
+
+<p>When the goes out of scope, the coroutine will be garabage collected. In
+cases where this is desired, using a <a href="#transient">transient</a> symbol
+for the tag is recommended.
+
+<p>A coroutine is created by calling <code><a href="refC.html#co">co</a></code>.
+Its <code>prg</code> body will be executed, and unless <code><a
+href="refY.html#yield">yield</a></code> is called at some point, the coroutine
+will "fall off" at the end and disappear.
+
+<p>When <code><a href="refY.html#yield">yield</a></code> is called, control is
+either transferred back to the caller, or to some other - explicitly specified,
+and already running - coroutine.
+
+<p>A coroutine is stopped and disposed when
+
+<p><ul>
+<li>it simply falls off the end,
+
+<li>some other (co)routine calls <code><a href="refC.html#co">co</a></code> with
+that tag but without a <code>prg</code> body,
+
+<li>the tag goes out of scope, so that the garbage collector stops it,
+
+<li>a <code><a href="refT.html#throw">throw</a></code> into another (co)routine
+environment is executed, or
+
+<li>an error occurred, and <a href="#errors">error handling</a> was entered.
+
+</ul>
+
+<p>In the current implementation, not more than 64 coroutines can exist at the
+same time. Reentrant coroutines are not supported, a coroutine cannot resume
+itself directly or indirectly.
+
+
+<p><hr>
 <h3><a name="int">Interrupt</a></h3>
 
 <p>During the evaluation of an expression, the PicoLisp interpreter can be
@@ -1109,6 +1157,12 @@ interpreter to the top level. See also <code><a
 href="refD.html#debug">debug</a></code>, <code><a
 href="refE.html#e">e</a></code>, <code><a href="ref_.html#^">^</a></code> and
 <code><a href="refD.html#*Dbg">*Dbg</a></code>
+
+<p>Other interrups may be handled by <code><a
+href="refA.html#alarm">alarm</a></code>, <code><a
+href="refS.html#sigio">sigio</a></code>, <code><a
+href="refH.html#*Hup">*Hup</a></code> and <code><a
+href="refS.html#*Sig1">*Sig[12]</a></code>.
 
 
 <p><hr>
@@ -2037,6 +2091,8 @@ abbreviations:
    <a href="refC.html#catch">catch</a>
    <a href="refT.html#throw">throw</a>
    <a href="refF.html#finally">finally</a>
+   <a href="refC.html#co">co</a>
+   <a href="refY.html#yield">yield</a>
    <a href="ref_.html#!">!</a>
    <a href="refE.html#e">e</a>
    <a href="ref_.html#$">$</a>
@@ -2367,6 +2423,7 @@ abbreviations:
    <a href="refA.html#alarm">alarm</a>
    <a href="refP.html#protect">protect</a>
    <a href="refH.html#heap">heap</a>
+   <a href="refS.html#stack">stack</a>
    <a href="refA.html#adr">adr</a>
    <a href="refE.html#env">env</a>
    <a href="refU.html#up">up</a>

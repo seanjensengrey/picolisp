@@ -1,4 +1,4 @@
-# 10jun10abu
+# 11jun10abu
 # (c) Software Lab. Alexander Burger
 
 ### Global return labels ###
@@ -91,11 +91,11 @@
       end
       cmp E SymTabEnd
    until gt
-   ld (EnvGet_A) getStdin_A
+   ld (Get_A) getStdin_A
    ld A 0  # Standard input
    call initInFileA_A  # Create input file
    ld (InFile) A  # Set to default InFile
-   ld (EnvPutB) putStdoutB
+   ld (PutB) putStdoutB
    ld A 2  # Standard error
    call initOutFileA_A  # Create output file
    ld A 1  # Standard output
@@ -1915,13 +1915,13 @@
    ld (StrC) 4  # Build name
    ld (StrX) S
    link
-   push (EnvPutB)  # Save 'put'
-   ld (EnvPutB) putStringB  # Set new
+   push (PutB)  # Save 'put'
+   ld (PutB) putStringB  # Set new
    jmp (A)  # Return
 
 (code 'endString_E 0)
    pop A  # Get return address
-   pop (EnvPutB)  # Restore 'put'
+   pop (PutB)  # Restore 'put'
    ld E Nil  # Preload NIL
    cmp (L I) ZERO  # Name?
    if ne  # Yes
@@ -2722,7 +2722,7 @@
          atom E
       while z  # Yes
          ld B `(char ".")  # Output dot
-         call (EnvPutB)
+         call (PutB)
       loop
       call newline
    end
