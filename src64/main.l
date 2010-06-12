@@ -1,4 +1,4 @@
-# 11jun10abu
+# 12jun10abu
 # (c) Software Lab. Alexander Burger
 
 ### Global return labels ###
@@ -563,7 +563,7 @@
    or E CNT
    ret
 
-# (stack ['cnt]) -> cnt
+# (stack ['cnt]) -> cnt | (.. sym . cnt)
 (code 'doStack 2)
    push X
    ld X E
@@ -579,12 +579,27 @@
          lea A ((Stack0) 4096)  # and stack limit
          sub A E
          ld (StkLimit) A
-         jmp 10
+         shr E 16  # Make short number [MB]
+         or E CNT
+         pop X
+         ret
       end
    end
    ld E (StkSize)  # Return current stack size
-10 shr E 16  # Make short number in MB
+   shr E 16  # Make short number [MB]
    or E CNT
+   ld X (Stack0)  # Collect coroutines
+   ld C (Stacks)  # Segment bitmask
+   do
+      sub X (StkSize)  # Next segment
+      shr C 1  # In use?
+      if c  # Yes
+         call consE_A  # Cons 'tag'
+         ld (A) (X -I)
+         ld (A CDR) E
+         ld E A
+      end
+   until z
    pop X
    ret
 
