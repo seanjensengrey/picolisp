@@ -598,6 +598,7 @@
          ld (A) (X -I)
          ld (A CDR) E
          ld E A
+         continue T
       end
    until z
    pop X
