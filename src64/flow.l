@@ -1,4 +1,4 @@
-# 11jun10abu
+# 13jun10abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -2767,6 +2767,8 @@
          ld X (L)  # Pointer to link
          do
             ld A (X)  # Get link
+            null A  # Any?
+            jz 10  # No
             cmp A C  # Reached main routine's link?
          while ne  # No
             ld X A  # Follow link
@@ -2774,7 +2776,7 @@
          ld (X) 0  # Clear link
       end
    end
-   push L  # End of segment
+10 push L  # End of segment
    push Y  # Save taget coroutine
    ld X EnvApply  # Pointer to apply stack
    do
@@ -2842,12 +2844,15 @@
 
 (code 'cutLocalCX 0)
    do
-      cmp C (X)  # More locals?
+      ld A (X)  # Get link
+      null A  # Any?
+      jz ret  # No
+      cmp A C  # More locals?
       if eq  # No
          ld (X) 0  # Cut off
          ret
       end
-      ld X (X)  # Next frame
+      ld X A  # Next frame
    loop
 
 (code 'joinLocalCX 0)
