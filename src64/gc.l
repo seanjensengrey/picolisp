@@ -1,4 +1,4 @@
-# 09jun10abu
+# 13jun10abu
 # (c) Software Lab. Alexander Burger
 
 # Mark data
@@ -150,25 +150,29 @@
       shr C 1  # In use?
       if c  # Yes
          null (Y -II)  # Active?
-         continue z  # Yes
-         push Y
-         push C
-         ld Y ((Y -II))  # Else get saved L
-         do
-            null Y  # End of stack?
-         while ne  # No
-            ld Z (Y)  # Keep end of frame in Z
+         if z  # Yes
+            ld E (Y -I)  # Mark 'tag'
+            call markE
+         else
+            push Y
+            push C
+            ld Y ((Y -II))  # Else get saved L
             do
-               add Y I  # End of frame?
-               cmp Y Z
+               null Y  # End of stack?
             while ne  # No
-               ld E (Y)  # Next item
-               call markE  # Mark it
+               ld Z (Y)  # Keep end of frame in Z
+               do
+                  add Y I  # End of frame?
+                  cmp Y Z
+               while ne  # No
+                  ld E (Y)  # Next item
+                  call markE  # Mark it
+               loop
+               ld Y (Y)  # Next frame
             loop
-            ld Y (Y)  # Next frame
-         loop
-         pop C
-         pop Y
+            pop C
+            pop Y
+         end
          continue T
       end
    until z
