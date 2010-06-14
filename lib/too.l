@@ -1,4 +1,4 @@
-# 16apr10abu
+# 14jun10abu
 # (c) Software Lab. Alexander Burger
 
 ### DB Garbage Collection ###
@@ -178,42 +178,40 @@
                                  (<> Obj (fetch Tree (cons V Aux)))
                                  (link X) ) ) ) )
                      (T
-                        (for B (: bag)
+                        (for (N . B) (: bag)
                            (cond
                               ((isa '+Key B)
-                                 (let N (index B (: bag))
-                                    (with B
-                                       (when
-                                          (find
-                                             '((L)
-                                                (and
-                                                   (get L N)
-                                                   (<> Obj
-                                                      (fetch
-                                                         (tree (: var) (: cls)
-                                                            (get
-                                                               (if (sym? (: hook)) Obj L)
-                                                               (: hook) ) )
-                                                         (get L N) ) ) ) )
-                                                V )
-                                             (link X) ) ) ) )
+                                 (with B
+                                    (when
+                                       (find
+                                          '((L)
+                                             (let? Val (get L N)
+                                                (<> Obj
+                                                   (fetch
+                                                      (tree (: var) (: cls)
+                                                         (get
+                                                            (if (sym? (: hook)) Obj L)
+                                                            (: hook) ) )
+                                                      Val ) ) ) )
+                                             V )
+                                          (link X) ) ) )
                               ((isa '+Ref B)
-                                 (let N (index B (: bag))
-                                    (with B
-                                       (when
-                                          (find
-                                             '((L)
-                                                (and
-                                                   (get L N)
-                                                   (<> Obj
-                                                      (fetch
-                                                         (tree (: var) (: cls)
-                                                            (get
-                                                               (if (sym? (: hook)) Obj L)
-                                                               (: hook) ) )
-                                                         (cons (get L N) Obj) ) ) ) )
-                                                V )
-                                             (link X) ) ) ) ) ) ) ) ) ) ) ) )
+                                 (with B
+                                    (when
+                                       (find
+                                          '((L)
+                                             (let? Val (get L N)
+                                                (when (isa '+Fold This)
+                                                   (setq Val (fold Val)) )
+                                                (<> Obj
+                                                   (fetch
+                                                      (tree (: var) (: cls)
+                                                         (get
+                                                            (if (sym? (: hook)) Obj L)
+                                                            (: hook) ) )
+                                                      (cons Val Obj) ) ) ) )
+                                             V )
+                                          (link X) ) ) ) ) ) ) ) ) ) ) )
       (cons Obj @) ) )
 
 
