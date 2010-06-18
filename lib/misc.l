@@ -481,12 +481,12 @@
    (when *Dbg
       (cons
          (list 'unless (car E)
-            (list 'quit "Assertion failed" (lit (car E))) ) ) ) )
+            (list 'quit "'assert' failed" (lit (car E))) ) ) ) )
 
 (de test (Pat . Prg)
    (bind (fish pat? Pat)
       (unless (match Pat (run Prg 1))
          (msg Prg)
-         (quit 'fail Pat) ) ) )
+         (quit "'test' failed" Pat) ) ) )
 
 # vi:et:ts=3:sw=3

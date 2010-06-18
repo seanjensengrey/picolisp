@@ -456,13 +456,13 @@ $ ./dbg
    ~(assert (>= 90 N 10))
    (bar N) )
 -> foo
-: (pp 'foo)
+: (pp 'foo)                      # Pretty-print 'foo'
 (de foo (N)
    (unless (>= 90 N 10)          # Assertion code exists
-      (quit "Assertion failed" '(>= 90 N 10)) )
+      (quit "'assert' failed" '(>= 90 N 10)) )
    (bar N) )
 -> foo
-: (foo 7)
+: (foo 7)                        # Try it
 (>= 90 N 10) -- Assertion failed
 ?
 
@@ -472,7 +472,7 @@ $ ./p
    ~(assert (>= 90 N 10))
    (bar N) )
 -> foo
-: (pp 'foo)
+: (pp 'foo)                      # Pretty-print 'foo'
 (de foo (N)
    (bar N) )                     # Assertion code does not exist
 -> foo
