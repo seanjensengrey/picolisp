@@ -123,8 +123,8 @@
 
 (de round (N D)
    (if (>= *Scl D)
-      (format (*/ N (** 10 (- *Scl D))) D)
-      (format N *Scl) ) )
+      (format (*/ N (** 10 (- *Scl D))) D *Sep0 *Sep3)
+      (format N *Scl *Sep0 *Sep3) ) )
 
 # Octal notation
 (de oct (X)
