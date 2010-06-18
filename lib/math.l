@@ -1,4 +1,4 @@
-# 18mar10abu
+# 18jun10abu
 # (c) Software Lab. Alexander Burger
 
 (and (=0 *Scl) (scl 6))                # Default scale 6
@@ -7,5 +7,10 @@
    pi/2  1.5707963267948966 )
 
 (load (if (== 64 64) "@lib/math64.l" "@lib/math32.l"))
+
+(de round (N D)
+   (if (>= *Scl D)
+      (format (*/ N (** 10 (- *Scl D))) D)
+      (format N *Scl) ) )
 
 # vi:et:ts=3:sw=3
