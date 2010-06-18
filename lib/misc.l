@@ -476,7 +476,13 @@
    (out S (prinl "RCPT TO:" To "^M"))
    (pre? "250 " (in S (line T))) )
 
-### Testing ###
+### Assertions ###
+(de assert E
+   (when *Dbg
+      (cons
+         (list 'unless (car E)
+            (list 'quit "Assertion failed" (lit (car E))) ) ) ) )
+
 (de test (Pat . Prg)
    (bind (fish pat? Pat)
       (unless (match Pat (run Prg 1))

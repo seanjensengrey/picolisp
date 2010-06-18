@@ -439,6 +439,45 @@ href="refM.html#mmeq">mmeq</a></code> and <a href="ref.html#cmp">Comparing</a>.
 -> (b . 7)
 </code></pre>
 
+<dt><a name="assert"><code>(assert exe) -> prg | NIL</code></a>
+<dd>When in debug mode (<code><a href="refD.html#*Dbg">*Dbg</a></code> is
+non-<code>NIL</code>), <code>assert</code> returns a <code>prg</code> list which
+tests <code>exe</code> and issues an error via <code><a
+href="refQ.html#quit">quit</a></code> if the result is <code>NIL</code>.
+Otherwise, <code>NIL</code> is returned. Used typically in combination with the
+<code>~</code> tilde <code><a href="ref.html#macro-io">read-macro</a></code> to
+insert the test code only when in debug mode. See also <code><a
+href="refT.html#test">test</a></code>.
+
+<pre><code>
+# Start in debug mode
+$ ./dbg
+: (de foo (N)
+   ~(assert (>= 90 N 10))
+   (bar N) )
+-> foo
+: (pp 'foo)
+(de foo (N)
+   (unless (>= 90 N 10)          # Assertion code exists
+      (quit "Assertion failed" '(>= 90 N 10)) )
+   (bar N) )
+-> foo
+: (foo 7)
+(>= 90 N 10) -- Assertion failed
+?
+
+# Start in non-debug mode
+$ ./p
+: (de foo (N)
+   ~(assert (>= 90 N 10))
+   (bar N) )
+-> foo
+: (pp 'foo)
+(de foo (N)
+   (bar N) )                     # Assertion code does not exist
+-> foo
+</code></pre>
+
 <dt><a name="asserta"><code>(asserta 'lst) -> lst</code></a>
 <dd>Inserts a new <a href="ref.html#pilog">Pilog</a> fact or rule before all
 other rules. See also <code><a href="refB.html#be">be</a></code>, <code><a
