@@ -1,4 +1,4 @@
-# 14may10abu
+# 18jun10abu
 # (c) Software Lab. Alexander Burger
 
 # *Allow *Tmp
@@ -120,6 +120,11 @@
    (if Cur
       (pack (format N 2 *Sep0 *Sep3) " " Cur)
       (format N 2 *Sep0 *Sep3) ) )
+
+(de round (N D)
+   (if (>= *Scl D)
+      (format (*/ N (** 10 (- *Scl D))) D)
+      (format N *Scl) ) )
 
 # Octal notation
 (de oct (X)
