@@ -1,4 +1,4 @@
-# 12jun10abu
+# 19jun10abu
 # (c) Software Lab. Alexander Burger
 
 ### Global return labels ###
@@ -1566,7 +1566,12 @@
                   shl E 4  # Make short number
                   or E CNT
                else
-                  call boxNumE_E  # Make bignum
+                  cmp E (hex "7FFFFFFFFFFFFFFF")  # Infinity?
+                  if eq  # Yes
+                     ld E TSym  # Return T
+                  else
+                     call boxNumE_E  # Make bignum
+                  end
                end
             else
                neg E  # Negate
@@ -1575,8 +1580,13 @@
                   shl E 4  # Make negative short number
                   or E (| SIGN CNT)
                else
-                  call boxNumE_E  # Make bignum
-                  or E SIGN  # Set negative
+                  cmp E (hex "8000000000000000")  # NaN or negative infinity?
+                  if eq  # Yes
+                     ld E Nil  # Return NIL
+                  else
+                     call boxNumE_E  # Make bignum
+                     or E SIGN  # Set negative
+                  end
                end
             end
          else

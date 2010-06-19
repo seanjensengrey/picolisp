@@ -1,4 +1,4 @@
-# 18may10abu
+# 19jun10abu
 # (c) Software Lab. Alexander Burger
 
 (load "lib/native.l")
@@ -20,44 +20,52 @@
 
 #include <math.h>
 
+static long mkNum(int scl, double d) {
+   if (isnan(d) || isinf(d) < 0)
+      return 0x8000000000000000;
+   if (isinf(d) > 0)
+      return 0x7FFFFFFFFFFFFFFF;
+   return round((double)scl * d);
+}
+
 long Pow(long x, long y, int scl) {
-   return round((double)scl * pow((double)x / (double)scl, (double)y / (double)scl));
+   return mkNum(scl, pow((double)x / (double)scl, (double)y / (double)scl));
 }
 
 long Exp(long x, int scl) {
-   return round((double)scl * exp((double)x / (double)scl));
+   return mkNum(scl, exp((double)x / (double)scl));
 }
 
 long Log(long x, int scl) {
-   return round((double)scl * log((double)x / (double)scl));
+   return mkNum(scl, log((double)x / (double)scl));
 }
 
 long Sin(long a, int scl) {
-   return round((double)scl * sin((double)a / (double)scl));
+   return mkNum(scl, sin((double)a / (double)scl));
 }
 
 long Cos(long a, int scl) {
-   return round((double)scl * cos((double)a / (double)scl));
+   return mkNum(scl, cos((double)a / (double)scl));
 }
 
 long Tan(long a, int scl) {
-   return round((double)scl * tan((double)a / (double)scl));
+   return mkNum(scl, tan((double)a / (double)scl));
 }
 
 long Asin(long a, int scl) {
-   return round((double)scl * asin((double)a / (double)scl));
+   return mkNum(scl, asin((double)a / (double)scl));
 }
 
 long Acos(long a, int scl) {
-   return round((double)scl * acos((double)a / (double)scl));
+   return mkNum(scl, acos((double)a / (double)scl));
 }
 
 long Atan(long a, int scl) {
-   return round((double)scl * atan((double)a / (double)scl));
+   return mkNum(scl, atan((double)a / (double)scl));
 }
 
 long Atan2(long x, long y, int scl) {
-   return round((double)scl * atan2((double)x / (double)scl, (double)y / (double)scl));
+   return mkNum(scl, atan2((double)x / (double)scl, (double)y / (double)scl));
 }
 /**/
 

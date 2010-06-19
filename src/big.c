@@ -1,4 +1,4 @@
-/* 30apr10abu
+/* 19jun10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -536,6 +536,10 @@ any doubleToNum(double d) {
    any x;
    cell c1;
 
+   if (isnan(d) || isinf(d) < 0)
+      return Nil;
+   if (isinf(d) > 0)
+      return T;
    sign = NO;
    if (d < 0.0)
       sign = YES,  d = -d;
