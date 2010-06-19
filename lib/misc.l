@@ -1,4 +1,4 @@
-# 18jun10abu
+# 19jun10abu
 # (c) Software Lab. Alexander Burger
 
 # *Allow *Tmp
@@ -477,11 +477,12 @@
    (pre? "250 " (in S (line T))) )
 
 ### Assertions ###
-(de assert E
+(de assert Prg
    (when *Dbg
       (cons
-         (list 'unless (car E)
-            (list 'quit "'assert' failed" (lit (car E))) ) ) ) )
+         (list 'unless
+            (if (cdr Prg) (cons 'and Prg) (car Prg))
+            (list 'quit "'assert' failed" (lit (car Prg))) ) ) ) )
 
 (de test (Pat . Prg)
    (bind (fish pat? Pat)
