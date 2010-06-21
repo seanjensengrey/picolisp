@@ -1,4 +1,4 @@
-# 30may10abu
+# 21jun10abu
 # (c) Software Lab. Alexander Burger
 
 # *Home *Gate *Host *Port *Port1 *Http1 *Chunked
@@ -382,12 +382,13 @@
    (and *Tmp (pre? *Tmp File) (one Upd))
    (ifn (info File)
       (http404)
-      (http1 (or Typ (mimetype File)) Upd (stem (chop File) "/") Att)
-      (prinl "Content-Length: " (car @) "^M")
-      (prin "Last-Modified: ")
-      (httpDate (cadr @) (cddr @))
-      (prinl "^M")
-      (in File (echo)) ) )
+      (let I @
+         (http1 (or Typ (mimetype File)) Upd (stem (chop File) "/") Att)
+         (prinl "Content-Length: " (car I) "^M")
+         (prin "Last-Modified: ")
+         (httpDate (cadr I) (cddr I))
+         (prinl "^M")
+         (in File (echo)) ) ) )
 
 (de srcUrl (Url)
    (if (or (pre? "http:" Url) (pre? "https:" Url))
