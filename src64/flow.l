@@ -1,4 +1,4 @@
-# 13jun10abu
+# 22jun10abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -1102,7 +1102,7 @@
    pop X
    ret
 
-# (meth 'obj ..) -> any
+# (meth 'obj ['any ..]) -> any
 (code 'doMeth 2)
    push X
    push Y

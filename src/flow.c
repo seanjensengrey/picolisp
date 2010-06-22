@@ -1,4 +1,4 @@
-/* 04jun10abu
+/* 22jun10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -516,7 +516,7 @@ any doMethod(any ex) {
    return method(x)? : Nil;
 }
 
-// (meth 'obj ..) -> any
+// (meth 'obj ['any ..]) -> any
 any doMeth(any ex) {
    any x, y;
    cell c1;
