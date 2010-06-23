@@ -1,4 +1,4 @@
-# 23jun10abu
+# 12mar10abu
 # (c) Software Lab. Alexander Burger
 
 # Browsing
@@ -161,7 +161,7 @@
                (get C '*Dbg -1 "X")
                (get "X" '*Dbg 1) ) )
          "*Vi" )
-      (call (or (sys "EDITOR") 'vim)
+      (call 'vim
          (pack "+" (car "*Vi"))
          (path (cdr "*Vi")) )
       "X" ) )

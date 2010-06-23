@@ -101,13 +101,12 @@ $ ./p -version
 <dt><code>(vi 'sym 'cls) -> sym</code>
 <dt><code>(vi '(sym . cls)) -> sym</code>
 <dt><code>(vi) -> NIL</code>
-<dd>Opens the editor specified by the environment variable <code>EDITOR</code>
-(or <code>vim</code> if that variable is not set) on the function or method
-definition of <code>sym</code>. A call to <code><a
-href="refL.html#ld">ld</a></code> thereafter will <code><a
-href="refL.html#load">load</a></code> the modified file. See also <code><a
-href="refD.html#doc">doc</a></code>, <code><a href="refP.html#pp">pp</a></code>,
-<code><a href="refD.html#*Dbg">*Dbg</a></code>, <code><a
+<dd>Opens the "vi" editor on the function or method definition of
+<code>sym</code>. A call to <code><a href="refL.html#ld">ld</a></code>
+thereafter will <code><a href="refL.html#load">load</a></code> the modified
+file. See also <code><a href="refD.html#doc">doc</a></code>, <code><a
+href="refP.html#pp">pp</a></code>, <code><a
+href="refD.html#*Dbg">*Dbg</a></code>, <code><a
 href="refD.html#debug">debug</a></code> and <code><a
 href="refP.html#pp">pp</a></code>.
 
