@@ -1,9 +1,9 @@
-# 21jun10abu
+# 25jun10abu
 # (c) Software Lab. Alexander Burger
 
 # *Home *Gate *Host *Port *Port1 *Http1 *Chunked
 # *Sock *Agent *ContLen *MPartLim *MPartEnd "*HtSet"
-# *Post *Url *Timeout *SesId *ConId
+# *Get1 *Post *Url *Timeout *SesId *ConId
 # *Referer *Cookies "*Cookies"
 
 (default
@@ -90,7 +90,7 @@
       (NIL (fork) (close P))
       (close *Sock) )
    (task *Sock (http @))
-   (http *Sock)
+   (http *Sock T)
    (or *SesId (bye))
    (task *Sock
       (when (accept *Sock)
@@ -132,7 +132,7 @@
       (push '"*Cookies" (cons (arg) (rest))) ) )
 
 # Handle HTTP-Transaction
-(de http (S)
+(de http (S *Get1)
    (use (*Post L @U @H @X)
       (off *Post *ContLen *Cookies "*Cookies" "*HtSet")
       (catch "http"

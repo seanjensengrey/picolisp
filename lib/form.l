@@ -1,4 +1,4 @@
-# 21apr10abu
+# 25jun10abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -110,7 +110,7 @@
    (and Flg (=: able)) )
 
 # Handle form actions
-(de action Prg
+(de action "Prg"
    (off "*Foc")
    (or *PRG "*Post2" (off "*Err"))
    (catch "stop"
@@ -118,7 +118,9 @@
          (*Post
             (unless (and *PRG (= *Form (car *Got)) (= *Get (cadr *Got)))
                (pushForm (cons)) )
-            (_doForm)
+            (if *Get1
+               (let *JS NIL (_doForm))
+               (_doForm) )
             (off *PRG *Got) )
          (*PRG
             (with (postForm)
@@ -144,7 +146,7 @@
 
 (de _doForm ()
    (one *Form)
-   (run Prg 2)
+   (run "Prg")
    (setq "*Stat"
       (cons
          (pair "*Err")
