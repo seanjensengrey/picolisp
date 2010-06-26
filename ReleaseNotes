@@ -1,4 +1,4 @@
-11jun10abu
+26jun10abu
 (c) Software Lab. Alexander Burger
 
 
@@ -38,3 +38,13 @@ F. The stack is now checked at runtime (also only in the 64-bit version). This
    operating system sent a segmentation violation signal. With the stack checks,
    a controlled error handler is entered upon stack overflow. The stack segment
    size can be manipulated with the new 'stack' function.
+
+G. There is now a basic rational arithmetics package (fractional numbers) in
+   "lib/frac.l". Fractions are represented as dotted pairs.
+
+      : (f+ (1 . 2) (1 . 3))
+      -> (5 . 6)
+      : (f* (1 . 2) (1 . 3))
+      -> (1 . 6)
+      : (let S (frac 0 1) (for N 10 (setq S (f+ S (frac 1 N)))))
+      -> (7381 . 2520)
