@@ -1,13 +1,11 @@
 # 26jun10abu
 # (c) Software Lab. Alexander Burger
 
-(and (=0 *Scl) (scl 6))  # Default scale 6
+(and (=0 *Scl) (scl 6))                # Default scale 6
 
-# Global constants
-(let P (make (in "@lib/pi1k.txt" (do (+ *Scl 4) (link (char)))))
-   (setq
-      pi   (format P *Scl)
-      pi/2 (*/ (format P (inc *Scl)) 20) ) )
+(setq                                  # Global constants
+   pi    3.1415926535897932
+   pi/2  1.5707963267948966 )
 
 (load (if (== 64 64) "@lib/math64.l" "@lib/math32.l"))
 
