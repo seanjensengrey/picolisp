@@ -119,10 +119,9 @@
 
 # Application startup
 (de app ()
-   (if *SesId
-      (off *Port%)
+   (unless *SesId
       (setq
-         *Port% (unless *Gate (= *Port *Port1))
+         *Port% (not *Gate)
          *SesId (pack (in "/dev/urandom" (rd 7)) "~")
          *Sock (port *HPorts '*Port) )
       (timeout *Timeout) ) )
@@ -136,7 +135,7 @@
 # Handle HTTP-Transaction
 (de http (S)
    (use (*Post L @U @H @X)
-      (off *Post *ContLen *Cookies "*Cookies" "*HtSet")
+      (off *Post *Port% *ContLen *Cookies "*Cookies" "*HtSet")
       (catch "http"
          (in S
             (cond
