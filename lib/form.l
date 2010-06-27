@@ -1,4 +1,4 @@
-# 25jun10abu
+# 27jun10abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -118,7 +118,7 @@
          (*Post
             (unless (and *PRG (= *Form (car *Got)) (= *Get (cadr *Got)))
                (pushForm (cons)) )
-            (if *Get1
+            (if *Port%
                (let *JS NIL (_doForm))
                (_doForm) )
             (off *PRG *Got) )

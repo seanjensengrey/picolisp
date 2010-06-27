@@ -1,9 +1,9 @@
-# 25jun10abu
+# 27jun10abu
 # (c) Software Lab. Alexander Burger
 
-# *Home *Gate *Host *Port *Port1 *Http1 *Chunked
+# *Home *Gate *Host *Port *Port1 *Port% *Http1 *Chunked
 # *Sock *Agent *ContLen *MPartLim *MPartEnd "*HtSet"
-# *Get1 *Post *Url *Timeout *SesId *ConId
+# *Post *Url *Timeout *SesId *ConId
 # *Referer *Cookies "*Cookies"
 
 (default
@@ -90,7 +90,7 @@
       (NIL (fork) (close P))
       (close *Sock) )
    (task *Sock (http @))
-   (http *Sock T)
+   (http *Sock)
    (or *SesId (bye))
    (task *Sock
       (when (accept *Sock)
@@ -119,8 +119,10 @@
 
 # Application startup
 (de app ()
-   (unless *SesId
+   (if *SesId
+      (off *Port%)
       (setq
+         *Port% (unless *Gate (= *Port *Port1))
          *SesId (pack (in "/dev/urandom" (rd 7)) "~")
          *Sock (port *HPorts '*Port) )
       (timeout *Timeout) ) )
@@ -132,7 +134,7 @@
       (push '"*Cookies" (cons (arg) (rest))) ) )
 
 # Handle HTTP-Transaction
-(de http (S *Get1)
+(de http (S)
    (use (*Post L @U @H @X)
       (off *Post *ContLen *Cookies "*Cookies" "*HtSet")
       (catch "http"
