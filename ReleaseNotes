@@ -1,50 +1,7 @@
-26jun10abu
+29jun10abu
 (c) Software Lab. Alexander Burger
 
 
-         Release Notes for picoLisp-3.0.3
+         Release Notes for picoLisp-3.0.4
          ================================
 
-A. The underlined display of transient symbols in the documentation is changed
-   back to double quotes, to allow an easier copy/paste of example code
-   fragments.
-
-B. The function 'not' is included in the group of flow- and logic-functions
-   which store non-NIL results of their conditional expressions in '@' (see the
-   chapter "@ Result" in "doc/ref.html"). This makes it consistent with 'nand'
-   and 'nor'.
-
-C. The line editor "lib/led.l" cycles with TAB also through path names (in
-   addition to internal symbols).
-
-D. The 'format' number <-> string conversion function now also accepts a list
-   argument. This is like as if 'pack' were built-in. Where
-
-      (format (pack Lst))
-
-   had to be written, now
-
-      (format Lst)
-
-   will also do.
-
-E. PicoLisp now supports coroutines (multiple independent execution contexts),
-   though only in the 64-bit version. More about that in
-   "doc/ref.html#coroutines".
-
-F. The stack is now checked at runtime (also only in the 64-bit version). This
-   became necessary because coroutines require separate stack segments. Until
-   now (and still in the 32-bit version) the stack could grow until the
-   operating system sent a segmentation violation signal. With the stack checks,
-   a controlled error handler is entered upon stack overflow. The stack segment
-   size can be manipulated with the new 'stack' function.
-
-G. There is now a basic rational arithmetics package (fractional numbers) in
-   "lib/frac.l". Fractions are represented as dotted pairs.
-
-      : (f+ (1 . 2) (1 . 3))
-      -> (5 . 6)
-      : (f* (1 . 2) (1 . 3))
-      -> (1 . 6)
-      : (let S (frac 0 1) (for N 10 (setq S (f+ S (frac 1 N)))))
-      -> (7381 . 2520)

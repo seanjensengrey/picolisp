@@ -1,4 +1,6 @@
-* XXjun10 picoLisp-3.0.3
+* XXsep10 picoLisp-3.0.4
+
+* 29jun10 picoLisp-3.0.3
    'assert' function
    'round' function
    'co', 'yield' and 'stack' coroutine functions
