@@ -1,4 +1,4 @@
-12nov09abu
+05jul10abu
 (c) Software Lab. Alexander Burger
 
                                                           Perfection is attained
@@ -53,7 +53,7 @@ You can download the latest release version at
 
 
 (2) As an application server framework, PicoLisp provides for
-   Database Management
+   NoSQL Database Management
       Index trees
       Object local indexes
       Entity/Relation classes

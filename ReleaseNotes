@@ -1,7 +1,11 @@
-29jun10abu
+04jul10abu
 (c) Software Lab. Alexander Burger
 
 
          Release Notes for picoLisp-3.0.4
          ================================
 
+A. In the 64-bit version bignum division is now faster by a factor between 20
+   and 60. That version had used an inefficient algorithm (bitwise shifts),
+   which was now replaced by Knuth's wordwise division algorithm (as is used
+   32-bit version).
