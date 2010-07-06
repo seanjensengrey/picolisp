@@ -1,4 +1,4 @@
-# 27jun10abu
+# 06jul10abu
 # (c) Software Lab. Alexander Burger
 
 # *Home *Gate *Host *Port *Port1 *Port% *Http1 *Chunked
@@ -96,8 +96,8 @@
       (when (accept *Sock)
          (task @ (http @)) ) ) )
 
-(de baseHRef (Port)
-   (pack
+(de baseHRef (Port . @)
+   (pass pack
       (or *Gate "http") "://" *Host
       (if *Gate "/" ":") (or Port *Port) "/" ) )
 
@@ -394,7 +394,7 @@
 (de srcUrl (Url)
    (if (or (pre? "http:" Url) (pre? "https:" Url))
       Url
-      (pack (baseHRef *Port1) Url) ) )
+      (baseHRef *Port1 Url) ) )
 
 (de sesId (Url)
    (if
