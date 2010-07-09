@@ -1,4 +1,4 @@
-# 30jun10abu
+# 09jul10abu
 # (c) Software Lab. Alexander Burger
 
 (de permute (Lst)
@@ -12,7 +12,7 @@
          Lst ) ) )
 
 (de shuffle (Lst)
-   (by seed sort Lst) )
+   (by '(NIL (rand)) sort Lst) )
 
 (de samples (Cnt Lst)
    (make
