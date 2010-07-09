@@ -207,12 +207,10 @@
 
 (de group (Lst)
    (make
-      (map
-         '((L)
-            (if (assoc (caar L) (made))
-               (conc @ (cons (cdar L)))
-               (link (cons (caar L) (cons (cdar L)))) ) )
-         Lst ) ) )
+      (for X Lst
+         (if (assoc (car X) (made))
+            (conc @ (cons (cdr X)))
+            (link (list (car X) (cdr X))) ) ) ) )
 
 ### Symbol ###
 (de qsym "Sym"
