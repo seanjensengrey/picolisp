@@ -1,4 +1,4 @@
-# 30may10abu
+# 09jul10abu
 # (c) Software Lab. Alexander Burger
 
 (de task (Key . Prg)
@@ -207,11 +207,12 @@
 
 (de group (Lst)
    (make
-      (while Lst
-         (if (assoc (caar Lst) (made))
-            (conc @ (cons (cdr (pop 'Lst))))
-            (link
-               (cons (caar Lst) (cons (cdr (pop 'Lst)))) ) ) ) ) )
+      (map
+         '((L)
+            (if (assoc (caar L) (made))
+               (conc @ (cons (cdar L)))
+               (link (cons (caar L) (cons (cdar L)))) ) )
+         Lst ) ) )
 
 ### Symbol ###
 (de qsym "Sym"
