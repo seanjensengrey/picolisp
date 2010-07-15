@@ -1,4 +1,4 @@
-# 09jul10abu
+# 15jul10abu
 # (c) Software Lab. Alexander Burger
 
 (de task (Key . Prg)
@@ -252,12 +252,12 @@
    (apply meta X This) )
 
 ### Pretty Printing ###
-(de "*PP"
+(de *PP
    T NIL if if2 ifn when unless while until do case state for
    with catch finally ! setq default push job use let let?
    prog1 later recur redef =: in out ctl tab new )
-(de "*PP1" if2 let let? for redef)
-(de "*PP2" setq default)
+(de *PP1 if2 let let? for redef)
+(de *PP2 setq default)
 
 (de pretty (X N . @)
    (setq N (abs (space (or N 0))))
@@ -270,9 +270,9 @@
          (pop 'X) )
       (let Z X
          (prin "(")
-         (when (memq (print (pop 'X)) "*PP")
+         (when (memq (print (pop 'X)) *PP)
             (cond
-               ((memq (car Z) "*PP1")
+               ((memq (car Z) *PP1)
                   (if (and (pair (car X)) (pair (cdar X)))
                      (when (>= 12 (size (car X)))
                         (space)
@@ -282,7 +282,7 @@
                      (when (or (atom (car X)) (>= 12 (size (car X))))
                         (space)
                         (print (pop 'X)) ) ) )
-               ((memq (car Z) "*PP2")
+               ((memq (car Z) *PP2)
                   (inc 'N 3)
                   (loop
                      (prinl)
