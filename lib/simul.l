@@ -1,4 +1,4 @@
-# 09jul10abu
+# 15jul10abu
 # (c) Software Lab. Alexander Burger
 
 (de permute (Lst)
@@ -10,6 +10,17 @@
                '((Y) (cons X Y))
                (permute (delete X Lst)) ) )
          Lst ) ) )
+
+(de subsets (N Lst)
+   (cond
+      ((=0 N) '(NIL))
+      ((not Lst))
+      (T
+         (append
+            (mapcar
+               '((X) (cons (car Lst) X))
+               (subsets (dec N) (cdr Lst)) )
+            (subsets N (cdr Lst)) ) ) ) )
 
 (de shuffle (Lst)
    (by '(NIL (rand)) sort Lst) )
