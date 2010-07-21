@@ -1,4 +1,4 @@
-# 19jun10abu
+# 21jul10abu
 # (c) Software Lab. Alexander Burger
 
 ### Global return labels ###
@@ -751,6 +751,38 @@
    pop Y
    pop X
    ret
+
+(code 'circE_XYF)
+   ld X E  # Return list in X
+   ld Y E  # Keep list in Y
+   do
+      or (E) 1  # Mark
+      ld E (E CDR)  # Normal list?
+      atom E
+      if nz  # Yes
+         do
+            off (Y) 1  # Unmark
+            ld Y (Y CDR)
+            atom Y  # Done?
+         until nz  # Yes
+         ret  # 'nz' - No circularity found
+      end
+      test (E) 1  # Detected circularity?
+      if nz  # Yes
+         do
+            cmp Y E  # Skip non-circular part
+         while ne
+            off (Y) 1  # Unmark
+            ld Y (Y CDR)
+         loop
+         do
+            off (Y) 1  # Unmark circular part
+            ld Y (Y CDR)
+            cmp Y E  # Done?
+         until eq  # Yes
+         ret  # 'z' - Circularity in Y
+      end
+   loop
 
 ### Comparisons ###
 (code 'equalAE_F 0)

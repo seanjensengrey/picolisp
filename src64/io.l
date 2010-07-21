@@ -1,4 +1,4 @@
-# 11jun10abu
+# 21jul10abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -753,7 +753,7 @@
       else
          sub A 63  # Adjust count
          push A  # <S I> Count
-         ld A (* 4 63)  # Output first tag byte
+         ld B (* 4 63)  # Output first tag byte
          call (PutBinBZ)
          push 63  # <S> and first 63 data bytes
          do
@@ -790,8 +790,8 @@
    if nz  # Yes
       cmp E Nil  # NIL?
       if eq  # Yes
-         ld A NIX
-         jmp (PutBinBZ)  # Output NIX
+         ld B NIX  # Output NIX
+         jmp (PutBinBZ)
       end
       sym (E TAIL)  # External symbol?
       if nz  # Yes
@@ -826,8 +826,8 @@
       call nameX_X  # Get name
       zero X  # Any?
       if eq  # No
-         ld A NIX
-         call (PutBinBZ)  # Output NIX
+         ld B NIX  # Output NIX
+         call (PutBinBZ)
       else
          ld Y Intern
          call isInternEXY_F  # Internal symbol?
@@ -868,7 +868,7 @@
                   dec E  # More?
                until z  # No
             else
-               ld A (* 4 63)  # Output first tag byte
+               ld B (* 4 63)  # Output first tag byte
                or A C  # Combine with tag
                call (PutBinBZ)
                sub E 63  # Adjust count
@@ -911,36 +911,64 @@
    end
    push X
    push Y
-   ld X E  # Get expression
-   ld Y E  # in X and Y
-   ld A BEG  # Begin list
+   ld B BEG  # Begin list
    call (PutBinBZ)
-   do
-      ld E (X)  # Next item
-      call binPrintEZ
-      ld X (X CDR)  # More?
-      cmp X Nil
-   while ne  # Yes
-      cmp X Y  # Circular?
-      if eq  # Yes
-         ld A DOT  # Output dotted pair
-         call (PutBinBZ)
-         break T
-      end
-      atom X  # End of list?
-      if nz  # Yes
-         ld A DOT  # Output dotted pair
-         call (PutBinBZ)
-         ld E X  # Output atom
+   call circE_XYF  # Circular list?
+   if nz  # No
+      do
+         ld E (X)  # Next item
          call binPrintEZ
-         pop Y  # Return
-         pop X
-         ret
+         ld X (X CDR)  # NIL-terminated?
+         cmp X Nil
+      while ne  # No
+         atom X  # Atomic tail?
+         if nz  # Yes
+            ld B DOT  # Output dotted pair
+            call (PutBinBZ)
+            ld E X  # Output atom
+            call binPrintEZ
+            pop Y  # Return
+            pop X
+            ret
+         end
+      loop
+   else
+      cmp X Y  # Fully circular?
+      if eq  # Yes
+         do
+            ld E (X)  # Output CAR
+            call binPrintEZ
+            ld X (X CDR)  # Done?
+            cmp X Y
+         until eq  # Yes
+         ld B DOT  # Output dotted pair
+         call (PutBinBZ)
+      else
+         do  # Non-circular part
+            ld E (X)  # Output CAR
+            call binPrintEZ
+            ld X (X CDR)  # Done?
+            cmp X Y
+         until eq  # Yes
+         ld B DOT  # Output DOT+BEG
+         call (PutBinBZ)
+         ld B BEG
+         call (PutBinBZ)
+         do  # Circular part
+            ld E (X)  # Output CAR
+            call binPrintEZ
+            ld X (X CDR)  # Done?
+            cmp X Y
+         until eq  # Yes
+         ld B DOT  # Output DOT+END
+         call (PutBinBZ)
+         ld B END
+         call (PutBinBZ)
       end
-   loop
+   end
    pop Y
    pop X
-   ld A END  # End list
+   ld B END  # End list
    jmp (PutBinBZ)
 
 # Family IPC
@@ -4675,36 +4703,70 @@
          ret
       end
    end
-   ld X E  # Keep list head
+   push Y
    ld B (char "(")  # Open paren
    call (PutB)
-   do
-      push (E CDR)  # Save rest
-      ld E (E)  # Print CAR
-      call printE
-      pop E
-      cmp E Nil  # NIL-terminated?
-   while ne  # No
-      cmp E X  # Circular?
+   call circE_XYF  # Circular list?
+   if nz  # No
+      do
+         ld E (X)  # Print CAR
+         call printE
+         ld X (X CDR)  # NIL-terminated?
+         cmp X Nil
+      while ne  # No
+         atom X  # Atomic tail?
+         if nz  # Yes
+            call space  # Print " . "
+            ld B (char ".")
+            call (PutB)
+            call space
+            ld E X  # and the atom
+            call printE
+            break T
+         end
+         call space  # Print space
+      loop
+   else
+      cmp X Y  # Fully circular?
       if eq  # Yes
-         call space  # Print " ."
-         ld B (char ".")
+         do
+            ld E (X)  # Print CAR
+            call printE
+            call space  # and space
+            ld X (X CDR)  # Done?
+            cmp X Y
+         until eq  # Yes
+         ld B (char ".")  # Print "."
          call (PutB)
-         break T
-      end
-      atom E  # Atomic tail?
-      if nz  # Yes
-         call space  # Print " . "
-         ld B (char ".")
+      else
+         do  # Non-circular part
+            ld E (X)  # Print CAR
+            call printE
+            call space  # and space
+            ld X (X CDR)  # Done?
+            cmp X Y
+         until eq  # Yes
+         ld B (char ".")  # Print ". ("
          call (PutB)
          call space
-         call printE  # and the atom
-         break T
+         ld B (char "(")
+         call (PutB)
+         do  # Circular part
+            ld E (X)  # Print CAR
+            call printE
+            call space  # and space
+            ld X (X CDR)  # Done?
+            cmp X Y
+         until eq  # Yes
+         ld B (char ".")  # Print ".)"
+         call (PutB)
+         ld B (char ")")
+         call (PutB)
       end
-      call space  # Print space
-   loop
+   end
    ld B (char ")")  # Closing paren
    call (PutB)
+   pop Y
    pop X
    ret
 
@@ -4999,18 +5061,18 @@
    push X
    ld X (E CDR)  # Args
    ld A BEG  # Begin list
-   call putCharA
+   call putCharB
    do
       ld E (X)  # Eval next arg
       eval
-      ld (PutBinBZ) putCharA  # Set binary print function
+      ld (PutBinBZ) putCharB  # Set binary print function
       ld (Extn) (ExtN)  # Set external symbol offset
       call binPrintEZ
       ld X (X CDR)  # X on rest
       atom X  # Any
    until nz  # No
    ld A END  # End list
-   call putCharA
+   call putCharB
    cc fflush((stdout))  # Flush
    nul4  # OK?
    ld E Nil
@@ -5018,7 +5080,8 @@
    pop X
    ret
 
-(code 'putCharA 0)
+(code 'putCharB 0)
+   zxt  # Extend into A
    cc putchar_unlocked(A)
    ret
 

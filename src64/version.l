@@ -1,6 +1,6 @@
-# 15jul10abu
+# 21jul10abu
 # (c) Software Lab. Alexander Burger
 
-(de *Version 3 0 3 5)
+(de *Version 3 0 3 6)
 
 # vi:et:ts=3:sw=3

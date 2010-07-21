@@ -1,4 +1,4 @@
-/* 03jun10abu
+/* 21jul10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -392,18 +392,31 @@ void binPrint(int extn, any x) {
          prNum(EXTERN, extn? extOffs(-extn, y) : y);
    }
    else {
-      y = x;
       putBin(BEG);
-      while (binPrint(extn, car(x)), !isNil(x = cdr(x))) {
-         if (x == y) {
-            putBin(DOT);
-            break;
+      if ((y = circ(x)) == NULL) {
+         while (binPrint(extn, car(x)), !isNil(x = cdr(x))) {
+            if (!isCell(x)) {
+               putBin(DOT);
+               binPrint(extn, x);
+               return;
+            }
          }
-         if (!isCell(x)) {
-            putBin(DOT);
-            binPrint(extn, x);
-            return;
-         }
+      }
+      else if (y == x) {
+         do
+            binPrint(extn, car(x));
+         while (y != (x = cdr(x)));
+         putBin(DOT);
+      }
+      else {
+         do
+            binPrint(extn, car(x));
+         while (y != (x = cdr(x)));
+         putBin(DOT),  putBin(BEG);
+         do
+            binPrint(extn, car(x));
+         while (y != (x = cdr(x)));
+         putBin(DOT),  putBin(END);
       }
       putBin(END);
    }
@@ -2283,19 +2296,34 @@ void print1(any x) {
    else if (car(x) == Quote  &&  x != cdr(x))
       Env.put('\''),  print1(cdr(x));
    else {
-      any y = x;
+      any y;
+
       Env.put('(');
-      while (print1(car(x)), !isNil(x = cdr(x))) {
-         if (x == y) {
-            outString(" .");
-            break;
+      if ((y = circ(x)) == NULL) {
+         while (print1(car(x)), !isNil(x = cdr(x))) {
+            if (!isCell(x)) {
+               outString(" . ");
+               print1(x);
+               break;
+            }
+            space();
          }
-         if (!isCell(x)) {
-            outString(" . ");
-            print1(x);
-            break;
-         }
-         space();
+      }
+      else if (y == x) {
+         do
+            print1(car(x)),  space();
+         while (y != (x = cdr(x)));
+         Env.put('.');
+      }
+      else {
+         do
+            print1(car(x)),  space();
+         while (y != (x = cdr(x)));
+         outString(". (");
+         do
+            print1(car(x)),  space();
+         while (y != (x = cdr(x)));
+         outString(".)");
       }
       Env.put(')');
    }

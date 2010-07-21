@@ -1,7 +1,7 @@
-# 19jun10abu
+# 21jul10abu
 # (c) Software Lab. Alexander Burger
 
-(load "lib/native.l")
+(load "@lib/native.l")
 
 (de log (X)
    (and (gt0 X) ("log" X 1.0)) )

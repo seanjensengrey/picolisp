@@ -1,4 +1,4 @@
-/* 04jun10abu
+/* 21jul10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -280,6 +280,7 @@ void bye(int) __attribute__ ((noreturn));
 void byteSym(int,int*,any*);
 void cellError(any,any) __attribute__ ((noreturn));
 void charSym(int,int*,any*);
+any circ(any);
 void closeInFile(int);
 void closeOnExec(any,int);
 void closeOutFile(int);
