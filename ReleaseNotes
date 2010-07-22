@@ -1,4 +1,4 @@
-04jul10abu
+22jul10abu
 (c) Software Lab. Alexander Burger
 
 
@@ -9,3 +9,5 @@ A. In the 64-bit version bignum division is now faster by a factor between 20
    and 60. That version had used an inefficient algorithm (bitwise shifts),
    which was now replaced by Knuth's wordwise division algorithm (as is used
    32-bit version).
+
+B. An OpenGL library (64-bit) is now part of the standard release.
