@@ -1,4 +1,4 @@
-# 21jul10abu
+# 22jul10abu
 # (c) Software Lab. Alexander Burger
 
 ### Global return labels ###
@@ -874,9 +874,15 @@
       atom E  # E's CDR atomic?
       break nz  # Yes: 'ne'
       cmp A (S I)  # A circular?
-      break eq  # Yes: 'eq'
+      if eq  # Yes
+         cmp E (S)  # Return whether E is also circular
+         break T
+      end
       cmp E (S)  # E circular?
-      break eq  # Yes: 'eq'
+      if eq  # Yes
+         clrz
+         break T  # Yes: 'ne'
+      end
    loop
    pop A  # Drop list heads
    pop A

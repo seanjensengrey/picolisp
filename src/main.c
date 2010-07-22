@@ -1,4 +1,4 @@
-/* 21jul10abu
+/* 22jul10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -405,8 +405,10 @@ bool equal(any x, any y) {
                return equal(x, cdr(y));
             if (!isCell(y = cdr(y)))
                return NO;
-            if (x == a && y == b)
-               return YES;
+            if (x == a)
+               return y == b;
+            if (y == b)
+               return NO;
          }
       }
    }
