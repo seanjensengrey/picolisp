@@ -1,4 +1,4 @@
-# 22jul10abu
+# 24jul10abu
 # 22jul10jk
 # (c) Software Lab. Alexander Burger
 
@@ -123,7 +123,9 @@
 
 
 ### OpenGL library interface ###
-(de *GlutLib . "/usr/lib/libglut.so")
+(default
+   *GluLib "/usr/lib/libGLU.so"
+   *GlutLib "/usr/lib/libglut.so" )
 
 
 ### Inline-C functions ###
