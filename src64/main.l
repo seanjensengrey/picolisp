@@ -1,4 +1,4 @@
-# 22jul10abu
+# 24jul10abu
 # (c) Software Lab. Alexander Burger
 
 ### Global return labels ###
@@ -1377,18 +1377,18 @@
          push (E DIG)  # <S> Library handle
       else
          call needSymEX  # Check symbol
-         call bufStringE_SZ  # Write to stack buffer
-         ld C S  # Preload name pointer
-         ld B (S)  # Check for main program library
-         cmp B (char "@")  # "@"?
-         if eq
-            nul (S 1)
-            ldz C 0  # Yes: Use NULL pointer
+         ld A (E TAIL)  # Check for main program library
+         call nameA_A  # Get name
+         cmp A (| CNT (>> -4 (char "@")))  # "@"?
+         if eq  # Yes
+            cc dlopen(0 (| RTLD_LAZY RTLD_GLOBAL))  # Open main library
+         else
+            call pathStringE_SZ  # Write to stack buffer
+            cc dlopen(S (| RTLD_LAZY RTLD_GLOBAL))  # Open dynamic library
+            ld S Z  # Drop buffer
          end
-         cc dlopen(C (| RTLD_LAZY RTLD_GLOBAL))  # Open dynamic library
          null A  # OK?
          jz dlErrX  # No
-         ld S Z  # Drop buffer
          push A  # <S> Library handle
          test A (hex "F000000000000000")  # Fit in short number?
          if z  # Yes
