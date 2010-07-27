@@ -1,5 +1,5 @@
-# 24jul10abu
-# 22jul10jk
+# 27jul10abu
+# 27jul10jk
 # (c) Software Lab. Alexander Burger
 
 (load "@lib/math.l" "@lib/native.l")
@@ -105,6 +105,7 @@
 (def 'GLUT_KEY_F10	10)
 (def 'GLUT_KEY_F11	11)
 (def 'GLUT_KEY_F12	12)
+
 # Directional keys
 (def 'GLUT_KEY_LEFT			100)
 (def 'GLUT_KEY_UP				101)
@@ -131,9 +132,16 @@
 ### Inline-C functions ###
 (gcc "glut" (list *GlutLib)
    (glClearColor (Red Green Blue Alpha) "GlClearColor" NIL Red Green Blue Alpha 1.0)
+   (glClearDepth (Depth) "GlClearDepth" NIL Depth 1.0)
    (glColor3f (Red Green Blue) "GlColor3f" NIL Red Green Blue 1.0)
+   (glColor4f (Red Green Blue Alpha) "GlColor4f" NIL Red Green Blue Alpha 1.0)
+   (glNormal3f (X Y Z) "GlNormal3f" NIL X Y Z 1.0)
    (glOrtho (Left Right Bottom Top Near Far) "GlOrtho" NIL Left Right Bottom Top Near Far 1.0)
+   (glRotatef (X Y Z) "GlRotatef" NIL Angle X Y Z 1.0)
+   (glTranslatef (X Y Z) "GlTranslatef" NIL X Y Z 1.0)
    (glVertex3f (X Y Z) "GlVertex3f" NIL X Y Z 1.0)
+   (glutSolidCube () "GlutSolidCube")
+   (glutWireCube () "GlutWireCube")
    (glutDisplayFunc () "GlutDisplayFunc")
    (glutCreateMenu () "GlutCreateMenu")
    (glutKeyboardFunc () "GlutKeyboardFunc")
@@ -157,11 +165,31 @@ void GlClearColor(long red, long green, long blue, long alpha, int scl) {
       (GLclampf)alpha / (float)scl );
 }
 
+void GlClearDepth(long depth, int scl) {
+   glClearDepth(
+      (double)depth / (double)scl );
+}
+
 void GlColor3f(long red, long green, long blue, int scl) {
    glColor3f(
       (double)red / (double)scl,
       (double)green / (double)scl,
       (double)blue / (double)scl );
+}
+
+void GlColor4f(long red, long green, long blue, long alpha, int scl) {
+   glColor4f(
+      (double)red / (double)scl,
+      (double)green / (double)scl,
+      (double)blue / (double)scl,
+      (double)alpha / (double)scl );
+}
+
+void GlNormal3f(long vx, long vy, long vz, int scl) {
+   glNormal3f(
+      (double)vx / (double)scl,
+      (double)vy / (double)scl,
+      (double)vz / (double)scl );
 }
 
 void GlOrtho(long left, long right, long bottom, long top, long near, long far, long scl) {
@@ -174,11 +202,36 @@ void GlOrtho(long left, long right, long bottom, long top, long near, long far, 
       (double)far / (double)scl );
 }
 
+void GlRotatef(long angle, long vx, long vy, long vz, int scl) {
+   glRotatef(
+      (double)angle / (double)scl,
+      (double)vx / (double)scl,
+      (double)vy / (double)scl,
+      (double)vz / (double)scl );
+}
+
+void GlTranslatef(long vx, long vy, long vz, int scl) {
+   glTranslatef(
+      (double)vx / (double)scl,
+      (double)vy / (double)scl,
+      (double)vz / (double)scl );
+}
+
 void GlVertex3f(long vx, long vy, long vz, int scl) {
    glVertex3f(
       (double)vx / (double)scl,
       (double)vy / (double)scl,
       (double)vz / (double)scl );
+}
+
+void GlutSolidCube(long size, int scl) {
+   glutSolidCube(
+      (double)size / (double)scl );
+}
+
+void GlutWireCube(long size, int scl) {
+   glutWireCube(
+      (double)size / (double)scl );
 }
 
 static void displayCallback(void) {
@@ -239,6 +292,9 @@ void GlutTimerFunc(int msec, int val) {glutTimerFunc(msec, timerCallback, val);}
 (de glutCreateWindow (Name)
    (native `*GlutLib "glutCreateWindow" NIL Name) )
 
+(de glutSwapBuffers ()
+   (native `*GlutLib "glutSwapBuffers") )
+
 (de glMatrixMode (Mode)
    (native `*GlutLib "glMatrixMode" NIL Mode) )
 
@@ -253,6 +309,12 @@ void GlutTimerFunc(int msec, int val) {glutTimerFunc(msec, timerCallback, val);}
 
 (de glEnd ()
    (native `*GlutLib "glEnd") )
+
+(de glColorMaterial (Face Mode)
+   (native `*GlutLib "glColorMaterial" NIL Face Mode) )
+
+(de glDepthFunc (Num)
+   (native `*GlutLib "glDepthFunc" NIL Num) )
 
 (de glEnable (Num)
    (native `*GlutLib "glEnable" NIL Num) )
@@ -272,10 +334,20 @@ void GlutTimerFunc(int msec, int val) {glutTimerFunc(msec, timerCallback, val);}
 (de glFlush ()
    (native `*GlutLib "glFlush") )
 
-#(de gluPerspective (Fovy Aspect ZNear ZFar)
-#   (native `*GlutLib "gluPerspective" NIL Fovy Aspect ZNear ZFar) )
-# Why does the above give me this:
-# [DLL] /usr/lib/libglut.so: undefined symbol: gluPerspective
+(de glPopMatrix ()
+   (native `*GlutLib "glPopMatrix") )
+
+(de glPushMatrix ()
+   (native `*GlutLib "glPushMatrix") )
+
+(de glShadeModel (Num)
+   (native `*GlutLib "glShadeModel" NIL Num) )
+
+(de glViewport (X Y W H)
+   (native `*GlutLib "glViewport" NIL X Y W H) )
+
+(de gluPerspective (Fovy Aspect ZNear ZFar)
+   (native `*GluLib "gluPerspective" NIL Fovy Aspect ZNear ZFar) )
 
 (de glutMainLoop ()
    (native `*GlutLib "glutMainLoop") )

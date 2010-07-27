@@ -1,4 +1,4 @@
-22jul10abu
+27jul10abu
 (c) Software Lab. Alexander Burger
 
 
@@ -11,3 +11,7 @@ A. In the 64-bit version bignum division is now faster by a factor between 20
    32-bit version).
 
 B. An OpenGL library (64-bit) is now part of the standard release.
+
+C. The 'native' function now also accepts up to six fixpoint arguments of the
+   form (value . 1.0), and can return scaled fixpoint numbers if the return spec
+   is a number (typically 1.0).

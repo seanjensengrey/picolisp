@@ -1,4 +1,4 @@
-# 02jun10abu
+# 27jul10abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -573,6 +573,37 @@
 (asm jgt (Adr A)
    (_jmp "ja" "jbe") )
 
+(asm darg (Src S Src2 S2)
+   (prinst "movapd" "%xmm4" "%xmm5")
+   (prinst "movapd" "%xmm3" "%xmm4")
+   (prinst "movapd" "%xmm2" "%xmm3")
+   (prinst "movapd" "%xmm1" "%xmm2")
+   (prinst "movapd" "%xmm0" "%xmm1")
+   (prinst "cvtsi2sd" (src Src S) "%xmm0")
+   (prinst "cvtsi2sd" (src Src2 S2) "%xmm7")
+   (prinst "divsd" "%xmm7" "%xmm0") )
+
+(asm dval (Src S)
+   (prinst "movsd" (src Src S) "%xmm0") )
+
+(asm fix (Src S)
+   (prinst "sub" "$8" "%rsp")                # Space for buffer
+   (prinst "movsd" "%xmm0" "(%rsp)")         # Get value
+   (prinst "mov" "6(%rsp)" "%ax")            # Mantisse [s111 1111 1111 xxxx]
+   (prinst "and" "$0x7FF0" "%rax")           # Infinite/NaN?
+   (prinst "cmp" "$0x7FF0" "%rax")
+   (prinst "pop" "%rax")                     # Keep value
+   (prinst "jz" "1f")                        # Yes: Skip
+   (prinst "cvtsi2sd" (src Src S) "%xmm7")   # Mulitply with scale
+   (prinst "mulsd" "%xmm7" "%xmm0")
+   (prinst "call" "lround")
+   (prinst "clc")                            # No carry: Normal value
+   (prinst "jmp" "2f")
+   (prinl "1:")
+   (prinst "or" "%rax" "%rax")               # Set sign flag
+   (prinst "stc")                            # Carry: Special value
+   (prinl "2:") )
+
 (asm cc (Adr A Arg M)
    (unless (== 'cc (caar (seek '((L) (== (cadr L) *Statement)) *Program)))
       (prinst "mov" "%rdx" "%r12") )
@@ -610,21 +641,21 @@
                      (off Lea) ) )
                Arg
                M )
-            # Don't use SSE registers if varargs
+            # Don't use SSE registers in varargs for static calls
             (when (member Adr '("printf" "fprintf" "sprintf"))
-               (prinst "xor" "%rax" "%rax") ) )
+               (prinst "xor" "%al" "%al") ) )
          (for R Reg
             (prinst "cmp" "%rsp" Arg)
             (prinst "jz" "1f")
             (prinst "pop" R) )
          (prinl "1:")
-         # Don't use SSE registers if varargs
-         (prinst "xor" "%rax" "%rax") ) )
+         # Maximally 6 SSE registers in varargs for dynamic calls
+         (prinst "mov" "$6" "%al") ) )
    ((get 'call 'asm) Adr A)
-   (if (lst? Arg)
-      (when (gt0 (- (length Arg) 6))
-         (prinst "lea" (pack (* @ 8) "(%rsp)") "%rsp") )
-      (prinst "mov" Arg "%rsp") )
+   (and
+      (lst? Arg)
+      (gt0 (- (length Arg) 6))
+      (prinst "lea" (pack (* @ 8) "(%rsp)") "%rsp") )
    (unless (== 'cc (caadr (memq *Statement *Program)))
       (prinst "mov" "%r12" "%rdx")
       (prinst "xor" "%r12" "%r12") ) )

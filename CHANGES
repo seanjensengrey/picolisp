@@ -1,4 +1,5 @@
 * XXsep10 picoLisp-3.0.4
+   'native' fixpoint handling
    OpenGL (64-bit) in "lib/openGl.l"
    Faster bignum division (64-bit)
 

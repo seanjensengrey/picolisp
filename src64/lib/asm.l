@@ -1,4 +1,4 @@
-# 02jun10abu
+# 27jul10abu
 # (c) Software Lab. Alexander Burger
 
 # *LittleEndian *Registers optimize
@@ -392,14 +392,17 @@
       (cmp4 (source) "*Mode")
       (cmpn (destination) "*Mode" (source) "*Mode" (source) "*Mode")
       (cnt (source) "*Mode")
+      (darg (source) "*Mode" (source) "*Mode")
       (dbg)
       (dec (destination) "*Mode")
       (div (source) "*Mode")
       (drop)
+      (dval (source) "*Mode")
       (eval)
       (eval+)
       (eval/ret)
       (exec (reg (read)))
+      (fix (source) "*Mode")
       (hx2 (read))
       (inc (destination) "*Mode")
       (initCode)
