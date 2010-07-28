@@ -1,4 +1,4 @@
-# 11jun10abu
+# 28jul10abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Globals 0)
@@ -43,9 +43,6 @@
 : Extn         word  0
 : StrX         word  0           # String status
 : StrC         word  0
-: Alarm        word  Nil         # Alarm handler
-: Sigio        word  Nil         # Sigio handler
-: LineX        word  ZERO        # Console line
 : LineC        word  -1
 : Break        word  0           # Breakpoint
 : GcCount      word  CELLS       # Collector count
@@ -70,11 +67,24 @@
 : DbJnl        word  0           # Journal file
 : DbLog        word  0           # Transaction log file
 
-# Symbol trees
+# GC relevant data
 :: Intern      word  Nil         # Short internal names
                word  Nil         # Long internal names
 :: Transient   word  Nil         # Short transient names
                word  Nil         # Long transient names
+: Alarm        word  Nil         # Alarm handler
+: Sigio        word  Nil         # Sigio handler
+: LineX        word  ZERO        # Console line
+: Lisp1        word  Nil         # Lisp callbacks
+: Lisp2        word  Nil
+: Lisp3        word  Nil
+: Lisp4        word  Nil
+: Lisp5        word  Nil
+: Lisp6        word  Nil
+: Lisp7        word  Nil
+: Lisp8        word  Nil
+: Lisp9        word  Nil
+: GcMarkEnd
 
 
 # Symbol Table
@@ -135,6 +145,15 @@
    initSym NIL       "quit"      doQuit
    initSym NIL       "errno"     doErrno
    initSym NIL       "native"    doNative
+   initSym NIL       "lisp5"     doLisp5
+   initSym NIL       "lisp2"     doLisp2
+   initSym NIL       "lisp7"     doLisp7
+   initSym NIL       "lisp1"     doLisp1
+   initSym NIL       "lisp3"     doLisp3
+   initSym NIL       "lisp6"     doLisp6
+   initSym NIL       "lisp8"     doLisp8
+   initSym NIL       "lisp4"     doLisp4
+   initSym NIL       "lisp9"     doLisp9
    initSym NIL       "args"      doArgs
    initSym NIL       "next"      doNext
    initSym NIL       "arg"       doArg
@@ -504,6 +523,8 @@
    word  Db1
    word  Nil
 
+: GcSymEnd
+
 # Version number
 :: Version
    word (short `(car *Version))
@@ -514,8 +535,6 @@
    word .+8
    word (short `(cadddr *Version))
    word Nil
-
-: GcMarkEnd
 
 # Structures
 : EnvCo  # Coroutine environment

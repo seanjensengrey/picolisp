@@ -272,6 +272,34 @@ href="refN.html#noLint">noLint</a></code>.
 ...
 </code></pre>
 
+<dt><a name="lisp1"><code>(lisp1 'fun) -> num</code></a>
+<dt><code>.. (lisp9 'fun) -> num</code>
+<dd>Installs a callback function <code>fun</code>, and returns a pointer
+<code>num</code> suitable to be passed to a C function via 'native'. Maximally
+nine callback functions can be installed that way. 'fun' should be a function of
+maximally five numbers, and should return a number. See also <code><a
+href="refN.html#native">native</a></code>.
+
+<pre><code>
+(load "lib/native.l")
+
+(gcc "ltest" NIL
+   (cbTest (Fun) cbTest 'N Fun) )
+
+long cbTest(int(*fun)(int,int,int,int,int)) {
+   return fun(1,2,3,4,5);
+}
+/**/
+
+: (cbTest
+   (lisp1
+      '((A B C D E)
+         (msg (list A B C D E))
+         (* A B C D E) ) ) )
+(1 2 3 4 5)
+-> 120
+</code></pre>
+
 <dt><a name="list"><code>(list 'any ['any ..]) -> lst</code></a>
 <dd>Returns a list of all <code>any</code> arguments. See also <code><a
 href="refC.html#cons">cons</a></code>.

@@ -1,4 +1,4 @@
-# 27jul10abu
+# 28jul10abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -589,7 +589,7 @@
 (asm fix (Src S)
    (prinst "sub" "$8" "%rsp")                # Space for buffer
    (prinst "movsd" "%xmm0" "(%rsp)")         # Get value
-   (prinst "mov" "6(%rsp)" "%ax")            # Mantisse [s111 1111 1111 xxxx]
+   (prinst "mov" "6(%rsp)" "%ax")            # Mantissa [s111 1111 1111 xxxx]
    (prinst "and" "$0x7FF0" "%rax")           # Infinite/NaN?
    (prinst "cmp" "$0x7FF0" "%rax")
    (prinst "pop" "%rax")                     # Keep value

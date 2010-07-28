@@ -1,8 +1,8 @@
-# 27jul10abu
+# 28jul10abu
 # 27jul10jk
 # (c) Software Lab. Alexander Burger
 
-(load "@lib/math.l" "@lib/native.l")
+(load "@lib/math.l")
 
 ### Constant Definitions ###
 # Primitives
@@ -122,159 +122,19 @@
 (def 'GLUT_MIDDLE_BUTTON	1)
 (def 'GLUT_RIGHT_BUTTON		2)
 
-
 ### OpenGL library interface ###
 (default
    *GluLib "/usr/lib/libGLU.so"
    *GlutLib "/usr/lib/libglut.so" )
 
-
-### Inline-C functions ###
-(gcc "glut" (list *GlutLib)
-   (glClearColor (Red Green Blue Alpha) "GlClearColor" NIL Red Green Blue Alpha 1.0)
-   (glClearDepth (Depth) "GlClearDepth" NIL Depth 1.0)
-   (glColor3f (Red Green Blue) "GlColor3f" NIL Red Green Blue 1.0)
-   (glColor4f (Red Green Blue Alpha) "GlColor4f" NIL Red Green Blue Alpha 1.0)
-   (glNormal3f (X Y Z) "GlNormal3f" NIL X Y Z 1.0)
-   (glOrtho (Left Right Bottom Top Near Far) "GlOrtho" NIL Left Right Bottom Top Near Far 1.0)
-   (glRotatef (X Y Z) "GlRotatef" NIL Angle X Y Z 1.0)
-   (glTranslatef (X Y Z) "GlTranslatef" NIL X Y Z 1.0)
-   (glVertex3f (X Y Z) "GlVertex3f" NIL X Y Z 1.0)
-   (glutSolidCube () "GlutSolidCube")
-   (glutWireCube () "GlutWireCube")
-   (glutDisplayFunc () "GlutDisplayFunc")
-   (glutCreateMenu () "GlutCreateMenu")
-   (glutKeyboardFunc () "GlutKeyboardFunc")
-   (glutMotionFunc () "GlutMotionFunc")
-   (glutMouseFunc () "GlutMouseFunc")
-   (glutReshapeFunc () "GlutReshapeFunc")
-   (glutSpecialFunc () "GlutSpecialFunc")
-   (glutTimerFunc () "GlutTimerFunc") )
-
-#include <GL/glut.h>
-#include <GL/glu.h>
-#include <GL/gl.h>
-
-extern long lisp(char*,long,long,long,long,long);
-
-void GlClearColor(long red, long green, long blue, long alpha, int scl) {
-   glClearColor(
-      (GLclampf)red / (float)scl,
-      (GLclampf)green / (float)scl,
-      (GLclampf)blue / (float)scl,
-      (GLclampf)alpha / (float)scl );
-}
-
-void GlClearDepth(long depth, int scl) {
-   glClearDepth(
-      (double)depth / (double)scl );
-}
-
-void GlColor3f(long red, long green, long blue, int scl) {
-   glColor3f(
-      (double)red / (double)scl,
-      (double)green / (double)scl,
-      (double)blue / (double)scl );
-}
-
-void GlColor4f(long red, long green, long blue, long alpha, int scl) {
-   glColor4f(
-      (double)red / (double)scl,
-      (double)green / (double)scl,
-      (double)blue / (double)scl,
-      (double)alpha / (double)scl );
-}
-
-void GlNormal3f(long vx, long vy, long vz, int scl) {
-   glNormal3f(
-      (double)vx / (double)scl,
-      (double)vy / (double)scl,
-      (double)vz / (double)scl );
-}
-
-void GlOrtho(long left, long right, long bottom, long top, long near, long far, long scl) {
-   glOrtho(
-      (double)left / (double)scl,
-      (double)right / (double)scl,
-      (double)bottom / (double)scl,
-      (double)top / (double)scl,
-      (double)near / (double)scl,
-      (double)far / (double)scl );
-}
-
-void GlRotatef(long angle, long vx, long vy, long vz, int scl) {
-   glRotatef(
-      (double)angle / (double)scl,
-      (double)vx / (double)scl,
-      (double)vy / (double)scl,
-      (double)vz / (double)scl );
-}
-
-void GlTranslatef(long vx, long vy, long vz, int scl) {
-   glTranslatef(
-      (double)vx / (double)scl,
-      (double)vy / (double)scl,
-      (double)vz / (double)scl );
-}
-
-void GlVertex3f(long vx, long vy, long vz, int scl) {
-   glVertex3f(
-      (double)vx / (double)scl,
-      (double)vy / (double)scl,
-      (double)vz / (double)scl );
-}
-
-void GlutSolidCube(long size, int scl) {
-   glutSolidCube(
-      (double)size / (double)scl );
-}
-
-void GlutWireCube(long size, int scl) {
-   glutWireCube(
-      (double)size / (double)scl );
-}
-
-static void displayCallback(void) {
-   lisp("displayCallback", 0, 0, 0, 0, 0);
-}
-void GlutDisplayFunc(void) {glutDisplayFunc(displayCallback);}
-
-static void createMenuCallback(int val) {
-   lisp("createMenuCallback", val, 0, 0, 0, 0);
-}
-void GlutCreateMenu(void) {glutCreateMenu(createMenuCallback);}
-
-static void keyboardCallback(unsigned char key, int xv, int yv) {
-   lisp("keyboardCallback", key, xv, yv, 0, 0);
-}
-void GlutKeyboardFunc(void) {glutKeyboardFunc(keyboardCallback);}
-
-static void motionCallback(int xv, int yv) {
-   lisp("motionCallback", xv, yv, 0, 0, 0);
-}
-void GlutMotionFunc(void) {glutMotionFunc(motionCallback);}
-
-static void mouseCallback(int button, int state, int xv, int yv) {
-   lisp("mouseCallback", button, state, xv, yv, 0);
-}
-void GlutMouseFunc(void) {glutMouseFunc(mouseCallback);}
-
-static void reshapeCallback(int width, int height) {
-   lisp("reshapeCallback", width, height, 0, 0, 0);
-}
-void GlutReshapeFunc(void) {glutReshapeFunc(reshapeCallback);}
-
-static void specialCallback(int key, int xv, int yv) {
-   lisp("specialCallback", key, xv, yv, 0, 0);
-}
-void GlutSpecialFunc(void) {glutSpecialFunc(specialCallback);}
-
-static void timerCallback(int val) {
-   lisp("timerCallback", val, 0, 0, 0, 0);
-}
-void GlutTimerFunc(int msec, int val) {glutTimerFunc(msec, timerCallback, val);}
-/**/
-
+# Pre-consed fixpoint arguments
+(setq
+   "Fix1" (0 . 1.0)
+   "Fix2" (0 . 1.0)
+   "Fix3" (0 . 1.0)
+   "Fix4" (0 . 1.0)
+   "Fix5" (0 . 1.0)
+   "Fix6" (0 . 1.0) )
 
 ### Native functions ###
 (de glutInit ()
@@ -309,6 +169,50 @@ void GlutTimerFunc(int msec, int val) {glutTimerFunc(msec, timerCallback, val);}
 
 (de glEnd ()
    (native `*GlutLib "glEnd") )
+
+(de glClearColor (Red Green Blue Alpha)
+   (set "Fix1" Red  "Fix2" Green  "Fix3" Blue  "Fix4" Alpha)
+   (native `*GlutLib "glClearColor" NIL "Fix1" "Fix2" "Fix3" "Fix4") )
+
+(de glClearDepth (Depth)
+   (set "Fix1" Depth)
+   (native `*GlutLib "glClearDepth" NIL "Fix1") )
+
+(de glColor3f (Red Green Blue)
+   (set "Fix1" Red  "Fix2" Green  "Fix3" Blue)
+   (native `*GlutLib "glColor3f" NIL "Fix1" "Fix2" "Fix3") )
+
+(de glColor4f (Red Green Blue Alpha)
+   (set "Fix1" Red  "Fix2" Green  "Fix3" Blue  "Fix4" Alpha)
+   (native `*GlutLib "glColor4f" NIL "Fix1" "Fix2" "Fix3" "Fix4") )
+
+(de glNormal3f (X Y Z)
+   (set "Fix1" X  "Fix2" Y  "Fix3" Z)
+   (native `*GlutLib "glNormal3f" NIL "Fix1" "Fix2" "Fix3") )
+
+(de glOrtho (Left Right Bottom Top Near Far)
+   (set "Fix1" Left  "Fix2" Right  "Fix3" Bottom  "Fix4" Top  "Fix5" Near  "Fix6" Far)
+   (native `*GlutLib "glOrtho" NIL "Fix1" "Fix2" "Fix3" "Fix4" "Fix5" "Fix6") )
+
+(de glRotatef (X Y Z)
+   (set "Fix1" X  "Fix2" Y  "Fix3" Z)
+   (native `*GlutLib "glRotatef" NIL "Fix1" "Fix2" "Fix3") )
+
+(de glTranslatef (X Y Z)
+   (set "Fix1" X  "Fix2" Y  "Fix3" Z)
+   (native `*GlutLib "glTranslatef" NIL "Fix1" "Fix2" "Fix3") )
+
+(de glVertex3f (X Y Z)
+   (set "Fix1" X  "Fix2" Y  "Fix3" Z)
+   (native `*GlutLib "glVertex3f" NIL "Fix1" "Fix2" "Fix3") )
+
+(de glutSolidCube (Size)
+   (set "Fix1" Size)
+   (native `*GlutLib "glutSolidCube" NIL "Fix1") )
+
+(de glutWireCube (Size)
+   (set "Fix1" Size)
+   (native `*GlutLib "glutWireCube" NIL "Fix1") )
 
 (de glColorMaterial (Face Mode)
    (native `*GlutLib "glColorMaterial" NIL Face Mode) )
@@ -361,72 +265,37 @@ void GlutTimerFunc(int msec, int val) {glutTimerFunc(msec, timerCallback, val);}
 (de glutPostRedisplay ()
    (native `*GlutLib "glutPostRedisplay") )
 
-
 ### Callbacks ###
-# Keep references in global symbols, to protect from garbage collection
-
 # Display Function
 (de displayPrg Prg
-   (setq *GlutDisplayPrg Prg)
-   (glutDisplayFunc) )
-
-(de displayCallback ()
-   (run *GlutDisplayPrg) )
+   (native `*GlutLib "glutDisplayFunc" NIL (lisp1 (cons NIL Prg))) )
 
 # CreateMenu Function
 (de createMenu (Fun)
-   (setq *CreateMenuFunc Fun)
-   (glutCreateMenu) )
-
-(de createMenuCallback (Val)
-   (*CreateMenuFunc Val) )
+   (native `*GlutLib "glutCreateMenu" NIL (lisp2 Fun)) )
 
 # Keyboard Function
 (de keyboardFunc (Fun)
-   (setq *GlutKeyboardFunc Fun)
-   (glutKeyboardFunc) )
-
-(de keyboardCallback (Key Xv Yv)
-   (*GlutKeyboardFunc Key Xv Yv) )
+   (native `*GlutLib "glutKeyboardFunc" NIL (lisp3 Fun)) )
 
 # Motion Function
 (de motionFunc (Fun)
-   (setq *GlutMotionFunc Fun)
-   (glutMotionFunc) )
-
-(de motionCallback (Xv Yv)
-   (*GlutMotionFunc Xv Yv) )
+   (native `*GlutLib "glutMotionFunc" NIL (lisp4 Fun)) )
 
 # Mouse Function
 (de mouseFunc (Fun)
-   (setq *GlutMouseFunc Fun)
-   (glutMouseFunc) )
-
-(de mouseCallback (Button State Xv Yv)
-   (*GlutMouseFunc Button State Xv Yv) )
+   (native `*GlutLib "glutMouseFunc" NIL (lisp5 Fun)) )
 
 # Reshape Function
 (de reshapeFunc (Fun)
-   (setq *GlutReshapeFunc Fun)
-   (glutReshapeFunc) )
-
-(de reshapeCallback (Width Height)
-   (*GlutReshapeFunc Width Height) )
+   (native `*GlutLib "glutReshapeFunc" NIL (lisp6 Fun)) )
 
 # Special Function
 (de specialFunc (Fun)
-   (setq *GlutSpecialFunc Fun)
-   (glutSpecialFunc) )
-
-(de specialCallback (Key Xv Yv)
-   (*GlutSpecialFunc Key Xv Yv) )
+   (native `*GlutLib "glutSpecialFunc" NIL (lisp7 Fun)) )
 
 # Timer Function
 (de timerFunc (Msec Fun Val)
-   (setq *GlutTimerFunc Fun)
-   (glutTimerFunc Msec Val) )
-
-(de timerCallback (Val)
-   (*GlutTimerFunc Val) )
+   (native `*GlutLib "glutTimerFunc" NIL Msec (lisp8 Fun) Val) )
 
 # vi:et:ts=3:sw=3

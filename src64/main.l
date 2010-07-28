@@ -1,4 +1,4 @@
-# 27jul10abu
+# 28jul10abu
 # (c) Software Lab. Alexander Burger
 
 ### Global return labels ###
@@ -1792,6 +1792,192 @@
       end
    end
    ret
+
+# (lisp1 'fun) -> num
+(code 'doLisp1 2)
+   ld E ((E CDR))  # Eval arg
+   eval
+   ld (Lisp1) E  # Set callback function
+   ld E cbLisp1  # Return function pointer
+: boxPtr
+   test E (hex "F000000000000000")  # Fit in short number?
+   jnz boxNumE_E  # No
+   shl E 4  # Else make short number
+   or E CNT
+   ret
+
+# (lisp2 'fun) -> num
+(code 'doLisp2 2)
+   ld E ((E CDR))  # Eval arg
+   eval
+   ld (Lisp2) E  # Set callback function
+   ld E cbLisp2  # Return function pointer
+   jmp boxPtr
+
+# (lisp3 'fun) -> num
+(code 'doLisp3 2)
+   ld E ((E CDR))  # Eval arg
+   eval
+   ld (Lisp3) E  # Set callback function
+   ld E cbLisp3  # Return function pointer
+   jmp boxPtr
+
+# (lisp4 'fun) -> num
+(code 'doLisp4 2)
+   ld E ((E CDR))  # Eval arg
+   eval
+   ld (Lisp4) E  # Set callback function
+   ld E cbLisp4  # Return function pointer
+   jmp boxPtr
+
+# (lisp5 'fun) -> num
+(code 'doLisp5 2)
+   ld E ((E CDR))  # Eval arg
+   eval
+   ld (Lisp5) E  # Set callback function
+   ld E cbLisp5  # Return function pointer
+   jmp boxPtr
+
+# (lisp6 'fun) -> num
+(code 'doLisp6 2)
+   ld E ((E CDR))  # Eval arg
+   eval
+   ld (Lisp6) E  # Set callback function
+   ld E cbLisp6  # Return function pointer
+   jmp boxPtr
+
+# (lisp7 'fun) -> num
+(code 'doLisp7 2)
+   ld E ((E CDR))  # Eval arg
+   eval
+   ld (Lisp7) E  # Set callback function
+   ld E cbLisp7  # Return function pointer
+   jmp boxPtr
+
+# (lisp8 'fun) -> num
+(code 'doLisp8 2)
+   ld E ((E CDR))  # Eval arg
+   eval
+   ld (Lisp8) E  # Set callback function
+   ld E cbLisp8  # Return function pointer
+   jmp boxPtr
+
+# (lisp9 'fun) -> num
+(code 'doLisp9 2)
+   ld E ((E CDR))  # Eval arg
+   eval
+   ld (Lisp9) E  # Set callback function
+   ld E cbLisp9  # Return function pointer
+   jmp boxPtr
+
+(code 'cbLisp1 0)
+   begin 5  # Arguments in A, C, E, X and Y
+   push Z
+   push L  # Save C frame pointer
+   ld L (Link)  # Restore link register
+   link  # Apply args
+   push (Lisp1)  # 'fun'
+: cbLisp
+   xchg A E  # First arg
+   call boxCntE_E  # Make number
+   push E
+   ld E C  # Second arg
+   call boxCntE_E  # Make number
+   push E
+   ld E A  # Third arg
+   call boxCntE_E  # Make number
+   push E
+   ld E X  # Fourth arg
+   call boxCntE_E  # Make number
+   push E
+   ld E Y  # Fifth arg
+   call boxCntE_E  # Make number
+   push E
+   ld Z S  # Z on last argument
+   link  # Close frame
+   lea Y (S VI)  # Pointer to 'fun' in Y
+   call applyXYZ_E  # Apply
+   ld A E  # Return value
+   shr A 4  # Normalize
+   if c  # Sign?
+      neg A  # Yes
+   end
+   drop
+   pop L  # Restore C frame pointer
+   pop Z
+   return 5
+
+(code 'cbLisp2 0)
+   begin 5  # Arguments in A, C, E, X and Y
+   push Z
+   push L  # Save C frame pointer
+   ld L (Link)  # Restore link register
+   link  # Apply args
+   push (Lisp2)  # 'fun'
+   jmp cbLisp
+
+(code 'cbLisp3 0)
+   begin 5  # Arguments in A, C, E, X and Y
+   push Z
+   push L  # Save C frame pointer
+   ld L (Link)  # Restore link register
+   link  # Apply args
+   push (Lisp3)  # 'fun'
+   jmp cbLisp
+
+(code 'cbLisp4 0)
+   begin 5  # Arguments in A, C, E, X and Y
+   push Z
+   push L  # Save C frame pointer
+   ld L (Link)  # Restore link register
+   link  # Apply args
+   push (Lisp4)  # 'fun'
+   jmp cbLisp
+
+(code 'cbLisp5 0)
+   begin 5  # Arguments in A, C, E, X and Y
+   push Z
+   push L  # Save C frame pointer
+   ld L (Link)  # Restore link register
+   link  # Apply args
+   push (Lisp5)  # 'fun'
+   jmp cbLisp
+
+(code 'cbLisp6 0)
+   begin 5  # Arguments in A, C, E, X and Y
+   push Z
+   push L  # Save C frame pointer
+   ld L (Link)  # Restore link register
+   link  # Apply args
+   push (Lisp6)  # 'fun'
+   jmp cbLisp
+
+(code 'cbLisp7 0)
+   begin 5  # Arguments in A, C, E, X and Y
+   push Z
+   push L  # Save C frame pointer
+   ld L (Link)  # Restore link register
+   link  # Apply args
+   push (Lisp7)  # 'fun'
+   jmp cbLisp
+
+(code 'cbLisp8 0)
+   begin 5  # Arguments in A, C, E, X and Y
+   push Z
+   push L  # Save C frame pointer
+   ld L (Link)  # Restore link register
+   link  # Apply args
+   push (Lisp8)  # 'fun'
+   jmp cbLisp
+
+(code 'cbLisp9 0)
+   begin 5  # Arguments in A, C, E, X and Y
+   push Z
+   push L  # Save C frame pointer
+   ld L (Link)  # Restore link register
+   link  # Apply args
+   push (Lisp9)  # 'fun'
+   jmp cbLisp
 
 (code 'lisp 0)
    begin 6  # Function name in A, arguments in C, E, X, Y and Z
