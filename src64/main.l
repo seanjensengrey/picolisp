@@ -1,4 +1,4 @@
-# 28jul10abu
+# 29jul10abu
 # (c) Software Lab. Alexander Burger
 
 ### Global return labels ###
@@ -361,6 +361,7 @@
       inc (Signal)
    end
    return 1
+   ret
 
 (code 'sigTerm)
    begin 0  # Ignore signal number
@@ -372,6 +373,7 @@
       inc (Signal)
    end
    return 0
+   ret
 
 (code 'sigChld)
    begin 0  # Ignore signal number
@@ -393,6 +395,7 @@
    pop C  # Restore 'errno'
    call errnoC
    return 0
+   ret
 : PidSigMsg asciz "%d SIG-%d\\n"
 
 (code 'tcSetC)
@@ -423,6 +426,7 @@
    ld C (Termio)
    call tcSetC
    return 0
+   ret
 
 (code 'setRaw 0)
    nul (Tio)  # Terminal I/O?
@@ -1795,11 +1799,14 @@
 
 # (lisp1 'fun) -> num
 (code 'doLisp1 2)
+   push cbLisp1  # Callback function pointer
+   push Lisp1  # Address of callback function
+: lispN
    ld E ((E CDR))  # Eval arg
    eval
-   ld (Lisp1) E  # Set callback function
-   ld E cbLisp1  # Return function pointer
-: boxPtr
+   pop A  # Get address
+   ld (A) E  # Set callback function
+   pop E  # Return function pointer
    test E (hex "F000000000000000")  # Fit in short number?
    jnz boxNumE_E  # No
    shl E 4  # Else make short number
@@ -1808,76 +1815,61 @@
 
 # (lisp2 'fun) -> num
 (code 'doLisp2 2)
-   ld E ((E CDR))  # Eval arg
-   eval
-   ld (Lisp2) E  # Set callback function
-   ld E cbLisp2  # Return function pointer
-   jmp boxPtr
+   push cbLisp2  # Callback function pointer
+   push Lisp2  # Address of callback function
+   jmp lispN
 
 # (lisp3 'fun) -> num
 (code 'doLisp3 2)
-   ld E ((E CDR))  # Eval arg
-   eval
-   ld (Lisp3) E  # Set callback function
-   ld E cbLisp3  # Return function pointer
-   jmp boxPtr
+   push cbLisp3  # Callback function pointer
+   push Lisp3  # Address of callback function
+   jmp lispN
 
 # (lisp4 'fun) -> num
 (code 'doLisp4 2)
-   ld E ((E CDR))  # Eval arg
-   eval
-   ld (Lisp4) E  # Set callback function
-   ld E cbLisp4  # Return function pointer
-   jmp boxPtr
+   push cbLisp4  # Callback function pointer
+   push Lisp4  # Address of callback function
+   jmp lispN
 
 # (lisp5 'fun) -> num
 (code 'doLisp5 2)
-   ld E ((E CDR))  # Eval arg
-   eval
-   ld (Lisp5) E  # Set callback function
-   ld E cbLisp5  # Return function pointer
-   jmp boxPtr
+   push cbLisp5  # Callback function pointer
+   push Lisp5  # Address of callback function
+   jmp lispN
 
 # (lisp6 'fun) -> num
 (code 'doLisp6 2)
-   ld E ((E CDR))  # Eval arg
-   eval
-   ld (Lisp6) E  # Set callback function
-   ld E cbLisp6  # Return function pointer
-   jmp boxPtr
+   push cbLisp6  # Callback function pointer
+   push Lisp6  # Address of callback function
+   jmp lispN
 
 # (lisp7 'fun) -> num
 (code 'doLisp7 2)
-   ld E ((E CDR))  # Eval arg
-   eval
-   ld (Lisp7) E  # Set callback function
-   ld E cbLisp7  # Return function pointer
-   jmp boxPtr
+   push cbLisp7  # Callback function pointer
+   push Lisp7  # Address of callback function
+   jmp lispN
 
 # (lisp8 'fun) -> num
 (code 'doLisp8 2)
-   ld E ((E CDR))  # Eval arg
-   eval
-   ld (Lisp8) E  # Set callback function
-   ld E cbLisp8  # Return function pointer
-   jmp boxPtr
+   push cbLisp8  # Callback function pointer
+   push Lisp8  # Address of callback function
+   jmp lispN
 
 # (lisp9 'fun) -> num
 (code 'doLisp9 2)
-   ld E ((E CDR))  # Eval arg
-   eval
-   ld (Lisp9) E  # Set callback function
-   ld E cbLisp9  # Return function pointer
-   jmp boxPtr
+   push cbLisp9  # Callback function pointer
+   push Lisp9  # Address of callback function
+   jmp lispN
 
 (code 'cbLisp1 0)
-   begin 5  # Arguments in A, C, E, X and Y
    push Z
+   ld Z Lisp1  # Address of callback function
+: cbLisp
+   begin 5  # Arguments in A, C, E, X and Y
    push L  # Save C frame pointer
    ld L (Link)  # Restore link register
    link  # Apply args
    push (Lisp1)  # 'fun'
-: cbLisp
    xchg A E  # First arg
    call boxCntE_E  # Make number
    push E
@@ -1904,79 +1896,48 @@
    end
    drop
    pop L  # Restore C frame pointer
-   pop Z
    return 5
+   pop Z
+   ret
 
 (code 'cbLisp2 0)
-   begin 5  # Arguments in A, C, E, X and Y
    push Z
-   push L  # Save C frame pointer
-   ld L (Link)  # Restore link register
-   link  # Apply args
-   push (Lisp2)  # 'fun'
+   ld Z Lisp2  # Address of callback function
    jmp cbLisp
 
 (code 'cbLisp3 0)
-   begin 5  # Arguments in A, C, E, X and Y
    push Z
-   push L  # Save C frame pointer
-   ld L (Link)  # Restore link register
-   link  # Apply args
-   push (Lisp3)  # 'fun'
+   ld Z Lisp3  # Address of callback function
    jmp cbLisp
 
 (code 'cbLisp4 0)
-   begin 5  # Arguments in A, C, E, X and Y
    push Z
-   push L  # Save C frame pointer
-   ld L (Link)  # Restore link register
-   link  # Apply args
-   push (Lisp4)  # 'fun'
+   ld Z Lisp4  # Address of callback function
    jmp cbLisp
 
 (code 'cbLisp5 0)
-   begin 5  # Arguments in A, C, E, X and Y
    push Z
-   push L  # Save C frame pointer
-   ld L (Link)  # Restore link register
-   link  # Apply args
-   push (Lisp5)  # 'fun'
+   ld Z Lisp5  # Address of callback function
    jmp cbLisp
 
 (code 'cbLisp6 0)
-   begin 5  # Arguments in A, C, E, X and Y
    push Z
-   push L  # Save C frame pointer
-   ld L (Link)  # Restore link register
-   link  # Apply args
-   push (Lisp6)  # 'fun'
+   ld Z Lisp6  # Address of callback function
    jmp cbLisp
 
 (code 'cbLisp7 0)
-   begin 5  # Arguments in A, C, E, X and Y
    push Z
-   push L  # Save C frame pointer
-   ld L (Link)  # Restore link register
-   link  # Apply args
-   push (Lisp7)  # 'fun'
+   ld Z Lisp7  # Address of callback function
    jmp cbLisp
 
 (code 'cbLisp8 0)
-   begin 5  # Arguments in A, C, E, X and Y
    push Z
-   push L  # Save C frame pointer
-   ld L (Link)  # Restore link register
-   link  # Apply args
-   push (Lisp8)  # 'fun'
+   ld Z Lisp8  # Address of callback function
    jmp cbLisp
 
 (code 'cbLisp9 0)
-   begin 5  # Arguments in A, C, E, X and Y
    push Z
-   push L  # Save C frame pointer
-   ld L (Link)  # Restore link register
-   link  # Apply args
-   push (Lisp9)  # 'fun'
+   ld Z Lisp9  # Address of callback function
    jmp cbLisp
 
 (code 'lisp 0)
@@ -2024,6 +1985,7 @@
    drop
    pop L  # Restore C frame pointer
    return 6
+   ret
 
 (code 'execE 0)
    push X

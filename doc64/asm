@@ -1,4 +1,4 @@
-# 27jul10abu
+# 29jul10abu
 # (c) Software Lab. Alexander Burger
 
 
@@ -170,7 +170,7 @@
 
       ret               # Return
       begin src         # Called from C-function with 'src' arguments
-      return src        # Return to C-function
+      return src        # Prepare to return to C-function
 
    Stack Manipulations:
       push src          # Push 'src' [---]

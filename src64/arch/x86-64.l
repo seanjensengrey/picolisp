@@ -1,4 +1,4 @@
-# 28jul10abu
+# 29jul10abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -690,8 +690,7 @@
    (and (>= N 5) (prinst "pop" "%r14"))
    (and (>= N 6) (prinst "pop" "%r15"))
    (prinst "pop" "%r12")
-   (prinst "pop" "%rbx")
-   (prinst "ret") )
+   (prinst "pop" "%rbx") )
 
 
 # Stack Manipulations
