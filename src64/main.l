@@ -1495,13 +1495,8 @@
             ld C (E CDR)  # Double?
             cnt C
             if nz  # Yes
-               shr C 4  # Normalize scale
-               ld A (E)  # and number
-               shr A 4
-               if c  # Sign?
-                  neg A  # Yes
-               end
-               darg A C  # Pass double argument
+               ld A (E)  # Get number
+               darg  # Pass double argument
             else
                ld E C  # Ignore variable
                ld C ((E))  # Get buffer size
@@ -1592,30 +1587,12 @@
    if ne
       cnt E  # Scale?
       if nz  # Yes
-         shr E 4  # Normalize
          null C  # Pointer?
          if nz  # Yes
-            dval (C)  # Get double value
+            dval  # Get double value
             add C 8  # Size of double
          end
-         fix E  # Get fixpoint number
-         if nc
-            ld E A  # Normal value
-            null E  # Negative?
-            if ns  # No
-               shl E 4  # Make short number
-               or E CNT
-            else
-               neg E  # Negate
-               shl E 4  # Make negative short number
-               or E (| SIGN CNT)
-            end
-         else
-            ld E Nil  # Special value
-            if ns  # Infinite?
-               ld E TSym
-            end
-         end
+         fix  # Get fixpoint number or flg
       else
          cmp E ISym  # 'I'?
          if eq  # Yes

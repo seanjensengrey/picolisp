@@ -573,36 +573,67 @@
 (asm jgt (Adr A)
    (_jmp "ja" "jbe") )
 
-(asm darg (Src S Src2 S2)
-   (prinst "movapd" "%xmm4" "%xmm5")
+(asm darg ()
+   (prinst "movapd" "%xmm4" "%xmm5")            # Push float stack
    (prinst "movapd" "%xmm3" "%xmm4")
    (prinst "movapd" "%xmm2" "%xmm3")
    (prinst "movapd" "%xmm1" "%xmm2")
    (prinst "movapd" "%xmm0" "%xmm1")
-   (prinst "cvtsi2sd" (src Src S) "%xmm0")
-   (prinst "cvtsi2sd" (src Src2 S2) "%xmm7")
-   (prinst "divsd" "%xmm7" "%xmm0") )
+   (prinst "testb" "$0x02" "%al")               # Short number?
+   (prinst "jz" "2f")                           # No: Skip
+   (prinst "shr" "$4" "%rdx")                   # Normalize scale
+   (prinst "shr" "$4" "%rax")                   # and number
+   (prinst "jnc" "1f")                          # Carry?
+   (prinst "neg" "%rax")                        # Yes: Negate
+   (prinl "1:")
+   (prinst "cvtsi2sd" "%rax" "%xmm0")           # Convert to fixnum
+   (prinst "cvtsi2sd" "%rdx" "%xmm7")
+   (prinst "divsd" "%xmm7" "%xmm0")
+   (prinst "jmp" "4f")
+   (prinl "2:")
+   (prinst "cmp" "$Nil" "%rax")                 # NIL?
+   (prinst "mov" "$0x7FF0000000000000" "%rax")  # +inf
+   (prinst "jnz" "3f")                          # No: Skip
+   (prinst "mov" "$0xFFF0000000000000" "%rax")  # -inf
+   (prinl "3:")
+   (prinst "push" "%rax")                       # Push value
+   (prinst "movsd" "(%rsp)" "%xmm0")            # into float stack
+   (prinst "add" "$8" "%rsp")                   # Drop buffer
+   (prinl "4:") )
 
-(asm dval (Src S)
-   (prinst "movsd" (src Src S) "%xmm0") )
+(asm dval ()
+   (prinst "movsd" "(%rdx)" "%xmm0") )
 
-(asm fix (Src S)
+(asm fix ()
    (prinst "sub" "$8" "%rsp")                # Space for buffer
    (prinst "movsd" "%xmm0" "(%rsp)")         # Get value
    (prinst "mov" "6(%rsp)" "%ax")            # Mantissa [s111 1111 1111 xxxx]
    (prinst "and" "$0x7FF0" "%rax")           # Infinite/NaN?
    (prinst "cmp" "$0x7FF0" "%rax")
    (prinst "pop" "%rax")                     # Keep value
-   (prinst "jz" "1f")                        # Yes: Skip
-   (prinst "cvtsi2sd" (src Src S) "%xmm7")   # Mulitply with scale
+   (prinst "jz" "2f")                        # Yes: Skip
+   (prinst "shr" "$4" "%rbx")                # Normalize scale
+   (prinst "cvtsi2sd" "%rbx" "%xmm7")        # Mulitply with scale
    (prinst "mulsd" "%xmm7" "%xmm0")
    (prinst "call" "lround")
-   (prinst "clc")                            # No carry: Normal value
-   (prinst "jmp" "2f")
+   (prinst "mov" "%rax" "%rbx")              # Get into E
+   (prinst "or" "%rax" "%rax")               # Negative?
+   (prinst "js" "1f")                        # Yes: Skip
+   (prinst "shl" "$4" "%rbx")                # Make positive short
+   (prinst "orb" "$2" "%bl")
+   (prinst "jmp" "3f")
    (prinl "1:")
-   (prinst "or" "%rax" "%rax")               # Set sign flag
-   (prinst "stc")                            # Carry: Special value
-   (prinl "2:") )
+   (prinst "neg" "%rbx")                     # Negate
+   (prinst "js" "2f")                        # Still negative: NIL
+   (prinst "shl" "$4" "%rbx")                # Make negative short
+   (prinst "orb" "$10" "%bl")
+   (prinst "jmp" "3f")
+   (prinl "2:")                              # Infinite/NaN
+   (prinst "mov" "$Nil" "%rbx")              # Preload NIL
+   (prinst "or" "%rax" "%rax")               # Negative?
+   (prinst "js" "3f")                        # Yes: Skip
+   (prinst "mov" "$TSym" "%rbx")             # Load T
+   (prinl "3:") )
 
 (asm cc (Adr A Arg M)
    (unless (== 'cc (caar (seek '((L) (== (cadr L) *Statement)) *Program)))

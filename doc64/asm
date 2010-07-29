@@ -164,9 +164,9 @@
       call adr          # Call 'adr'
       cc adr(src ..)    # C-Call to 'adr' with 'src' arguments
       cc adr reg        # C-Call to 'adr' with end of stacked args in 'reg'
-      darg src src      # Pass double argument 'src' and scale 'src'
-      dval src          # Set up double value 'src'
-      fix src           # Convert double with scale 'src' to fixnum in 'A' [.sc]
+      darg              # Pass double argument in 'A' with scale 'C'
+      dval              # Set up double value pointed to by 'C'
+      fix               # Convert double with scale 'E' to fixnum in 'E'
 
       ret               # Return
       begin src         # Called from C-function with 'src' arguments
