@@ -610,7 +610,6 @@
    (prinst "mov" "6(%rsp)" "%ax")            # Mantissa [s111 1111 1111 xxxx]
    (prinst "and" "$0x7FF0" "%rax")           # Infinite/NaN?
    (prinst "cmp" "$0x7FF0" "%rax")
-   (prinst "pop" "%rax")                     # Keep value
    (prinst "jz" "2f")                        # Yes: Skip
    (prinst "shr" "$4" "%rbx")                # Normalize scale
    (prinst "cvtsi2sd" "%rbx" "%xmm7")        # Mulitply with scale
@@ -624,16 +623,17 @@
    (prinst "jmp" "3f")
    (prinl "1:")
    (prinst "neg" "%rbx")                     # Negate
-   (prinst "js" "2f")                        # Still negative: NIL
+   (prinst "js" "2f")                        # Still negative: Overflow
    (prinst "shl" "$4" "%rbx")                # Make negative short
    (prinst "orb" "$10" "%bl")
    (prinst "jmp" "3f")
    (prinl "2:")                              # Infinite/NaN
    (prinst "mov" "$Nil" "%rbx")              # Preload NIL
-   (prinst "or" "%rax" "%rax")               # Negative?
-   (prinst "js" "3f")                        # Yes: Skip
+   (prinst "testb" "$0x80" "7(%rsp)")        # Float value negative?
+   (prinst "jnz" "3f")                       # Yes: Skip
    (prinst "mov" "$TSym" "%rbx")             # Load T
-   (prinl "3:") )
+   (prinl "3:")
+   (prinst "add" "$8" "%rsp") )              # Drop buffer
 
 (asm cc (Adr A Arg M)
    (unless (== 'cc (caar (seek '((L) (== (cadr L) *Statement)) *Program)))
