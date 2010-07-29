@@ -606,14 +606,10 @@
 
 (asm fix ()
    (prinst "sub" "$8" "%rsp")                # Space for buffer
-   (prinst "movsd" "%xmm0" "(%rsp)")         # Get value
-   (prinst "mov" "6(%rsp)" "%ax")            # Mantissa [s111 1111 1111 xxxx]
-   (prinst "and" "$0x7FF0" "%rax")           # Infinite/NaN?
-   (prinst "cmp" "$0x7FF0" "%rax")
-   (prinst "jz" "2f")                        # Yes: Skip
    (prinst "shr" "$4" "%rbx")                # Normalize scale
    (prinst "cvtsi2sd" "%rbx" "%xmm7")        # Mulitply with scale
    (prinst "mulsd" "%xmm7" "%xmm0")
+   (prinst "movsd" "%xmm0" "(%rsp)")         # Keep result
    (prinst "call" "lround")
    (prinst "mov" "%rax" "%rbx")              # Get into E
    (prinst "or" "%rax" "%rax")               # Negative?
