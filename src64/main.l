@@ -1,4 +1,4 @@
-# 29jul10abu
+# 02aug10abu
 # (c) Software Lab. Alexander Burger
 
 ### Global return labels ###
@@ -1482,6 +1482,7 @@
             end
          end
          push E  # Pass long argument
+         push 0  # as Integer/pointer value
       else
          sym E  # String?
          if nz  # Yes
@@ -1491,18 +1492,20 @@
             ld S Z  # Drop buffer
             pop Z
             push A  # Pass pointer argument
+            push 0  # as Integer/pointer value
          else
-            ld C (E CDR)  # Double?
+            ld C (E CDR)  # Fixpoint?
             cnt C
             if nz  # Yes
-               ld A (E)  # Get number
-               darg  # Pass double argument
+               push (E)  # Pass number or flag
+               push C  # as fixpoint value
             else
                ld E C  # Ignore variable
                ld C ((E))  # Get buffer size
                shr C 4  # Normalize
                call allocC_A  # Allocate buffer
                push A  # Pass pointer argument
+               push 0  # as Integer/pointer value
                push Z
                ld Z A  # Buffer pointer in Z
                do
@@ -1560,7 +1563,7 @@
       if z  # No
          sym E  # String?
          jnz 10  # Yes
-         cnt (E CDR)  # Double?
+         cnt (E CDR)  # Fixpoint?
          if z  # No
             cmp (E) Nil  # Variable?
             if ne  # Yes
@@ -1589,8 +1592,14 @@
       if nz  # Yes
          null C  # Pointer?
          if nz  # Yes
-            dval  # Get double value
-            add C 8  # Size of double
+            test E SIGN  # Negative?
+            if z  # No
+               dval  # Get double value
+               add C 8  # Size of double
+            else
+               fval  # Get float value
+               add C 4  # Size of float
+            end
          end
          fix  # Get fixpoint number or flg
       else

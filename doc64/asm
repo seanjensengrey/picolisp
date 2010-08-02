@@ -1,4 +1,4 @@
-# 29jul10abu
+# 02aug10abu
 # (c) Software Lab. Alexander Burger
 
 
@@ -164,8 +164,8 @@
       call adr          # Call 'adr'
       cc adr(src ..)    # C-Call to 'adr' with 'src' arguments
       cc adr reg        # C-Call to 'adr' with end of stacked args in 'reg'
-      darg              # Pass double argument in 'A' with scale 'C'
       dval              # Set up double value pointed to by 'C'
+      fval              # Set up float value pointed to by 'C'
       fix               # Convert double with scale 'E' to fixnum in 'E'
 
       ret               # Return

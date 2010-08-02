@@ -1,8 +1,8 @@
-# 29jul10abu
+# 02aug10abu
 # 27jul10jk
 # (c) Software Lab. Alexander Burger
 
-(load "@lib/math.l" "@lib/native.l")
+(load "@lib/math.l")
 
 ### Constant Definitions ###
 # Primitives
@@ -127,28 +127,18 @@
    *GluLib "/usr/lib/libGLU.so"
    *GlutLib "/usr/lib/libglut.so" )
 
-### Inline-C functions ###
-(gcc "glut" (list *GlutLib)
-   (glClearColor (Red Green Blue Alpha) "GlClearColor" NIL Red Green Blue Alpha 1.0) )
-
-#include <GL/glut.h>
-#include <GL/glu.h>
-#include <GL/gl.h>
-
-void GlClearColor(long red, long green, long blue, long alpha, int scl) {
-   glClearColor((GLclampf)red / (float)scl, (GLclampf)green / (float)scl,
-                  (GLclampf)blue / (float)scl, (GLclampf)alpha / (float)scl );
-}
-/**/
-
 # Pre-consed fixpoint arguments
 (setq
-   "Fix1" (0 . 1.0)
-   "Fix2" (0 . 1.0)
-   "Fix3" (0 . 1.0)
-   "Fix4" (0 . 1.0)
-   "Fix5" (0 . 1.0)
-   "Fix6" (0 . 1.0) )
+   "Flt1" (0 . -1.0)
+   "Flt2" (0 . -1.0)
+   "Flt3" (0 . -1.0)
+   "Flt4" (0 . -1.0)
+   "Dbl1" (0 . 1.0)
+   "Dbl2" (0 . 1.0)
+   "Dbl3" (0 . 1.0)
+   "Dbl4" (0 . 1.0)
+   "Dbl5" (0 . 1.0)
+   "Dbl6" (0 . 1.0) )
 
 ### Native functions ###
 (de glutInit ()
@@ -184,45 +174,49 @@ void GlClearColor(long red, long green, long blue, long alpha, int scl) {
 (de glEnd ()
    (native `*GlutLib "glEnd") )
 
+(de glClearColor (Red Green Blue Alpha)
+   (set "Flt1" Red  "Flt2" Green  "Flt3" Blue  "Flt4" Alpha)
+   (native `*GlutLib "glClearColor" NIL "Flt1" "Flt2" "Flt3" "Flt4") )
+
 (de glClearDepth (Depth)
-   (set "Fix1" Depth)
-   (native `*GlutLib "glClearDepth" NIL "Fix1") )
+   (set "Dbl1" Depth)
+   (native `*GlutLib "glClearDepth" NIL "Dbl1") )
 
 (de glColor3f (Red Green Blue)
-   (set "Fix1" Red  "Fix2" Green  "Fix3" Blue)
-   (native `*GlutLib "glColor3f" NIL "Fix1" "Fix2" "Fix3") )
+   (set "Dbl1" Red  "Dbl2" Green  "Dbl3" Blue)
+   (native `*GlutLib "glColor3f" NIL "Dbl1" "Dbl2" "Dbl3") )
 
 (de glColor4f (Red Green Blue Alpha)
-   (set "Fix1" Red  "Fix2" Green  "Fix3" Blue  "Fix4" Alpha)
-   (native `*GlutLib "glColor4f" NIL "Fix1" "Fix2" "Fix3" "Fix4") )
+   (set "Dbl1" Red  "Dbl2" Green  "Dbl3" Blue  "Dbl4" Alpha)
+   (native `*GlutLib "glColor4f" NIL "Dbl1" "Dbl2" "Dbl3" "Dbl4") )
 
 (de glNormal3f (X Y Z)
-   (set "Fix1" X  "Fix2" Y  "Fix3" Z)
-   (native `*GlutLib "glNormal3f" NIL "Fix1" "Fix2" "Fix3") )
+   (set "Dbl1" X  "Dbl2" Y  "Dbl3" Z)
+   (native `*GlutLib "glNormal3f" NIL "Dbl1" "Dbl2" "Dbl3") )
 
 (de glOrtho (Left Right Bottom Top Near Far)
-   (set "Fix1" Left  "Fix2" Right  "Fix3" Bottom  "Fix4" Top  "Fix5" Near  "Fix6" Far)
-   (native `*GlutLib "glOrtho" NIL "Fix1" "Fix2" "Fix3" "Fix4" "Fix5" "Fix6") )
+   (set "Dbl1" Left  "Dbl2" Right  "Dbl3" Bottom  "Dbl4" Top  "Dbl5" Near  "Dbl6" Far)
+   (native `*GlutLib "glOrtho" NIL "Dbl1" "Dbl2" "Dbl3" "Dbl4" "Dbl5" "Dbl6") )
 
 (de glRotatef (X Y Z)
-   (set "Fix1" X  "Fix2" Y  "Fix3" Z)
-   (native `*GlutLib "glRotatef" NIL "Fix1" "Fix2" "Fix3") )
+   (set "Dbl1" X  "Dbl2" Y  "Dbl3" Z)
+   (native `*GlutLib "glRotatef" NIL "Dbl1" "Dbl2" "Dbl3") )
 
 (de glTranslatef (X Y Z)
-   (set "Fix1" X  "Fix2" Y  "Fix3" Z)
-   (native `*GlutLib "glTranslatef" NIL "Fix1" "Fix2" "Fix3") )
+   (set "Dbl1" X  "Dbl2" Y  "Dbl3" Z)
+   (native `*GlutLib "glTranslatef" NIL "Dbl1" "Dbl2" "Dbl3") )
 
 (de glVertex3f (X Y Z)
-   (set "Fix1" X  "Fix2" Y  "Fix3" Z)
-   (native `*GlutLib "glVertex3f" NIL "Fix1" "Fix2" "Fix3") )
+   (set "Dbl1" X  "Dbl2" Y  "Dbl3" Z)
+   (native `*GlutLib "glVertex3f" NIL "Dbl1" "Dbl2" "Dbl3") )
 
 (de glutSolidCube (Size)
-   (set "Fix1" Size)
-   (native `*GlutLib "glutSolidCube" NIL "Fix1") )
+   (set "Dbl1" Size)
+   (native `*GlutLib "glutSolidCube" NIL "Dbl1") )
 
 (de glutWireCube (Size)
-   (set "Fix1" Size)
-   (native `*GlutLib "glutWireCube" NIL "Fix1") )
+   (set "Dbl1" Size)
+   (native `*GlutLib "glutWireCube" NIL "Dbl1") )
 
 (de glColorMaterial (Face Mode)
    (native `*GlutLib "glColorMaterial" NIL Face Mode) )
