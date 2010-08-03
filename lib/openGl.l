@@ -1,4 +1,4 @@
-# 02aug10abu
+# 03aug10abu
 # 27jul10jk
 # (c) Software Lab. Alexander Burger
 
@@ -183,32 +183,32 @@
    (native `*GlutLib "glClearDepth" NIL "Dbl1") )
 
 (de glColor3f (Red Green Blue)
-   (set "Dbl1" Red  "Dbl2" Green  "Dbl3" Blue)
-   (native `*GlutLib "glColor3f" NIL "Dbl1" "Dbl2" "Dbl3") )
+   (set "Flt1" Red  "Flt2" Green  "Flt3" Blue)
+   (native `*GlutLib "glColor3f" NIL "Flt1" "Flt2" "Flt3") )
 
 (de glColor4f (Red Green Blue Alpha)
-   (set "Dbl1" Red  "Dbl2" Green  "Dbl3" Blue  "Dbl4" Alpha)
-   (native `*GlutLib "glColor4f" NIL "Dbl1" "Dbl2" "Dbl3" "Dbl4") )
+   (set "Flt1" Red  "Flt2" Green  "Flt3" Blue  "Flt4" Alpha)
+   (native `*GlutLib "glColor4f" NIL "Flt1" "Flt2" "Flt3" "Flt4") )
 
 (de glNormal3f (X Y Z)
-   (set "Dbl1" X  "Dbl2" Y  "Dbl3" Z)
-   (native `*GlutLib "glNormal3f" NIL "Dbl1" "Dbl2" "Dbl3") )
+   (set "Flt1" X  "Flt2" Y  "Flt3" Z)
+   (native `*GlutLib "glNormal3f" NIL "Flt1" "Flt2" "Flt3") )
 
 (de glOrtho (Left Right Bottom Top Near Far)
    (set "Dbl1" Left  "Dbl2" Right  "Dbl3" Bottom  "Dbl4" Top  "Dbl5" Near  "Dbl6" Far)
    (native `*GlutLib "glOrtho" NIL "Dbl1" "Dbl2" "Dbl3" "Dbl4" "Dbl5" "Dbl6") )
 
-(de glRotatef (X Y Z)
-   (set "Dbl1" X  "Dbl2" Y  "Dbl3" Z)
-   (native `*GlutLib "glRotatef" NIL "Dbl1" "Dbl2" "Dbl3") )
+(de glRotatef (A X Y Z)
+   (set "Flt1" A  "Flt2" X  "Flt3" Y  "Flt4" Z)
+   (native `*GlutLib "glRotatef" NIL "Flt1" "Flt2" "Flt3" "Flt4") )
 
 (de glTranslatef (X Y Z)
-   (set "Dbl1" X  "Dbl2" Y  "Dbl3" Z)
-   (native `*GlutLib "glTranslatef" NIL "Dbl1" "Dbl2" "Dbl3") )
+   (set "Flt1" X  "Flt2" Y  "Flt3" Z)
+   (native `*GlutLib "glTranslatef" NIL "Flt1" "Flt2" "Flt3") )
 
 (de glVertex3f (X Y Z)
-   (set "Dbl1" X  "Dbl2" Y  "Dbl3" Z)
-   (native `*GlutLib "glVertex3f" NIL "Dbl1" "Dbl2" "Dbl3") )
+   (set "Flt1" X  "Flt2" Y  "Flt3" Z)
+   (native `*GlutLib "glVertex3f" NIL "Flt1" "Flt2" "Flt3") )
 
 (de glutSolidCube (Size)
    (set "Dbl1" Size)
@@ -237,7 +237,8 @@
    (native `*GlutLib "glHint" NIL Target Mode) )
 
 (de glLineWidth (Width)
-   (native `*GlutLib "glLineWidth" NIL Width) )
+   (set "Flt1" Width)
+   (native `*GlutLib "glLineWidth" NIL "Flt1") )
 
 (de glFlush ()
    (native `*GlutLib "glFlush") )
