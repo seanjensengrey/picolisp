@@ -1,4 +1,4 @@
-# 02aug10abu
+# 03aug10abu
 # (c) Software Lab. Alexander Burger
 
 ### Global return labels ###
@@ -1855,7 +1855,7 @@
    push L  # Save C frame pointer
    ld L (Link)  # Restore link register
    link  # Apply args
-   push (Lisp1)  # 'fun'
+   push (Z)  # 'fun'
    xchg A E  # First arg
    call boxCntE_E  # Make number
    push E
