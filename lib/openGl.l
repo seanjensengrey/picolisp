@@ -252,11 +252,12 @@
 (de glShadeModel (Num)
    (native `*GlutLib "glShadeModel" NIL Num) )
 
-(de glViewport (X Y W H)
-   (native `*GlutLib "glViewport" NIL X Y W H) )
+(de glViewport (X Y Width Height)
+   (native `*GlutLib "glViewport" NIL X Y Width Height) )
 
 (de gluPerspective (Fovy Aspect ZNear ZFar)
-   (native `*GluLib "gluPerspective" NIL Fovy Aspect ZNear ZFar) )
+   (set "Dbl1" Fovy  "Dbl2" Aspect  "Dbl3" ZNear  "Dbl4" ZFar)
+   (native `*GluLib "gluPerspective" NIL "Dbl1" "Dbl2" "Dbl3" "Dbl4") )
 
 (de glutMainLoop ()
    (native `*GlutLib "glutMainLoop") )
