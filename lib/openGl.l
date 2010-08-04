@@ -1,4 +1,4 @@
-# 03aug10abu
+# 04aug10abu
 # 27jul10jk
 # (c) Software Lab. Alexander Burger
 
@@ -205,6 +205,10 @@
 (de glTranslatef (X Y Z)
    (set "Flt1" X  "Flt2" Y  "Flt3" Z)
    (native `*GlutLib "glTranslatef" NIL "Flt1" "Flt2" "Flt3") )
+
+(de glVertex2f (X Y)
+   (set "Flt1" X  "Flt2" Y)
+   (native `*GlutLib "glVertex2f" NIL "Flt1" "Flt2") )
 
 (de glVertex3f (X Y Z)
    (set "Flt1" X  "Flt2" Y  "Flt3" Z)
