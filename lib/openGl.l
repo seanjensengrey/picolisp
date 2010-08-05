@@ -1,4 +1,4 @@
-# 04aug10abu
+# 05aug10abu
 # 27jul10jk
 # (c) Software Lab. Alexander Burger
 
@@ -278,34 +278,34 @@
 ### Callbacks ###
 # Display Function
 (de displayPrg Prg
-   (native `*GlutLib "glutDisplayFunc" NIL (lisp1 (cons NIL Prg))) )
+   (native `*GlutLib "glutDisplayFunc" NIL (lisp 'displayPrg (cons NIL Prg))) )
 
 # CreateMenu Function
 (de createMenu (Fun)
-   (native `*GlutLib "glutCreateMenu" NIL (lisp2 Fun)) )
+   (native `*GlutLib "glutCreateMenu" NIL (lisp 'createMenu Fun)) )
 
 # Keyboard Function
 (de keyboardFunc (Fun)
-   (native `*GlutLib "glutKeyboardFunc" NIL (lisp3 Fun)) )
+   (native `*GlutLib "glutKeyboardFunc" NIL (lisp 'keyboardFunc Fun)) )
 
 # Motion Function
 (de motionFunc (Fun)
-   (native `*GlutLib "glutMotionFunc" NIL (lisp4 Fun)) )
+   (native `*GlutLib "glutMotionFunc" NIL (lisp 'motionFunc Fun)) )
 
 # Mouse Function
 (de mouseFunc (Fun)
-   (native `*GlutLib "glutMouseFunc" NIL (lisp5 Fun)) )
+   (native `*GlutLib "glutMouseFunc" NIL (lisp 'mouseFunc Fun)) )
 
 # Reshape Function
 (de reshapeFunc (Fun)
-   (native `*GlutLib "glutReshapeFunc" NIL (lisp6 Fun)) )
+   (native `*GlutLib "glutReshapeFunc" NIL (lisp 'reshapeFunc Fun)) )
 
 # Special Function
 (de specialFunc (Fun)
-   (native `*GlutLib "glutSpecialFunc" NIL (lisp7 Fun)) )
+   (native `*GlutLib "glutSpecialFunc" NIL (lisp 'specialFunc Fun)) )
 
 # Timer Function
 (de timerFunc (Msec Fun Val)
-   (native `*GlutLib "glutTimerFunc" NIL Msec (lisp8 Fun) Val) )
+   (native `*GlutLib "glutTimerFunc" NIL Msec (lisp 'timerFunc Fun) Val) )
 
 # vi:et:ts=3:sw=3

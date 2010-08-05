@@ -272,13 +272,14 @@ href="refN.html#noLint">noLint</a></code>.
 ...
 </code></pre>
 
-<dt><a name="lisp1"><code>(lisp1 'fun) -> num</code></a>
-<dt><code>.. (lisp9 'fun) -> num</code>
-<dd>(64-bit version only) Installs a callback function <code>fun</code>, and
-returns a pointer <code>num</code> suitable to be passed to a C function via
-'native'. Maximally nine callback functions can be installed that way. 'fun'
-should be a function of maximally five numbers, and should return a number. See
-also <code><a href="refN.html#native">native</a></code>.
+<dt><a name="lisp"><code>(lisp 'sym ['fun]) -> num</code></a>
+<dd>(64-bit version only) Installs under the tag <code>sym</code> a callback
+function <code>fun</code>, and returns a pointer <code>num</code> suitable to be
+passed to a C function via 'native'. If <code>fun</code> is <code>NIL</code>,
+the corresponding entry is freed. Maximally 24 callback functions can be
+installed that way. 'fun' should be a function of maximally five numbers, and
+should return a number. See also <code><a
+href="refN.html#native">native</a></code>.
 
 <pre><code>
 (load "lib/native.l")
@@ -292,7 +293,7 @@ long cbTest(int(*fun)(int,int,int,int,int)) {
 /**/
 
 : (cbTest
-   (lisp1
+   (lisp 'cbTest
       '((A B C D E)
          (msg (list A B C D E))
          (* A B C D E) ) ) )

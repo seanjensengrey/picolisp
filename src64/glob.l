@@ -1,4 +1,4 @@
-# 28jul10abu
+# 05aug10abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Globals 0)
@@ -75,15 +75,55 @@
 : Alarm        word  Nil         # Alarm handler
 : Sigio        word  Nil         # Sigio handler
 : LineX        word  ZERO        # Console line
-: Lisp1        word  Nil         # Lisp callbacks
-: Lisp2        word  Nil
-: Lisp3        word  Nil
-: Lisp4        word  Nil
-: Lisp5        word  Nil
-: Lisp6        word  Nil
-: Lisp7        word  Nil
-: Lisp8        word  Nil
-: Lisp9        word  Nil
+: Lisp         word  Nil         # Lisp callbacks: tag+fun
+               word  Nil
+               word  Nil         # 2
+               word  Nil
+               word  Nil         # 3
+               word  Nil
+               word  Nil         # 4
+               word  Nil
+               word  Nil         # 5
+               word  Nil
+               word  Nil         # 6
+               word  Nil
+               word  Nil         # 7
+               word  Nil
+               word  Nil         # 8
+               word  Nil
+               word  Nil         # 9
+               word  Nil
+               word  Nil         # 10
+               word  Nil
+               word  Nil         # 11
+               word  Nil
+               word  Nil         # 12
+               word  Nil
+               word  Nil         # 13
+               word  Nil
+               word  Nil         # 14
+               word  Nil
+               word  Nil         # 15
+               word  Nil
+               word  Nil         # 16
+               word  Nil
+               word  Nil         # 17
+               word  Nil
+               word  Nil         # 18
+               word  Nil
+               word  Nil         # 19
+               word  Nil
+               word  Nil         # 20
+               word  Nil
+               word  Nil         # 21
+               word  Nil
+               word  Nil         # 22
+               word  Nil
+               word  Nil         # 23
+               word  Nil
+               word  Nil         # 24
+               word  Nil
+: LispEnd
 : GcMarkEnd
 
 
@@ -145,15 +185,7 @@
    initSym NIL       "quit"      doQuit
    initSym NIL       "errno"     doErrno
    initSym NIL       "native"    doNative
-   initSym NIL       "lisp5"     doLisp5
-   initSym NIL       "lisp2"     doLisp2
-   initSym NIL       "lisp7"     doLisp7
-   initSym NIL       "lisp1"     doLisp1
-   initSym NIL       "lisp3"     doLisp3
-   initSym NIL       "lisp6"     doLisp6
-   initSym NIL       "lisp8"     doLisp8
-   initSym NIL       "lisp4"     doLisp4
-   initSym NIL       "lisp9"     doLisp9
+   initSym NIL       "lisp"      doLisp
    initSym NIL       "args"      doArgs
    initSym NIL       "next"      doNext
    initSym NIL       "arg"       doArg

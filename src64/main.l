@@ -1,4 +1,4 @@
-# 03aug10abu
+# 05aug10abu
 # (c) Software Lab. Alexander Burger
 
 ### Global return labels ###
@@ -1783,79 +1783,12 @@
    end
    ret
 
-# (lisp1 'fun) -> num
-(code 'doLisp1 2)
-   push cbLisp1  # Callback function pointer
-   push Lisp1  # Address of callback function
-: lispN
-   ld E ((E CDR))  # Eval arg
-   eval
-   pop A  # Get address
-   ld (A) E  # Set callback function
-   pop E  # Return function pointer
-   test E (hex "F000000000000000")  # Fit in short number?
-   jnz boxNumE_E  # No
-   shl E 4  # Else make short number
-   or E CNT
-   ret
-
-# (lisp2 'fun) -> num
-(code 'doLisp2 2)
-   push cbLisp2  # Callback function pointer
-   push Lisp2  # Address of callback function
-   jmp lispN
-
-# (lisp3 'fun) -> num
-(code 'doLisp3 2)
-   push cbLisp3  # Callback function pointer
-   push Lisp3  # Address of callback function
-   jmp lispN
-
-# (lisp4 'fun) -> num
-(code 'doLisp4 2)
-   push cbLisp4  # Callback function pointer
-   push Lisp4  # Address of callback function
-   jmp lispN
-
-# (lisp5 'fun) -> num
-(code 'doLisp5 2)
-   push cbLisp5  # Callback function pointer
-   push Lisp5  # Address of callback function
-   jmp lispN
-
-# (lisp6 'fun) -> num
-(code 'doLisp6 2)
-   push cbLisp6  # Callback function pointer
-   push Lisp6  # Address of callback function
-   jmp lispN
-
-# (lisp7 'fun) -> num
-(code 'doLisp7 2)
-   push cbLisp7  # Callback function pointer
-   push Lisp7  # Address of callback function
-   jmp lispN
-
-# (lisp8 'fun) -> num
-(code 'doLisp8 2)
-   push cbLisp8  # Callback function pointer
-   push Lisp8  # Address of callback function
-   jmp lispN
-
-# (lisp9 'fun) -> num
-(code 'doLisp9 2)
-   push cbLisp9  # Callback function pointer
-   push Lisp9  # Address of callback function
-   jmp lispN
-
-(code 'cbLisp1 0)
-   push Z
-   ld Z Lisp1  # Address of callback function
-: cbLisp
+: cbl
    begin 5  # Arguments in A, C, E, X and Y
    push L  # Save C frame pointer
    ld L (Link)  # Restore link register
    link  # Apply args
-   push (Z)  # 'fun'
+   push (Z I)  # 'fun'
    xchg A E  # First arg
    call boxCntE_E  # Make number
    push E
@@ -1886,45 +1819,146 @@
    pop Z
    ret
 
-(code 'cbLisp2 0)
+(code 'cbl1 0)
    push Z
-   ld Z Lisp2  # Address of callback function
-   jmp cbLisp
+   lea Z (Lisp)  # Address of callback function
+   jmp cbl
+: cbl2
+   push Z
+   lea Z (Lisp II)
+   jmp cbl
+: cbl3
+   push Z
+   lea Z (Lisp (* 2 II))
+   jmp cbl
+: cbl4
+   push Z
+   lea Z (Lisp (* 3 II))
+   jmp cbl
+: cbl5
+   push Z
+   lea Z (Lisp (* 4 II))
+   jmp cbl
+: cbl6
+   push Z
+   lea Z (Lisp (* 5 II))
+   jmp cbl
+: cbl7
+   push Z
+   lea Z (Lisp (* 6 II))
+   jmp cbl
+: cbl8
+   push Z
+   lea Z (Lisp (* 7 II))
+   jmp cbl
+: cbl9
+   push Z
+   lea Z (Lisp (* 8 II))
+   jmp cbl
+: cbl10
+   push Z
+   lea Z (Lisp (* 9 II))
+   jmp cbl
+: cbl11
+   push Z
+   lea Z (Lisp (* 10 II))
+   jmp cbl
+: cbl12
+   push Z
+   lea Z (Lisp (* 11 II))
+   jmp cbl
+: cbl13
+   push Z
+   lea Z (Lisp (* 12 II))
+   jmp cbl
+: cbl14
+   push Z
+   lea Z (Lisp (* 13 II))
+   jmp cbl
+: cbl15
+   push Z
+   lea Z (Lisp (* 14 II))
+   jmp cbl
+: cbl16
+   push Z
+   lea Z (Lisp (* 15 II))
+   jmp cbl
+: cbl17
+   push Z
+   lea Z (Lisp (* 16 II))
+   jmp cbl
+: cbl18
+   push Z
+   lea Z (Lisp (* 17 II))
+   jmp cbl
+: cbl19
+   push Z
+   lea Z (Lisp (* 18 II))
+   jmp cbl
+: cbl20
+   push Z
+   lea Z (Lisp (* 19 II))
+   jmp cbl
+: cbl21
+   push Z
+   lea Z (Lisp (* 20 II))
+   jmp cbl
+: cbl22
+   push Z
+   lea Z (Lisp (* 21 II))
+   jmp cbl
+: cbl23
+   push Z
+   lea Z (Lisp (* 22 II))
+   jmp cbl
+: cbl24
+   push Z
+   lea Z (Lisp (* 23 II))
+   jmp cbl
 
-(code 'cbLisp3 0)
+# (lisp 'sym ['fun]) -> num
+(code 'doLisp 2)
+   push X
+   push Y
    push Z
-   ld Z Lisp3  # Address of callback function
-   jmp cbLisp
-
-(code 'cbLisp4 0)
-   push Z
-   ld Z Lisp4  # Address of callback function
-   jmp cbLisp
-
-(code 'cbLisp5 0)
-   push Z
-   ld Z Lisp5  # Address of callback function
-   jmp cbLisp
-
-(code 'cbLisp6 0)
-   push Z
-   ld Z Lisp6  # Address of callback function
-   jmp cbLisp
-
-(code 'cbLisp7 0)
-   push Z
-   ld Z Lisp7  # Address of callback function
-   jmp cbLisp
-
-(code 'cbLisp8 0)
-   push Z
-   ld Z Lisp8  # Address of callback function
-   jmp cbLisp
-
-(code 'cbLisp9 0)
-   push Z
-   ld Z Lisp9  # Address of callback function
-   jmp cbLisp
+   ld X (E CDR)  # Get tag
+   call evSymX_E  # Evaluate to a symbol
+   ld Y Lisp  # Search lisp callback definitions
+   ld Z cbl1
+   do
+      cmp E (Y)  # Found tag?
+      jeq  10  # Yes
+      add Y II  # Next entry
+      add Z "cbl2-cbl1"
+      cmp Y LispEnd
+   until eq
+   ld Y Lisp  # Not found, search for empty slot
+   ld Z cbl1
+   do
+      cmp (Y I) Nil  # Empty?
+      if eq  # Yes
+         ld (Y) E  # Store tag
+10       ld X (X CDR)  # X on 'fun'
+         ld E (X)  # Eval 'fun'
+         eval
+         ld (Y I) E  # Store in slot
+         ld E Z
+         pop Z
+         pop Y
+         pop X
+         test E (hex "F000000000000000")  # Fit in short number?
+         jnz boxNumE_E  # No
+         shl E 4  # Else make short number
+         or E CNT
+         ret
+      end
+      add Y II  # Next entry
+      add Z "cbl2-cbl1"
+      cmp Y LispEnd
+   until eq
+   ld Y CbErr
+   jmp errEXYZ
+: CbErr asciz "Too many callbacks"
 
 (code 'lisp 0)
    begin 6  # Function name in A, arguments in C, E, X, Y and Z

@@ -1,5 +1,5 @@
 * XXsep10 picoLisp-3.0.4
-   Generic C-callbacks 'lisp1' .. 'lisp9'
+   Generic 'lisp' C-callbacks
    'native' fixpoint handling
    OpenGL (64-bit) in "lib/openGl.l"
    Faster bignum division (64-bit)
