@@ -1920,30 +1920,31 @@
 (code 'doLisp 2)
    push X
    push Y
-   push Z
-   ld X (E CDR)  # Get tag
-   call evSymX_E  # Evaluate to a symbol
-   ld Y Lisp  # Search lisp callback definitions
-   ld Z cbl1
+   ld X E
+   ld Y (E CDR)  # Get tag
+   call evSymY_E  # Evaluate to a symbol
+   ld A Lisp  # Search lisp callback definitions
+   ld C cbl1
    do
-      cmp E (Y)  # Found tag?
+      cmp E (A)  # Found tag?
       jeq  10  # Yes
-      add Y II  # Next entry
-      add Z "cbl2-cbl1"
-      cmp Y LispEnd
+      add A II  # Next entry
+      add C "cbl2-cbl1"
+      cmp A LispEnd
    until eq
-   ld Y Lisp  # Not found, search for empty slot
-   ld Z cbl1
+   ld A Lisp  # Not found, search for empty slot
+   ld C cbl1
    do
-      cmp (Y I) Nil  # Empty?
+      cmp (A I) Nil  # Empty?
       if eq  # Yes
-         ld (Y) E  # Store tag
-10       ld X (X CDR)  # X on 'fun'
-         ld E (X)  # Eval 'fun'
+10       push C  # Save function pointer
+         push A  # And callback entry
+         ld (A) E  # Store tag
+         ld E ((Y CDR))  # Eval 'fun'
          eval
-         ld (Y I) E  # Store in slot
-         ld E Z
-         pop Z
+         pop A
+         ld (A I) E  # Store in slot
+         pop E  # Get function pointer
          pop Y
          pop X
          test E (hex "F000000000000000")  # Fit in short number?
@@ -1952,9 +1953,9 @@
          or E CNT
          ret
       end
-      add Y II  # Next entry
-      add Z "cbl2-cbl1"
-      cmp Y LispEnd
+      add A II  # Next entry
+      add C "cbl2-cbl1"
+      cmp A LispEnd
    until eq
    ld Y CbErr
    jmp errEXYZ
