@@ -1,4 +1,4 @@
-# 06jul10abu
+# 07aug10abu
 # (c) Software Lab. Alexander Burger
 
 # *Home *Gate *Host *Port *Port1 *Port% *Http1 *Chunked
@@ -154,7 +154,12 @@
                      ((if *ContLen (ht:Read @) (line))
                         (for L (split @ '&)
                            (when (cdr (setq L (split L "=")))
-                              (_htSet (car L) (ht:Pack (cadr L))) ) ) )
+                              (let? S (_htSet (car L) (ht:Pack (cadr L)))
+                                 (and
+                                    (cddr L)
+                                    (format (car @))
+                                    (unless (out (tmp S) (echo @))
+                                       (call 'rm "-f" (tmp S)) ) ) ) ) ) )
                      (T (throw "http")) ) )
                (T
                   (out S
@@ -220,15 +225,13 @@
       (and S (=0 *Http1) (task (close S))) ) )
 
 (de _htHead ()
-   (use (L @X @Y)
-      (setq *Http1 (format (car @H))  *Chunked (gt0 *Http1))
+   (use (L @X @Y Pil)
+      (setq *Http1 (format (car @H))  *Chunked (gt0 *Http1)  Pil)
       (if (index "~" @U)
          (setq *ConId (pack (head @ @U))  @U (cdr (nth @U @)))
          (off *ConId) )
       (while (setq L (line))
          (cond
-            ((match '(~(chop "Gate: ") @X " " . @Y) L)
-               (setq *Gate (pack @X)  *Adr (pack @Y)) )
             ((match '(~(chop "Host: ") . @X) L)
                (setq *Host
                   (cond
@@ -251,7 +254,10 @@
             ((match '(~(chop "Content-@ype: multipart/form-data; boundary=") . @X) L)
                (setq
                   *MPartLim (append '(- -) @X)
-                  *MPartEnd (append *MPartLim '(- -)) ) ) ) ) ) )
+                  *MPartEnd (append *MPartLim '(- -)) ) )
+            ((match '(~(chop "X-Pil: ") @X "=" . @Y) L)
+               (push 'Pil (list 'setq (intern (pack @X)) (htArg @Y))) ) ) )
+      (run Pil) ) )
 
 # rfc1867 multipart/form-data
 (de _htMultipart ()

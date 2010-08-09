@@ -1,4 +1,4 @@
-/* 21jul10abu
+/* 07aug10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -2136,7 +2136,7 @@ any doEcho(any ex) {
                   if (om >= 0)
                      for (j = 0, n = op-p[i]; j <= n; ++j)
                         Env.put(av[om][j]);
-                  Env.get();
+                  Chr = 0;
                   x = data(c[i]);
                   goto done;
                }
@@ -2175,11 +2175,17 @@ any doEcho(any ex) {
          if (Chr < 0)
             return Nil;
    }
-   for (cnt = xCnt(ex,y); --cnt >= 0; Env.get()) {
-      if (Chr < 0)
-         return Nil;
-      Env.put(Chr);
+   if ((cnt = xCnt(ex,y)) > 0) {
+      for (;;) {
+         if (Chr < 0)
+            return Nil;
+         Env.put(Chr);
+         if (!--cnt)
+            break;
+         Env.get();
+      }
    }
+   Chr = 0;
    return T;
 }
 

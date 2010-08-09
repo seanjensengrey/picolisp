@@ -1,4 +1,4 @@
-# 21jul10abu
+# 07aug10abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -4259,19 +4259,23 @@
             call (Get_A)  # Get next
          loop
       end
-      do
-         sub E 1  # Decrement second 'cnt'
-      while ns
-         null A  # EOF?
-         if s  # Yes
-            ld E Nil  # Return NIL
-            pop Y
-            pop X
-            ret
-         end
-         call (PutB)  # Output byte
-         call (Get_A)  # Get next
-      loop
+      null E  # 'cnt'?
+      if nsz  # Yes
+         do
+            null A  # EOF?
+            if s  # Yes
+               ld E Nil  # Return NIL
+               pop Y
+               pop X
+               ret
+            end
+            call (PutB)  # Output byte
+            sub E 1  # Decrement 'cnt'
+         while nz
+            call (Get_A)  # Get next
+         loop
+      end
+      ld (Chr) 0  # Clear look ahead
       ld E TSym  # Return T
       pop Y
       pop X
@@ -4334,7 +4338,7 @@
                      sub E 1
                   loop
                end
-               call (Get_A)  # Skip next input byte
+               ld (Chr) 0  # Clear look ahead
                ld E (Z II)  # Return matched symbol
                jmp 90
             end

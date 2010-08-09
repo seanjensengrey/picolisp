@@ -1,4 +1,4 @@
-# 19jun10abu
+# 09aug10abu
 # (c) Software Lab. Alexander Burger
 
 # *Allow *Tmp
@@ -392,6 +392,9 @@
 
 (de dirname (F)
    (pack (flip (member '/ (flip (chop F))))) )
+
+(de basename (F)
+   (pack (stem (chop F) '/)) )
 
 # Temporary Files
 (de tmp @
