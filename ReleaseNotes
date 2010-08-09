@@ -1,4 +1,4 @@
-27jul10abu
+09aug10abu
 (c) Software Lab. Alexander Burger
 
 
@@ -15,3 +15,27 @@ B. An OpenGL library (64-bit) is now part of the standard release.
 C. The 'native' function now also accepts up to six fixpoint arguments of the
    form (value . 1.0), and can return scaled fixpoint numbers if the return spec
    is a number (typically 1.0).
+
+D. HTTP file uploads can now be achieved with Drag & Drop, using the new '+Drop'
+   button prefix class. For example, a simple file-upload GUI which accepts a
+   file and copies it to some destination:
+
+      (gui '(+UpField) 30)
+      (gui '(+Button) "Upload File"
+         '(let? F (val> (field -1))
+            (call 'cp (tmp F) (some-destination)) ) )
+
+   may now be written as
+
+      (gui '(+UpField) 30)
+      (gui '(+Drop +Button) '(field -1) "Upload File"
+         '(when (: drop)
+            (call 'cp @ (some-destination)) ) )
+
+   This allows manual file selection as before, but you can also drag the file
+   and drop it onto the "Upload File" button. The '+Drag' prefix takes a
+   references of the related '+UpField', and sets the 'drop' property of its GUI
+   component to a proper value that can be used in the action expression.
+
+   Note that this works only in HTML5 capable browsers (e.g Firefox 3.6),
+   supporting the JavaScript File API.
