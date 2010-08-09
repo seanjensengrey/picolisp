@@ -1015,8 +1015,8 @@
       (and
          (or *Drop (val> (eval (: "drop"))))
          (tmp @) ) )
-   (off *Drop)
-   (extra) )
+   (extra)
+   (off *Drop) )
 
 
 (class +JS)
