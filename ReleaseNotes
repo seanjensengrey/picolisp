@@ -1,4 +1,4 @@
-09aug10abu
+11aug10abu
 (c) Software Lab. Alexander Burger
 
 
@@ -39,3 +39,6 @@ D. HTTP file uploads can now be achieved with Drag & Drop, using the new '+Drop'
 
    Note that this works only in HTML5 capable browsers (e.g Firefox 3.6),
    supporting the JavaScript File API.
+
+E. The license was changed from GPL to the MIT/X11 License with this release
+   (see the file "COPYING").
