@@ -1,4 +1,4 @@
-# 05aug10abu
+# 15aug10abu
 # (c) Software Lab. Alexander Burger
 
 ### Global return labels ###
@@ -1557,6 +1557,7 @@
    do
       cmp Y L  # Args?
    while ne  # Yes
+      add S I  # Drop type
       pop X  # Next C arg
       ld E (Y)  # Next Lisp arg
       num E  # Number?
