@@ -1,4 +1,4 @@
-/* 07aug10abu
+/* 23aug10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -2808,7 +2808,7 @@ bool isLife(any x) {
    adr n;
    byte buf[2*BLK];
 
-   if (n = blk64(name(x))*BLKSIZE) {
+   if ((n = blk64(name(x))*BLKSIZE) > 0) {
       if (F < Files) {
          for (x = tail1(x); !isSym(x); x = cdr(cellPtr(x)));
          if (x == At || x == At2)
