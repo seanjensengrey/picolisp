@@ -1,4 +1,4 @@
-# 07aug10abu
+# 24aug10abu
 # (c) Software Lab. Alexander Burger
 
 # *Home *Gate *Host *Port *Port1 *Port% *Http1 *Chunked
@@ -224,6 +224,13 @@
                      (T (httpEcho *Url "application/octet-stream" 1 T)) ) ) ) ) )
       (and S (=0 *Http1) (task (close S))) ) )
 
+(de _htHost H
+   (setq *Host
+      (cond
+         (*Gate H)
+         ((index ":" H) (head (dec @) H))
+         (T H) ) ) )
+
 (de _htHead ()
    (use (L @X @Y Pil)
       (setq *Http1 (format (car @H))  *Chunked (gt0 *Http1)  Pil)
@@ -233,11 +240,7 @@
       (while (setq L (line))
          (cond
             ((match '(~(chop "Host: ") . @X) L)
-               (setq *Host
-                  (cond
-                     (*Gate @X)
-                     ((index ":" @X) (head (dec @) @X))
-                     (T @X) ) ) )
+               (fifo 'Pil (cons '_htHost @X)) )
             ((match '(~(chop "Referer: ") . @X) L)
                (setq *Referer @X) )
             ((match '(~(chop "Cookie: ") . @X) L)
@@ -256,8 +259,9 @@
                   *MPartLim (append '(- -) @X)
                   *MPartEnd (append *MPartLim '(- -)) ) )
             ((match '(~(chop "X-Pil: ") @X "=" . @Y) L)
-               (push 'Pil (list 'setq (intern (pack @X)) (htArg @Y))) ) ) )
-      (run Pil) ) )
+               (fifo 'Pil (list 'setq (intern (pack @X)) (htArg @Y))) ) ) )
+      (while Pil
+         (eval (fifo 'Pil)) ) ) )
 
 # rfc1867 multipart/form-data
 (de _htMultipart ()
