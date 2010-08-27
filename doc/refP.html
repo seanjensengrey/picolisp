@@ -766,6 +766,15 @@ following arguments. See also <code><a href="ref_.html#=:">=:</a></code>.
 -> 1
 : (prop 'X 'a)
 -> (1 . a)
+
+: (setq L '(A B C))
+-> (A B C)
+: (setq B 'D)
+-> D
+: (put L 2 0 'p 5)  # Store '5' under the 'p' propery of the value of 'B'
+-> 5
+: (getl 'D)
+-> ((5 . p))
 </code></pre>
 
 <dt><a name="put!"><code>(put! 'obj 'sym 'any) -> any</code></a>
