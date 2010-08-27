@@ -311,10 +311,10 @@ only a KEY, and another KEY/VAL cell.
 </code></pre>
 
 <p>Each property in a symbol's tail is either a symbol (like the single KEY
-above, then it represents a boolean value), or a cell with the property key in
-its CDR and the property value in its CAR. In both cases, the key should be a
-symbol, because searches in the property list are performed using pointer
-comparisons.
+above, then it represents the boolean value <code>T</code>), or a cell with the
+property key in its CDR and the property value in its CAR. In both cases, the
+key should be a symbol, because searches in the property list are performed
+using pointer comparisons.
 
 <p>The name of a symbol is stored as a number at the end of the tail. It
 contains the characters of the name in UTF-8 encoding, using between one and
