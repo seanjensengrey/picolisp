@@ -1,4 +1,4 @@
-# 07aug10abu
+# 28aug10abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -369,7 +369,7 @@
    call allocAE_A  # Extend buffer
    ld (Y V) A  # Store
    ld E (Y IV)  # Get buffer count again
-   add E (Y IV)  # Point to new count
+   add E A  # Point to new count
    ld A C  # Store new
    st2 (E)
    add E 2  # Point to new data
