@@ -2721,7 +2721,7 @@ static pid_t tryLock(off_t n, off_t len) {
       }
       if (errno != EINTR  &&  errno != EACCES  &&  errno != EAGAIN)
          lockErr();
-      // fl.l_type = F_WRLCK;
+      fl.l_type = F_WRLCK;
       fl.l_whence = SEEK_SET;
       fl.l_start = n;
       fl.l_len = len;

@@ -327,8 +327,8 @@
             jne lockErr  # No
          end
       end
-      #? ld A F_WRLCK  # Write lock
-      #? st2 (Flock)  # 'l_type'
+      ld A F_WRLCK  # Write lock
+      st2 (Flock)  # 'l_type'
       ld (Flock L_START) C  # Start position ('l_whence' is SEEK_SET)
       ld (Flock L_LEN) E  # Length
       do
