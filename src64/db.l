@@ -298,10 +298,10 @@
 
 (code 'tryLockCE_FA)
    do
-      ld (Flock L_START) C  # Start position ('l_whence' is SEEK_SET)
-      ld (Flock L_LEN) E  # Length
       ld A F_WRLCK  # Write lock
       st2 (Flock)  # 'l_type'
+      ld (Flock L_START) C  # Start position ('l_whence' is SEEK_SET)
+      ld (Flock L_LEN) E  # Length
       cc fcntl(((DbFile)) F_SETLK Flock)  # Try to lock
       nul4  # OK?
       if ns  # Yes
@@ -327,10 +327,6 @@
             jne lockErr  # No
          end
       end
-      ld A F_WRLCK  # Write lock
-      st2 (Flock)  # 'l_type'
-      ld (Flock L_START) C  # Start position ('l_whence' is SEEK_SET)
-      ld (Flock L_LEN) E  # Length
       do
          cc fcntl(((DbFile)) F_GETLK Flock)  # Try to get lock
          nul4  # OK?
