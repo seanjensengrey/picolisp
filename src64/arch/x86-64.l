@@ -1,4 +1,4 @@
-# 02aug10abu
+# 30aug10abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -405,17 +405,17 @@
 (asm zxt ()  # 8 bit -> 64 bit
    (prinst "movzx" "%al" "%rax") )
 
-(asm setc ()
-   (prinst "stc") )
-
-(asm clrc ()
-   (prinst "clc") )
-
 (asm setz ()
    (prinst "or" "%r12" "%r12") )
 
 (asm clrz ()
    (prinst "cmp" "%rsp" "%r12") )
+
+(asm setc ()
+   (prinst "stc") )
+
+(asm clrc ()
+   (prinst "clc") )
 
 
 # Comparisons

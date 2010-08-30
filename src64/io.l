@@ -1,4 +1,4 @@
-# 28aug10abu
+# 30aug10abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -224,7 +224,8 @@
       call errno_A
       cmp A EAGAIN  # No data available?
       if eq  # Yes
-         setc  # Return 'lt'
+         clrz  # Return 'lt'
+         setc
          ret
       end
       cmp A EINTR  # Interrupted?
@@ -274,7 +275,7 @@
             add X A  # Increment buffer pointer
             sub E A  # Decrement count
             if z  #  Got all
-               null A  # 'nsz'
+               null A  # Return 'gt' (A is non-zero)
                ret
             end
             do
@@ -296,7 +297,8 @@
       call errno_A
       cmp A EAGAIN  # No data available?
       if eq  # Yes
-         setc  # Return 'lt'
+         clrz  # Return 'lt'
+         setc
          ret
       end
       cmp A EINTR  # Interrupted?
@@ -2801,8 +2803,8 @@
                ld C (Y I)  # Get 'hear' fd again
                ld E 2  # Size of count
                ld X Buf  # Buffer pointer
-               call rdBytesNbCEX_F  # Read count
-               if ns  # Greater or equal zero
+               call rdBytesNbCEX_F  # Read count?
+               if ge  # Yes
                   if z
                      call clsChildY  # Close child
                      pop Z
@@ -2894,7 +2896,7 @@
                ld E I  # Size of slot
                ld X Buf  # Buffer pointer
                call rdBytesNbCEX_F  # Read slot?
-               if nsz  # Yes
+               if gt  # Yes
                   ld Y (Child)  # Get child
                   add Y (Buf)  # in slot
                   null (Y)  # 'pid'?
