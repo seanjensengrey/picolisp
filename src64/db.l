@@ -1,4 +1,4 @@
-# 19may10abu
+# 30aug10abu
 # (c) Software Lab. Alexander Burger
 
 # 6 bytes in little endian format
@@ -254,53 +254,47 @@
 
 (code 'rdLockDb)
    cmp (Solo) TSym  # Already locked whole DB?
-   if ne  # No
-      ld A (| F_RDLCK (hex "10000"))  # Read lock, length 1
-      ld C ((DbFiles))  # Descriptor of first file
-      jmp lockFileAC
-   end
-   ret
+   jeq ret  # Yes
+   ld A (| F_RDLCK (hex "10000"))  # Read lock, length 1
+   ld C ((DbFiles))  # Descriptor of first file
+   jmp lockFileAC
 
 (code 'wrLockDb)
    cmp (Solo) TSym  # Already locked whole DB?
-   if ne  # No
-      ld A (| F_WRLCK (hex "10000"))  # Write lock, length 1
-      ld C ((DbFiles))  # Descriptor of first file
-      jmp lockFileAC
-   end
-   ret
+   jeq ret  # Yes
+   ld A (| F_WRLCK (hex "10000"))  # Write lock, length 1
+   ld C ((DbFiles))  # Descriptor of first file
+   jmp lockFileAC
 
 (code 'rwUnlockDbA)
    cmp (Solo) TSym  # Already locked whole DB?
-   if ne  # No
-      null A  # Length zero?
-      if z  # Yes
-         push X
-         push Y
-         ld X (DbFiles)  # Iterate DB files
-         ld Y (DBs)  # Count
-         do
-            sub Y VIII  # Done?
-         while ne  # No
-            add X VIII  # Skip first, increment by sizeof(dbFile)
-            nul (X (+ IV 0))  # This one locked?
-            if nz  # Yes
-               ld A (| F_UNLCK (hex "00000"))  # Unlock, length 0
-               ld C (X)  # File descriptor
-               call unLockFileAC
-               set (X (+ IV 0)) 0  # Clear lock entry
-            end
-         loop
-         pop Y
-         pop X
-         ld (Solo) ZERO  # Reset solo mode
-         ld A 0  # Length zero again
-      end
-      or A F_UNLCK
-      ld C ((DbFiles))  # Unlock first file
-      call unLockFileAC
+   jeq ret  # Yes
+   null A  # Length zero?
+   if z  # Yes
+      push X
+      push Y
+      ld X (DbFiles)  # Iterate DB files
+      ld Y (DBs)  # Count
+      do
+         sub Y VIII  # Done?
+      while ne  # No
+         add X VIII  # Skip first, increment by sizeof(dbFile)
+         nul (X (+ IV 0))  # This one locked?
+         if nz  # Yes
+            ld A (| F_UNLCK (hex "00000"))  # Unlock, length 0
+            ld C (X)  # File descriptor
+            call unLockFileAC
+            set (X (+ IV 0)) 0  # Clear lock entry
+         end
+      loop
+      pop Y
+      pop X
+      ld (Solo) ZERO  # Reset solo mode
+      ld A 0  # Length zero again
    end
-   ret
+   or A F_UNLCK
+   ld C ((DbFiles))  # Unlock first file
+   jmp unLockFileAC
 
 (code 'tryLockCE_FA)
    do
@@ -319,9 +313,9 @@
             cmp (Solo) TSym  # Already locked whole DB?
             if ne  # No
                ld (Solo) Nil  # Clear solo mode
+               setz
             end
          end
-         setz
          ret  # 'z'
       end
       call errno_A
