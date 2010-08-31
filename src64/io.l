@@ -1,4 +1,4 @@
-# 30aug10abu
+# 31aug10abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -377,7 +377,7 @@
    add E 2  # Point to new data
    movn (E) (X) C  # Copy data
    add C 2  # Total new size
-   add (Y IV)  # Add to buffer count
+   add (Y IV) C  # Add to buffer count
    ret
 
 (code 'flushA_F 0)
@@ -2875,8 +2875,8 @@
                         call allocAE_A  # Shrink buffer
                         ld (Y V) A  # Store
                      end
+                     ld (Y III) 0  # Clear buffer offset
                   end
-                  ld (Y III) 0  # Clear buffer offset
                else
                   call clsChildY  # Close child
                end
