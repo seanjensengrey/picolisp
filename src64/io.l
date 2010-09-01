@@ -1,4 +1,4 @@
-# 31aug10abu
+# 01sep10abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -749,7 +749,7 @@
          shl A 2  # Adjust to tag byte
          call (PutBinBZ)  # Output tag byte
          do
-            call prByteCEXY  # Output next data bye
+            call prByteCEXY  # Output next data byte
             dec (S)  # More?
          until z  # No
       else
@@ -759,7 +759,7 @@
          call (PutBinBZ)
          push 63  # <S> and first 63 data bytes
          do
-            call prByteCEXY  # Output next data bye
+            call prByteCEXY  # Output next data byte
             dec (S)  # More?
          until z  # No
          do
@@ -769,7 +769,7 @@
             ld (S) A  # and the next 255 data bytes
             call (PutBinBZ)  # Output count byte
             do
-               call prByteCEXY  # Output next data bye
+               call prByteCEXY  # Output next data byte
                dec (S)  # More?
             until z  # No
             sub (S I) 255  # Decrement counter
@@ -780,7 +780,7 @@
          do
             sub (S) 1  # More?
          while ge  # Yes
-            call prByteCEXY  # Output next data bye
+            call prByteCEXY  # Output next data byte
          loop
       end
       pop A  # Drop count
@@ -3054,17 +3054,16 @@
 
 # (sync) -> flg
 (code 'doSync 2)
-   null (Mic)  # No 'mic' channel?
-   jz retNil  # Yes
-   null (Hear)  # No 'hear' channel?
-   jz retNil  # Yes
+   ld A (Mic)  # 'mic' channel
+   or A (Hear)  # or 'hear' channel?
+   jz retNil  # No
    push X
    ld X E
    ld E Slot  # Buffer pointer
    ld C I  # Count
    do
       cc write((Mic) E C)  # Write 'Slot' to 'Mic'
-      nul4  # OK?
+      null A  # OK?
       if ns  # Yes
          sub C A  # Decrement count
          break z  # Done
