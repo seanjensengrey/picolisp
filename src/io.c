@@ -1,4 +1,4 @@
-/* 30aug10abu
+/* 02sep10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -168,17 +168,19 @@ int rdBytes(int fd, byte *p, int cnt, bool nb) {
 bool wrBytes(int fd, byte *p, int cnt) {
    int n;
 
-   do {
-      if ((n = write(fd, p, cnt)) >= 0)
-         p += n, cnt -= n;
+   for (;;) {
+      if ((n = write(fd, p, cnt)) >= 0) {
+         if ((cnt -= n) == 0)
+            return YES;
+         p += n;
+      }
       else if (errno == EBADF || errno == EPIPE || errno == ECONNRESET)
          return NO;
       else if (errno != EINTR)
          writeErr("bytes");
       if (*Signal)
          sighandler(NULL);
-   } while (cnt);
-   return YES;
+   }
 }
 
 static void wrChild(int i, byte *p, int cnt) {

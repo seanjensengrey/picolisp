@@ -1,4 +1,4 @@
-# 01sep10abu
+# 02sep10abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -320,11 +320,11 @@
       else
          call errno_A
          cmp A EBADF  # Bad file number?
-         jz retnz  # Return 'nz'
+         jeq retnz  # Return 'nz'
          cmp A EPIPE  # Broken pipe?
-         jz retnz  # Return 'nz'
+         jeq retnz  # Return 'nz'
          cmp A ECONNRESET  # Connection reset by peer?
-         jz retnz  # Return 'nz'
+         jeq retnz  # Return 'nz'
          cmp A EINTR  # Interrupted?
          jne wrBytesErr  # No
       end
@@ -508,7 +508,7 @@
    if z  # No
       ld E A
       cmp B BEG  # Begin a list?
-      jnz retnc  # No: Return DOT or END (also in B)
+      jne retnc  # No: Return DOT or END (also in B)
       call binReadZ_FE  # Else read list
       jc ret
       push X
@@ -3080,7 +3080,7 @@
    loop
    set (Sync) 0  # Clear sync flag
    do
-      ld C -1  # No fd
+      ld C -1  # No file descriptor
       ld E C  # Wait infinite
       call waitFdCEX_A  # Wait for events
       nul (Sync)  # Synchronized?
