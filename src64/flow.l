@@ -1,4 +1,4 @@
-# 22jun10abu
+# 04sep10abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -3131,8 +3131,6 @@
    nul4  # In child?
    if z  # Yes
       cc setpgid(0 0)  # Set process group
-      cc getpgrp()  # Set terminal process group
-      cc tcsetpgrp(0 A)
       cc execvp((S) S)  # Execute program
       jmp execErrS  # Error if failed
    end
@@ -3144,7 +3142,10 @@
    until z  # Yes
    ld Z A  # Keep pid in Z
    cc setpgid(Z 0)  # Set process group
-   cc tcsetpgrp(0 Z)  # Set terminal process group
+   null (Termio)  # Raw mode?
+   if nz  # Yes
+      cc tcsetpgrp(0 Z)  # Set terminal process group
+   end
    do  # Re-use expression stack entry
       do
          cc waitpid(Z S WUNTRACED)  # Wait for child
@@ -3158,8 +3159,11 @@
             call sighandlerX
          end
       loop
-      cc getpgrp()  # Set terminal process group
-      cc tcsetpgrp(0 A)
+      null (Termio)  # Raw mode?
+      if nz  # Yes
+         cc getpgrp()  # Set terminal process group
+         cc tcsetpgrp(0 A)
+      end
       call wifstoppedS_F  # WIFSTOPPED(S)?
       if ne  # No
          ld4 (S)  # Result?
@@ -3174,7 +3178,10 @@
       ld B (char "+")  # Prompt
       ld E Nil  # REPL
       call loadBEX_E
-      cc tcsetpgrp(0 Z)  # Set terminal process group
+      null (Termio)  # Raw mode?
+      if nz  # Yes
+         cc tcsetpgrp(0 Z)  # Set terminal process group
+      end
       cc kill(Z SIGCONT)
    loop
 
