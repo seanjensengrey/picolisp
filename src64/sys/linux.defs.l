@@ -1,4 +1,4 @@
-# 20may10abu
+# 05sep10abu
 # (c) Software Lab. Alexander Burger
 
 # errno
@@ -106,7 +106,8 @@
 (equ WUNTRACED 2)
 
 # poll
-(equ POLLFD 8)
+(equ POLLFD 8)  # Should be multiple of 8
+(equ POLLFD_SH 3)  # Shift size (log2 POLLFD)
 (equ POLL_EVENTS 4)  # 2
 (equ POLL_REVENTS 6)  # 2
 (equ POLLIN 1)

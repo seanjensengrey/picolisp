@@ -1,4 +1,4 @@
-# 02sep10abu
+# 05sep10abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -2575,10 +2575,6 @@
    null C  # Any?
    ret
 
-(code 'inReadyC_F 0)
-   cmp (C I) (C II)  # 'ix' < 'cnt'?
-   ret  # Yes: 'nz'
-
 (code 'inReadyA_FC 0)
    ld C A
    shl C 3  # Vector index
@@ -2600,13 +2596,13 @@
    ld C (C)  # Slot?
    null C  # Any?
    jz rdSetASL_F  # No
-   call inReadyC_F  # Data in buffer?
+   cmp (C I) (C II)  # Data in buffer ('ix' < 'cnt')?
    if z  # No
-      lea Z (L -III)  # Beyond last 'poll' structure
+      lea Z (L -IV)  # Beyond last 'poll' structure
       do
+         cmp Z (L -IV)  # More structures?
+         jeq ret  # No: 'z'
          sub Z POLLFD  # Next structure
-         cmp Z S  # More structures?
-         jle retz  # No: 'z'
          cmp4 (Z)  # Found 'fd'?
       until eq  # Yes
       ld2 (Z POLL_REVENTS)  # 'revents'
@@ -2620,11 +2616,11 @@
    ret
 
 (code 'rdSetASL_F 0)  # Z
-   lea Z (L -III)  # Beyond last 'poll' structure
+   lea Z (L -IV)  # Beyond last 'poll' structure
    do
+      cmp Z (L -IV)  # More structures?
+      jeq ret  # No: 'z'
       sub Z POLLFD  # Next structure
-      cmp Z S  # More structures?
-      jle retz  # No: 'z'
       cmp4 (Z)  # Found 'fd'?
    until eq  # Yes
    ld2 (Z POLL_REVENTS)  # 'revents'
@@ -2632,11 +2628,11 @@
    ret  # Return 'nz'
 
 (code 'wrSetASL_F 0)  # Z
-   lea Z (L -III)  # Beyond last 'poll' structure
+   lea Z (L -IV)  # Beyond last 'poll' structure
    do
+      cmp Z (L -IV)  # More structures?
+      jeq ret  # No: 'z'
       sub Z POLLFD  # Next structure
-      cmp Z S  # More structures?
-      jle retz  # No: 'z'
       cmp4 (Z)  # Found 'fd'?
    until eq  # Yes
    ld2 (Z POLL_REVENTS)  # 'revents'
@@ -2654,8 +2650,8 @@
    push C  # <L -I> File descriptor
    push E  # <L -II> Milliseconds
    push E  # <L -III> Timeout
+   push 0  # <L -IV> Poll array
    do
-      ld Z 0  # Structure count
       ld A (L -I)  # File descriptor
       null A  # Positive?
       if ns  # Yes
@@ -2667,7 +2663,6 @@
             st4 (S)  # Store 'fd'
             ld A POLLIN  # Poll input
             st2 (S POLL_EVENTS)  # Store 'events'
-            inc Z  # Increment count
          end
       end
       ld Y (Run)  # Get '*Run'
@@ -2705,7 +2700,6 @@
                   st4 (S)  # Store 'fd'
                   ld A POLLIN  # Poll input
                   st2 (S POLL_EVENTS)  # Store 'events'
-                  inc Z  # Increment count
                end
             end
          end
@@ -2718,7 +2712,7 @@
          if ne  # Yes
             call inFilesA_FC  # Still open?
             if nz  # Yes
-               call inReadyC_F  # Data in buffer?
+               cmp (C I) (C II)  # Data in buffer ('ix' < 'cnt')?
                if nz  # Yes
                   ld (L -III) 0  # Timeout = 0
                else
@@ -2726,7 +2720,6 @@
                   st4 (S)  # Store 'Hear'
                   ld A POLLIN  # Poll input
                   st2 (S POLL_EVENTS)  # Store 'events'
-                  inc Z  # Increment count
                end
             end
          end
@@ -2738,7 +2731,6 @@
          st4 (S)  # Store 'Spkr'
          ld A POLLIN  # Poll input
          st2 (S POLL_EVENTS)  # Store 'events'
-         inc Z  # Increment count
       end
       ld Y (Child)  # Iterate children
       ld E (Children)  # Count
@@ -2752,7 +2744,6 @@
             st4 (S)
             ld A POLLIN  # Poll input
             st2 (S POLL_EVENTS)  # Store 'events'
-            inc Z  # Increment count
             null (Y IV)  # Child's buffer count?
             if nz  # Yes
                sub S POLLFD  # Create 'poll' structure
@@ -2760,17 +2751,20 @@
                st4 (S)
                ld A POLLOUT  # Poll output
                st2 (S POLL_EVENTS)  # Store 'events'
-               inc Z  # Increment count
             end
          end
          add Y VI  # Increment by sizeof(child)
       loop
       cmp S (StkLimit)  # Stack check
       jlt stkErrX
+      lea C (L -IV)  # Set poll array pointer
+      ld (C) S
+      sub C S  # Calculate poll count
+      shr C POLLFD_SH
       call msec_A  # Get milliseconds
       ld E A  # into E
       do
-         cc poll(S Z (L -III))  # Wait for event or timeout
+         cc poll(S C (L -III))  # Wait for event or timeout
          nul4  # OK?
       while s  # No
          call errno_A
@@ -3004,7 +2998,7 @@
    while ns  # Yes
       call rdSetRdyASL_F  # Ready?
    while z  # No
-      lea S (L -III)  # Drop 'poll' structures
+      lea S (L -IV)  # Drop 'poll' structures
    loop
    ld (At) (L II)  # Restore '@'
    ld A (L -II)  # Return milliseconds
@@ -3170,7 +3164,7 @@
    ldz E Nil  # No: Return NIL
    if nz
       do
-         call inReadyC_F  # Data in buffer?
+         cmp (C I) (C II)  # Data in buffer ('ix' < 'cnt')?
       while z  # No
          sub S POLLFD  # Create 'poll' structure
          st4 (S)  # Store 'fd'
