@@ -1,4 +1,4 @@
-# 05sep10abu
+# 06sep10abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -2583,7 +2583,7 @@
    add C (InFiles)  # Get vector
    ld C (C)  # Slot?
    null C  # Any?
-   jz retnc  # No
+   jz ret  # No
    cmp (C I) (C II)  # 'ix' < 'cnt'?
    ret  # Yes: Return 'c'
 
@@ -2598,9 +2598,9 @@
    jz rdSetASL_F  # No
    cmp (C I) (C II)  # Data in buffer ('ix' < 'cnt')?
    if z  # No
-      lea Z (L -IV)  # Beyond last 'poll' structure
+      lea Z (L -V)  # Beyond last 'poll' structure
       do
-         cmp Z (L -IV)  # More structures?
+         cmp Z (L -V)  # More structures?
          jeq ret  # No: 'z'
          sub Z POLLFD  # Next structure
          cmp4 (Z)  # Found 'fd'?
@@ -2616,9 +2616,9 @@
    ret
 
 (code 'rdSetASL_F 0)  # Z
-   lea Z (L -IV)  # Beyond last 'poll' structure
+   lea Z (L -V)  # Beyond last 'poll' structure
    do
-      cmp Z (L -IV)  # More structures?
+      cmp Z (L -V)  # More structures?
       jeq ret  # No: 'z'
       sub Z POLLFD  # Next structure
       cmp4 (Z)  # Found 'fd'?
@@ -2628,9 +2628,9 @@
    ret  # Return 'nz'
 
 (code 'wrSetASL_F 0)  # Z
-   lea Z (L -IV)  # Beyond last 'poll' structure
+   lea Z (L -V)  # Beyond last 'poll' structure
    do
-      cmp Z (L -IV)  # More structures?
+      cmp Z (L -V)  # More structures?
       jeq ret  # No: 'z'
       sub Z POLLFD  # Next structure
       cmp4 (Z)  # Found 'fd'?
@@ -2650,7 +2650,7 @@
    push C  # <L -I> File descriptor
    push E  # <L -II> Milliseconds
    push E  # <L -III> Timeout
-   push 0  # <L -IV> Poll array
+   sub S II  # <L -IV> Flush flag, <L -V> Poll array
    do
       ld A (L -I)  # File descriptor
       null A  # Positive?
@@ -2757,7 +2757,7 @@
       loop
       cmp S (StkLimit)  # Stack check
       jlt stkErrX
-      lea C (L -IV)  # Set poll array pointer
+      lea C (L -V)  # Set poll array pointer
       ld (C) S
       sub C S  # Calculate poll count
       shr C POLLFD_SH
@@ -2781,7 +2781,7 @@
       call msec_A  # Get milliseconds
       sub A E  # Time difference
       ld (L -III) A  # Save it
-      set (Flg) 0  # Guarantee flushed pipes
+      set (L -IV) 0  # Guarantee flushed pipes
       ld Y (Child)  # Iterate children
       ld Z (Children)  # Count
       push X  # Save context
@@ -2812,7 +2812,7 @@
                   lea X (S II)  # Buffer pointer
                   call rdBytesCEX_F  # Read data?
                   if nz  # Yes
-                     set (Flg) 1  # Still got data from pipe
+                     set (L -IV) 1  # Still got data from pipe
                      ld Y (Child)  # Iterate children
                      ld Z (Children)  # Count
                      do
@@ -2879,7 +2879,7 @@
          end
          add Y VI  # Increment by sizeof(child)
       loop
-      nul (Flg)  # All pipes flushed?
+      nul (L -IV)  # All pipes flushed?
       if z  # Yes
          ld A (Spkr)  # Speaker open?
          null A
@@ -2998,7 +2998,7 @@
    while ns  # Yes
       call rdSetRdyASL_F  # Ready?
    while z  # No
-      lea S (L -IV)  # Drop 'poll' structures
+      lea S (L -V)  # Drop 'poll' structures
    loop
    ld (At) (L II)  # Restore '@'
    ld A (L -II)  # Return milliseconds

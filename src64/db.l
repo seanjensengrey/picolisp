@@ -1,4 +1,4 @@
-# 30aug10abu
+# 07sep10abu
 # (c) Software Lab. Alexander Burger
 
 # 6 bytes in little endian format
@@ -1734,6 +1734,8 @@
                         call tellEndZ  # Close 'tell'
                         lea Z (L (- (+ III PIPE_BUF)))  # Reset buffer pointer
                         call tellBegZ_Z  # Start new 'tell' message
+                        ld E (L I)  # Get 'any'
+                        call prTellEZ  # Print to 'tell'
                      end
                      ld E (X)  # Get external symbol
                      call prTellEZ  # Print to 'tell'
@@ -1760,6 +1762,8 @@
                         call tellEndZ  # Close 'tell'
                         lea Z (L (- (+ III PIPE_BUF)))  # Reset buffer pointer
                         call tellBegZ_Z  # Start new 'tell' message
+                        ld E (L I)  # Get 'any'
+                        call prTellEZ  # Print to 'tell'
                      end
                      ld E (X)  # Get external symbol
                      call prTellEZ  # Print to 'tell'

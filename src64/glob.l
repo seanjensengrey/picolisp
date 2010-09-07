@@ -1,4 +1,4 @@
-# 05aug10abu
+# 06sep10abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Globals 0)
@@ -615,7 +615,6 @@ initData
 
 # Bytes
 :: Tio      byte 0            # Terminal I/O
-:: Flg      byte 0            # General flag value
 
 : Repl      byte 0            # REPL flag
 : PRepl     byte 0            # Parent REPL
