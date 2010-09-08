@@ -492,11 +492,11 @@ arguments may follow the command name.
 <p>By default, each argument is the name of a file to be executed by the
 interpreter. If, however, the argument's first character is a hyphen '-', then
 the rest of that argument is taken as a Lisp function call (without the
-surrounding parentheses). A hyphen by itself as an argument stops evaluation of
-the rest of the command line (it may be processed later using the <code><a
+surrounding parentheses), and a hyphen by itself as an argument stops evaluation
+of the rest of the command line (it may be processed later using the <code><a
 href="refA.html#argv">argv</a></code> and <code><a
-href="refO.html#opt">opt</a></code> functions). This mechanism corresponds to
-calling <code>(<a href="refL.html#load">load</a> T)</code>.
+href="refO.html#opt">opt</a></code> functions). This whole mechanism corresponds
+to calling <code>(<a href="refL.html#load">load</a> T)</code>.
 
 <p>As a convention, PicoLisp source files have the extension "<code>.l</code>".
 

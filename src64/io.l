@@ -1,4 +1,4 @@
-# 06sep10abu
+# 07sep10abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -2584,7 +2584,7 @@
    ld C (C)  # Slot?
    null C  # Any?
    jz ret  # No
-   cmp (C I) (C II)  # 'ix' < 'cnt'?
+   cmp (C I) (C II)  # Data in buffer ('ix' < 'cnt')?
    ret  # Yes: Return 'c'
 
 (code 'rdSetRdyASL_F 0)  # Z
@@ -2598,15 +2598,7 @@
    jz rdSetASL_F  # No
    cmp (C I) (C II)  # Data in buffer ('ix' < 'cnt')?
    if z  # No
-      lea Z (L -V)  # Beyond last 'poll' structure
-      do
-         cmp Z (L -V)  # More structures?
-         jeq ret  # No: 'z'
-         sub Z POLLFD  # Next structure
-         cmp4 (Z)  # Found 'fd'?
-      until eq  # Yes
-      ld2 (Z POLL_REVENTS)  # 'revents'
-      test A (| POLLIN POLLHUP)  # Ready?
+      call rdSetASL_F
       if nz  # Yes
          call slowNbC_FA  # Try non-blocking read
          jge retnz
@@ -2636,7 +2628,7 @@
       cmp4 (Z)  # Found 'fd'?
    until eq  # Yes
    ld2 (Z POLL_REVENTS)  # 'revents'
-   test A POLLOUT  # Ready?
+   test A (| POLLOUT POLLHUP)  # Ready?
    ret  # Return 'nz'
 
 (code 'waitFdCEX_A)

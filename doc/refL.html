@@ -385,7 +385,7 @@ identical to that of <code><a href="refI.html#in">in</a></code>, with the
 exception that if an argument is a symbol and its first character is a hyphen
 '-', then that argument is parsed as an executable list (without the surrounding
 parentheses). When <code>any</code> is <code>T</code>, all remaining command
-line arguments are loaded recursively. When <code>any</code> is
+line arguments are <code>load</code>ed recursively. When <code>any</code> is
 <code>NIL</code>, standard input is read, a prompt is issued before each read
 operation, the results are printed to standard output (read-eval-print loop),
 and <code>load</code> terminates when an empty line is entered. In any case,
