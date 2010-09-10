@@ -1,4 +1,4 @@
-# 07sep10abu
+# 10sep10abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -2587,18 +2587,18 @@
    cmp (C I) (C II)  # Data in buffer ('ix' < 'cnt')?
    ret  # Yes: Return 'c'
 
-(code 'rdSetRdyASL_F 0)  # Z
+(code 'rdSetRdyAL_F 0)  # Z
    ld C A
    shl C 3  # Vector index
    cmp C (InFDs)  # 'fd' >= 'InFDs'?
-   jge rdSetASL_F  # Yes
+   jge rdSetAL_F  # Yes
    add C (InFiles)  # Get vector
    ld C (C)  # Slot?
    null C  # Any?
-   jz rdSetASL_F  # No
+   jz rdSetAL_F  # No
    cmp (C I) (C II)  # Data in buffer ('ix' < 'cnt')?
    if z  # No
-      call rdSetASL_F
+      call rdSetAL_F
       if nz  # Yes
          call slowNbC_FA  # Try non-blocking read
          jge retnz
@@ -2607,7 +2607,7 @@
    end
    ret
 
-(code 'rdSetASL_F 0)  # Z
+(code 'rdSetAL_F 0)  # Z
    lea Z (L -V)  # Beyond last 'poll' structure
    do
       cmp Z (L -V)  # More structures?
@@ -2619,7 +2619,7 @@
    test A (| POLLIN POLLHUP)  # Ready?
    ret  # Return 'nz'
 
-(code 'wrSetASL_F 0)  # Z
+(code 'wrSetAL_F 0)  # Z
    lea Z (L -V)  # Beyond last 'poll' structure
    do
       cmp Z (L -V)  # More structures?
@@ -2784,7 +2784,7 @@
          if nz  # Yes
             push Z  # Outer loop count
             ld A (Y I)  # Get child's 'hear' fd
-            call rdSetASL_F  # Ready?
+            call rdSetAL_F  # Ready?
             if nz  # Yes
                ld C (Y I)  # Get 'hear' fd again
                ld E 2  # Size of count
@@ -2793,15 +2793,14 @@
                if ge  # Yes
                   if z
                      call clsChildY  # Close child
-                     pop Z
-                     continue T
+                     jmp 20  # Continue
                   end
-                  sub S PIPE_BUF  # <S II> Pipe buffer
+                  sub S PIPE_BUF  # <S I> Pipe buffer
                   push Y  # <S> Outer child index
                   ld C (Y I)  # Get 'hear' fd again
                   ld2 (Buf)  # Get size
                   ld E A
-                  lea X (S II)  # Buffer pointer
+                  lea X (S I)  # Buffer pointer
                   call rdBytesCEX_F  # Read data?
                   if nz  # Yes
                      set (L -IV) 1  # Still got data from pipe
@@ -2814,7 +2813,7 @@
                            if nz  # Yes
                               ld2 (Buf)  # Get size
                               ld C A
-                              lea X (S II)  # and data
+                              lea X (S I)  # and data
                               call wrChildCXY  # Write to child
                            end
                         end
@@ -2825,15 +2824,14 @@
                      call clsChildY  # Close child
                      pop Y
                      add S PIPE_BUF  # Drop 'tell' buffer
-                     pop Z
-                     continue T
+                     jmp 20  # Continue
                   end
                   pop Y
                   add S PIPE_BUF  # Drop 'tell' buffer
                end
             end
             ld A (Y II)  # Get child's 'tell' fd
-            call wrSetASL_F  # Ready?
+            call wrSetAL_F  # Ready?
             if nz  # Yes
                ld C (Y II)  # Get 'tell' fd again
                ld X (Y V)  # Get buffer pointer
@@ -2867,7 +2865,7 @@
                   call clsChildY  # Close child
                end
             end
-            pop Z
+20          pop Z
          end
          add Y VI  # Increment by sizeof(child)
       loop
@@ -2876,7 +2874,7 @@
          ld A (Spkr)  # Speaker open?
          null A
          if nz  # Yes
-            call rdSetASL_F  # Ready?
+            call rdSetAL_F  # Ready?
             if nz  # Yes
                ld C (Spkr)  # Get fd
                ld E I  # Size of slot
@@ -2900,7 +2898,7 @@
       if nz  # Yes
          cmp A (L -I)  # Different from argument-fd?
          if ne  # Yes
-            call rdSetRdyASL_F  # Ready?
+            call rdSetRdyAL_F  # Ready?
             if nz  # Yes
                call rdHear_FE  # Read expression?
                if nc  # Yes
@@ -2935,7 +2933,7 @@
             atom A  # End of tasklist?
          while z  # No
             cmp E (A)  # Member?
-            jeq 20  # Yes: Skip
+            jeq 30  # Yes: Skip
             ld A (A CDR)
          loop
          ld A (E)  # Get fd or timeout value
@@ -2959,7 +2957,7 @@
          else
             cmp A (L -I)  # Different from argument-fd?
             if ne  # Yes
-               call rdSetRdyASL_F  # Ready?
+               call rdSetRdyAL_F  # Ready?
                if nz  # Yes
                   ld (At) (E)  # Set to fd
                   ld Z (E CDR)  # Run body
@@ -2967,7 +2965,7 @@
                end
             end
          end
-20       ld Y (Y CDR)
+30       ld Y (Y CDR)
       loop
       pop X  # Restore context
       null (Signal)  # Signal?
@@ -2988,7 +2986,7 @@
       ld A (L -I)  # File descriptor
       null A  # Positive?
    while ns  # Yes
-      call rdSetRdyASL_F  # Ready?
+      call rdSetRdyAL_F  # Ready?
    while z  # No
       lea S (L -V)  # Drop 'poll' structures
    loop
@@ -3040,9 +3038,10 @@
 
 # (sync) -> flg
 (code 'doSync 2)
-   ld A (Mic)  # 'mic' channel
-   or A (Hear)  # or 'hear' channel?
-   jz retNil  # No
+   null (Mic)  # No 'mic' channel?
+   jz retNil  # Yes
+   null (Hear)  # No 'hear' channel?
+   jz retNil  # Yes
    push X
    ld X E
    ld E Slot  # Buffer pointer

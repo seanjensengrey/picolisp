@@ -1,4 +1,4 @@
-# 07sep10abu
+# 09sep10abu
 # (c) Software Lab. Alexander Burger
 
 # 6 bytes in little endian format
@@ -405,27 +405,28 @@
    cmp A C  # OK?
    jne dbWrErr  # No
    null (DbJnl)  # Journal?
-   jz Ret  # No
-   cmp A ((DbFile) III)  # Size (in A and C) equal to current file's block size?
-   if eq  # Yes
-      ld A BLKSIZE  # Use block unit size instead
+   if nz  # Yes
+      cmp A ((DbFile) III)  # Size (in A and C) equal to current file's block size?
+      if eq  # Yes
+         ld A BLKSIZE  # Use block unit size instead
+      end
+      cc putc_unlocked(A (DbJnl))  # Write size
+      sub S (+ BLK 2)  # <S> Buffer
+      ld A ((DbFile) I)  # Get file number
+      ld (S) B  # Store low byte
+      shr A 8
+      ld (S 1) B  # and high byte
+      ld A E  # Get position
+      shr A ((DbFile) II)  # Un-shift for current file
+      call setAdrAS  # Set block address in buffer
+      cc fwrite(S (+ BLK 2) 1 (DbJnl))  # Write file number and address
+      cmp A 1  # OK?
+      jne wrJnlErr  # No
+      cc fwrite(Z C 1 (DbJnl))  # Write C bytes from buffer Z
+      cmp A 1  # OK?
+      jne wrJnlErr  # No
+      add S (+ BLK 2)  # Drop buffer
    end
-   cc putc_unlocked(A (DbJnl))  # Write size
-   sub S (+ BLK 2)  # <S> Buffer
-   ld A ((DbFile) I)  # Get file number
-   ld (S) B  # Store low byte
-   shr A 8
-   ld (S 1) B  # and high byte
-   ld A E  # Get position
-   shr A ((DbFile) II)  # Un-shift for current file
-   call setAdrAS  # Set block address in buffer
-   cc fwrite(S (+ BLK 2) 1 (DbJnl))  # Write file number and address
-   cmp A 1  # OK?
-   jne wrJnlErr  # No
-   cc fwrite(Z C 1 (DbJnl))  # Write C bytes from buffer Z
-   cmp A 1  # OK?
-   jne wrJnlErr  # No
-   add S (+ BLK 2)  # Drop buffer
    ret
 
 (code 'logBlock)

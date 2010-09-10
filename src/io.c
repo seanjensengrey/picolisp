@@ -1,4 +1,4 @@
-/* 02sep10abu
+/* 10sep10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -1494,14 +1494,17 @@ any doSync(any ex) {
       return Nil;
    p = (byte*)&Slot;
    cnt = sizeof(int);
-   do {
-      if ((n = write(Mic, p, cnt)) >= 0)
-         p += n, cnt -= n;
+   for (;;) {
+      if ((n = write(Mic, p, cnt)) >= 0) {
+         if ((cnt -= n) == 0)
+            break;
+         p += n;
+      }
       else if (errno != EINTR)
          writeErr("sync");
       if (*Signal)
          sighandler(ex);
-   } while (cnt);
+   }
    Sync = NO;
    do
       waitFd(ex, -1, -1);
@@ -3223,7 +3226,7 @@ void db(any ex, any s, int a) {
             tail(s) = ext(x);
          }
          else if (*p == At)
-            *p =  At2;  // loaded -> dirty
+            *p = At2;  // loaded -> dirty
          else {  // NIL & 1 | 2
             adr n;
             cell c[1];
