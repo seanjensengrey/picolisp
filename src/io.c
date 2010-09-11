@@ -1,4 +1,4 @@
-/* 10sep10abu
+/* 11sep10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -143,9 +143,9 @@ int rdBytes(int fd, byte *p, int cnt, bool nb) {
          fcntl(fd, F_SETFL, f);
       if (n > 0) {
          for (;;) {
-            p += n;
             if ((cnt -= n) == 0)
                return 1;
+            p += n;
             while ((n = read(fd, p, cnt)) <= 0) {
                if (!n || errno != EINTR)
                   return 0;

@@ -1,4 +1,4 @@
-# 09sep10abu
+# 11sep10abu
 # (c) Software Lab. Alexander Burger
 
 # 6 bytes in little endian format
@@ -859,6 +859,7 @@
                      ld C (DBs)  # Count
                      do
                         set (E (+ IV 1)) 0  # Clear dirty flag
+                        add E VIII  # Increment by sizeof(dbFile)
                         sub C VIII  # Done?
                      until z  # Yes
                      sub S (MaxBlkSize)  # <S> Buffer
@@ -937,6 +938,7 @@
          nul4  # OK?
          js dbSyncErrX  # No
       end
+      add E VIII  # Increment by sizeof(dbFile)
       sub C VIII  # Done?
    until z  # Yes
    ret
@@ -1518,6 +1520,7 @@
       do
          set (E (+ IV 1)) 0  # Clear dirty flag
          ld (E VII) 0  # and 'fluse'
+         add E VIII  # Increment by sizeof(dbFile)
          sub C VIII  # Done?
       until z  # Yes
       push X
@@ -1613,6 +1616,7 @@
             loop
             pop A  # Drop count
          end
+         add X VIII  # Increment by sizeof(dbFile)
          sub Y VIII  # Done?
       until z  # Yes
       cc putc_unlocked((hex "FF") (DbLog))  # Write end marker
@@ -1868,6 +1872,8 @@
    ld C (DBs)  # Count
    do
       ld (E VII) -1  # Init 'fluse'
+      add E VIII  # Increment by sizeof(dbFile)
+      sub C VIII  # Done?
    until z  # Yes
    drop
    pop Z

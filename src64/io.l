@@ -1,4 +1,4 @@
-# 10sep10abu
+# 11sep10abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -272,12 +272,12 @@
       null A  # OK?
       if nsz  # Yes
          do
-            add X A  # Increment buffer pointer
             sub E A  # Decrement count
             if z  #  Got all
                null A  # Return 'gt' (A is non-zero)
                ret
             end
+            add X A  # Increment buffer pointer
             do
                cc read(C X E)  # Read into buffer
                null A  # OK?
@@ -536,7 +536,7 @@
                cmp E END  # Circular list?
                ldz E (L I)  # Yes: Get first cell
                ld (X CDR) E  # Store in last cell
-               break T
+               break T  # 'nc' (E > END)
             end
          end
          call consE_C  # Append next cell

@@ -1,4 +1,4 @@
-# 30aug10abu
+# 11sep10abu
 # (c) Software Lab. Alexander Burger
 
 
@@ -177,7 +177,7 @@
       pop dst           # Pop 'dst' [---]
       link              # Setup frame
       tuck src          # Extend frame
-      drop              # Drop frame
+      drop              # Drop frame [---]
 
    Evaluation:
       eval              # Evaluate expression in 'E'
