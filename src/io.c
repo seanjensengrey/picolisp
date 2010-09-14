@@ -1,4 +1,4 @@
-/* 11sep10abu
+/* 14sep10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -174,12 +174,14 @@ bool wrBytes(int fd, byte *p, int cnt) {
             return YES;
          p += n;
       }
-      else if (errno == EBADF || errno == EPIPE || errno == ECONNRESET)
-         return NO;
-      else if (errno != EINTR)
-         writeErr("bytes");
-      if (*Signal)
-         sighandler(NULL);
+      else {
+         if (errno == EBADF || errno == EPIPE || errno == ECONNRESET)
+            return NO;
+         if (errno != EINTR)
+            writeErr("bytes");
+         if (*Signal)
+            sighandler(NULL);
+      }
    }
 }
 
@@ -1463,8 +1465,6 @@ long waitFd(any ex, int fd, long ms) {
             }
          }
       }
-      if (*Signal)
-         sighandler(ex);
    } while (ms  &&  fd >= 0 && !isSet(fd, &rdSet));
    Env.task = taskSave;
    val(At) = Pop(c1);
@@ -1500,10 +1500,12 @@ any doSync(any ex) {
             break;
          p += n;
       }
-      else if (errno != EINTR)
-         writeErr("sync");
-      if (*Signal)
-         sighandler(ex);
+      else {
+         if (errno != EINTR)
+            writeErr("sync");
+         if (*Signal)
+            sighandler(ex);
+      }
    }
    Sync = NO;
    do

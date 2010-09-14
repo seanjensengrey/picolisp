@@ -1,4 +1,4 @@
-# 04sep10abu
+# 13sep10abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -3299,12 +3299,12 @@
       ld4 (SpMiPipe 4)  # Write end
       call closeOnExecAX
    end
-   push A  # Create 'hear' and 'tell' pipes
-   push A
-   cc pipe(S)  # Open 'hear' pipe
+   push A  # Create 'tell' pipe
+   cc pipe(S)  # Open 'tell' pipe
    nul4  # OK?
    jnz pipeErrX
-   cc pipe(&(S 8))  # Open 'tell' pipe
+   push A  # Create 'hear' pipe
+   cc pipe(S)  # Open 'hear' pipe
    nul4  # OK?
    jnz pipeErrX
    ld4 (S)  # Read end of 'hear'
@@ -3411,10 +3411,9 @@
       setc  # Return "in child"
       ret
    end
+   push A  # Save child's 'pid'
    cmp C (Children)  # Children table full?
-   ldnz E A  # No: Get 'pid' into E
    if eq  # Yes
-      push A  # Save child's 'pid'
       ld A (Child)  # Get vector
       ld E C  # Children
       add E (* 8 VI)  # Eight more slots
@@ -3428,10 +3427,9 @@
          ld (A) 0  # Clear 'pid'
          dec E  # Done?
       until z  # Yes
-      pop E  # Get 'pid'
    end
    add C (Child)  # Point C to free 'child' entry
-   ld (C) E  # Set 'pid'
+   pop (C)  # Set 'pid'
    ld4 (S)  # Close read end of 'hear'
    call closeAX
    ld4 (S 4)  # Write end of 'hear'

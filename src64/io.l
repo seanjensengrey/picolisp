@@ -1,4 +1,4 @@
-# 11sep10abu
+# 14sep10abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -327,10 +327,10 @@
          jeq retnz  # Return 'nz'
          cmp A EINTR  # Interrupted?
          jne wrBytesErr  # No
-      end
-      null (Signal)  # Signal?
-      if nz  # Yes
-         call sighandler0
+         null (Signal)  # Signal?
+         if nz  # Yes
+            call sighandler0
+         end
       end
    loop
 
@@ -2765,10 +2765,6 @@
             ld (Run) Nil  # Clear '*Run'
             jmp selectErrX
          end
-         null (Signal)  # Signal?
-         if nz  # Yes
-            call sighandlerX
-         end
       loop
       call msec_A  # Get milliseconds
       sub A E  # Time difference
@@ -3057,10 +3053,10 @@
          call errno_A
          cmp A EINTR  # Interrupted?
          jne wrSyncErrX  # No
-      end
-      null (Signal)  # Signal?
-      if nz  # Yes
-         call sighandlerX
+         null (Signal)  # Signal?
+         if nz  # Yes
+            call sighandlerX
+         end
       end
    loop
    set (Sync) 0  # Clear sync flag
