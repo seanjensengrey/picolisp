@@ -1465,6 +1465,8 @@ long waitFd(any ex, int fd, long ms) {
             }
          }
       }
+      if (*Signal)
+         sighandler(ex);
    } while (ms  &&  fd >= 0 && !isSet(fd, &rdSet));
    Env.task = taskSave;
    val(At) = Pop(c1);

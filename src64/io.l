@@ -2765,6 +2765,10 @@
             ld (Run) Nil  # Clear '*Run'
             jmp selectErrX
          end
+         null (Signal)  # Signal?
+         if nz  # Yes
+            call sighandlerX
+         end
       loop
       call msec_A  # Get milliseconds
       sub A E  # Time difference
