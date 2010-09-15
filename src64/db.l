@@ -1,4 +1,4 @@
-# 11sep10abu
+# 15sep10abu
 # (c) Software Lab. Alexander Burger
 
 # 6 bytes in little endian format
@@ -1944,7 +1944,14 @@
          loop
       loop
    loop
-90 pop Y
+90 ld Y (Zap)  # Objects to delete?
+   atom Y
+   if z  # Yes
+      ld (Y) Nil  # Clear zap list
+   end
+   ld A 0  # Length
+   call rwUnlockDbA  # Unlock all
+   pop Y
    pop X
    ld E TSym  # Return T
    ret

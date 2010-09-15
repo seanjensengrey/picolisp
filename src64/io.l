@@ -1,4 +1,4 @@
-# 14sep10abu
+# 15sep10abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -2642,7 +2642,7 @@
    push C  # <L -I> File descriptor
    push E  # <L -II> Milliseconds
    push E  # <L -III> Timeout
-   sub S II  # <L -IV> Flush flag, <L -V> Poll array
+   sub S II  # <L -IV> Drain flag, <L -V> Poll array
    do
       ld A (L -I)  # File descriptor
       null A  # Positive?
@@ -2773,7 +2773,7 @@
       call msec_A  # Get milliseconds
       sub A E  # Time difference
       ld (L -III) A  # Save it
-      set (L -IV) 0  # Guarantee flushed pipes
+      set (L -IV) 0  # Guarantee drained pipes
       ld Y (Child)  # Iterate children
       ld Z (Children)  # Count
       push X  # Save context
@@ -2869,7 +2869,7 @@
          end
          add Y VI  # Increment by sizeof(child)
       loop
-      nul (L -IV)  # All pipes flushed?
+      nul (L -IV)  # All pipes drained?
       if z  # Yes
          ld A (Spkr)  # Speaker open?
          null A
