@@ -1,4 +1,4 @@
-# 15sep10abu
+# 17sep10abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -2567,38 +2567,65 @@
    ret
 
 # Check if input channel has data
-(code 'inFilesA_FC 0)
-   ld C A
-   shl C 3  # Vector index
-   add C (InFiles)  # Get vector
-   ld C (C)  # Slot?
-   null C  # Any?
-   ret
-
-(code 'inReadyA_FC 0)
-   ld C A
-   shl C 3  # Vector index
-   cmp C (InFDs)  # 'fd' >= 'InFDs'?
+(code 'inReadyC_F 0)
+   ld A C
+   shl A 3  # Vector index
+   cmp A (InFDs)  # 'fd' >= 'InFDs'?
    jge ret  # No
-   add C (InFiles)  # Get vector
-   ld C (C)  # Slot?
-   null C  # Any?
+   add A (InFiles)  # Get vector
+   ld A (A)  # Slot?
+   null A  # Any?
    jz ret  # No
-   cmp (C I) (C II)  # Data in buffer ('ix' < 'cnt')?
+   cmp (A I) (A II)  # Data in buffer ('ix' < 'cnt')?
    ret  # Yes: Return 'c'
 
-(code 'rdSetRdyAL_F 0)  # Z
-   ld C A
-   shl C 3  # Vector index
-   cmp C (InFDs)  # 'fd' >= 'InFDs'?
-   jge rdSetAL_F  # Yes
-   add C (InFiles)  # Get vector
-   ld C (C)  # Slot?
-   null C  # Any?
-   jz rdSetAL_F  # No
-   cmp (C I) (C II)  # Data in buffer ('ix' < 'cnt')?
+(code 'fdSetCL_X 0)
+   ld X C  # Get fd
+   and C 7  # Shift count
+   ld B 1  # Bit mask
+   shl B C  # Shift it
+   shr X 3  # Offset
+   add X L  # Point to byte
+   ret
+
+(code 'fdRdSetCZL 0)  # X
+   cmp Z C  # Maintain maximum
+   ldc Z C
+   call fdSetCL_X
+   or (X (- (+ V FD_SET))) B  # FD_SET in RdSet
+   ret
+
+(code 'fdWrSetCZL 0)  # X
+   cmp Z C  # Maintain maximum
+   ldc Z C
+   call fdSetCL_X
+   or (X (- (+ V FD_SET FD_SET))) B  # FD_SET in WrSet
+   ret
+
+(code 'rdSetCL_F 0)  # X
+   call fdSetCL_X
+   test (X (- (+ V FD_SET))) B  # FD_SET in RdSet
+   ret  # Return 'nz'
+
+(code 'wrSetCL_F 0)  # X
+   call fdSetCL_X
+   test (X (- (+ V FD_SET FD_SET))) B  # FD_SET in WrSet
+   ret  # Return 'nz'
+
+(code 'rdSetRdyCL_F 0)  # X
+   ld A C
+   shl A 3  # Vector index
+   cmp A (InFDs)  # 'fd' >= 'InFDs'?
+   jge rdSetCL_F  # Yes
+   add A (InFiles)  # Get vector
+   ld A (A)  # Slot?
+   null A  # Any?
+   jz rdSetCL_F  # No
+   cmp (A I) (A II)  # Data in buffer ('ix' < 'cnt')?
    if z  # No
-      call rdSetAL_F
+      push A
+      call rdSetCL_F
+      pop C
       if nz  # Yes
          call slowNbC_FA  # Try non-blocking read
          jge retnz
@@ -2606,30 +2633,6 @@
       end
    end
    ret
-
-(code 'rdSetAL_F 0)  # Z
-   lea Z (L -V)  # Beyond last 'poll' structure
-   do
-      cmp Z (L -V)  # More structures?
-      jeq ret  # No: 'z'
-      sub Z POLLFD  # Next structure
-      cmp4 (Z)  # Found 'fd'?
-   until eq  # Yes
-   ld2 (Z POLL_REVENTS)  # 'revents'
-   test A (| POLLIN POLLHUP)  # Ready?
-   ret  # Return 'nz'
-
-(code 'wrSetAL_F 0)  # Z
-   lea Z (L -V)  # Beyond last 'poll' structure
-   do
-      cmp Z (L -V)  # More structures?
-      jeq ret  # No: 'z'
-      sub Z POLLFD  # Next structure
-      cmp4 (Z)  # Found 'fd'?
-   until eq  # Yes
-   ld2 (Z POLL_REVENTS)  # 'revents'
-   test A (| POLLOUT POLLHUP)  # Ready?
-   ret  # Return 'nz'
 
 (code 'waitFdCEX_A)
    push Y
@@ -2642,19 +2645,25 @@
    push C  # <L -I> File descriptor
    push E  # <L -II> Milliseconds
    push E  # <L -III> Timeout
-   sub S II  # <L -IV> Drain flag, <L -V> Poll array
+   sub S (+ II FD_SET FD_SET)  # <L -IV> Microseconds, Drain
+                               # <L -V> Seconds
+                               # <L - (V + FD_SET)> RdSet
+                               # <L - (V + FD_SET - FD_SET)> WrSet
+   cmp S (StkLimit)  # Stack check
+   jlt stkErrX
    do
-      ld A (L -I)  # File descriptor
-      null A  # Positive?
+      ld B 0  # Zero fd sets
+      mset (S) (+ FD_SET FD_SET)
+      push X  # Save context
+      ld Z 0  # Maximum fd
+      ld C (L -I)  # File descriptor
+      null C  # Positive?
       if ns  # Yes
-         call inReadyA_FC  # Ready?
+         call inReadyC_F  # Ready?
          if c  # Yes
             ld (L -III) 0  # Timeout = 0
          else
-            sub S POLLFD  # Create 'poll' structure
-            st4 (S)  # Store 'fd'
-            ld A POLLIN  # Poll input
-            st2 (S POLL_EVENTS)  # Store 'events'
+            call fdRdSetCZL
          end
       end
       ld Y (Run)  # Get '*Run'
@@ -2672,8 +2681,8 @@
             jeq 10  # Yes: Skip
             ld A (A CDR)
          loop
-         ld A (E)  # Get fd or timeout value
-         shr A 4  # Negative?
+         ld C (E)  # Get fd or timeout value
+         shr C 4  # Negative?
          if c  # Yes
             ld A ((E CDR))  # Get CADR
             shr A 4  # Normalize
@@ -2682,47 +2691,42 @@
                ld (L -III) A  # Set new timeout
             end
          else
-            cmp A (L -I)  # Different from argument-fd?
+            cmp C (L -I)  # Different from argument-fd?
             if ne  # Yes
-               call inReadyA_FC  # Ready?
+               call inReadyC_F  # Ready?
                if c  # Yes
                   ld (L -III) 0  # Timeout = 0
                else
-                  sub S POLLFD  # Create 'poll' structure
-                  st4 (S)  # Store 'fd'
-                  ld A POLLIN  # Poll input
-                  st2 (S POLL_EVENTS)  # Store 'events'
+                  call fdRdSetCZL
                end
             end
          end
 10       ld Y (Y CDR)
       loop
-      ld A (Hear)  # RPC listener?
-      null A
+      ld C (Hear)  # RPC listener?
+      null C
       if nz  # Yes
-         cmp A (L -I)  # Different from argument-fd?
+         cmp C (L -I)  # Different from argument-fd?
          if ne  # Yes
-            call inFilesA_FC  # Still open?
+            ld A C  # Still open?
+            shl A 3  # Vector index
+            add A (InFiles)  # Get vector
+            ld A (A)  # Slot?
+            null A  # Any?
             if nz  # Yes
-               cmp (C I) (C II)  # Data in buffer ('ix' < 'cnt')?
+               cmp (A I) (A II)  # Data in buffer ('ix' < 'cnt')?
                if nz  # Yes
                   ld (L -III) 0  # Timeout = 0
                else
-                  sub S POLLFD  # Create 'poll' structure
-                  st4 (S)  # Store 'Hear'
-                  ld A POLLIN  # Poll input
-                  st2 (S POLL_EVENTS)  # Store 'events'
+                  call fdRdSetCZL
                end
             end
          end
       end
-      ld A (Spkr)  # Speaker open?
-      null A
+      ld C (Spkr)  # Speaker open?
+      null C
       if nz  # Yes
-         sub S POLLFD  # Create 'poll' structure
-         st4 (S)  # Store 'Spkr'
-         ld A POLLIN  # Poll input
-         st2 (S POLL_EVENTS)  # Store 'events'
+         call fdRdSetCZL
       end
       ld Y (Child)  # Iterate children
       ld E (Children)  # Count
@@ -2731,32 +2735,33 @@
       while ge  # Yes
          null (Y)  # 'pid'?
          if nz  # Yes
-            sub S POLLFD  # Create 'poll' structure
-            ld A (Y I)  # Store child's 'hear' fd
-            st4 (S)
-            ld A POLLIN  # Poll input
-            st2 (S POLL_EVENTS)  # Store 'events'
+            ld C (Y I)  # Child's 'hear' fd
+            call fdRdSetCZL
             null (Y IV)  # Child's buffer count?
             if nz  # Yes
-               sub S POLLFD  # Create 'poll' structure
-               ld A (Y II)  # Store child's 'tell' fd
-               st4 (S)
-               ld A POLLOUT  # Poll output
-               st2 (S POLL_EVENTS)  # Store 'events'
+               ld C (Y II)  # Child's 'tell' fd
+               call fdWrSetCZL
             end
          end
          add Y VI  # Increment by sizeof(child)
       loop
-      cmp S (StkLimit)  # Stack check
-      jlt stkErrX
-      lea C (L -V)  # Set poll array pointer
-      ld (C) S
-      sub C S  # Calculate poll count
-      shr C POLLFD_SH
+      pop X  # Restore context
+      inc Z  # Maximum fd + 1
+      ld C 0  # Timeval structure pointer
+      ld A (L -III)  # Timeout value?
+      null A
+      if ns  # Yes
+         div 1000  # Calculate seconds (C is zero)
+         ld (L -V) A
+         ld A C  # and microseconds
+         mul 1000
+         ld (L -IV) A
+         lea C (L -V)
+      end
       call msec_A  # Get milliseconds
       ld E A  # into E
       do
-         cc poll(S C (L -III))  # Wait for event or timeout
+         cc select(Z &(S FD_SET) S 0 C)  # Wait for event or timeout
          nul4  # OK?
       while s  # No
          call errno_A
@@ -2776,15 +2781,15 @@
       set (L -IV) 0  # Guarantee drained pipes
       ld Y (Child)  # Iterate children
       ld Z (Children)  # Count
-      push X  # Save context
+      push X  # Save context again
       do
          sub Z VI  # More?
       while ge  # Yes
          null (Y)  # 'pid'?
          if nz  # Yes
             push Z  # Outer loop count
-            ld A (Y I)  # Get child's 'hear' fd
-            call rdSetAL_F  # Ready?
+            ld C (Y I)  # Get child's 'hear' fd
+            call rdSetCL_F  # Ready?
             if nz  # Yes
                ld C (Y I)  # Get 'hear' fd again
                ld E 2  # Size of count
@@ -2830,8 +2835,8 @@
                   add S PIPE_BUF  # Drop 'tell' buffer
                end
             end
-            ld A (Y II)  # Get child's 'tell' fd
-            call wrSetAL_F  # Ready?
+            ld C (Y II)  # Get child's 'tell' fd
+            call wrSetCL_F  # Ready?
             if nz  # Yes
                ld C (Y II)  # Get 'tell' fd again
                ld X (Y V)  # Get buffer pointer
@@ -2871,10 +2876,10 @@
       loop
       nul (L -IV)  # All pipes drained?
       if z  # Yes
-         ld A (Spkr)  # Speaker open?
-         null A
+         ld C (Spkr)  # Speaker open?
+         null C
          if nz  # Yes
-            call rdSetAL_F  # Ready?
+            call rdSetCL_F  # Ready?
             if nz  # Yes
                ld C (Spkr)  # Get fd
                ld E I  # Size of slot
@@ -2893,12 +2898,12 @@
             end
          end
       end
-      ld A (Hear)  # RPC listener?
-      null A
+      ld C (Hear)  # RPC listener?
+      null C
       if nz  # Yes
-         cmp A (L -I)  # Different from argument-fd?
+         cmp C (L -I)  # Different from argument-fd?
          if ne  # Yes
-            call rdSetRdyAL_F  # Ready?
+            call rdSetRdyCL_F  # Ready?
             if nz  # Yes
                call rdHear_FE  # Read expression?
                if nc  # Yes
@@ -2913,6 +2918,7 @@
                      drop
                   end
                else
+                  ld A (Hear)
                   call closeAX  # Close 'Hear'
                   ld A (Hear)
                   call closeInFileA
@@ -2936,8 +2942,8 @@
             jeq 30  # Yes: Skip
             ld A (A CDR)
          loop
-         ld A (E)  # Get fd or timeout value
-         shr A 4  # Negative?
+         ld C (E)  # Get fd or timeout value
+         shr C 4  # Negative?
          if c  # Yes
             ld C (E CDR)  # Get CDR
             ld A (C)  # and CADR
@@ -2955,9 +2961,9 @@
                prog Z
             end
          else
-            cmp A (L -I)  # Different from argument-fd?
+            cmp C (L -I)  # Different from argument-fd?
             if ne  # Yes
-               call rdSetRdyAL_F  # Ready?
+               call rdSetRdyCL_F  # Ready?
                if nz  # Yes
                   ld (At) (E)  # Set to fd
                   ld Z (E CDR)  # Run body
@@ -2983,13 +2989,11 @@
       end
    while nz  # Milliseconds non-zero
       ld (L -III) A  # Set timeout
-      ld A (L -I)  # File descriptor
-      null A  # Positive?
+      ld C (L -I)  # File descriptor
+      null C  # Positive?
    while ns  # Yes
-      call rdSetRdyAL_F  # Ready?
-   while z  # No
-      lea S (L -V)  # Drop 'poll' structures
-   loop
+      call rdSetRdyCL_F  # Ready?
+   until nz  # Yes
    ld (At) (L II)  # Restore '@'
    ld A (L -II)  # Return milliseconds
    drop
@@ -3136,6 +3140,16 @@
    pop X
    ret
 
+(code 'fdSetC_Y 0)
+   ld Y (C)  # Get fd
+   and Y 7  # Shift count
+   ld B 1  # Bit mask
+   shl B Y  # Shift it
+   ld Y (C)  # Get fd again
+   shr Y 3  # Offset
+   add Y S  # Pointer to byte minus I
+   ret
+
 # (poll 'cnt) -> cnt | NIL
 (code 'doPoll 2)
    push X
@@ -3151,18 +3165,26 @@
    shl C 3  # Vector index
    cmp C (InFDs)  # 'fd' >= 'InFDs'?
    jge badFdErrEX  # Yes
-   call inFilesA_FC  # Readable input file?
+   ld C A  # Readable input file?
+   shl C 3  # Vector index
+   add C (InFiles)  # Get vector
+   ld C (C)  # Slot?
+   null C  # Any?
    ldz E Nil  # No: Return NIL
    if nz
+      push Y
+      sub S (+ II FD_SET)  # <S FD_SET> Timeval, <S> RdSet
       do
          cmp (C I) (C II)  # Data in buffer ('ix' < 'cnt')?
       while z  # No
-         sub S POLLFD  # Create 'poll' structure
-         st4 (S)  # Store 'fd'
-         ld A POLLIN  # Poll input
-         st2 (S POLL_EVENTS)  # Store 'events'
+         ld B 0  # Zero fd set and timeval
+         mset (S) (+ II FD_SET)
+         call fdSetC_Y
+         or (Y I) B  # FD_SET in RdSet
+         ld Y (C)  # fd + 1
+         inc Y
          do
-            cc poll(S 1 0)  # Check
+            cc select(Y S 0 &(S FD_SET))  # Check
             nul4  # OK?
          while s  # No
             call errno_A
@@ -3172,13 +3194,14 @@
                jmp selectErrX
             end
          loop
-         ld2 (S POLL_REVENTS)  # 'revents'
-         add S POLLFD  # Drop 'poll' structure
-         test A (| POLLIN POLLHUP)  # Ready?
+         call fdSetC_Y
+         test (Y I) B  # FD_SET in RdSet
          ldz E Nil  # No: Return NIL
       while nz
          call slowNbC_FA  # Try non-blocking read
       until ge
+      add S (+ II FD_SET)
+      pop Y
    end
    pop X
    ret

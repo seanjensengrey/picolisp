@@ -1,4 +1,4 @@
-# 05sep10abu
+# 17sep10abu
 # (c) Software Lab. Alexander Burger
 
 # errno
@@ -105,15 +105,8 @@
 (equ WNOHANG 1)
 (equ WUNTRACED 2)
 
-# poll
-(equ POLLFD 8)  # Should be multiple of 8
-(equ POLLFD_SH 3)  # Shift size (log2 POLLFD)
-(equ POLL_EVENTS 4)  # 2
-(equ POLL_REVENTS 6)  # 2
-(equ POLLIN 1)
-(equ POLLOUT 4)
-(equ POLLHUP 16)
-(equ POLLNVAL 32)
+# select
+(equ FD_SET 128)  # 1024 bit
 
 # time
 (equ TM_SEC 0)
