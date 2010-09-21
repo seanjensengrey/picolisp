@@ -1,4 +1,4 @@
-11aug10abu
+19sep10abu
 (c) Software Lab. Alexander Burger
 
 
@@ -42,3 +42,8 @@ D. HTTP file uploads can now be achieved with Drag & Drop, using the new '+Drop'
 
 E. The license was changed from GPL to the MIT/X11 License with this release
    (see the file "COPYING").
+
+F. The usage of the poll(2) system call in the 64-bit version was found to cause
+   errors. The database stress test in "misc/stress.l" occasionally indicated
+   inconsistencies (for unknown reasons). Therefore, the 64-bit version is now -
+   like the 32-bit version - based on select(2).

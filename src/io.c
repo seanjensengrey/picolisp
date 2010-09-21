@@ -1,4 +1,4 @@
-/* 14sep10abu
+/* 21sep10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -2237,8 +2237,13 @@ static void outSym(int c) {
 void outName(any s) {outSym(symByte(name(s)));}
 
 void outNum(any x) {
-   if (isNum(cdr(numCell(x))))
-      outName(numToSym(x, 0, 0, 0));
+   if (isNum(cdr(numCell(x)))) {
+      cell c1;
+
+      Push(c1, numToSym(x, 0, 0, 0));
+      outName(data(c1));
+      drop(c1);
+   }
    else {
       char *p, buf[BITS/2];
 
