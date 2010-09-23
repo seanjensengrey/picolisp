@@ -1,4 +1,5 @@
 * XXsep10 picoLisp-3.0.4
+   Extended protocol for 'sync'
    MIT/X11 License
    Drag & Drop file upload
    Generic 'lisp' C-callbacks

@@ -1,4 +1,4 @@
-# 15sep10abu
+# 23sep10abu
 # (c) Software Lab. Alexander Burger
 
 # 6 bytes in little endian format
@@ -1864,6 +1864,7 @@
    end
    ld A 0  # Length
    call rwUnlockDbA  # Unlock all
+   call unsync  # Release sync
    null (DbLog)  # Transaction log?
    if z  # No
       dec (EnvProtect)  # Unprotect
@@ -1951,6 +1952,7 @@
    end
    ld A 0  # Length
    call rwUnlockDbA  # Unlock all
+   call unsync  # Release sync
    pop Y
    pop X
    ld E TSym  # Return T

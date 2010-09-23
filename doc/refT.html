@@ -209,8 +209,10 @@ href="refF.html#format">format</a></code>.
 members (i.e. all children of the current process, and all other children of the
 parent process, see <code><a href="refF.html#fork">fork</a></code>) for
 automatic execution. <code>tell</code> can also be used by <code><a
-href="refC.html#commit">commit</a></code> to notify about database changes. See
-also <code><a href="refH.html#hear">hear</a></code>, <code><a
+href="refC.html#commit">commit</a></code> to notify about database changes. When
+called without arguments, no message is actually sent, and the parent process
+may grant <code><a href="refS.html#sync">sync</a></code> to the next waiting
+process. See also <code><a href="refH.html#hear">hear</a></code>, <code><a
 href="refP.html#pid">pid</a></code> and <code><a
 href="refR.html#rpc">rpc</a></code>.
 

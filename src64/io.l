@@ -1,4 +1,4 @@
-# 17sep10abu
+# 23sep10abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -335,6 +335,10 @@
    loop
 
 (code 'clsChildY 0)
+   cmp (Y) (Talking)  # Currently active?
+   if eq  # Yes
+      ld (Talking) 0  # Clear
+   end
    ld (Y) 0  # Clear 'pid'
    cc close((Y I))  # Close 'hear'
    cc close((Y II))  # and 'tell'
@@ -1026,6 +1030,23 @@
    pop A  # Drop size
    pop Y
    pop X
+   ret
+
+(code 'unsync 0)  # X
+   ld C (Tell)  # File descriptor
+   null C  # Any?
+   if nz  # Yes
+      push 0  # Send zero
+      ld X S  # Get buffer
+      ld E 2  # Size
+      call wrBytesCEX_F  # Write buffer to pipe
+      if nz  # Not successful
+         cc close(C)  # Close 'Tell'
+         ld (Tell) 0  # Clear 'Tell'
+      end
+      add S I  # Drop buffer
+   end
+   set (Sync) 0  # Clear sync flag
    ret
 
 (code 'rdHear_FE)
@@ -2645,7 +2666,7 @@
    push C  # <L -I> File descriptor
    push E  # <L -II> Milliseconds
    push E  # <L -III> Timeout
-   sub S (+ II FD_SET FD_SET)  # <L -IV> Microseconds, Drain
+   sub S (+ II FD_SET FD_SET)  # <L -IV> Microseconds
                                # <L -V> Seconds
                                # <L - (V + FD_SET)> RdSet
                                # <L - (V + FD_SET - FD_SET)> WrSet
@@ -2727,24 +2748,24 @@
       null C
       if nz  # Yes
          call fdRdSetCZL
-      end
-      ld Y (Child)  # Iterate children
-      ld E (Children)  # Count
-      do
-         sub E VI  # More?
-      while ge  # Yes
-         null (Y)  # 'pid'?
-         if nz  # Yes
-            ld C (Y I)  # Child's 'hear' fd
-            call fdRdSetCZL
-            null (Y IV)  # Child's buffer count?
+         ld Y (Child)  # Iterate children
+         ld E (Children)  # Count
+         do
+            sub E VI  # More?
+         while ge  # Yes
+            null (Y)  # 'pid'?
             if nz  # Yes
-               ld C (Y II)  # Child's 'tell' fd
-               call fdWrSetCZL
+               ld C (Y I)  # Child's 'hear' fd
+               call fdRdSetCZL
+               null (Y IV)  # Child's buffer count?
+               if nz  # Yes
+                  ld C (Y II)  # Child's 'tell' fd
+                  call fdWrSetCZL
+               end
             end
-         end
-         add Y VI  # Increment by sizeof(child)
-      loop
+            add Y VI  # Increment by sizeof(child)
+         loop
+      end
       pop X  # Restore context
       inc Z  # Maximum fd + 1
       ld C 0  # Timeval structure pointer
@@ -2778,108 +2799,116 @@
       call msec_A  # Get milliseconds
       sub A E  # Time difference
       ld (L -III) A  # Save it
-      set (L -IV) 0  # Guarantee drained pipes
-      ld Y (Child)  # Iterate children
-      ld Z (Children)  # Count
-      push X  # Save context again
-      do
-         sub Z VI  # More?
-      while ge  # Yes
-         null (Y)  # 'pid'?
-         if nz  # Yes
-            push Z  # Outer loop count
-            ld C (Y I)  # Get child's 'hear' fd
-            call rdSetCL_F  # Ready?
+      null (Spkr)  # Speaker open?
+      if nz  # Yes
+         inc (EnvProtect)  # Protect child communication
+         ld Y (Child)  # Iterate children
+         ld Z (Children)  # Count
+         push X  # Save context again
+         do
+            sub Z VI  # More?
+         while ge  # Yes
+            null (Y)  # 'pid'?
             if nz  # Yes
-               ld C (Y I)  # Get 'hear' fd again
-               ld E 2  # Size of count
-               ld X Buf  # Buffer pointer
-               call rdBytesNbCEX_F  # Read count?
-               if ge  # Yes
-                  if z
-                     call clsChildY  # Close child
-                     jmp 20  # Continue
-                  end
-                  sub S PIPE_BUF  # <S I> Pipe buffer
-                  push Y  # <S> Outer child index
+               push Z  # Outer loop count
+               ld C (Y I)  # Get child's 'hear' fd
+               call rdSetCL_F  # Ready?
+               if nz  # Yes
                   ld C (Y I)  # Get 'hear' fd again
-                  ld2 (Buf)  # Get size
-                  ld E A
-                  lea X (S I)  # Buffer pointer
-                  call rdBytesCEX_F  # Read data?
-                  if nz  # Yes
-                     set (L -IV) 1  # Still got data from pipe
-                     ld Y (Child)  # Iterate children
-                     ld Z (Children)  # Count
-                     do
-                        cmp Y (S)  # Same as outer loop child?
-                        if ne  # No
-                           null (Y)  # 'pid'?
-                           if nz  # Yes
-                              ld2 (Buf)  # Get size
-                              ld C A
-                              lea X (S I)  # and data
-                              call wrChildCXY  # Write to child
-                           end
+                  ld E 2  # Size of count
+                  ld X Buf  # Buffer pointer
+                  call rdBytesNbCEX_F  # Read count?
+                  if ge  # Yes
+                     if z
+                        call clsChildY  # Close child
+                        jmp 20  # Continue
+                     end
+                     ld2 (Buf)  # Size?
+                     null A
+                     if z  # No
+                        cmp (Y) (Talking)  # Currently active?
+                        if eq  # Yes
+                           ld (Talking) 0  # Clear
                         end
-                        add Y VI  # Increment by sizeof(child)
-                        sub Z VI  # More?
-                     until z  # No
+                     else
+                        sub S PIPE_BUF  # <S I> Pipe buffer
+                        push Y  # <S> Outer child index
+                        ld C (Y I)  # Get 'hear' fd again
+                        ld2 (Buf)  # Get size
+                        ld E A
+                        lea X (S I)  # Buffer pointer
+                        call rdBytesCEX_F  # Read data?
+                        if nz  # Yes
+                           ld Y (Child)  # Iterate children
+                           ld Z (Children)  # Count
+                           do
+                              cmp Y (S)  # Same as outer loop child?
+                              if ne  # No
+                                 null (Y)  # 'pid'?
+                                 if nz  # Yes
+                                    ld2 (Buf)  # Get size
+                                    ld C A
+                                    lea X (S I)  # and data
+                                    call wrChildCXY  # Write to child
+                                 end
+                              end
+                              add Y VI  # Increment by sizeof(child)
+                              sub Z VI  # More?
+                           until z  # No
+                        else
+                           call clsChildY  # Close child
+                           pop Y
+                           add S PIPE_BUF  # Drop 'tell' buffer
+                           jmp 20  # Continue
+                        end
+                        pop Y
+                        add S PIPE_BUF  # Drop 'tell' buffer
+                     end
+                  end
+               end
+               ld C (Y II)  # Get child's 'tell' fd
+               call wrSetCL_F  # Ready?
+               if nz  # Yes
+                  ld C (Y II)  # Get 'tell' fd again
+                  ld X (Y V)  # Get buffer pointer
+                  add X (Y III)  # plus buffer offset
+                  ld2 (X)  # Get size
+                  ld E A
+                  add X 2  # Point to data (beyond size)
+                  push E  # Keep size
+                  call wrBytesCEX_F  # Write data?
+                  pop E
+                  if z  # Yes
+                     add E (Y III)  # Add size to buffer offset
+                     add E 2  # plus size of size
+                     ld (Y III) E  # New buffer offset
+                     add E E  # Twice the offset
+                     cmp E (Y IV)  # greater or equal to buffer count?
+                     if ge  # Yes
+                        sub (Y IV) (Y III)  # Decrement count by offset
+                        if nz
+                           ld X (Y V)  # Get buffer pointer
+                           add X (Y III)  # Add buffer offset
+                           movn ((Y V)) (X) (Y IV)  # Copy data
+                           ld A (Y V)  # Get buffer pointer
+                           ld E (Y IV)  # and new count
+                           call allocAE_A  # Shrink buffer
+                           ld (Y V) A  # Store
+                        end
+                        ld (Y III) 0  # Clear buffer offset
+                     end
                   else
                      call clsChildY  # Close child
-                     pop Y
-                     add S PIPE_BUF  # Drop 'tell' buffer
-                     jmp 20  # Continue
                   end
-                  pop Y
-                  add S PIPE_BUF  # Drop 'tell' buffer
                end
+20             pop Z
             end
-            ld C (Y II)  # Get child's 'tell' fd
-            call wrSetCL_F  # Ready?
-            if nz  # Yes
-               ld C (Y II)  # Get 'tell' fd again
-               ld X (Y V)  # Get buffer pointer
-               add X (Y III)  # plus buffer offset
-               ld2 (X)  # Get size
-               ld E A
-               add X 2  # Point to data (beyond size)
-               push E  # Keep size
-               call wrBytesCEX_F  # Write data?
-               pop E
-               if z  # Yes
-                  add E (Y III)  # Add size to buffer offset
-                  add E 2  # plus size of size
-                  ld (Y III) E  # New buffer offset
-                  add E E  # Twice the offset
-                  cmp E (Y IV)  # greater or equal to buffer count?
-                  if ge  # Yes
-                     sub (Y IV) (Y III)  # Decrement count by offset
-                     if nz
-                        ld X (Y V)  # Get buffer pointer
-                        add X (Y III)  # Add buffer offset
-                        movn ((Y V)) (X) (Y IV)  # Copy data
-                        ld A (Y V)  # Get buffer pointer
-                        ld E (Y IV)  # and new count
-                        call allocAE_A  # Shrink buffer
-                        ld (Y V) A  # Store
-                     end
-                     ld (Y III) 0  # Clear buffer offset
-                  end
-               else
-                  call clsChildY  # Close child
-               end
-            end
-20          pop Z
-         end
-         add Y VI  # Increment by sizeof(child)
-      loop
-      nul (L -IV)  # All pipes drained?
-      if z  # Yes
-         ld C (Spkr)  # Speaker open?
-         null C
-         if nz  # Yes
-            call rdSetCL_F  # Ready?
+            add Y VI  # Increment by sizeof(child)
+         loop
+         null (Talking)  # Ready to sync?
+         if z  # Yes
+            ld C (Spkr)  # Get speaker
+            call rdSetCL_F  # Anybody?
             if nz  # Yes
                ld C (Spkr)  # Get fd
                ld E I  # Size of slot
@@ -2888,8 +2917,10 @@
                if gt  # Yes
                   ld Y (Child)  # Get child
                   add Y (Buf)  # in slot
-                  null (Y)  # 'pid'?
+                  ld A (Y)  # 'pid'?
+                  null A
                   if nz  # Yes
+                     ld (Talking) A  # Set to talking
                      ld C 2  # Size of 'TBuf'
                      ld X TBuf  # Buffer pointer
                      call wrChildCXY  # Write to child
@@ -2897,6 +2928,7 @@
                end
             end
          end
+         dec (EnvProtect)
       end
       ld C (Hear)  # RPC listener?
       null C
@@ -3046,6 +3078,8 @@
    jz retNil  # Yes
    null (Hear)  # No 'hear' channel?
    jz retNil  # Yes
+   nul (Sync)  # Already synchronized?
+   jnz retT  # Yes
    push X
    ld X E
    ld E Slot  # Buffer pointer
@@ -3118,23 +3152,29 @@
    push X
    push Y
    push Z
-   push (TellBuf)  # Save current 'tell' env
-   sub S PIPE_BUF  # New 'tell' buffer
-   ld Z S  # Buffer pointer
-   call tellBegZ_Z  # Start 'tell' message
    ld X (E CDR)  # Args
-   do
-      ld E (X)  # Eval next
-      eval
-      ld Y E  # Keep result
-      call prTellEZ  # Print to 'tell'
-      ld X (X CDR)  # More args?
-      atom X
-   until nz  # No
-   call tellEndZ  # Close 'tell'
-   ld E Y  # Get result
-   add S PIPE_BUF  # Drop 'tell' buffer
-   pop (TellBuf)
+   atom X  # Any?
+   if nz  # No
+      call unsync  # Release sync
+      ld E Nil  # Return NIL
+   else
+      push (TellBuf)  # Save current 'tell' env
+      sub S PIPE_BUF  # New 'tell' buffer
+      ld Z S  # Buffer pointer
+      call tellBegZ_Z  # Start 'tell' message
+      do
+         ld E (X)  # Eval next
+         eval
+         ld Y E  # Keep result
+         call prTellEZ  # Print to 'tell'
+         ld X (X CDR)  # More args?
+         atom X
+      until nz  # No
+      call tellEndZ  # Close 'tell'
+      add S PIPE_BUF  # Drop 'tell' buffer
+      pop (TellBuf)
+      ld E Y  # Get result
+   end
    pop Z
    pop Y
    pop X

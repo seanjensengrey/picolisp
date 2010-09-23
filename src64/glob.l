@@ -1,4 +1,4 @@
-# 06sep10abu
+# 23sep10abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Globals 0)
@@ -37,6 +37,7 @@
 : Hear         word  0           # RPC listener
 : Tell         word  0           # RPC broadcaster
 : TellBuf      word  0           # RPC buffer
+: Talking      word  0           # Active child
 : Children     word  0           # Scaled number of children
 : Child        word  0           # Child array
 : ExtN         word  0           # External symbol offset

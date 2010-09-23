@@ -1,4 +1,4 @@
-19sep10abu
+23sep10abu
 (c) Software Lab. Alexander Burger
 
 
@@ -45,5 +45,9 @@ E. The license was changed from GPL to the MIT/X11 License with this release
 
 F. The usage of the poll(2) system call in the 64-bit version was found to cause
    errors. The database stress test in "misc/stress.l" occasionally indicated
-   inconsistencies (for unknown reasons). Therefore, the 64-bit version is now -
-   like the 32-bit version - based on select(2).
+   inconsistencies (for reasons which are not completely clear). Therefore, the
+   64-bit version is now - like the 32-bit version - based on select(2). And,
+   both versions employ now a different strategy for syncing the communication
+   between child processes. This required a slight change in the semantics of
+   'sync' and 'tell', which should, however, not have influence on normal
+   applications.

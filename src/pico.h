@@ -1,4 +1,4 @@
-/* 21jul10abu
+/* 23sep10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -63,7 +63,7 @@ typedef struct heap {
 } heap;
 
 typedef struct child {
-   int pid;
+   pid_t pid;
    int hear, tell;
    int ofs, cnt;
    byte *buf;
