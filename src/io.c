@@ -1,4 +1,4 @@
-/* 23sep10abu
+/* 27sep10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -455,15 +455,15 @@ static void tellBeg(ptr *pb, ptr *pp, ptr buf) {
 
 static void prTell(any x) {putBin = putTell,  binPrint(0, x);}
 
-static void tellEnd(ptr *pb, ptr *pp) {
+static void tellEnd(ptr *pb, ptr *pp, int pid) {
    int i, n;
 
    *PipePtr++ = END;
-   *(int*)PipeBuf = n = PipePtr - PipeBuf - sizeof(int);
+   *(int*)PipeBuf = (n = PipePtr - PipeBuf - sizeof(int)) | pid << 16;
    if (Tell && !wrBytes(Tell, PipeBuf, n+sizeof(int)))
       close(Tell),  Tell = 0;
    for (i = 0; i < Children; ++i)
-      if (Child[i].pid)
+      if (Child[i].pid && (!pid || pid == Child[i].pid))
          wrChild(i, PipeBuf+sizeof(int), n);
    PipePtr = *pp,  PipeBuf = *pb;
 }
@@ -1423,14 +1423,19 @@ long waitFd(any ex, int fd, long ms) {
                         if (Child[i].pid == Talking)
                            Talking = 0;
                      }
-                     else if (rdBytes(Child[i].hear, buf, n, NO)) {
-                        for (j = 0; j < Children; ++j)
-                           if (j != i  &&  Child[j].pid)
-                              wrChild(j, buf, n);
-                     }
                      else {
-                        clsChild(i);
-                        continue;
+                        pid_t pid = n >> 16;
+
+                        n &= 0xFFFF;
+                        if (rdBytes(Child[i].hear, buf, n, NO)) {
+                           for (j = 0; j < Children; ++j)
+                              if (j != i && Child[j].pid && (!pid || pid == Child[j].pid))
+                                 wrChild(j, buf, n);
+                        }
+                        else {
+                           clsChild(i);
+                           continue;
+                        }
                      }
                   }
                }
@@ -1556,9 +1561,10 @@ any doHear(any ex) {
    return x;
 }
 
-// (tell 'sym ['any ..]) -> any
+// (tell ['cnt] 'sym ['any ..]) -> any
 any doTell(any x) {
    any y;
+   int pid;
    ptr pbSave, ppSave;
    byte buf[PIPE_BUF];
 
@@ -1568,11 +1574,15 @@ any doTell(any x) {
       unsync();
       return Nil;
    }
+   pid = 0;
+   if (isNum(y = EVAL(car(x)))) {
+      pid = (int)unDig(y)/2;
+      x = cdr(x),  y = EVAL(car(x));
+   }
    tellBeg(&pbSave, &ppSave, buf);
-   do
-      prTell(y = EVAL(car(x)));
-   while (isCell(x = cdr(x)));
-   tellEnd(&pbSave, &ppSave);
+   while (prTell(y), isCell(x = cdr(x)))
+      y = EVAL(car(x));
+   tellEnd(&pbSave, &ppSave, pid);
    return y;
 }
 
@@ -3401,7 +3411,7 @@ any doCommit(any ex) {
                cdr(z) = At;  // loaded
                if (note) {
                   if (PipePtr >= PipeBuf + PIPE_BUF - 12) {  // EXTERN <2+1+7> END
-                     tellEnd(&pbSave, &ppSave);
+                     tellEnd(&pbSave, &ppSave, 0);
                      tellBeg(&pbSave, &ppSave, buf),  prTell(data(c1));
                   }
                   prTell(car(x));
@@ -3414,7 +3424,7 @@ any doCommit(any ex) {
                cleanUp(n*BLKSIZE);
                if (note) {
                   if (PipePtr >= PipeBuf + PIPE_BUF - 12) {  // EXTERN <2+1+7> END
-                     tellEnd(&pbSave, &ppSave);
+                     tellEnd(&pbSave, &ppSave, 0);
                      tellBeg(&pbSave, &ppSave, buf),  prTell(data(c1));
                   }
                   prTell(car(x));
@@ -3425,7 +3435,7 @@ any doCommit(any ex) {
       }
    }
    if (note)
-      tellEnd(&pbSave, &ppSave);
+      tellEnd(&pbSave, &ppSave, 0);
    x = cdddr(ex),  EVAL(car(x));
    if (Jnl)
       fflush(Jnl),  lockFile(fileno(Jnl), F_SETLK, F_UNLCK);

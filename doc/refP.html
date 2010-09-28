@@ -252,6 +252,15 @@ another process.
 -> 0
 </code></pre>
 
+<p><strong>Note:</strong> This function is deprecated, and will be removed in
+the next version. Please use the PID argument feature of <code>tell</code>
+instead. With that, the above example reduces to
+
+<pre><code>
+: (tell 20290 'gc 0)
+-> 0
+</code></pre>
+
 <dt><a name="pilog"><code>(pilog 'lst . prg) -> any</code></a>
 <dd>Evaluates a <a href="ref.html#pilog">Pilog</a> query, and executes
 <code>prg</code> for each result set with all Pilog variables bound to their

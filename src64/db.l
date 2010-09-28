@@ -1,4 +1,4 @@
-# 23sep10abu
+# 27sep10abu
 # (c) Software Lab. Alexander Burger
 
 # 6 bytes in little endian format
@@ -1736,7 +1736,8 @@
                      lea A ((TellBuf) (- PIPE_BUF 10))  # Space for EXTERN+<8>+END?
                      cmp Z A
                      if ge  # No
-                        call tellEndZ  # Close 'tell'
+                        ld A 0  # Send to all PIDs
+                        call tellEndAZ  # Close 'tell'
                         lea Z (L (- (+ III PIPE_BUF)))  # Reset buffer pointer
                         call tellBegZ_Z  # Start new 'tell' message
                         ld E (L I)  # Get 'any'
@@ -1764,7 +1765,8 @@
                      lea A ((TellBuf) (- PIPE_BUF 10))  # Space for EXTERN+<8>+END?
                      cmp Z A
                      if ge  # No
-                        call tellEndZ  # Close 'tell'
+                        ld A 0  # Send to all PIDs
+                        call tellEndAZ  # Close 'tell'
                         lea Z (L (- (+ III PIPE_BUF)))  # Reset buffer pointer
                         call tellBegZ_Z  # Start new 'tell' message
                         ld E (L I)  # Get 'any'
@@ -1812,8 +1814,9 @@
    pop X
    null (L -I)  # Notify?
    if nz  # Yes
+      ld A 0  # Send to all PIDs
       ld Z (L -II)  # Get buffer pointer
-      call tellEndZ  # Close 'tell'
+      call tellEndAZ  # Close 'tell'
       add S PIPE_BUF  # Drop 'tell' buffer
       pop (TellBuf)
    end

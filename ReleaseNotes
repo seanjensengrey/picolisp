@@ -1,4 +1,4 @@
-24sep10abu
+28sep10abu
 (c) Software Lab. Alexander Burger
 
 
@@ -51,3 +51,8 @@ F. The usage of the poll(2) system call in the 64-bit version was found to cause
    between child processes. This required a slight change in the semantics of
    'sync' and 'tell', which should however not have any influence on normal
    applications.
+
+G. The 'pid' function is deprecated. It will be removed in the next release.
+   This was announced in the mailing list in
+
+      http://www.mail-archive.com/picolisp@software-lab.de/msg01949.html

@@ -1,4 +1,6 @@
 * XXsep10 picoLisp-3.0.4
+   'tell' accepts PID argument
+   Deprecated 'pid'
    Extended protocol for 'sync'
    MIT/X11 License
    Drag & Drop file upload
