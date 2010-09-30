@@ -1,4 +1,4 @@
-# 15sep10abu
+# 30sep10abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -151,32 +151,6 @@
    pop A  # Retrieve args
    cmp E Nil  # Result NIL?
    ldnz E (A CDR)  # No: Return 'any2'
-   ret
-
-# (pid 'pid|lst . exe) -> any
-(code 'doPid 2)
-   ld E (E CDR)
-   push (E CDR)  # Push rest
-   ld E (E)  # Eval condition
-   eval
-   ld A (Pid)  # Get '*Pid'
-   atom E  # Single 'pid'?
-   if nz  # Yes
-      cmp E A  # Matches '*Pid'?
-      pop E
-      jne retNil  # No
-      eval/ret  # Evaluate 'exe'
-   end
-   do
-      cmp (E) A  # CAR matches '*Pid'?
-      if eq
-         pop E
-         eval/ret  # Evaluate 'exe'
-      end
-      ld E (E CDR)  # Try next
-      atom E  # Any?
-   until nz  # No
-   pop A  # Drop 'exe'
    ret
 
 # (lit 'any) -> any

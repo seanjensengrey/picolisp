@@ -1,4 +1,4 @@
-/* 23sep10abu
+/* 30sep10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -636,7 +636,6 @@ any doPath(any);
 any doPatQ(any);
 any doPeek(any);
 any doPick(any);
-any doPid(any);
 any doPipe(any);
 any doPoll(any);
 any doPool(any);

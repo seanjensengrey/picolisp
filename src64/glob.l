@@ -1,4 +1,4 @@
-# 23sep10abu
+# 30sep10abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Globals 0)
@@ -232,7 +232,6 @@
 
    # Control flow
    initSym NIL       "as"        doAs
-   initSym NIL       "pid"       doPid
    initSym NIL       "lit"       doLit
    initSym NIL       "eval"      doEval
    initSym NIL       "run"       doRun

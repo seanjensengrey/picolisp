@@ -1,4 +1,4 @@
-/* 04sep10abu
+/* 30sep10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -64,20 +64,6 @@ any doAs(any x) {
    if (isNil(EVAL(car(x))))
       return Nil;
    return cdr(x);
-}
-
-// (pid 'pid|lst . exe) -> any
-any doPid(any x) {
-   any y;
-
-   x = cdr(x);
-   if (!isCell(y = EVAL(car(x))))
-      return equal(y, val(Pid))? EVAL(cdr(x)) : Nil;
-   do
-      if (equal(car(y), val(Pid)))
-         return EVAL(cdr(x));
-   while (isCell(y = cdr(y)));
-   return Nil;
 }
 
 // (lit 'any) -> any

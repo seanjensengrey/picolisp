@@ -1,4 +1,4 @@
-/* 20may10abu
+/* 30sep10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -243,7 +243,6 @@ static symInit Symbols[] = {
    {doPath, "path"},
    {doPatQ, "pat?"},
    {doPeek, "peek"},
-   {doPid, "pid"},
    {doPick, "pick"},
    {doPipe, "pipe"},
    {doPoll, "poll"},

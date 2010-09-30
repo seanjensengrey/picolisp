@@ -1,4 +1,6 @@
-* XXsep10 picoLisp-3.0.4
+* XXdec10 picoLisp-3.0.5
+
+* 30sep10 picoLisp-3.0.4
    'tell' accepts PID argument
    Deprecated 'pid'
    Extended protocol for 'sync'
