@@ -1,4 +1,4 @@
-/* 27sep10abu
+/* 03oct10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -2514,9 +2514,8 @@ any doExt(any ex) {
 // (rd ['sym]) -> any
 // (rd 'cnt) -> num | NIL
 any doRd(any x) {
-   int i, j;
    long cnt;
-   word n;
+   int n, i;
    cell c1;
 
    x = cdr(x),  x = EVAL(car(x));
@@ -2527,54 +2526,25 @@ any doRd(any x) {
       drop(c1);
       return x;
    }
-   if (!InFile)
-      return Nil;
    if ((cnt = unBox(x)) < 0) {
-      byte buf[cnt = -cnt];
-
-      if (!rdBytes(InFile->fd, buf, cnt, NO))  // Little Endian
+      if ((n = getBinary()) < 0)
          return Nil;
-      if (cnt % sizeof(word) == 0)
-         Push(c1, Nil);
-      else {
-         n = buf[--cnt];
-
-         while (cnt % sizeof(word))
-            n = n << 8 | buf[--cnt];
-         Push(c1, box(n));
-      }
-      while ((cnt -= WORD) >= 0) {
-         n = buf[cnt + WORD-1];
-         i = WORD-2;
-         do
-            n = n << 8 | buf[cnt + i];
-         while (--i >= 0);
-         data(c1) = consNum(n, data(c1));
+      i = 0,  Push(c1, x = box(n));
+      while (++cnt) {
+         if ((n = getBinary()) < 0)
+            return Nil;
+         byteSym(n, &i, &x);
       }
    }
    else {
-      byte buf[cnt];
-
-      if (!rdBytes(InFile->fd, buf, cnt, NO))
+      if ((n = getBinary()) < 0)
          return Nil;
-      if (cnt % sizeof(word) == 0) {
-         i = 0;
-         Push(c1, Nil);
-      }
-      else {
-         n = buf[0];
-
-         for (i = 1;  i < (int)(cnt % sizeof(word));  ++i)
-            n = n << 8 | buf[i];
-         Push(c1, box(n));
-      }
-      while (i < cnt) {
-         n = buf[i++];
-         j = 1;
-         do
-            n = n << 8 | buf[i++];
-         while (++j < WORD);
-         data(c1) = consNum(n, data(c1));
+      i = 0,  Push(c1, x = box(n));
+      while (--cnt) {
+         if ((n = getBinary()) < 0)
+            return Nil;
+         digMul(data(c1), 256);
+         digAdd(data(c1), n);
       }
    }
    zapZero(data(c1));

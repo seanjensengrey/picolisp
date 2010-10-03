@@ -1,4 +1,4 @@
-# 28sep10abu
+# 03oct10abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -5032,75 +5032,67 @@
 # (rd ['sym]) -> any
 # (rd 'cnt) -> num | NIL
 (code 'doRd 2)
-   ld E ((E CDR))  # Get arg
-   eval  # Eval it
-   cnt E  # Read raw bytes?
-   if z  # No
-      push Z
-      ld Z (InFile)  # Current InFile
-      null Z  # Any?
-      if nz  # Yes
-         link
-         push E  # <L I> EOF
-         link
-         ld (GetBinZ_FB) getBinaryZ_FB  # Set binary read function
-         ld (Extn) (ExtN)  # Set external symbol offset
-         call binReadZ_FE  # Read item?
-         ldc E (L I)  # No: Return EOF
-         drop
-      end
-      pop Z
-      ret
-   end
-   ld C (InFile)  # Current InFile?
-   null C
-   jz retNil  # No
    push X
-   push Y
    push Z
    link
    push ZERO  # <L I> Result
    link
-   shr E 4  # Normalize
-   jz 80  # Zero
-   if c  # Little endian
-      sub S E  # Buffer
-      ld Y S  # Buffer pointer
-      ld Z 1  # Forward direction
-   else
-      ld Y S  # Buffer pointer
-      ld Z -1  # Backward direction
-      add Y Z  # Point to last byte
-      sub S E  # Buffer
-   end
-   cmp S (StkLimit)  # Stack check
-   jlt stkErr
-   ld C (C)  # Get 'fd' of InFile
-   ld X S  # Buffer pointer
-   push E  # <S> Count
-   call rdBytesCEX_F  # OK?
-   if z  # No
-80    ld E Nil  # Return NIL
-      jmp 90
-   end
-   lea X (L I)  # X on result
-   ld C 4  # Build unsigned number
-   do
-      ld B (Y)  # Next byte from buffer
-      call byteNumBCX_CX
-      add Y Z  # Add direction offset
-      dec (S)  # Decrement count
-   until z
-   ld E (L I)  # Get result
-   big E  # Bignum?
+   ld E ((E CDR))  # Get arg
+   eval  # Eval it
+   ld Z (InFile)  # Current InFile?
+   null Z
    if nz  # Yes
-      ld A E
-      call zapZeroA_A  # Remove leading zeroes
-      ld E A
+      cnt E  # Read raw bytes?
+      if z  # No
+         ld (L I) E  # EOF
+         ld (GetBinZ_FB) getBinaryZ_FB  # Set binary read function
+         ld (Extn) (ExtN)  # Set external symbol offset
+         call binReadZ_FE  # Read item?
+         ldc E (L I)  # No: Return EOF
+      else
+         shr E 4  # Normalize
+         jz 90  # Zero
+         if c  # Little endian
+            lea X (L I)  # X on result
+            ld C 3  # Build signed number
+            do
+               call getBinaryZ_FB  # Enough bytes?
+               jc 90  # No
+               call byteNumBCX_CX  # Add next byte to number
+               dec E  # Done?
+            until z  # Yes
+            ld A (L I)  # Double result
+            call twiceA_A
+         else
+            ld X E  # Count in X
+            do
+               call getBinaryZ_FB  # Enough bytes?
+               jc 90  # No
+               zxt
+               push A  # Save byte
+               ld A (L I)  # Multiply number by 256
+               ld E (hex "1002")
+               call muluAE_A
+               ld (L I) A  # Save digit
+               pop E  # Get digit
+               shl E 4  # Make short number
+               or E CNT
+               call adduAE_A  # Add to number
+               ld (L I) A  # Save again
+               dec X  # Done?
+            until z  # Yes
+         end
+         big A  # Bignum?
+         if nz  # Yes
+            call zapZeroA_A  # Remove leading zeroes
+         end
+         ld E A  # Get result
+      end
+   else
+90    ld E Nil  # Return NIL
    end
-90 drop
+   drop
    pop Z
-   pop Y
    pop X
    ret
 

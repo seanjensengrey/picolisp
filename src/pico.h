@@ -1,4 +1,4 @@
-/* 30sep10abu
+/* 03oct10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -296,6 +296,7 @@ void db(any,any,int);
 int dbSize(any,any);
 void digAdd(any,word);
 void digDiv2(any);
+void digMul(any,word);
 void digMul2(any);
 void digSub1(any);
 any doubleToNum(double);
