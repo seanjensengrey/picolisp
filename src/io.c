@@ -1,4 +1,4 @@
-/* 03oct10abu
+/* 05oct10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -2535,20 +2535,21 @@ any doRd(any x) {
             return Nil;
          byteSym(n, &i, &x);
       }
+      zapZero(data(c1));
+      digMul2(data(c1));
    }
    else {
       if ((n = getBinary()) < 0)
          return Nil;
-      i = 0,  Push(c1, x = box(n));
+      i = 0,  Push(c1, x = box(n+n));
       while (--cnt) {
          if ((n = getBinary()) < 0)
             return Nil;
          digMul(data(c1), 256);
-         digAdd(data(c1), n);
+         setDig(data(c1), unDig(data(c1)) | n+n);
       }
+      zapZero(data(c1));
    }
-   zapZero(data(c1));
-   digMul2(data(c1));
    return Pop(c1);
 }
 

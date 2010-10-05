@@ -1,4 +1,4 @@
-/* 06jun09abu
+/* 05oct10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -262,8 +262,7 @@ any doMaplist(any ex) {
       while (isCell(data(c[0]) = cdr(data(c[0])))) {
          for (i = 1; i < n; ++i)
             data(c[i]) = cdr(data(c[i]));
-         cdr(x) = cons(apply(ex, data(foo), NO, n, c), Nil);
-         x = cdr(x);
+         x = cdr(x) = cons(apply(ex, data(foo), NO, n, c), Nil);
       }
    }
    return Pop(res);
@@ -289,8 +288,7 @@ any doMapcar(any ex) {
       while (isCell(data(c[0]) = cdr(data(c[0])))) {
          for (i = 1; i < n; ++i)
             data(c[i]) = cdr(data(c[i]));
-         cdr(x) = cons(apply(ex, data(foo), YES, n, c), Nil);
-         x = cdr(x);
+         x = cdr(x) = cons(apply(ex, data(foo), YES, n, c), Nil);
       }
    }
    return Pop(res);
@@ -665,8 +663,7 @@ any doBy(any ex) {
       while (isCell(data(c[0]) = cdr(data(c[0])))) {
          for (i = 1; i < n; ++i)
             data(c[i]) = cdr(data(c[i]));
-         cdr(x) = cons(cons(apply(ex, data(foo1), YES, n, c), car(data(c[0]))), Nil);
-         x = cdr(x);
+         x = cdr(x) = cons(cons(apply(ex, data(foo1), YES, n, c), car(data(c[0]))), Nil);
       }
       data(res) = apply(ex, data(foo2), NO, 1, &res);
       for (x = data(res); isCell(x); x = cdr(x))
