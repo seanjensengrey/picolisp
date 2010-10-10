@@ -1,4 +1,4 @@
-30sep10abu
+06oct10abu
 (c) Software Lab. Alexander Burger
 
 
@@ -10,3 +10,5 @@ A. The 'pid' function was removed. This was announced in the previous version,
 
       http://www.mail-archive.com/picolisp@software-lab.de/msg01949.html
 
+B. "Ersatz PicoLisp" (written in Java) was included for a first evaluation. For
+   further informations, please look at "ersatz/README".

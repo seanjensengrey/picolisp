@@ -1,4 +1,4 @@
-# 15aug10abu
+# 07oct10abu
 # (c) Software Lab. Alexander Burger
 
 ### Global return labels ###
@@ -196,7 +196,7 @@
    cc fprintf((stderr) ExecErr (S))
    ld E 127
    jmp finishE
-: ExecErr asciz "%s: can't exec\\n"
+: ExecErr asciz "%s: Can't exec\\n"
 
 # Install interrupting signal
 (code 'iSignalCE)

@@ -1,0 +1,430 @@
+# 10oct10abu
+# (c) Software Lab. Alexander Burger
+
+# Ersatz PicoLisp Functions
+
+############ main ############
+# (args) -> flg
+args
+   return Env.Next < Env.ArgC? T : Nil;
+
+# (next) -> any
+next
+   return Env.Next < Env.ArgC? (Env.Arg = Env.Args[Env.Next++]) : Nil;
+
+# (arg ['cnt]) -> any
+arg
+   if ((x = ex.cdr()) instanceof Cell)
+      return (i = evInt(x)+Env.Next-1) >= 0 && i < Env.ArgC? Env.Args[i] : Nil;
+   return Env.Arg;
+
+# (rest) -> lst
+rest
+   for (x = Nil, i = Env.ArgC; --i >= Env.Next;)
+      x = new Cell(Env.Args[i], x);
+   return x;
+
+############ apply ############
+# (apply 'fun 'lst ['any ..]) -> any
+apply
+   w = (x = ex.cdr()).car().eval();
+   y = (x = x.cdr()).car().eval();
+   for (v = new Any[6], i = 0; (x = x.cdr()) instanceof Cell;)
+      v = append(v, i++, x.car().eval());
+   while (y instanceof Cell) {
+      v = append(v, i++, y.car());
+      y = y.cdr();
+   }
+   return w.apply(ex, false, v, i);
+
+# (pass 'fun ['any ..]) -> any
+pass
+   w = (x = ex.cdr()).car().eval();
+   for (v = new Any[6], i = 0; (x = x.cdr()) instanceof Cell;)
+      v = append(v, i++, x.car().eval());
+   for (j = Env.Next; j < Env.ArgC; ++j)
+      v = append(v, i++, Env.Args[j]);
+   return w.apply(ex, false, v, i);
+
+# (map 'fun 'lst ..) -> lst
+map
+   w = (x = ex.cdr()).car().eval();
+   if ((x = x.cdr()) instanceof Cell) {
+      v = new Any[6];
+      i = 0;
+      do
+         v = append(v, i++, x.car().eval());
+      while ((x = x.cdr()) instanceof Cell);
+      while ((y = v[0]) instanceof Cell) {
+         x = w.apply(ex, false, v, i);
+         for (j = i; --j >= 0;)
+            v[j] = v[j].cdr();
+      }
+   }
+   return x;
+
+# (mapcar 'fun 'lst ..) -> lst
+mapcar
+   w = (x = ex.cdr()).car().eval();
+   z = Nil;
+   if ((x = x.cdr()) instanceof Cell) {
+      v = new Any[6];
+      i = 0;
+      do
+         v = append(v, i++, x.car().eval());
+      while ((x = x.cdr()) instanceof Cell);
+      if (!(v[0] instanceof Cell))
+         return z;
+      z = x = new Cell(w.apply(ex, true, v, i), Nil);
+      while (v[0].cdr() instanceof Cell) {
+         for (j = i; --j >= 0;)
+            v[j] = v[j].cdr();
+         x = ((Cell)x).Cdr = new Cell(w.apply(ex, true, v, i), Nil);
+      }
+   }
+   return z;
+
+############ flow ############
+# (eval 'any ['cnt ['lst]]) -> any
+eval
+   if ((y = (x = ex.cdr()).car().eval()) instanceof Number)
+      return y;
+   if (!((x = x.cdr()) instanceof Cell) || Env.Bind == null)
+      return y.eval();
+   return evRun(true, y, evInt(x), x.cdr().car().eval());
+
+# (run 'any ['cnt ['lst]]) -> any
+run
+   if ((y = (x = ex.cdr()).car().eval()) instanceof Number)
+      return y;
+   if (!((x = x.cdr()) instanceof Cell) || Env.Bind == null)
+      return y.run();
+   return evRun(false, y, evInt(x), x.cdr().car().eval());
+
+# (de sym . any) -> sym
+de
+   x = ex.cdr();
+   redefine(ex, (Symbol)x.car(), x.cdr());
+   return ex.cdr().car();
+
+# (dm sym . fun|cls2) -> sym
+# (dm (sym . cls) . fun|cls2) -> sym
+# (dm (sym sym2 [. cls]) . fun|cls2) -> sym
+dm
+   if (!((x = ex.cdr()).car() instanceof Cell)) {
+      s = (Symbol)x.car();
+      w = Class.Val;
+   }
+   else {
+      s = (Symbol)x.car().car();
+      w = !((y = x.car()).cdr() instanceof Cell)? y.cdr() :
+         (y.cdr().cdr() == Nil? Class.Val : y.cdr().cdr()).get(y.cdr().car());
+   }
+   if (s != T)
+      redefine(ex, s, Meth.Val);
+   if (x.cdr() instanceof Symbol) {
+      y = ((Symbol)x.cdr()).Val;
+      for (;;) {
+         if (!(y instanceof Cell) || !(y.car() instanceof Cell))
+            err(ex, s, "Bad message");
+         if (y.car().car() == s) {
+            x = y.car();
+            break;
+         }
+         y = y.cdr();
+      }
+   }
+   for (y = ((Symbol)w).Val; y instanceof Cell && y.car() instanceof Cell; y = y.cdr())
+      if (y.car().car() == s) {
+         if (!equal(x.cdr(), y.cdr().car()))
+            redefMsg(s, w);
+         ((Cell)y.car()).Cdr = x.cdr();
+         putSrc(w, s);
+         return s;
+      }
+   ((Symbol)w).Val = x.car() instanceof Cell?
+      new Cell(new Cell(s, x.cdr()), ((Symbol)w).Val) :
+      new Cell(x, ((Symbol)w).Val);
+   putSrc(w, s);
+   return s;
+
+# (if 'any1 'any2 . prg) -> any
+if
+   if ((y = (x = ex.cdr()).car().eval()) == Nil)
+      return x.cdr().cdr().prog();
+   At.Val = y;
+   x = x.cdr();
+   return x.car().eval();
+
+# (while 'any . prg) -> any
+while
+   x = ex.cdr();
+   z = Nil;
+   while ((y = x.car().eval()) != Nil) {
+      At.Val = y;
+      z = x.cdr().prog();
+   }
+   return z;
+
+# (catch 'any . prg) -> any
+catch
+   new Catch(y = (x = ex.cdr()).car().eval(), Zero, Env);
+   try {return x.cdr().prog();}
+   catch (Throw e) {
+      if (y == e.Tag)
+         return e.Val;
+      throw e;
+   }
+   finally {Catch = Catch.Link;}
+
+# (throw 'sym 'any)
+throw
+   y = (x = ex.cdr()).car().eval();
+   throw new Throw(ex, y, x.cdr().car().eval());
+
+# (finally exe . prg) -> any
+finally
+   new Catch(null, y = (x = ex.cdr()).car(), Env);
+   z = x.cdr().prog();
+   y.eval();
+   Catch = Catch.Link;
+   return z;
+
+# (bye 'cnt|NIL)
+bye
+   x = ex.cdr().car().eval();
+   /* ... */
+   System.exit(x == Nil? 0 : ((Number)x).intValue());
+
+############ sym ############
+# (all ['T]) -> lst
+all
+   return all((x = ex.cdr().car().eval()) == Nil? Intern : Transient);
+
+# (==== ['sym ..]) -> NIL
+====
+   Transient.clear();
+   for (x = ex.cdr(); x instanceof Cell; x = x.cdr()) {
+      y = x.car().eval();
+      Transient.put(((Symbol)y).Name, (Symbol)y);
+   }
+   return Nil;
+
+# (set 'var 'any ..) -> any
+set
+   x = ex.cdr();
+   do {
+      y = x.car().eval();
+      y.set(z = (x = x.cdr()).car().eval());
+   } while ((x = x.cdr()) instanceof Cell);
+   return z;
+
+# (setq var 'any ..) -> any
+setq
+   x = ex.cdr();
+   do {
+      y = x.car();
+      y.set(z = (x = x.cdr()).car().eval());
+   } while ((x = x.cdr()) instanceof Cell);
+   return z;
+
+# (put 'sym1|lst ['sym2|cnt ..] 'sym|0 'any) -> any
+put
+   y = (x = ex.cdr()).car().eval();
+   for (x = x.cdr();;) {
+      z = x.car().eval();
+      if (!((x = x.cdr()).cdr() instanceof Cell))
+         return y.put(z, x.car().eval());
+      y = y.get(z);
+   }
+
+# (get 'sym1|lst ['sym2|cnt ..]) -> any
+get
+   y = (x = ex.cdr()).car().eval();
+   while ((x = x.cdr()) instanceof Cell)
+      y = y.get(x.car().eval());
+   return y;
+
+############ subr ############
+# (car 'var) -> any
+car
+   return ex.cdr().car().eval().car();
+
+# (cdr 'lst) -> any
+cdr
+   return ex.cdr().car().eval().cdr();
+
+# (cons 'any ['any ..]) -> lst
+cons
+   y = z = new Cell((x = ex.cdr()).car().eval(), Nil);
+   while ((x = x.cdr()).cdr() instanceof Cell)
+      y = ((Cell)y).Cdr = new Cell(x.car().eval(), Nil);
+   ((Cell)y).Cdr = x.car().eval();
+   return z;
+
+# (list 'any ['any ..]) -> lst
+list
+   y = z = new Cell((x = ex.cdr()).car().eval(), Nil);
+   while ((x = x.cdr()) instanceof Cell)
+      y = ((Cell)y).Cdr = new Cell(x.car().eval(), Nil);
+   return z;
+
+# (> 'any ..) -> flg
+>
+   y = (x = ex.cdr()).car().eval();
+   while ((x = x.cdr()) instanceof Cell) {
+      z = x.car().eval();
+      if (compare(y,z) <= 0)
+         return Nil;
+      y = z;
+   }
+   return T;
+
+############ big ############
+# (+ 'num ..) -> num
++
+   if ((y = (x = ex.cdr()).car().eval()) == Nil)
+      return Nil;
+   for (n = (Number)y; (x = x.cdr()) instanceof Cell; n = n.add((Number)y))
+      if ((y = x.car().eval()) == Nil)
+         return Nil;
+   return new Number(n.toByteArray());
+
+# (- 'num ..) -> num
+-
+   if ((y = (x = ex.cdr()).car().eval()) == Nil)
+      return Nil;
+   n = (Number)y;
+   if (!((x = x.cdr()) instanceof Cell))
+      return new Number(n.negate().toByteArray());
+   do {
+      if ((y = x.car().eval()) == Nil)
+         return Nil;
+      n = n.subtract((Number)y);
+   } while ((x = x.cdr()) instanceof Cell);
+   return new Number(n.toByteArray());
+
+# (inc 'num) -> num
+# (inc 'var ['num]) -> num
+inc
+   if ((y = (x = ex.cdr()).car().eval()) == Nil)
+      return Nil;
+   if (y instanceof Number)
+      return new Number(((Number)y).add(ONE).toByteArray());
+   if (!((x = x.cdr()) instanceof Cell)) {
+      if (y.car() == Nil)
+         return Nil;
+      y.set(z = new Number(((Number)y.car()).add(ONE).toByteArray()));
+   }
+   else {
+      z = x.car().eval();
+      if (y.car() == Nil || z == Nil)
+         return Nil;
+      y.set(z = new Number(((Number)y.car()).add((Number)z).toByteArray()));
+   }
+   return z;
+
+# (dec 'num) -> num
+# (dec 'var ['num]) -> num
+dec
+   if ((y = (x = ex.cdr()).car().eval()) == Nil)
+      return Nil;
+   if (y instanceof Number)
+      return new Number(((Number)y).subtract(ONE).toByteArray());
+   if (!((x = x.cdr()) instanceof Cell)) {
+      if (y.car() == Nil)
+         return Nil;
+      y.set(z = new Number(((Number)y.car()).subtract(ONE).toByteArray()));
+   }
+   else {
+      z = x.car().eval();
+      if (y.car() == Nil || z == Nil)
+         return Nil;
+      y.set(z = new Number(((Number)y.car()).subtract((Number)z).toByteArray()));
+   }
+   return z;
+
+# (* 'num ..) -> num
+*
+   if ((y = (x = ex.cdr()).car().eval()) == Nil)
+      return Nil;
+   for (n = (Number)y; (x = x.cdr()) instanceof Cell; n = n.multiply((Number)y))
+      if ((y = x.car().eval()) == Nil)
+         return Nil;
+   return new Number(n.toByteArray());
+
+# (*/ 'num1 ['num2 ..] 'num3) -> num
+*/
+   if ((y = (x = ex.cdr()).car().eval()) == Nil)
+      return Nil;
+   for (n = (Number)y; ; n = n.multiply((Number)y)) {
+      if ((y = (x = x.cdr()).car().eval()) == Nil)
+         return Nil;
+      if (!((x.cdr()) instanceof Cell))
+         return new Number(n.add(((Number)y).divide(Two)).divide((Number)y).toByteArray());
+   }
+
+# (/ 'num ..) -> num
+/
+   if ((y = (x = ex.cdr()).car().eval()) == Nil)
+      return Nil;
+   for (n = (Number)y; (x = x.cdr()) instanceof Cell; n = n.divide((Number)y))
+      if ((y = x.car().eval()) == Nil)
+         return Nil;
+   return new Number(n.toByteArray());
+
+# (% 'num ..) -> num
+%
+   if ((y = (x = ex.cdr()).car().eval()) == Nil)
+      return Nil;
+   for (n = (Number)y; (x = x.cdr()) instanceof Cell; n = n.remainder((Number)y))
+      if ((y = x.car().eval()) == Nil)
+         return Nil;
+   return new Number(n.toByteArray());
+
+# (>> 'cnt 'num) -> num
+>>
+   i = evInt(x = ex.cdr());
+   if ((y = x.cdr().car().eval()) == Nil)
+      return Nil;
+   return new Number(((Number)y).shiftRight(i).toByteArray());
+
+# (lt0 'any) -> num | NIL
+lt0
+   return (x = ex.cdr().car().eval()) instanceof Number && ((Number)x).compareTo(Zero) < 0? x : Nil;
+
+# (ge0 'any) -> num | NIL
+ge0
+   return (x = ex.cdr().car().eval()) instanceof Number && ((Number)x).compareTo(Zero) >= 0? x : Nil;
+
+# (gt0 'any) -> num | NIL
+gt0
+   return (x = ex.cdr().car().eval()) instanceof Number && ((Number)x).compareTo(Zero) > 0? x : Nil;
+
+# (abs 'num) -> num
+abs
+   return new Number(((Number)ex.cdr().car().eval()).abs().toByteArray());
+
+############ io ############
+# (load 'any ..) -> any
+load
+   x = ex.cdr();
+   do {
+      if ((y = x.car().eval()) != T)
+         y = load(ex, '>', y);
+      else
+         y = loadAll(ex);
+   } while ((x = x.cdr()) instanceof Cell);
+   return y;
+
+# (println 'any ..) -> any
+println
+   OutFile.print(y = (x = ex.cdr()).car().eval());
+   while ((x = x.cdr()) instanceof Cell) {
+      OutFile.space();
+      OutFile.print(y = x.car().eval());
+   }
+   OutFile.newline();
+   return y;
+
+# vi:et:ts=3:sw=3

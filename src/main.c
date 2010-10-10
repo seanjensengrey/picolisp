@@ -1,4 +1,4 @@
-/* 22jul10abu
+/* 07oct10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -65,7 +65,7 @@ void bye(int n) {
 }
 
 void execError(char *s) {
-   fprintf(stderr, "%s: can't exec\n", s);
+   fprintf(stderr, "%s: Can't exec\n", s);
    exit(127);
 }
 

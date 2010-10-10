@@ -1,4 +1,4 @@
-# 30sep10abu
+# 08oct10abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -184,120 +184,128 @@
    ld X (E CDR)  # Args
    ld E (X)  # Eval first
    eval
-   link
-   push E  # <L I> 'any'
-   link
-   ld X (X CDR)  # X on rest
-   atom X  # Any?
-   if nz  # No
-10    eval  # Evaluate 'any'
-      drop
-      pop X
-      ret
-   end
-   null (EnvBind)  # Bindings?
-   jz 10  # No
-   ld E (X)  # Eval 'cnt'
-   eval
-   shr E 4  # Normalize
-   push E  # <L -I> 'cnt'
-   push 0  # <L -II> 'n'
-   ld E ((X CDR))  # Last argument
-   eval  # Exclusion list 'lst' in E
-   push Y
-   ld C (L -I)  # Get 'cnt'
-   ld Y (EnvBind)  # and bindings
-   do
-      ld A (Y)  # End of bindings in A
-      inc (L -II)  # Increment 'n'
-      sub (Y -I) (L -I)  # Decrement 'eswp' by 'cnt'
-      if c  # First pass
-         add Y I
-         do
-            ld X (Y)  # Next symbol
-            xchg (X) (Y I)  # Exchange symbol value with saved value
-            add Y II
-            cmp Y A  # More?
-         until eq  # No
-         cmp X At  # Lambda frame?
-         if eq  # Yes
-            dec C  # Decrement local 'cnt'
-            break z  # Done
-         end
-      end
-      ld Y (A I)  # Bind link
-      null Y  # More bindings?
-   until z  # No
-   atom E  # Exclusion list?
-   if nz  # No
-      ld E (L I)  # Get 'any'
-      eval  # Evaluate it
-   else
-      push (EnvBind)  # Build bind frame
+   num E  # 'any' is number?
+   if z  # No
       link
+      push E  # <L I> 'any'
+      link
+      ld X (X CDR)  # X on rest
+      atom X  # Any?
+      if nz  # No
+10       sym E  # Symbolic?
+         if nz  # Yes
+            ld E (E)  # Get value
+         else
+            call evListE_E  # Else evaluate expression
+         end
+         drop
+         pop X
+         ret
+      end
+      null (EnvBind)  # Bindings?
+      jz 10  # No
+      ld E (X)  # Eval 'cnt'
+      eval
+      shr E 4  # Normalize
+      push E  # <L -I> 'cnt'
+      push 0  # <L -II> 'n'
+      ld E ((X CDR))  # Last argument
+      eval  # Exclusion list 'lst' in E
+      push Y
+      ld C (L -I)  # Get 'cnt'
+      ld Y (EnvBind)  # and bindings
       do
-         ld X (E)  # Next excluded symbol
-         push (X)  # Save in bind frame
-         push X
-         ld C (L -II)  # Get 'n'
-         ld Y (EnvBind)  # Bindings
-         do
-            ld A (Y)  # End of bindings in A
+         ld A (Y)  # End of bindings in A
+         inc (L -II)  # Increment 'n'
+         sub (Y -I) (L -I)  # Decrement 'eswp' by 'cnt'
+         if c  # First pass
             add Y I
             do
-               cmp X (Y)  # Found excluded symbol?
-               if eq  # Yes
-                  ld (X) (Y I)  # Bind to found value
-                  jmp 20
-               end
+               ld X (Y)  # Next symbol
+               xchg (X) (Y I)  # Exchange symbol value with saved value
                add Y II
                cmp Y A  # More?
             until eq  # No
-            dec C  # Traversed 'n' frames?
-         while nz  # No
-            ld Y (A I)  # Bind link
-            null Y  # More bindings?
-         until z  # No
-20       ld E (E CDR)
-         atom E  # Exclusion list?
-      until nz  # No
-      ld E ((L) I)  # Get 'any'
-      link
-      ld (EnvBind) L  # Close bind frame
-      push 0  # Init env swap
-      eval  # Evaluate 'any'
-      pop A  # Drop env swap
-      pop L  # Get link
-      do  # Unbind excluded symbols
-         pop X  # Next symbol
-         pop (X)  # Restore value
-         cmp S L  # More?
-      until eq  # No
-      pop L  # Restore link
-      pop (EnvBind)  # Restore bind link
-   end
-   ld C (L -II)  # Get 'n'
-   do
-      ld A C  # in A
-      ld Y (EnvBind)  # Bindings
-      do
-         dec A  # 'n-1' times
-      while nz
-         ld Y ((Y) I)  # Follow link
-      loop
-      add (Y -I) (L -I)  # Increment 'eswp' by 'cnt'
-      if z  # Last pass
-         lea A ((Y) -II)  # Last binding in A
+            cmp X At  # Lambda frame?
+            if eq  # Yes
+               dec C  # Decrement local 'cnt'
+               break z  # Done
+            end
+         end
+         ld Y (A I)  # Bind link
+         null Y  # More bindings?
+      until z  # No
+      atom E  # Exclusion list?
+      if nz  # No
+         ld E (L I)  # Get 'any'
+         eval  # Evaluate it
+      else
+         push (EnvBind)  # Build bind frame
+         link
          do
-            xchg ((A)) (A I)  # Exchange next symbol value with saved value
-            sub A II
-            cmp A Y  # More?
-         until lt  # No
+            ld X (E)  # Next excluded symbol
+            push (X)  # Save in bind frame
+            push X
+            ld C (L -II)  # Get 'n'
+            ld Y (EnvBind)  # Bindings
+            do
+               ld A (Y)  # End of bindings in A
+               add Y I
+               do
+                  cmp X (Y)  # Found excluded symbol?
+                  if eq  # Yes
+                     ld (X) (Y I)  # Bind to found value
+                     jmp 20
+                  end
+                  add Y II
+                  cmp Y A  # More?
+               until eq  # No
+               dec C  # Traversed 'n' frames?
+            while nz  # No
+               ld Y (A I)  # Bind link
+               null Y  # More bindings?
+            until z  # No
+20          ld E (E CDR)
+            atom E  # Exclusion list?
+         until nz  # No
+         ld E ((L) I)  # Get 'any'
+         link
+         ld (EnvBind) L  # Close bind frame
+         push 0  # Init env swap
+         eval  # Evaluate 'any'
+         pop A  # Drop env swap
+         pop L  # Get link
+         do  # Unbind excluded symbols
+            pop X  # Next symbol
+            pop (X)  # Restore value
+            cmp S L  # More?
+         until eq  # No
+         pop L  # Restore link
+         pop (EnvBind)  # Restore bind link
       end
-      dec C  # Decrement 'n'
-   until z  # Done
-   pop Y
-   drop
+      ld C (L -II)  # Get 'n'
+      do
+         ld A C  # in A
+         ld Y (EnvBind)  # Bindings
+         do
+            dec A  # 'n-1' times
+         while nz
+            ld Y ((Y) I)  # Follow link
+         loop
+         add (Y -I) (L -I)  # Increment 'eswp' by 'cnt'
+         if z  # Last pass
+            lea A ((Y) -II)  # Last binding in A
+            do
+               xchg ((A)) (A I)  # Exchange next symbol value with saved value
+               sub A II
+               cmp A Y  # More?
+            until lt  # No
+         end
+         dec C  # Decrement 'n'
+      until z  # Done
+      pop Y
+      drop
+   end
    pop X
    ret
 
@@ -360,12 +368,12 @@
       until z  # No
       atom E  # Exclusion list?
       if nz  # No
-         ld X (L I)  # Run 'any'
-         sym X  # Symbolic?
+         ld E (L I)  # Run 'any'
+         sym E  # Symbolic?
          if nz  # Yes
-            ld E (X)  # Get value
+            ld E (E)  # Get value
          else
-            prog X  # Execute
+            call runE_E  # Execute
          end
       else
          push (EnvBind)  # Build bind frame
@@ -396,15 +404,15 @@
 20          ld E (E CDR)
             atom E  # Exclusion list?
          until nz  # No
-         ld X ((L) I)  # Get 'any'
+         ld E ((L) I)  # Get 'any'
          link
          ld (EnvBind) L  # Close bind frame
          push 0  # Init env swap
-         sym X  # 'any' symbolic?
+         sym E  # 'any' symbolic?
          if nz  # Yes
-            ld E (X)  # Get value
+            ld E (E)  # Get value
          else
-            prog X  # Execute
+            call runE_E  # Execute
          end
          pop A  # Drop env swap
          pop L  # Get link

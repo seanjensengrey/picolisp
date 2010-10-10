@@ -1,0 +1,52 @@
+#!../bin/picolisp ../lib.l
+# 06oct10abu
+# (c) Software Lab. Alexander Burger
+
+(load "@ext.l")
+
+# Build Ersatz PicoLisp
+
+(out "PicoLisp.java"
+   (in "sys.src"
+      (echo "<SYM>")
+      (let Cnt (read)
+         (in "fun.src"
+            (skip "#")
+            (loop
+               (let Name (line T)
+                  (prinl
+                     "mkSymbol(new Number(\""
+                     (inc 'Cnt)
+                     "\"), \""
+                     Name
+                     "\", Intern);" ) )
+               (while (= " " (car (line))))
+               (prin "      ")
+               (NIL (skip "#")) ) ) )
+      (skip)
+      (echo "<FUN>")
+      (let (Cnt (read)  Line)
+         (in "fun.src"
+            (skip "#")
+            (loop
+               (let Name (line T)
+                  (prinl
+                     "case "
+                     (inc 'Cnt)
+                     ":  // "
+                     Name ) )
+               (while (= " " (car (setq Line (line))))
+                  (prinl "         " Line) )
+               (prin "         ")
+               (NIL (skip "#")) ) ) )
+      (skip)
+      (echo) ) )
+
+(when (call "javac" "-O" "-g:none" "PicoLisp.java")
+   (let Lst (filter '((F) (tail '`(chop ".class") (chop F))) (dir))
+      (apply call Lst "jar" "cmf" "Manifest" "picolisp.jar")
+      (apply call Lst "rm") ) )
+
+(bye)
+
+# vi:et:ts=3:sw=3

@@ -1,4 +1,4 @@
-# 03oct10abu
+# 07oct10abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -4000,9 +4000,9 @@
    sub S IV  # InFrame
    ld Y S
    call rdOpenEXY
+   call pushInFilesY
    ld E Nil  # Close transient scope
    call doHide
-   call pushInFilesY
    do
       ld A ((InFiles))  # Get stdin
       cmp A (InFile)  # Reading from file?

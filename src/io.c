@@ -1,4 +1,4 @@
-/* 05oct10abu
+/* 07oct10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -1988,8 +1988,8 @@ any load(any ex, int pr, any x) {
       return x;
    }
    rdOpen(ex, x, &f);
-   doHide(Nil);
    pushInFiles(&f);
+   doHide(Nil);
    x = Nil;
    for (;;) {
       if (InFile != InFiles[STDIN_FILENO])

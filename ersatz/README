@@ -1,0 +1,47 @@
+10oct10abu
+(c) Software Lab. Alexander Burger
+
+
+         Ersatz PicoLisp
+         ===============
+
+Ersatz PicoLisp is a version of PicoLisp completely written in Java.
+
+It should be the last resort when there is no other way to run a "real"
+PicoLisp. Also, it may be used to bootstrap the 64-bit version, which requires a
+running PicoLisp to build from the sources.
+
+Performance is rather poor. It is 10 to 20 times slower, and uses much more
+memory. But efficiency was not a major goal. Instead, performance was often
+sacrificed in favor of simpler or more modular structures.
+
+There is no support for child processes ('fork'), interprocess communication
+('tell', 'hear', 'ipc' etc.), PLIO ('pr', 'rd' etc.) and databases (external
+symbols).
+
+
+      Invocation
+      ----------
+
+Ersatz PicoLisp can be started - analog to 'bin/picolisp' - as
+
+   $ ersatz/picolisp
+
+
+If absolutely no "bin/picolisp" can be build, you might install symbolic links
+in the "bin/" directory to Ersatz PicoLisp:
+
+   $ (cd bin; ln -s ../ersatz/picolisp && ln -s ../ersatz/picolisp.jar)
+
+
+      Building the JAR file
+      ---------------------
+
+The actual source files are
+
+   sys.src  # The system
+   fun.src  # Function definitions
+
+The PicoLisp script "mkJar" will read them, generate the Java source file
+"PicoLisp.java", compile that with 'javac', and pack the result into a JAR (Java
+Archive) file.
