@@ -38,13 +38,35 @@ public class PicoLisp {
    static PicoLispWriter OutFile = StdOut;
    static Any TheCls, TheKey;
    static String[] Argv;
+   static String Home;
 
    public static void main(String[] argv) {
       Argv = argv;
+      init();
       <SYM> 1
       loadAll(null);
       load(null, ':', Nil);
       System.exit(0);
+   }
+
+   final static void init() {
+      String s;
+      for (int i = 0; i < Argv.length; ++i)
+         if ((s = Argv[i]).charAt(0) != '-') {
+            if ((i = s.lastIndexOf('/')) >= 0 && !(i == 1 && s.charAt(0) == '.'))
+               Home = s.substring(0, i+1);
+            break;
+         }
+   }
+
+   final static String path(String s) {
+      if (s.charAt(0) == '+') {
+         if (s.charAt(1) == '@')
+            return "+" + Home + s.substring(1);
+      }
+      else if (s.charAt(0) == '@')
+         return Home + s.substring(1);
+      return s;
    }
 
    final static void unwind(Catch p) {
@@ -985,10 +1007,11 @@ public class PicoLisp {
 
       final public PicoLispReader open(Any ex) {
          try {
+            String nm = path(Name);
             if (firstChar() == '+') {
                /* ... */
             }
-            return new PicoLispReader(new FileReader(Name), Name);
+            return new PicoLispReader(new FileReader(nm), nm);
          }
          catch (IOException e) {
             err(ex, this, "Can't open");

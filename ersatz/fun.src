@@ -406,6 +406,9 @@ abs
    return new Number(((Number)ex.cdr().car().eval()).abs().toByteArray());
 
 ############ io ############
+# (path 'any) -> sym
+path
+
 # (load 'any ..) -> any
 load
    x = ex.cdr();

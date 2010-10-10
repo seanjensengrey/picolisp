@@ -44,4 +44,6 @@ The actual source files are
 
 The PicoLisp script "mkJar" will read them, generate the Java source file
 "PicoLisp.java", compile that with 'javac', and pack the result into a JAR (Java
-Archive) file.
+Archive) file. "mkJar" expects to be run in the "ersatz/" directory, e.g.:
+
+   $ (cd ersatz; ./mkJar)
