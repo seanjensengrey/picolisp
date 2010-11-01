@@ -1,4 +1,4 @@
-# 08oct10abu
+# 12oct10abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -641,9 +641,8 @@
 
 # Apply METH in C to X, with object A
 (code 'evMethodACXYZ_E 0)
-   push Z  # 'cls'
-   push Y  # 'key'
-   push (EnvMeth)  # <(L) II> Method frame
+   push Z  # <(L) III> 'cls'
+   push Y  # <(L) II> 'key'
    ld Y (C)  # Parameter list in Y
    ld Z (C CDR)  # Body in Z
    push (EnvBind)  # Build bind frame
@@ -679,7 +678,8 @@
       link
       ld (EnvBind) L  # Close bind frame
       push 0  # Init env swap
-      lea (EnvMeth) ((L) II)  # and method frame
+      xchg (EnvCls) ((L) III)  # 'cls'
+      xchg (EnvKey) ((L) II)  # 'key'
       prog Z  # Run body
       pop A  # Drop env swap
       pop L  # Get link
@@ -690,9 +690,8 @@
       until eq  # No
       pop L  # Restore link
       pop (EnvBind)  # Restore bind link
-      pop (EnvMeth)  # and method link
-      pop A  # Drop frame
-      pop A
+      pop (EnvKey)  # 'key'
+      pop (EnvCls)  # and 'cls'
       ret
    end
    # Non-NIL parameter
@@ -714,7 +713,8 @@
       link
       ld (EnvBind) L  # Close bind frame
       push 0  # Init env swap
-      lea (EnvMeth) ((L) II)  # and method frame
+      xchg (EnvCls) ((L) III)  # 'cls'
+      xchg (EnvKey) ((L) II)  # 'key'
       prog Z  # Run body
       pop A  # Drop env swap
       pop L  # Get link
@@ -725,9 +725,8 @@
       until eq  # No
       pop L  # Restore link
       pop (EnvBind)  # Restore bind link
-      pop (EnvMeth)  # and method link
-      pop A  # Drop frame
-      pop A
+      pop (EnvKey)  # 'key'
+      pop (EnvCls)  # and 'cls'
       ret
    end
    # Evaluated argument list
@@ -754,7 +753,8 @@
       link  # Close varArgs frame
    end
    ld (EnvBind) Y  # Close bind frame
-   lea (EnvMeth) ((Y) II)  # and method frame
+   xchg (EnvCls) ((L) III)  # 'cls'
+   xchg (EnvKey) ((L) II)  # 'key'
    ld C (Y)  # End of bindings in C
    add Y I
    do
@@ -782,9 +782,8 @@
    until eq  # No
    pop L  # Restore link
    pop (EnvBind)  # Restore bind link
-   pop (EnvMeth)  # and method link
-   pop A  # Drop frame
-   pop A
+   pop (EnvKey)  # 'key'
+   pop (EnvCls)  # and 'cls'
    ret
 
 (code 'methodEY_FCYZ 0)
@@ -881,7 +880,7 @@
    ld X (Y CDR)  # Keep args in X
    ld E A  # Object
    ld Y TSym  # Search for initial method
-   ld Z Nil  # No classes
+   ld Z 0  # No classes
    call methodEY_FCYZ  # Found?
    if eq  # Yes
       ld A (L II)  # 'obj'
@@ -1113,7 +1112,7 @@
       jz msgErrYX
       cnt (Y)  # Value numeric?
       if nz  # Yes
-         ld Z Nil  # No classes
+         ld Z 0  # No classes
          call methodEY_FCYZ  # Found?
          jne msgErrYX  # No
          ld A (L I)  # Get 'obj'
@@ -1158,7 +1157,7 @@
    end
    ld X (Y CDR)  # Keep args in X
    ld Y (L II)  # Get 'msg'
-   ld Z Nil  # No classes
+   ld Z 0  # No classes
    call methodEY_FCYZ  # Found?
    jne msgErrYX  # No
    ld A (L I)  # Get 'obj'
@@ -1201,7 +1200,7 @@
    end
    ld X (Y CDR)  # Keep args in X
    ld Y (L II)  # Get 'msg'
-   ld Z Nil  # No classes
+   ld Z 0  # No classes
    call methodEY_FCYZ  # Found?
    if eq  # Yes
       ld A (L I)  # Get 'obj'
@@ -1221,10 +1220,9 @@
    push Y
    push Z
    push E  # Save expression
-   ld A (EnvMeth)  # Method frame
-   ld Y (A I)  # 'key'
-   ld X (A II)  # 'cls'
-   cmp X Nil  # Any?
+   ld X (EnvCls)  # 'cls'
+   ld Y (EnvKey)  # 'key'
+   null X  # Any?
    ldnz X (X)  # Yes: First class
    ldz X (This)  # No: 'This'
    ld X (X)  # Get class definition
@@ -1241,14 +1239,13 @@
       call methodEY_FCYZ  # Found?
       if eq  # Yes
          pop E  # Get expression
-         push Z  # 'cls'
-         push Y  # 'key'
-         push (EnvMeth)  # Build method frame
-         ld (EnvMeth) S
+         push (EnvCls)  # 'cls'
+         push (EnvKey)  # 'key'
+         ld (EnvCls) Z  # Set new
+         ld (EnvKey) Y
          call evExprCE_E  # Evaluate expression
-         pop (EnvMeth)  # Restore method link
-         pop A  # Drop frame
-         pop A
+         pop (EnvKey)
+         pop (EnvCls)
          pop Z
          pop Y
          pop X
@@ -1268,19 +1265,18 @@
    push Y
    push Z
    push E  # Save expression
-   ld Y ((EnvMeth) I)  # Get 'key'
+   ld Y (EnvKey)  # Get 'key'
    ld X (This)  # Current object
    call extraXY_FCYZ  # Locate extra method
    if eq
       pop E  # Get expression
-      push Z  # 'cls'
-      push Y  # 'key'
-      push (EnvMeth)  # Build method frame
-      ld (EnvMeth) S
+      push (EnvCls)  # 'cls'
+      push (EnvKey)  # 'key'
+      ld (EnvCls) Z  # Set new
+      ld (EnvKey) Y
       call evExprCE_E  # Evaluate expression
-      pop (EnvMeth)  # Restore method link
-      pop A  # Drop frame
-      pop A
+      pop (EnvKey)
+      pop (EnvCls)
       pop Z
       pop Y
       pop X
@@ -1302,7 +1298,7 @@
    do
       atom X  # Classes?
    while z  # Yes
-      cmp X ((EnvMeth) II)  # Hit current 'cls' list?
+      cmp X (EnvCls)  # Hit current 'cls' list?
       if eq  # Yes
 10       do
             ld X (X CDR)  # Locate method in extra classes
@@ -2608,9 +2604,6 @@
             ld X EnvCtlFrames  # Pointer to control frames
             ld C (Z (pack III "+(EnvCtlFrames-EnvCo)"))  # Local control frames
             call joinLocalCX  # Join locals
-            ld X EnvMeth  # Pointer to method frames
-            ld C (Z (pack III "+(EnvMeth-EnvCo)"))  # Local method frames
-            call joinLocalCX  # Join locals
             ld X EnvApply  # Local apply stack
             do
                null (X)  # Any?
@@ -2768,9 +2761,6 @@
       lea X ((A) I)  # Get link
    loop
    ld (X) 0  # Cut off
-   ld X EnvMeth  # Pointer to method frames
-   ld C (Z (pack III "+(EnvMeth-EnvCo)"))  # Local method frames
-   call cutLocalCX  # Cut off locals
    ld X EnvCtlFrames  # Pointer to control frames
    ld C (Z (pack III "+(EnvCtlFrames-EnvCo)"))  # Local control frames
    call cutLocalCX  # Cut off locals

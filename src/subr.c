@@ -1,4 +1,4 @@
-/* 07nov09abu
+/* 22oct10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -535,11 +535,8 @@ any doAppend(any x) {
          while (isCell(y = cdr(z)))
             z = cdr(z) = cons(car(y), cdr(y));
          while (isCell(cdr(x = cdr(x)))) {
-            y = EVAL(car(x));
-            while (isCell(y)) {
+            for (y = EVAL(car(x)); isCell(y); y = cdr(z))
                z = cdr(z) = cons(car(y), cdr(y));
-               y = cdr(z);
-            }
             cdr(z) = y;
          }
          cdr(z) = EVAL(car(x));
@@ -620,22 +617,18 @@ any doReplace(any x) {
    Save(c1);
    for (i = 0; i < n; ++i)
       x = cdr(x),  Push(c[i], EVAL(car(x)));
-   for (i = 0;  i < n;  i += 2)
-      if (equal(car(data(c1)), data(c[i]))) {
+   for (x = car(data(c1)), i = 0;  i < n;  i += 2)
+      if (equal(x, data(c[i]))) {
          x = data(c[i+1]);
-         goto rpl1;
+         break;
       }
-   x = car(data(c1));
-rpl1:
    Push(c2, y = cons(x,Nil));
    while (isCell(data(c1) = cdr(data(c1)))) {
-      for (i = 0;  i < n;  i += 2)
-         if (equal(car(data(c1)), data(c[i]))) {
+      for (x = car(data(c1)), i = 0;  i < n;  i += 2)
+         if (equal(x, data(c[i]))) {
             x = data(c[i+1]);
-            goto rpl2;
+            break;
          }
-      x = car(data(c1));
-   rpl2:
       y = cdr(y) = cons(x, Nil);
    }
    cdr(y) = data(c1);
@@ -1025,11 +1018,9 @@ any doMax(any x) {
    cell c1;
 
    x = cdr(x),  Push(c1, EVAL(car(x)));
-   while (isCell(x = cdr(x))) {
-      y = EVAL(car(x));
-      if (compare(y, data(c1)) > 0)
+   while (isCell(x = cdr(x)))
+      if (compare(y = EVAL(car(x)), data(c1)) > 0)
          data(c1) = y;
-   }
    return Pop(c1);
 }
 
@@ -1039,11 +1030,9 @@ any doMin(any x) {
    cell c1;
 
    x = cdr(x),  Push(c1, EVAL(car(x)));
-   while (isCell(x = cdr(x))) {
-      y = EVAL(car(x));
-      if (compare(y, data(c1)) < 0)
+   while (isCell(x = cdr(x)))
+      if (compare(y = EVAL(car(x)), data(c1)) < 0)
          data(c1) = y;
-   }
    return Pop(c1);
 }
 
@@ -1159,9 +1148,7 @@ any doIndex(any x) {
 
    x = cdr(x),  Push(c1, EVAL(car(x)));
    x = cdr(x),  x = EVAL(car(x));
-   if (n = indx(Pop(c1), x))
-      return boxCnt(n);
-   return Nil;
+   return (n = indx(Pop(c1), x))? boxCnt(n) : Nil;
 }
 
 // (offset 'lst1 'lst2) -> cnt | NIL
@@ -1298,11 +1285,9 @@ any doRank(any x) {
    x = cdr(x),  Push(c2, y = EVAL(car(x)));
    x = cdr(x),  x = EVAL(car(x));
    Rank = Pop(c1);
-   if (!isCell(y))
-      return Nil;
-   if (isNil(x))
-      return rank1(y, length(y)) ?: Nil;
-   return rank2(y, length(y)) ?: Nil;
+   if (isCell(y))
+      return (isNil(x)? rank1(y, length(y)) : rank2(y, length(y))) ?: Nil;
+   return Nil;
 }
 
 /* Pattern matching */
@@ -1338,7 +1323,7 @@ bool match(any p, any d) {
             return YES;
          }
       }
-      if (!isCell(d) || !(match(x, car(d))))
+      if (!isCell(d) || !match(x, car(d)))
          return NO;
       p = cdr(p);
       d = cdr(d);
@@ -1364,9 +1349,7 @@ static any fill(any x, any s) {
    if (isNum(x))
       return NULL;
    if (isSym(x))
-      return
-         (isNil(s)? x!=At && firstByte(x)=='@' : memq(x,s)!=NULL)?
-         val(x) : NULL;
+      return (isNil(s)? x!=At && firstByte(x)=='@' : memq(x,s)!=NULL)? val(x) : NULL;
    if (y = fill(car(x),s)) {
       Push(c1,y);
       y = fill(cdr(x),s);

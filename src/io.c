@@ -1,4 +1,4 @@
-/* 07oct10abu
+/* 14oct10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -1237,7 +1237,7 @@ any token(any x, int c) {
       while (Env.get(), Chr != '"' && testEsc())
          byteSym(Chr, &i, &y);
       Env.get();
-      return consStr(y = Pop(c1));
+      return consStr(Pop(c1));
    }
    if (Chr >= '0' && Chr <= '9') {
       i = 0,  Push(c1, y = box(Chr));

@@ -1,4 +1,4 @@
-16mar10abu
+22oct10abu
 (c) Software Lab. Alexander Burger
 
 
@@ -37,8 +37,8 @@ Please follow these steps:
    Note that on the BSD family of operating systems, 'gmake' must be used
    instead of 'make'.
 
-4. Optional (but recommended) are two symbolic links from /usr/lib and /usr/bin
-   to the installation directory
+4. Optional (but recommended if you have permission to switch to root) are two
+   symbolic links from /usr/lib and /usr/bin to the installation directory
 
       # ln -s /<installdir> /usr/lib/picolisp
       # ln -s /usr/lib/picolisp/bin/picolisp /usr/bin/picolisp

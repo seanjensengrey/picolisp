@@ -1,4 +1,4 @@
-/* 07oct10abu
+/* 12oct10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -523,7 +523,6 @@ void err(any ex, any x, char *fmt, ...) {
    }
    unwind(NULL);
    Env.stack = NULL;
-   Env.meth = NULL;
    Env.protect = Env.trace = 0;
    Env.next = -1;
    Env.task = Nil;
@@ -567,7 +566,7 @@ void unwind(catchFrame *catch) {
 
    while (q = CatchPtr) {
       while (p = Env.bind) {
-         if ((i = Env.bind->i) < 0) {
+         if ((i = p->i) < 0) {
             j = i, n = 0;
             while (++n, ++j && (p = p->link))
                if (p->i >= 0 || p->i < i)

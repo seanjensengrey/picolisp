@@ -1,7 +1,8 @@
-// 10oct10abu
+// 01nov10abu
 // (c) Software Lab. Alexander Burger
 
 import java.io.*;
+import java.net.*;
 import java.util.*;
 import java.math.*;
 
@@ -9,6 +10,8 @@ import java.math.*;
 public class PicoLisp {
    final static HashMap<String,Symbol> Intern = new HashMap<String,Symbol>();
    final static HashMap<String,Symbol> Transient = new HashMap<String,Symbol>();
+   final static byte MonLen[] = new byte[] {31,31,28,31,30,31,30,31,31,30,31,30,31};
+   final static byte Version[] = new byte[] {<VERSION>};
 
    final static Number Zero = new Number(0);
    final static Number One = new Number(1);
@@ -23,34 +26,57 @@ public class PicoLisp {
    final static Symbol Dbg = mkSymbol(Nil, "*Dbg", Intern);
    final static Symbol Scl = mkSymbol(Zero, "*Scl", Intern);
    final static Symbol Class = mkSymbol(Nil, "*Class", Intern);
+   final static Symbol Run = mkSymbol(Nil, "*Run", Intern);
+   final static Symbol Up = mkSymbol(Nil, "^", Intern);
+   final static Symbol Err = mkSymbol(Nil, "*Err", Intern);
+   final static Symbol Msg = mkSymbol(Nil, "*Msg", Intern);
+   final static Symbol Uni = mkSymbol(Nil, "*Uni", Intern);
+   final static Symbol Bye = mkSymbol(Nil, "*Bye", Intern);
 
    final static Symbol Quote = mkSymbol(Zero, "quote", Intern);
    final static Symbol Meth = mkSymbol(One, "meth", Intern);
 
-   final static PicoLispReader StdIn = new PicoLispReader(System.in);
-   final static PicoLispWriter StdOut = new PicoLispWriter(System.out);
-   final static PicoLispWriter StdErr = new PicoLispWriter(System.err);
    final static String Delim = " \t\n\r\"'(),[]`~{}";
 
    static Catch Catch;
    static Env Env = new Env();
+   static Process[] Pids = new Process[12];
+   static PicoLispReader[] InFiles = new PicoLispReader[12];
+   static PicoLispWriter[] OutFiles = new PicoLispWriter[12];
+   final static PicoLispReader StdIn = new PicoLispReader(System.in, 0);
+   final static PicoLispWriter StdOut = new PicoLispWriter(System.out, 1);
+   final static PicoLispWriter StdErr = new PicoLispWriter(System.err, 2);
    static PicoLispReader InFile = StdIn;
    static PicoLispWriter OutFile = StdOut;
-   static Any TheCls, TheKey;
+   static Any TheCls, TheKey, Penv, Pnl;
    static String[] Argv;
    static String Home;
+   static Calendar Cal;
+   static int MaxFun;
+   static long USec, Seed;
+   static boolean Break, Jam, B;
+   static Bind Brk;
 
    public static void main(String[] argv) {
       Argv = argv;
       init();
       <SYM> 1
-      loadAll(null);
-      load(null, ':', Nil);
-      System.exit(0);
+      USec = System.nanoTime() / 1000;
+      for (boolean first = true; ; first = false) {
+         try {
+            if (first)
+               loadAll(null);
+            load(null, ':', Nil);
+            bye(0);
+         }
+         catch (Control e) {}
+         catch (Throwable e) {error(null, null, e.toString());}
+      }
    }
 
    final static void init() {
       String s;
+      Home = "";
       for (int i = 0; i < Argv.length; ++i)
          if ((s = Argv[i]).charAt(0) != '-') {
             if ((i = s.lastIndexOf('/')) >= 0 && !(i == 1 && s.charAt(0) == '.'))
@@ -59,42 +85,245 @@ public class PicoLisp {
          }
    }
 
-   final static String path(String s) {
-      if (s.charAt(0) == '+') {
-         if (s.charAt(1) == '@')
-            return "+" + Home + s.substring(1);
+   final static Any bye(int n) {
+      if (!B) {
+         B = true;
+         unwind(null);
+         Bye.Car.prog();
       }
-      else if (s.charAt(0) == '@')
-         return Home + s.substring(1);
+      System.exit(n);
+      return null;  /* Brain-dead Java */
+   }
+
+   final static long initSeed(Any x) {
+      long n;
+      for (n = 0; x instanceof Cell; x = x.Cdr)
+         n += initSeed(x.Car);
+      if (x != Nil) {
+         if (x instanceof Number && ((Number)x).Big == null)
+            n += ((Number)x).Cnt;
+         else {
+            byte b[] = x instanceof Symbol? x.name().getBytes() : ((Number)x).Big.toByteArray();
+            for (int i = 0; i < b.length; ++i)
+               n += b[i];
+         }
+      }
+      return n;
+   }
+
+   final static Any date(int y, int m, int d) {
+      int n;
+
+      if (m<1 || m>12 || d<1 || d>MonLen[m] && (m!=2 || d!=29 || y%4!=0 || y%100==0 && y%400!=0))
+         return Nil;
+      n = (12*y + m - 3) / 12;
+      return new Number((4404*y+367*m-1094)/12 - 2*n + n/4 - n/100 + n/400 + d);
+   }
+
+   final static Any date(int n) {
+      int y = (100*n - 20) / 3652425;
+      n += (y - y/4);
+      y = (100*n - 20) / 36525;
+      n -= 36525*y / 100;
+      int m = (10*n - 5) / 306;
+      int d = (10*n - 306*m + 5) / 10;
+      if (m < 10)
+         m += 3;
+      else {
+         ++y;
+         m -= 9;
+      }
+      return new Cell(new Number(y), new Cell(new Number(m), new Cell(new Number(d), Nil)));
+   }
+
+   final static Any time(Calendar cal) {
+      return new Number(cal.get(Calendar.HOUR_OF_DAY) * 3600 + cal.get(Calendar.MINUTE) * 60 + cal.get(Calendar.SECOND));
+   }
+
+   final static Any time(int h, int m, int s) {
+      if (h < 0 || h > 23  ||  m < 0 || m > 59  ||  s < 0 || s > 60)
+         return Nil;
+      return new Number(h * 3600 + m * 60 + s);
+   }
+
+   final static char firstChar(Any s) {
+      String nm = s.name();
+      return nm.length() == 0? '\0' : nm.charAt(0);
+   }
+
+   final static String path(String s) {
+      if (s.length() > 0)
+         if (s.charAt(0) == '+') {
+            if (s.length() > 1 && s.charAt(1) == '@')
+               return "+" + Home + s.substring(1);
+         }
+         else if (s.charAt(0) == '@')
+            return Home + s.substring(1);
       return s;
    }
 
-   final static void unwind(Catch p) {
-      /* ... */
+   final static void unwind(Catch target) {
+      int i, j, n;
+      Bind p;
+      Catch q;
+      Any x, y;
+      while ((q = Catch) != null) {
+         while ((p = Env.Bind) != null) {
+            if ((i = p.Eswp) != 0) {
+               j = i;  n = 0;
+               for (;;) {
+                  ++n;
+                  if (++j == 0 || (p = p.Link) == null)
+                     break;
+                  if (p.Eswp < i)
+                     --j;
+               }
+               do {
+                  for (p = Env.Bind, j = n; --j != 0; p = p.Link);
+                  if ((p.Eswp -= i) >= 0) {
+                     if (p.Eswp > 0)
+                        p.Eswp = 0;
+                     for (j = p.Cnt; (j -= 2) >= 0;) {
+                        y = p.Data[j+1];
+                        x = y.Car;  y.Car = p.Data[j];  p.Data[j] = x;
+                     }
+                  }
+               } while (--n != 0);
+            }
+            if (Env.Bind == q.Env.Bind)
+               break;
+            if (Env.Bind.Eswp == 0)
+               for (i = Env.Bind.Cnt; (i -= 2) >= 0;)
+                  Env.Bind.Data[i+1].Car = Env.Bind.Data[i];
+            Env.Bind = Env.Bind.Link;
+         }
+         while (Env.InFrames != q.Env.InFrames)
+            Env.popInFiles();
+         while (Env.OutFrames != q.Env.OutFrames)
+            Env.popOutFiles();
+         Env = q.Env;
+         q.Fin.eval();
+         Catch = q.Link;
+         if (q == target)
+            return;
+      }
+      while (Env.Bind != null) {
+         if (Env.Bind.Eswp == 0)
+            for (i = Env.Bind.Cnt; (i -= 2) >= 0;)
+               Env.Bind.Data[i+1].Car = Env.Bind.Data[i];
+         Env.Bind = Env.Bind.Link;
+      }
+      while (Env.InFrames != null)
+         Env.popInFiles();
+      while (Env.OutFrames != null)
+         Env.popOutFiles();
    }
 
-   final static Any err(Any ex, Any x, String msg) {
+   final static void error(Any ex, Any x, String msg) {
+      Up.Car = ex == null? Nil : ex;
+      if (msg.length() != 0) {
+         Msg.Car = mkStr(msg);
+         for (Catch p = Catch;  p != null;  p = p.Link) {
+            Any y = p.Tag;
+            if (y != null)
+               while (y instanceof Cell) {
+                  if (msg.indexOf(y.Car.name()) >= 0)
+                     throw new Control(ex, p.Tag, y.Car == Nil? Msg.Car : y.Car);
+                  y = y.Cdr;
+               }
+         }
+      }
+      Env.pushOutFile(new OutFrame(OutFiles[2], 0));
+      if (InFile.Name != null)
+         StdErr.Wr.print('[' + InFile.Name + ':' + InFile.Src  + "] ");
       if (ex != null) {
          StdErr.Wr.print("!? ");
          StdErr.print(ex);
          StdErr.newline();
       }
-      if (x != null)
-         msg = x + " -- " + msg;
-      throw new Error(msg);
+      if (x != null) {
+         StdErr.print(x);
+         StdErr.Wr.print(" -- ");
+      }
+      if (msg.length() != 0) {
+         StdErr.Wr.print(msg);
+         StdErr.newline();
+         if (Err.Car != Nil && !Jam) {
+            Jam = true;
+            Err.Car.prog();
+            Jam = false;
+         }
+         load(null, '?', Nil);
+      }
+      unwind(null);
+      Env.Args = null;
+      Env.Next = 0;
+      Env.Make = Env.Yoke = null;
    }
 
+   final static Any err(Any ex, Any x, String msg) {
+      error(ex, x, msg);
+      throw new Control();
+   }
+
+   final static Any brkLoad(Any x) {
+      if (!Break) {
+         Break = true;
+         OutFile.Wr.flush();
+         Brk = new Bind();
+         Brk.add(Up.Car);  Brk.add(Up);  Up.Car = x;
+         Brk.add(Run.Car);  Brk.add(Run);  Run.Car = Nil;
+         Brk.add(At.Car);  Brk.add(At);
+         Env.Bind = Brk;
+         Env.pushOutFile(new OutFrame(OutFiles[1], 0));
+         OutFile.print(x);
+         OutFile.newline();
+         load(null, '!', Nil);
+         Env.popOutFiles();
+         At.Car = Brk.Data[4];
+         Run.Car = Brk.Data[2];
+         x = Up.Car;
+         Up.Car = Brk.Data[0];
+         Env.Bind = Brk.Link;
+         Break = false;
+      }
+      return x;
+   }
+
+   final static void trace(int i, Any x, String s) {
+      if (i > 64)
+         i = 64;
+      while (--i >= 0)
+         StdErr.space();
+      if (x instanceof Symbol)
+         StdErr.print(x);
+      else {
+         StdErr.print(x.Car);
+         StdErr.space();
+         StdErr.print(x.Cdr);
+         StdErr.space();
+         StdErr.print(This.Car);
+      }
+      StdErr.Wr.print(s);
+   }
+
+   final static Any execError(Any x) {return err(null, x, "Can't execute");}
+   final static Any protError(Any x) {return err(null, x, "Protected symbol");}
+   final static Any symError(Any x) {return err(null, x, "Symbol expected");}
+   final static void needVar(Any ex, Any x) {if (x instanceof Number) err(ex, x, "Variable expected");}
+
+   final static void badFd(Any ex, Any x) {err(ex, x, "Bad FD");}
    final static void closeErr(IOException e) {err(null, null, e.toString());}
 
    final static Any load(Any ex, char pr, Any x) {
-      if (x instanceof Symbol && ((Symbol)x).firstChar() == '-')
+      if (x instanceof Symbol && firstChar(x) == '-')
          return ((Symbol)x).parse(true,null).eval();
-      Env.pushInFile(x.open(ex));
+      Env.pushInFile(x.rdOpen(ex));
       Transient.clear();
       x = Nil;
       for (;;) {
          Any y;
-         if (InFile != StdIn)
+         if (InFile.Name != null)
             y = InFile.read('\0');
          else {
             if (pr != '\0'  &&  InFile.Chr == 0) {
@@ -108,13 +337,13 @@ public class PicoLisp {
          }
          if (y == Nil)
             break;
-         if (InFile != StdIn || InFile.Chr != 0 || pr == '\0')
+         if (InFile.Name != null || InFile.Chr != 0 || pr == '\0')
             x = y.eval();
          else {
-            Any at = At.Val;
-            x = At.set(y.eval());
-            At3.set(At2.Val);
-            At2.set(at);
+            Any at = At.Car;
+            x = At.Car = y.eval();
+            At3.Car = At2.Car;
+            At2.Car = at;
             OutFile.Wr.print("-> ");
             OutFile.Wr.flush();
             OutFile.print(x);
@@ -122,13 +351,14 @@ public class PicoLisp {
          }
       }
       Env.popInFiles();
+      Transient.clear();
       return x;
    }
 
    final static Any loadAll(Any ex) {
       Any x = Nil;
       while (Argv.length > 0  &&  !Argv[0].equals("-")) {
-         x = load(ex, '\0', new Symbol(null, Argv[0]));
+         x = load(ex, '\0', mkStr(Argv[0]));
          String[] a = new String[Argv.length-1];
          System.arraycopy(Argv, 1, a, 0, a.length);
          Argv = a;
@@ -137,8 +367,6 @@ public class PicoLisp {
    }
 
    final static Any undefined(Any x, Any ex) {
-      OutFile.print(ex);  /* ... */
-      OutFile.newline();
       return err(ex, x, "Undefined");
    }
 
@@ -152,15 +380,163 @@ public class PicoLisp {
       return a;
    }
 
+   final static int allocPid() {
+      int i;
+      for (i = 2; Pids[i] != null; ++i) {
+         if (i == Pids.length) {
+            Process[] p = new Process[i*2];
+            System.arraycopy(Pids, 0, p, 0, i);
+            Pids = p;
+            break;
+         }
+      }
+      return i;
+   }
+
+   final static int allocFd() {
+      int i;
+      for (i = 3; InFiles[i] != null || OutFiles[i] != null; ++i) {
+         if (i == InFiles.length) {
+            PicoLispReader[] r = new PicoLispReader[i*2];
+            System.arraycopy(InFiles, 0, r, 0, i);
+            InFiles = r;
+            PicoLispWriter[] w = new PicoLispWriter[i*2];
+            System.arraycopy(OutFiles, 0, w, 0, i);
+            OutFiles = w;
+            break;
+         }
+      }
+      return i;
+   }
+
+   final static Any mkChar(char c) {return new Symbol(null, "" + c);}
+   final static Any mkStr(String nm) {return nm == null || nm.length() == 0? Nil : new Symbol(null, nm);}
+   final static Any mkStr(StringBuilder sb) {return mkStr(sb.toString());}
    final static Symbol mkSymbol(Any val) {return new Symbol(val, null);}
 
-   final static Symbol mkSymbol(Any val, String name, HashMap<String,Symbol> table) {
+   final static Symbol mkSymbol(Any val, String nm, HashMap<String,Symbol> table) {
       Symbol sym;
-      if ((sym = table.get(name)) == null) {
-         sym = new Symbol(val, name);
-         table.put(name, sym);
+      if ((sym = table.get(nm)) == null) {
+         sym = new Symbol(val, nm);
+         table.put(nm, sym);
       }
       return sym;
+   }
+
+   final static Any strToNum(String s, int scl) throws NumberFormatException {
+      if (s.length() != 0 && s.charAt(0) == '+')
+         s = s.substring(1);
+      if (s.indexOf('.') <= 0)
+         return new Number(s);
+      return new Number((new BigDecimal(s)).setScale(scl, RoundingMode.HALF_UP).unscaledValue());
+   }
+
+   final static Any strToAtom(String s) {
+      if (s.equals("NIL"))
+         return Nil;
+      try {return strToNum(s, ((Number)Scl.Car).Cnt);}
+      catch (NumberFormatException e) {return mkSymbol(Nil, s, Intern);}
+   }
+
+   final static Any format(Any z, int scl, Any x) {
+      char sep = '.', ign = '\0';
+      if (x instanceof Cell) {
+         sep = firstChar(x.Car.eval());
+         if ((x = x.Cdr) instanceof Cell)
+            ign = firstChar(x.Car.eval());
+      }
+      StringBuilder sb = new StringBuilder();
+      if (z instanceof Number) {
+         String s = z.toString();
+         if (s.charAt(0) == '-') {
+            sb.append('-');
+            s = s.substring(1);
+         }
+         if ((scl = s.length() - scl - 1) < 0) {
+            sb.append('0');
+            sb.append(sep);
+            while (scl < -1) {
+               sb.append('0');
+               ++scl;
+            }
+         }
+         for (int i = 0;;) {
+            sb.append(s.charAt(i++));
+            if (i == s.length())
+               return mkStr(sb);
+            if (scl == 0)
+               sb.append(sep);
+            else if (ign != '\0'  &&  scl > 0  &&  scl % 3 == 0)
+               sb.append(ign);
+            --scl;
+         }
+      }
+      String s = z.name();
+      for (int i = 0; i < s.length(); ++i) {
+         char c = s.charAt(i);
+         if (c != ign)
+            sb.append(c == sep? '.' : c);
+      }
+      try {return strToNum(sb.toString(), scl);}
+      catch (NumberFormatException e) {return Nil;}
+   }
+
+   final static Any token(Any x, char c) {
+      if (InFile.Chr == 0)
+         InFile.get();
+      if (InFile.skip(c) < 0)
+         return null;
+      if (InFile.Chr == '"') {
+         InFile.get();
+         if (InFile.Chr == '"') {
+            InFile.get();
+            return Nil;
+         }
+         if (!InFile.testEsc())
+            return Nil;
+         StringBuilder sb = new StringBuilder();
+         sb.append((char)InFile.Chr);
+         while (InFile.get() != '"' && InFile.testEsc())
+            sb.append((char)InFile.Chr);
+         InFile.get();
+         return mkStr(sb);
+      }
+      if (InFile.Chr >= '0' && InFile.Chr <= '9') {
+         StringBuilder sb = new StringBuilder();
+         sb.append((char)InFile.Chr);
+         while (InFile.get() >= '0' && InFile.Chr <= '9' || InFile.Chr == '.')
+            sb.append((char)InFile.Chr);
+         return strToAtom(sb.toString());
+      }
+      String s = x.name();
+      if (InFile.Chr >= 'A' && InFile.Chr <= 'Z' || InFile.Chr == '\\' || InFile.Chr >= 'a' && InFile.Chr <= 'z' || s.indexOf(InFile.Chr) >= 0) {
+         if (InFile.Chr == '\\')
+            InFile.get();
+         StringBuilder sb = new StringBuilder();
+         sb.append((char)InFile.Chr);
+         while (InFile.get() >= '0' && InFile.Chr <= '9' || InFile.Chr >= 'A' && InFile.Chr <= 'Z' || InFile.Chr == '\\' || InFile.Chr >= 'a' && InFile.Chr <= 'z' || s.indexOf(InFile.Chr) >= 0) {
+            if (InFile.Chr == '\\')
+               InFile.get();
+            sb.append((char)InFile.Chr);
+         }
+         s = sb.toString();
+         return s.equals("NIL")? Nil : mkSymbol(Nil, s, Intern);
+      }
+      return mkChar((char)InFile.get());
+   }
+
+   final static Any fish(Any ex, Any foo, Any[] v, Any res) {
+      if (foo.apply(ex, false, v, 1) != Nil)
+         return new Cell(v[0], res);
+      if (v[0] instanceof Cell) {
+         Any x = v[0];
+         if ((v[0] = x.Cdr) != Nil)
+            res = fish(ex, foo, v, res);
+         v[0] = x.Car;
+         res = fish(ex, foo, v, res);
+         v[0] = x;
+      }
+      return res;
    }
 
    final static Any all(HashMap<String,Symbol> table) {
@@ -170,56 +546,85 @@ public class PicoLisp {
       return x;
    }
 
-   final static void redefMsg(Any x, Any y) {
-      /* ... */
-      OutFile.Wr.print("# ");
-      OutFile.print(x);
-      if (y != null) {
-         OutFile.space();
-         OutFile.print(y);
-      }
-      OutFile.Wr.println(" redefined");
+   final static Any meta(Any x, Any y) {
+      Any z;
+      for (; x instanceof Cell; x = x.Cdr)
+         if (x.Car instanceof Symbol && ((z = x.Car.get(y)) != Nil || (z = meta(x.Car.Car, y)) != Nil))
+            return z;
+      return Nil;
    }
 
-   final static void putSrc(Any s, Any k) {
-      if (Dbg.Val != Nil && InFile != null && InFile.Name != null) {
-         Any x = new Cell(new Number(InFile.Src+1), mkSymbol(null, InFile.Name, Transient));
+   final static boolean isa(Any cls, Any x) {
+      Any z;
+      z = x = x.Car;
+      while (x instanceof Cell) {
+         if (!(x.Car instanceof Cell)) {
+            while (x.Car instanceof Symbol) {
+               if (cls == x.Car || isa(cls, x.Car))
+                  return true;
+               if (!((x = x.Cdr) instanceof Cell) || z == x)
+                  return false;
+            }
+            return false;
+         }
+         if (z == (x = x.Cdr))
+            return false;
+      }
+      return false;
+   }
+
+   final static void redefMsg(Any x, Any y) {
+      StdErr.Wr.print("# ");
+      StdErr.print(x);
+      if (y != null) {
+         StdErr.space();
+         StdErr.print(y);
+      }
+      StdErr.Wr.println(" redefined");
+      StdErr.Wr.flush();
+   }
+
+   final static void putSrc(Symbol s, Any k) {
+      if (Dbg.Car != Nil && InFile != null && InFile.Name != null) {
+         Any x = new Cell(new Number(InFile.Src), mkSymbol(null, InFile.Name, Transient));
          Any y = s.get(Dbg);
          if (k == null) {
             if (y == Nil)
                s.put(Dbg, new Cell(x, Nil));
             else
-               ((Cell)y).Car = x;
+               y.Car = x;
          }
          else if (y == Nil)
             s.put(Dbg, new Cell(Nil, new Cell(x, Nil)));
          else {
-            for (Any z = y.cdr(); z instanceof Cell; z = z.cdr())
-               if (z.car().car() == k) {
-                  ((Cell)z.car()).Cdr = x;
+            for (Any z = y.Cdr; z instanceof Cell; z = z.Cdr)
+               if (z.Car.Car == k) {
+                  z.Car.Cdr = x;
                   return;
                }
-            ((Cell)y).Cdr = new Cell(new Cell(k, x), y.cdr());
+            y.Cdr = new Cell(new Cell(k, x), y.Cdr);
          }
       }
    }
 
-   final static void redefine(Any ex, Symbol s, Any x) {
-      if (s.car() != Nil  &&  s != s.car()  &&  !equal(x, s.car()))
+   final static void redefine(Symbol s, Any x) {
+      if (s.Car != Nil  &&  s != s.Car  &&  !x.equal(s.Car))
          redefMsg(s, null);
-      s.Val = x;
+      s.Car = x;
       putSrc(s, null);
    }
 
-   final static int evInt(Any x) {return ((Number)x.car().eval()).intValue();}
-   final static long evLong(Any x) {return ((Number)x.car().eval()).longValue();}
+   final static int xInt(Any x) {return ((Number)x).Cnt;}
+   final static int evInt(Any ex) {return ((Number)ex.Car.eval()).Cnt;}
+   final static long evLong(Any ex) {return ((Number)ex.Car.eval()).longValue();}
+   final static String evString(Any ex) {return ex.Car.eval().name();}
 
    final static Any circ(Any x) {
       int m = 0;
       Any[] mark = new Any[12];
       for (;;) {
          mark = append(mark, m++, x);
-         if (!((x = x.cdr()) instanceof Cell))
+         if (!((x = x.Cdr) instanceof Cell))
             return null;
          for (int i = 0; i < m; ++i)
             if (mark[i] == x)
@@ -227,103 +632,365 @@ public class PicoLisp {
       }
    }
 
-   final static boolean equal(Any x, Any y) {
-      for (;;) {
-         if (x == y)
-            return true;
-         if (x == Nil || y == Nil)
+   final static Any fill(Any x, Any s) {
+      Any y, z;
+      if (x instanceof Number || x == Nil)
+         return null;
+      if (x instanceof Symbol)
+         return (s==Nil? x!=At && firstChar(x)=='@' : memq(x,s)!=null)? x.Car : null;
+      if ((y = fill(x.Car, s)) != null) {
+         z = fill(x.Cdr, s);
+         return new Cell(y, z == null? x.Cdr : z);
+      }
+      if ((y = fill(x.Cdr, s)) != null)
+         return new Cell(x.Car, y);
+      return null;
+   }
+
+   final static boolean isBlank(Any x) {
+      if (x != Nil) {
+         if (!(x instanceof Symbol))
             return false;
-         if (x instanceof Number)
-            return x.equals(y);
-         if (x instanceof Symbol)
-            return y instanceof Symbol  &&  ((Symbol)x).Name.equals(((Symbol)y).Name);
-         if (!(y instanceof Cell))
-            return false;
-         while (x.car() == Quote) {
-            if (y.car() != Quote)
-               return false;
-            if (x == x.cdr())
-               return y == y.cdr();
-            if (y == y.cdr())
-               return false;
-            if (!((x = x.cdr()) instanceof Cell))
-               return equal(x, y.cdr());
-            if (!((y = y.cdr()) instanceof Cell))
-               return false;
+         String s = x.name();
+         if (s != null)
+            for (int i = 0; i < s.length(); ++i)
+               if (s.charAt(i) > ' ')
+                  return false;
+      }
+      return true;
+   }
+
+   final static Any funq(Any x) {
+      Any y;
+      if (x instanceof Symbol)
+         return Nil;
+      if (x instanceof Number)
+         return ((Number)x).Big == null && ((Number)x).Cnt <= MaxFun? x : Nil;
+      for (y = x.Cdr; y instanceof Cell; y = y.Cdr) {
+         if (y == x)
+            return Nil;
+         if (y.Car instanceof Cell) {
+            if (y.Car.Car instanceof Number) {
+               if (y.Cdr instanceof Cell)
+                  return Nil;
+            }
+            else if (y.Car.Car == Nil || y.Car.Car == T)
+               return Nil;
          }
-         Any a = x;
-         Any b = y;
-         for (;;) {
-            if (!equal(x.car(), y.car()))
-               return false;
-            if (!((x = x.cdr()) instanceof Cell))
-               return equal(x, y.cdr());
-            if (!((y = y.cdr()) instanceof Cell))
-               return false;
-            if (x == a)
-               return y == b;
-            if (y == b)
-               return false;
+         else if (y.Cdr != Nil)
+            return Nil;
+      }
+      if (y != Nil)
+         return Nil;
+      if ((x = x.Car) == Nil)
+         return T;
+      for (y = x; y instanceof Cell;)
+         if (y.Car instanceof Number || y.Car instanceof Cell || y.Car == Nil || y.Car == T || x == (y = y.Cdr))
+            return Nil;
+      return y instanceof Number || y == T? Nil : x;
+   }
+
+   final static Any trim(Any x) {
+      Any y;
+      if (!(x instanceof Cell))
+         return x;
+      if ((y = trim(x.Cdr)) == Nil && isBlank(x.Car))
+         return Nil;
+      return new Cell(x.Car, y);
+   }
+
+   final static Any nCdr(int n, Any x) {
+      while (--n >= 0)
+         x = x.Cdr;
+      return x;
+   }
+
+   final static Any nth(int n, Any x) {
+      if (--n < 0)
+         return Nil;
+      return nCdr(n,x);
+   }
+
+   final static Any sort(Any ex, Any lst, Any foo) {
+      Any x = lst, l = Nil, r = Nil, c = Nil;
+      do {
+         int i = foo == Nil? lst.Car.compare(x.Car) : foo.apply(ex, false, new Any[] {x.Car, lst.Car}, 2) == Nil? -1 : 1;
+         if (i > 0)
+            l = new Cell(x.Car, l);
+         else if (i < 0)
+            r = new Cell(x.Car, r);
+         else
+            c = new Cell(x.Car, c);
+      } while ((x = x.Cdr) instanceof Cell);
+      if ((lst = l) instanceof Cell) {
+         if (l.Cdr instanceof Cell)
+            for (lst = l = sort(ex, l, foo); (l = l.Cdr).Cdr instanceof Cell;);
+         if (c instanceof Cell)
+            for (l.Cdr = c; (l = l.Cdr).Cdr instanceof Cell;);
+      }
+      else if ((lst = c) instanceof Cell)
+         for (l = c; l.Cdr instanceof Cell; l = l.Cdr);
+      else
+         return sort(ex, r, foo);
+      if (r instanceof Cell)
+         l.Cdr = r.Cdr instanceof Cell? sort(ex, r, foo) : r;
+      return lst;
+   }
+
+   final static Any consIdx(Any x, Any y) {
+      if (x.Cdr.Cdr instanceof Cell)
+         y = consIdx(x.Cdr.Cdr, y);
+      y = new Cell(x.Car, y);
+      return x.Cdr.Car instanceof Cell? consIdx(x.Cdr.Car, y) : y;
+   }
+
+   final static Any idx(Any var, Any key, int flg) {
+      Any x, y, z, p, tree, tos;
+      boolean ad;
+      int i;
+      if (key == null)
+         return var.Car instanceof Cell? consIdx(var.Car, Nil) : Nil;
+      if (!((x = var.Car) instanceof Cell)) {
+         if (flg > 0)
+            var.Car = new Cell(key, Nil);
+         return Nil;
+      }
+      p = var;
+      ad = true;
+      for (;;) {
+         if ((i = key.compare(x.Car)) == 0) {
+            if (flg < 0) {
+               if (!(x.Cdr.Car instanceof Cell)) {
+                  if (ad)
+                     p.Car = x.Cdr.Cdr;
+                  else
+                     p.Cdr = x.Cdr.Cdr;
+               }
+               else if (!((y = x.Cdr.Cdr) instanceof Cell)) {
+                  if (ad)
+                     p.Car = x.Cdr.Car;
+                  else
+                     p.Cdr = x.Cdr.Car;
+               }
+               else if (!((z = y.Cdr.Car) instanceof Cell)) {
+                  x.Car = y.Car;
+                  x.Cdr.Cdr = y.Cdr.Cdr;
+               }
+               else {
+                  while (z.Cdr.Car instanceof Cell)
+                     z = (y = z).Cdr.Car;
+                  x.Car = z.Car;
+                  y.Cdr.Car = z.Cdr.Cdr;
+               }
+            }
+            return x;
+         }
+         if (!(x.Cdr instanceof Cell)) {
+            if (flg > 0)
+               x.Cdr = i < 0? new Cell(new Cell(key, Nil), Nil) : new Cell(Nil, new Cell(key, Nil));
+            return Nil;
+         }
+         if (i < 0) {
+            if (!(x.Cdr.Car instanceof Cell)) {
+               if (flg > 0)
+                  x.Cdr.Car = new Cell(key, Nil);
+               return Nil;
+            }
+            p = x.Cdr;  ad = true;
+            x = p.Car;
+         }
+         else {
+            if (!(x.Cdr.Cdr instanceof Cell)) {
+               if (flg > 0)
+                  x.Cdr.Cdr = new Cell(key, Nil);
+               return Nil;
+            }
+            p = x.Cdr;  ad = false;
+            x = p.Cdr;
          }
       }
    }
 
-   final static int compare(Any x, Any y) {
-      if (x == y)
-         return 0;
-      if (x == Nil)
-         return -1;
-      if (x == T)
-         return +1;
-      if (x instanceof Number) {
-         if (!(y instanceof Number))
-            return y == Nil? +1 : -1;
-         return ((Number)x).compareTo((Number)y);
+   final static Any consLup(Any x, Any y, Any from, Any to) {
+      if (x instanceof Cell) {
+         if (x.Car == T)
+            return consLup(x.Cdr.Car, y, from, to);
+         if (!(x.Car instanceof Cell))
+            return consLup(x.Cdr.Cdr, y, from, to);
+         if (to.compare(x.Car.Car) >= 0) {
+            y = consLup(x.Cdr.Cdr, y, from, to);
+            if (from.compare(x.Car.Car) <= 0) {
+               y = new Cell(x.Car, y);
+               return consLup(x.Cdr.Car, y, from, to);
+            }
+         }
+         if (from.compare(x.Car.Car) <= 0)
+            return consLup(x.Cdr.Car, y, from, to);
       }
-      if (x instanceof Symbol) {
-         if (y instanceof Number || y == Nil)
-            return +1;
-         if (y instanceof Cell || y == T)
-            return -1;
-         String a = ((Symbol)x).Name;
-         String b = ((Symbol)y).Name;
-         if (a == null)
-            return b == null? x.hashCode() - y.hashCode() : -1;
-         if (b == null)
-            return +1;
-         return a.compareTo(b);
+      return y;
+   }
+
+   final static Any member(Any x, Any y) {
+      Any z = y;
+
+      while (y instanceof Cell) {
+         if (x.equal(y.Car))
+            return y;
+         if (z == (y = y.Cdr))
+            return null;
       }
-      if (!(y instanceof Cell))
-         return y == T? -1 : +1;
-      Any a = x;
-      Any b = y;
-      for (;;) {
-         int n;
-         if ((n = compare(x.car(), y.car())) != 0)
-            return n;
-         if (!((x = x.cdr()) instanceof Cell))
-            return compare(x, y.cdr());
-         if (!((y = y.cdr()) instanceof Cell))
-            return y == T? -1 : +1;
-         if (x == a && y == b)
+      return y == Nil || !x.equal(y)? null : y;
+   }
+
+   final static Any memq(Any x, Any y) {
+      Any z = y;
+
+      while (y instanceof Cell) {
+         if (x == y.Car)
+            return y;
+         if (z == (y = y.Cdr))
+            return null;
+      }
+      return y == Nil || x != y? null : y;
+   }
+
+   final static int indx(Any x, Any y) {
+      int i = 1;
+      Any z = y;
+
+      while (y instanceof Cell) {
+         if (x.equal(y.Car))
+            return i;
+         ++i;
+         if (z == (y = y.Cdr))
             return 0;
       }
+      return 0;
    }
 
-   final static Any evRun(boolean ev, Any ex, int cnt, Any lst) {
+   final static boolean match(Any p, Any d) {
+      Any x;
+      for (;;) {
+         if (!(p instanceof Cell)) {
+            if (p instanceof Symbol  &&  firstChar(p) == '@') {
+               p.Car = d;
+               return true;
+            }
+            return p.equal(d);
+         }
+         if ((x = p.Car) instanceof Symbol  &&  firstChar(x) == '@') {
+            if (!(d instanceof Cell)) {
+               if (d.equal(p.Cdr)) {
+                  x.Car = Nil;
+                  return true;
+               }
+               return false;
+            }
+            if (match(p.Cdr, d.Cdr)) {
+               x.Car = new Cell(d.Car, Nil);
+               return true;
+            }
+            if (match(p.Cdr, d)) {
+               x.Car = Nil;
+               return true;
+            }
+            if (match(p, d.Cdr)) {
+               x.Car = new Cell(d.Car, x.Car);
+               return true;
+            }
+         }
+         if (!(d instanceof Cell) || !match(x, d.Car))
+            return false;
+         p = p.Cdr;
+         d = d.Cdr;
+      }
+   }
+
+   final static boolean unify(Number n1, Any x1, Number n2, Any x2) {
+      lookup1:
+      while (x1 instanceof Symbol  &&  firstChar(x1) == '@') {
+         for (Any x = Penv;  x.Car instanceof Cell;  x = x.Cdr)
+            if (n1.Cnt == ((Number)x.Car.Car.Car).Cnt  &&  x1 == x.Car.Car.Cdr) {
+               n1 = (Number)x.Car.Cdr.Car;
+               x1 = x.Car.Cdr.Cdr;
+               continue lookup1;
+            }
+         break;
+      }
+      lookup2:
+      while (x2 instanceof Symbol  &&  firstChar(x2) == '@') {
+         for (Any x = Penv;  x.Car instanceof Cell;  x = x.Cdr)
+            if (n2.Cnt == ((Number)x.Car.Car.Car).Cnt  &&  x2 == x.Car.Car.Cdr) {
+               n2 = (Number)x.Car.Cdr.Car;
+               x2 = x.Car.Cdr.Cdr;
+               continue lookup2;
+            }
+         break;
+      }
+      if (n1.Cnt == n2.Cnt  &&  x1.equal(x2))
+         return true;
+      if (x1 instanceof Symbol  &&  firstChar(x1) == '@') {
+         if (x1 != At) {
+            Penv = new Cell(new Cell(new Cell(n1,x1), Nil), Penv);
+            Penv.Car.Cdr = new Cell(n2,x2);
+         }
+         return true;
+      }
+      if (x2 instanceof Symbol  &&  firstChar(x2) == '@') {
+         if (x2 != At) {
+            Penv = new Cell(new Cell(new Cell(n2,x2), Nil), Penv);
+            Penv.Car.Cdr = new Cell(n1,x1);
+         }
+         return true;
+      }
+      if (!(x1 instanceof Cell) || !(x2 instanceof Cell))
+         return x1.equal(x2);
+      Any env = Penv;
+      if (unify(n1, x1.Car, n2, x2.Car)  &&  unify(n1, x1.Cdr, n2, x2.Cdr))
+         return true;
+      Penv = env;
+      return false;
+   }
+
+   final static Any lup(Number n, Any x) {
+      lup:
+      while (x instanceof Symbol  &&  firstChar(x) == '@') {
+         for (Any y = Penv;  y.Car instanceof Cell;  y = y.Cdr)
+            if (n.Cnt == ((Number)y.Car.Car.Car).Cnt  &&  x == y.Car.Car.Cdr) {
+               n = (Number)y.Car.Cdr.Car;
+               x = y.Car.Cdr.Cdr;
+               continue lup;
+            }
+         break;
+      }
+      return x instanceof Cell? new Cell(lup(n, x.Car), lup(n, x.Cdr)) : x;
+   }
+
+   final static Any lookup(Number n, Any x) {
+      return (x = lup(n,x)) instanceof Symbol && firstChar(x) == '@'?  Nil : x;
+   }
+
+   final static Any uniFill(Any x) {
+      if (x instanceof Number)
+         return x;
+      if (x instanceof Symbol)
+         return lup((Number)Pnl.Car, x);
+      return new Cell(uniFill(x.Car), uniFill(x.Cdr));
+   }
+
+   final static Any evRun(boolean ev, Any x, int cnt, Any lst) {
       int i, j = cnt, n = 0;
-      Bind bnd = Env.Bind;
-      Symbol sym;
-      Any y, z;
+      Bind b, bnd = Env.Bind;
+      Any s, y, z;
       do {
          ++n;
          i = bnd.Eswp;
          bnd.Eswp -= cnt;
          if (i == 0) {
             for (i = 0; i < bnd.Cnt; i+= 2) {
-               sym = (Symbol)bnd.Data[i+1];
-               y = sym.Val;
-               sym.Val = bnd.Data[i];
+               s = bnd.Data[i+1];
+               y = s.Car;
+               s.Car = bnd.Data[i];
                bnd.Data[i] = y;
             }
             if (bnd.Data[1] == At && --j == 0)
@@ -331,37 +998,37 @@ public class PicoLisp {
          }
       } while ((bnd = bnd.Link) != null);
       if (!(lst instanceof Cell))
-         z = ev? ex.eval() : ex.run();
+         z = ev? x.eval() : x.run();
       else {
          bnd = new Bind();
          do {
-            sym = (Symbol)lst.car();
-            bnd.add(sym.Val);
-            bnd.add(sym);
+            s = lst.Car;
+            bnd.add(s.Car);
+            bnd.add(s);
          exclude:
-            for (bnd = Env.Bind, j = n; ;) {
-               for (i = 0; i < bnd.Cnt; i+= 2)
-                  if (sym == bnd.Data[i+1]) {
-                     sym.Val = bnd.Data[i];
+            for (b = Env.Bind, j = n; ;) {
+               for (i = 0; i < b.Cnt; i+= 2)
+                  if (s == b.Data[i+1]) {
+                     s.Car = b.Data[i];
                      break exclude;
                   }
-               if (--j == 0 || (bnd = bnd.Link) == null)
+               if (--j == 0 || (b = b.Link) == null)
                   break;
             }
-         } while ((lst = lst.cdr()) instanceof Cell);
+         } while ((lst = lst.Cdr) instanceof Cell);
          Env.Bind = bnd;
-         z = ev? ex.eval() : ex.run();
+         z = ev? x.eval() : x.run();
          for (i = bnd.Cnt; (i -= 2) >= 0;)
-            ((Symbol)bnd.Data[i+1]).Val = bnd.Data[i];
+            bnd.Data[i+1].Car = bnd.Data[i];
          Env.Bind = bnd.Link;
       }
       do {
          for (bnd = Env.Bind, i = n; --i != 0; bnd = bnd.Link);
          if ((bnd.Eswp += cnt) == 0)
             for (i = bnd.Cnt; (i -= 2) >= 0;) {
-               sym = (Symbol)bnd.Data[i+1];
-               y = sym.Val;
-               sym.Val = bnd.Data[i];
+               s = bnd.Data[i+1];
+               y = s.Car;
+               s.Car = bnd.Data[i];
                bnd.Data[i] = y;
             }
       } while (--n > 0);
@@ -370,35 +1037,35 @@ public class PicoLisp {
 
    final static Any evMethod(Any o, Any ex, Any x) {
       int i;
-      Any t, y = ex.car();
-      Any cls = TheCls;  Any key = TheKey;
-      Bind bnd = new Bind();  bnd.add(At.Val);  bnd.add(At);
+      Any y = ex.Car;
+      Any cls = TheCls,  key = TheKey;
+      Bind bnd = new Bind();  bnd.add(At.Car);  bnd.add(At);
       while (y instanceof Cell) {
-         bnd.add(x.car().eval());  // Save new value
-         bnd.add(y.car());  // and symbol
-         x = x.cdr();
-         y = y.cdr();
+         bnd.add(x.Car.eval());  // Save new value
+         bnd.add(y.Car);  // and symbol
+         x = x.Cdr;
+         y = y.Cdr;
       }
       if (y == Nil || y != At) {
          i = bnd.Cnt;
          if (y != Nil) {
-            bnd.add(y.car());  // Save old value
+            bnd.add(y.Car);  // Save old value
             bnd.add(y);  // and symbol
-            y.set(x);  // Set new value
+            y.Car = x;  // Set new value
          }
          do {
-            Symbol sym = (Symbol)bnd.Data[--i];
-            x = sym.Val;
-            sym.Val = bnd.Data[--i];  // Set new value
+            y = bnd.Data[--i];
+            x = y.Car;
+            y.Car = bnd.Data[--i];  // Set new value
             bnd.Data[i] = x;  // Save old value
          } while (i > 0);
-         bnd.add(This.Val);
+         bnd.add(This.Car);
          bnd.add(This);
-         This.Val = o;
+         This.Car = o;
          Env.Bind = bnd;
-         t = cls;  cls = Env.Cls;  Env.Cls = t;
-         t = key;  key = Env.Key;  Env.Key = t;
-         x = ex.cdr().prog();
+         y = cls;  cls = Env.Cls;  Env.Cls = y;
+         y = key;  key = Env.Key;  Env.Key = y;
+         x = ex.Cdr.prog();
       }
       else {
          int next, argc, j = 0;
@@ -406,8 +1073,8 @@ public class PicoLisp {
          if (x instanceof Cell) {
             av = new Any[6];
             do
-               av = append(av, j++, x.car().eval());
-            while ((x = x.cdr()) instanceof Cell);
+               av = append(av, j++, x.Car.eval());
+            while ((x = x.Cdr) instanceof Cell);
          }
          next = Env.Next;  Env.Next = 0;
          argc = Env.ArgC;  Env.ArgC = j;
@@ -415,73 +1082,127 @@ public class PicoLisp {
          args = Env.Args;  Env.Args = av;
          i = bnd.Cnt;
          do {
-            Symbol sym = (Symbol)bnd.Data[--i];
-            x = sym.Val;
-            sym.Val = bnd.Data[--i];  // Set new value
+            y = bnd.Data[--i];
+            x = y.Car;
+            y.Car = bnd.Data[--i];  // Set new value
             bnd.Data[i] = x;  // Save old value
          } while (i > 0);
-         bnd.add(This.Val);
+         bnd.add(This.Car);
          bnd.add(This);
-         This.Val = o;
+         This.Car = o;
          Env.Bind = bnd;
-         t = cls;  cls = Env.Cls;  Env.Cls = t;
-         t = key;  key = Env.Key;  Env.Key = t;
-         x = ex.cdr().prog();
+         y = cls;  cls = Env.Cls;  Env.Cls = y;
+         y = key;  key = Env.Key;  Env.Key = y;
+         x = ex.Cdr.prog();
          Env.Args = args;
          Env.Arg = arg;
       }
       for (i = bnd.Cnt; (i -= 2) >= 0;)
-         ((Symbol)bnd.Data[i+1]).Val = bnd.Data[i];
-      Env.Cls = cls;  Env.Key = key;
+         bnd.Data[i+1].Car = bnd.Data[i];
       Env.Bind = bnd.Link;
+      Env.Cls = cls;  Env.Key = key;
       return x;
    }
 
    final static Any method(Any x) {
       Any y, z;
-
-      if ((y = ((Symbol)x).Val) instanceof Cell) {
-         while ((z = y.car()) instanceof Cell) {
-            if (z.car() == TheKey)
-               return z.cdr();
-            if (!((y = y.cdr()) instanceof Cell))
+      if ((y = x.Car) instanceof Cell) {
+         while ((z = y.Car) instanceof Cell) {
+            if (z.Car == TheKey)
+               return z.Cdr;
+            if (!((y = y.Cdr) instanceof Cell))
                return null;
          }
          do
-            if ((x = method((TheCls = y).car())) != null)
+            if ((x = method((TheCls = y).Car)) != null)
                return x;
-         while ((y = y.cdr()) instanceof Cell);
+         while ((y = y.Cdr) instanceof Cell);
       }
       return null;
    }
 
+   final static Any extra(Any x) {
+      Any y;
+      for (x = x.Car; x.Car instanceof Cell; x = x.Cdr);
+      while (x instanceof Cell) {
+         if (x == Env.Cls  ||  (y = extra(x.Car)) == null) {
+            while ((x = x.Cdr) instanceof Cell)
+               if ((y = method((TheCls = x).Car)) != null)
+                  return y;
+            return null;
+         }
+         if (y != null  &&  y != T)
+            return y;
+         x = x.Cdr;
+      }
+      return T;
+   }
+
+   final static Any loop(Any x) {
+      Any a, y, z;
+      for (;;) {
+         y = x;
+         do {
+            if ((z = y.Car) instanceof Cell) {
+               if (z.Car == Nil) {
+                  if ((a = (z = z.Cdr).Car.eval()) == Nil)
+                     return z.Cdr.prog();
+                  At.Car = a;
+               }
+               else if (z.Car == T) {
+                  if ((a = (z = z.Cdr).Car.eval()) != Nil) {
+                     At.Car = a;
+                     return z.Cdr.prog();
+                  }
+               }
+               else
+                  z.eval();
+            }
+         } while ((y = y.Cdr) instanceof Cell);
+      }
+   }
+
    /* Ersatz PicoLisp Reader */
+   final static class InFrame {
+      InFrame Link;
+      PicoLispReader Rd;
+      int Pid;
+
+      InFrame(PicoLispReader rd, int pid) {
+         Link = Env.InFrames;
+         Rd = rd;
+         Pid = pid;
+      }
+   }
+
    final static class PicoLispReader {
-      PicoLispReader Link;
       LineNumberReader Rd;
       String Name;
       char Eof1, Eof2;
-      int Chr, Src;
+      int Fd, Chr, Src;
 
-      PicoLispReader(Reader rd, String name) {
+      PicoLispReader(Reader rd, String nm, int fd) {
          Rd = new LineNumberReader(rd);
-         Name = name;
+         Name = nm;
+         if (fd < 0)
+            fd = allocFd();
+         InFiles[Fd = fd] = this;
       }
 
-      PicoLispReader(InputStream in) {
-         this(new InputStreamReader(in), null);
+      PicoLispReader(InputStream in, int fd) {
+         this(new InputStreamReader(in), null, fd);
       }
 
       PicoLispReader(String s, char eof1, char eof2) {
-         this(new StringReader(s), null);
+         this(new StringReader(s), null, -1);
          Eof1 = eof1;
          Eof2 = eof2;
       }
 
       final void close() {
          try {
-            if (this != StdIn)
-               Rd.close();
+            InFiles[Fd] = null;
+            Rd.close();
          }
          catch (IOException e) {closeErr(e);}
       }
@@ -491,9 +1212,9 @@ public class PicoLisp {
       final int get() {
          try {
             if ((Chr = Rd.read()) < 0) {
-               if ((Chr = Eof1) != '\0')
+               if ((Chr = Eof1) != 0)
                   Eof1 = '\0';
-               else if ((Chr = Eof2) != '\0')
+               else if ((Chr = Eof2) != 0)
                   Eof2 = '\0';
                else
                   Chr = -1;
@@ -501,6 +1222,22 @@ public class PicoLisp {
             return Chr;
          }
          catch (IOException e) {return -1;}
+      }
+
+      final boolean eol() {
+         if (Chr < 0)
+            return true;
+         if (Chr == '\n') {
+            Chr = 0;
+            return true;
+         }
+         if (Chr == '\r') {
+            get();
+            if (Chr == '\n')
+               Chr = 0;
+            return true;
+         }
+         return false;
       }
 
       final int skip(int c) {
@@ -566,13 +1303,7 @@ public class PicoLisp {
             sb.append((char)Chr);
             get();
          }
-         String s = sb.toString();
-         if (s.equals("NIL"))
-            return Nil;
-         try {return new Number(s);}
-         catch (NumberFormatException e) {
-            return mkSymbol(Nil, s, Intern);
-         }
+         return strToAtom(sb.toString());
       }
 
       final Any rdList() {
@@ -591,8 +1322,8 @@ public class PicoLisp {
             }
             get();
             if ((res = x = read0(false).eval()) instanceof Cell) {
-               while (x.cdr() instanceof Cell)
-                  x = x.cdr();
+               while (x.Cdr instanceof Cell)
+                  x = x.Cdr;
                break;
             }
          }
@@ -606,22 +1337,22 @@ public class PicoLisp {
             if (Chr == '.') {
                get();
                if (Delim.indexOf(Chr) >= 0) {
-                  ((Cell)x).Cdr = skip('#')==')' || Chr==']'? res : read0(false);
+                  x.Cdr = skip('#')==')' || Chr==']'? res : read0(false);
                   if (skip('#') == ')')
                      get();
                   else if (Chr != ']')
                      err(null, x, "Bad dotted pair");
                   break;
                }
-               x = ((Cell)x).Cdr = new Cell(rdAtom('.'), Nil);
+               x = x.Cdr = new Cell(rdAtom('.'), Nil);
             }
             else if (Chr != '~')
-               x = ((Cell)x).Cdr = new Cell(read0(false), Nil);
+               x = x.Cdr = new Cell(read0(false), Nil);
             else {
                get();
-               ((Cell)x).Cdr = read0(false).eval();
-               while (x.cdr() instanceof Cell)
-                  x = x.cdr();
+               x.Cdr = read0(false).eval();
+               while (x.Cdr instanceof Cell)
+                  x = x.Cdr;
             }
          }
          return res;
@@ -635,7 +1366,7 @@ public class PicoLisp {
             eofErr();
          }
          if (top && InFile != null)
-            InFile.Src = InFile.Rd.getLineNumber();
+            InFile.Src = InFile.Rd.getLineNumber() + 1;
          if (Chr == '(') {
             x = rdList();
             if (top  &&  Chr == ']')
@@ -652,6 +1383,10 @@ public class PicoLisp {
          if (Chr == '\'') {
             get();
             return new Cell(Quote, read0(false));
+         }
+         if (Chr == ',') {
+            get();
+            return (y = idx(Uni, x = read0(false), 1)) instanceof Cell? y.Car : x;
          }
          if (Chr == '`') {
             get();
@@ -697,15 +1432,38 @@ public class PicoLisp {
    }
 
    /* Ersatz PicoLisp Printer */
-   final static class PicoLispWriter {
-      PicoLispWriter Link;
-      PrintWriter Wr;
+   final static class OutFrame {
+      OutFrame Link;
+      PicoLispWriter Wr;
+      int Pid;
 
-      PicoLispWriter(OutputStream out) {Wr = new PrintWriter(out);}
+      OutFrame(PicoLispWriter wr, int pid) {
+         Link = Env.OutFrames;
+         Wr = wr;
+         Pid = pid;
+      }
+   }
+
+   final static class PicoLispWriter {
+      PrintWriter Wr;
+      String Name;
+      int Fd;
+
+      PicoLispWriter(PrintWriter wr, String nm, int fd) {
+         Wr = wr;
+         Name = nm;
+         if (fd < 0)
+            fd = allocFd();
+         OutFiles[Fd = fd] = this;
+      }
+
+      PicoLispWriter(OutputStream out, int fd) {
+         this(new PrintWriter(out), null, fd);
+      }
 
       final void close() {
-         if (this != StdOut && this != StdErr)
-            Wr.close();
+         OutFiles[Fd] = null;
+         Wr.close();
       }
 
       final void print(Any x) {Wr.print(x.toString());}
@@ -725,33 +1483,68 @@ public class PicoLisp {
 
       Bind() {
          Link = Env.Bind;
-         Data = new Any[6];
+         Data = new Any[12];
       }
 
       final void add(Any x) {Data = append(Data, Cnt++, x);}
    }
 
    final static class Env {
-      Env Link;
-      int Next, ArgC;
+      int Next, ArgC, Trace;
       Bind Bind;
-      Any Arg, Args[], Cls, Key;
-      PicoLispReader InFiles;
-      PicoLispWriter OutFiles;
+      Any Arg, Args[], Cls, Key, Make, Yoke;
+      InFrame InFrames;
+      OutFrame OutFrames;
 
-      final void pushInFile(PicoLispReader in) {
-         in.Link = InFiles;
-         InFile = InFiles = in;
+      Env() {}
+
+      Env(Env env) {
+         Next = env.Next;  ArgC = env.ArgC;  Trace = env.Trace;
+         Bind = env.Bind;
+         Arg = env.Arg;  Args = env.Args;
+         Cls = env.Cls;  Key = env.Key;
+         Make = env.Make;  Yoke = env.Yoke;
+         InFrames = env.InFrames;  OutFrames = env.OutFrames;
+      }
+
+      final void pushInFile(InFrame in) {
+         InFrames = in;
+         InFile = InFiles[in.Rd.Fd];
       }
 
       final void popInFiles() {
-         InFile.close();
-         InFile = InFiles = InFiles.Link;
+         if (InFrames.Pid != 0) {
+            InFile.close();
+            if (InFrames.Pid > 1) {
+               try {
+                  if (Pids[InFrames.Pid].waitFor() != 0)
+                     err(null, null, "Pipe read close error");
+                  Pids[InFrames.Pid] = null;
+               }
+               catch (InterruptedException e) {}  //#! sighandler()
+            }
+         }
+         InFile = (InFrames = InFrames.Link) == null? StdIn : InFiles[InFrames.Rd.Fd];
       }
 
-      final void pushOutFile(PicoLispWriter out) {
-         out.Link = OutFiles;
-         OutFile = OutFiles = out;
+      final void pushOutFile(OutFrame out) {
+         OutFrames = out;
+         OutFile = OutFiles[out.Wr.Fd];
+      }
+
+      final void popOutFiles() {
+         if (OutFrames.Pid != 0) {
+            OutFile.close();
+            if (OutFrames.Pid > 1) {
+               try {
+                  if (Pids[OutFrames.Pid].waitFor() != 0)
+                     err(null, null, "Pipe write close error");
+                  Pids[OutFrames.Pid] = null;
+               }
+               catch (InterruptedException e) {}  //#! sighandler()
+            }
+         }
+         OutFile = (OutFrames = OutFrames.Link) == null? StdOut : OutFiles[OutFrames.Wr.Fd];
       }
    }
 
@@ -763,15 +1556,17 @@ public class PicoLisp {
       Catch(Any tag, Any fin, Env env) {
          Tag = tag;
          Fin = fin;
-         Env = env;
+         Env = new Env(env);
          Link = Catch;  Catch = this;
       }
    }
 
-   static final class Throw extends RuntimeException {
+   final static class Control extends RuntimeException {
       Any Tag, Val;
 
-      Throw(Any ex, Any tag, Any val) {
+      Control() {}
+
+      Control(Any ex, Any tag, Any val) {
          Tag = tag;
          Val = val;
          for (Catch p = Catch; p != null; p = p.Link)
@@ -783,94 +1578,335 @@ public class PicoLisp {
       }
    }
 
-   interface Any {
-      public Any set(Any val);
-      public Any put(Any key, Any val);
-      public Any get(Any key);
-      public Any car();
-      public Any cdr();
-      public Any eval();
-      public Any prog();
-      public Any run();
-      public Any call(Cell ex);
-      public Any func(Cell ex);
-      public Any apply(Cell ex, boolean cf, Any[] v, int n);
-      public PicoLispReader open(Any ex);
-      public String toString();
+   static abstract class Any {
+      Any Car, Cdr;
+
+      abstract Any put(Any key, Any val);
+      abstract Any get(Any key);
+      abstract Any prop(Any key);
+      abstract Any putl(Any lst);
+      abstract Any getl();
+      abstract Any eval();
+      abstract Any prog();
+      abstract Any run();
+      abstract Any call(Any ex);
+      abstract Any func(Any ex);
+      abstract Any apply(Any ex, boolean cf, Any[] v, int n);
+      abstract boolean equal(Any x);
+      abstract int compare(Any x);
+      abstract long length();
+      abstract long size();
+      abstract InFrame rdOpen(Any ex);
+      abstract OutFrame wrOpen(Any ex);
+      abstract String name();
    }
 
-   final static class Number extends BigInteger implements Any {
-      Number(String val) {super(val);}
-      Number(byte[] val) {super(val);}
+   final static class Number extends Any {
+      int Cnt;
+      BigInteger Big;
 
-      Number(int i) {
-         super(new byte[] {(byte)(i>>24), (byte)(i>>16), (byte)(i>>8), (byte)i});
+      Number(int i) {Cnt = i;}
+
+      Number(long n) {
+         if (n >= Integer.MIN_VALUE  && n <= Integer.MAX_VALUE)
+            Cnt = (int)n;
+         else
+            Big = new BigInteger(new byte[] {(byte)(n>>56), (byte)(n>>48), (byte)(n>>40), (byte)(n>>32), (byte)(n>>24), (byte)(n>>16), (byte)(n>>8), (byte)n});
       }
 
-      final public Any set(Any val) {return err(null, this, "Variable expected");}
-      final public Any put(Any key, Any val) {return err(null, this, "Symbol expected");}
-      final public Any get(Any key) {return err(null, this, "Symbol expected");}
-      final public Any car() {return err(null, this, "Variable expected");}
-      final public Any cdr() {return err(null, this, "List expected");}
-      final public Any eval() {return this;}
-      final public Any prog() {return err(null, this, "Can't execute");}
-      final public Any run() {return err(null, this, "Can't execute");}
-      final public Any call(Cell ex) {return ex;}
+      Number(BigInteger b) {
+         if (b.bitLength() < 32)
+            Cnt = b.intValue();
+         else
+            Big = b;
+      }
 
-      final public Any func(Cell ex) {
-         int i, j;
-         BigInteger n;
-         Symbol s;
-         Any[] v;
-         Any w, x, y, z;
-         switch(intValue()) {
-         case 0:  // (quote . any) -> any
-            return ex.Cdr;
-         case 1:  // (meth 'obj ['any ..]) -> any
-            z = (x = ex.cdr()).car().eval();
-            for (TheKey = ex.car(); ; TheKey = ((Symbol)TheKey).Val)
-               if (((Symbol)TheKey).Val instanceof Number) {
-                  TheCls = null;
-                  if ((y = method(z)) != null)
-                     return evMethod(z, y, x.cdr());
-                  err(ex, TheKey, "Bad message");
-               }
-         <FUN> 1
-         default:
-            return undefined(this, ex);
+      Number(String s) {
+         try {Cnt = Integer.parseInt(s);}
+         catch (NumberFormatException e) {Big = new BigInteger(s);}
+      }
+
+      final long longValue() {return Big == null? Cnt : Big.longValue();}
+
+      final static BigInteger big(int i) {
+         return new BigInteger(new byte[] {(byte)(i>>24), (byte)(i>>16), (byte)(i>>8), (byte)i});
+      }
+
+      final Any put(Any key, Any val) {return symError(this);}
+      final Any get(Any key) {return symError(this);}
+      final Any prop(Any key) {return symError(this);}
+      final Any putl(Any lst) {return symError(this);}
+      final Any getl() {return symError(this);}
+      final Any eval() {return this;}
+      final Any prog() {return execError(this);}
+      final Any run() {return execError(this);}
+      final Any call(Any ex) {return ex;}
+
+      final Any func(Any ex) {
+         try {
+            switch(Cnt) {
+            case 0:  // (quote . any) -> any
+               return ex.Cdr;
+            case 1:  // (meth 'obj ['any ..]) -> any
+               return doMeth(ex);
+            <FUN> 1
+            default:
+               return undefined(this, ex);
+            }
+         }
+         catch (Throwable e) {
+            if (e instanceof Control)
+               throw (Control)e;
+            return err(ex, null, e.toString());
          }
       }
 
-      final public Any apply(Cell ex, boolean cf, Any[] v, int n) {
+      final static Any doMeth(Any ex) {
+         Any x, y, z;
+         z = (x = ex.Cdr).Car.eval();
+         for (TheKey = ex.Car; ; TheKey = TheKey.Car)
+            if (TheKey.Car instanceof Number) {
+               TheCls = null;
+               if ((y = method(z)) != null)
+                  return evMethod(z, y, x.Cdr);
+               err(ex, TheKey, "Bad message");
+            }
+      }
+
+      <DEF> 1
+
+      final Any apply(Any ex, boolean cf, Any[] v, int n) {
          Any x, y = Nil;
          if (n > 0) {
-            y = x = new Cell(mkSymbol(cf? v[0].car() : v[0]), Nil);
+            y = x = new Cell(mkSymbol(cf? v[0].Car : v[0]), Nil);
             for (int i = 1; i < n; ++i)
-               x = ((Cell)x).Cdr = new Cell(mkSymbol(cf? v[i].car() : v[i]), Nil);
+               x = x.Cdr = new Cell(mkSymbol(cf? v[i].Car : v[i]), Nil);
          }
          return func(new Cell(this, y));
       }
 
-      final public PicoLispReader open(Any ex) {
-         err(ex, this, "Can't open");
-         return null;
+      final boolean equal(Any x) {
+         if (x == this)
+            return true;
+         if (!(x instanceof Number))
+            return false;
+         Number num = (Number)x;
+         if (Big == null)
+            return num.Big == null && Cnt == num.Cnt;
+         return Big == num.Big;
+      }
+
+      final int compare(Any x) {
+         if (x == this)
+            return 0;
+         if (x == Nil)
+            return +1;
+         if (!(x instanceof Number))
+            return -1;
+         Number num = (Number)x;
+         if (Big == null)
+            return num.Big == null? Cnt - num.Cnt : -1;
+         return Big.compareTo(num.Big);
+      }
+
+      final long length() {return (Big == null? Integer.toString(Cnt) : Big.toString()).length();}
+
+      final long size() {
+         if (Big == null) {
+            int n = 2 * (Cnt >= 0? Cnt : -Cnt);
+            if (n == 0)
+               return 1;
+            int i = 1;
+            while ((n >>= 8) != 0)
+               ++i;
+            return i;
+         }
+         return Big.toByteArray().length;
+      }
+
+      final InFrame rdOpen(Any ex) {
+         int i;
+         InFrame f;
+         if ((i = Cnt) < 0) {
+            for (f = Env.InFrames;;) {
+               if ((f = f.Link) == null)
+                  badFd(ex, this);
+               if (++i == 0) {
+                  i = f.Rd.Fd;
+                  break;
+               }
+            }
+         }
+         if (i >= InFiles.length || InFiles[i] == null)
+            badFd(ex, this);
+         return new InFrame(InFiles[i],0);
+      }
+
+      final OutFrame wrOpen(Any ex) {
+         int i;
+         OutFrame f;
+         if ((i = Cnt) < 0) {
+            for (f = Env.OutFrames;;) {
+               if ((f = f.Link) == null)
+                  badFd(ex, this);
+               if (++i == 0) {
+                  i = f.Wr.Fd;
+                  break;
+               }
+            }
+         }
+         if (i >= OutFiles.length || OutFiles[i] == null)
+            badFd(ex, this);
+         return new OutFrame(OutFiles[i],0);
+      }
+
+      final String name() {return Big == null? Integer.toString(Cnt) : Big.toString();}
+      final public String toString() {return name();}
+
+      final Number abs() {
+         if (Big == null) {
+            if (Cnt >= 0)
+               return this;
+            if (Cnt != Integer.MIN_VALUE)
+               return new Number(-Cnt);
+            return new Number(-(long)Cnt);
+         }
+         return new Number(Big.abs());
+      }
+
+      final Number neg() {
+         if (Big == null) {
+            if (Cnt != Integer.MIN_VALUE)
+               return new Number(-Cnt);
+            return new Number(-(long)Cnt);
+         }
+         return new Number(Big.negate());
+      }
+
+      final Number add(Number num) {
+         if (Big == null) {
+            if (num.Big == null)
+               return new Number((long)Cnt + (long)num.Cnt);
+            return new Number(big(Cnt).add(num.Big));
+         }
+         if (num.Big == null)
+            return new Number(Big.add(big(num.Cnt)));
+         return new Number(Big.add(num.Big));
+      }
+
+      final Number sub(Number num) {
+         if (Big == null) {
+            if (num.Big == null)
+               return new Number((long)Cnt - (long)num.Cnt);
+            return new Number(big(Cnt).subtract(num.Big));
+         }
+         if (num.Big == null)
+            return new Number(Big.subtract(big(num.Cnt)));
+         return new Number(Big.subtract(num.Big));
+      }
+
+      final Number mul(Number num) {
+         if (Big == null) {
+            if (num.Big == null)
+               return new Number((long)Cnt * (long)num.Cnt);
+            return new Number(big(Cnt).multiply(num.Big));
+         }
+         if (num.Big == null)
+            return new Number(Big.multiply(big(num.Cnt)));
+         return new Number(Big.multiply(num.Big));
+      }
+
+      final Number div(Number num) {
+         if (Big == null) {
+            if (num.Big == null)
+               return new Number((long)Cnt / (long)num.Cnt);
+            return new Number(big(Cnt).divide(num.Big));
+         }
+         if (num.Big == null)
+            return new Number(Big.divide(big(num.Cnt)));
+         return new Number(Big.divide(num.Big));
+      }
+
+      final Number rem(Number num) {
+         if (Big == null) {
+            if (num.Big == null)
+               return new Number((long)Cnt % (long)num.Cnt);
+            return new Number(big(Cnt).remainder(num.Big));
+         }
+         if (num.Big == null)
+            return new Number(Big.remainder(big(num.Cnt)));
+         return new Number(Big.remainder(num.Big));
+      }
+
+      final Number shift(int i) {
+         if (Big == null) {
+            if (i >= 0)
+               return new Number((long)Cnt >> i);
+            if (i > -32)
+               return new Number((long)Cnt << -i);
+            return new Number((new BigInteger(new byte[] {(byte)(Cnt>>24), (byte)(Cnt>>16), (byte)(Cnt>>8), (byte)Cnt})).shiftRight(i));
+         }
+         return new Number(Big.shiftRight(i));
+      }
+
+      final boolean tst(Number num) {
+         if (Big == null) {
+            if (num.Big == null)
+               return Cnt == (Cnt & num.Cnt);
+            BigInteger b = big(Cnt);
+            return b.equals(b.and(num.Big));
+         }
+         if (num.Big == null)
+            return Big.equals(Big.and(big(num.Cnt)));
+         return Big.equals(Big.and(num.Big));
+      }
+
+      final Number and(Number num) {
+         if (Big == null) {
+            if (num.Big == null)
+               return new Number((long)Cnt & (long)num.Cnt);
+            return new Number(big(Cnt).and(num.Big));
+         }
+         if (num.Big == null)
+            return new Number(Big.and(big(num.Cnt)));
+         return new Number(Big.and(num.Big));
+      }
+
+      final Number or(Number num) {
+         if (Big == null) {
+            if (num.Big == null)
+               return new Number((long)Cnt | (long)num.Cnt);
+            return new Number(big(Cnt).or(num.Big));
+         }
+         if (num.Big == null)
+            return new Number(Big.or(big(num.Cnt)));
+         return new Number(Big.or(num.Big));
+      }
+
+      final Number xor(Number num) {
+         if (Big == null) {
+            if (num.Big == null)
+               return new Number((long)Cnt ^ (long)num.Cnt);
+            return new Number(big(Cnt).xor(num.Big));
+         }
+         if (num.Big == null)
+            return new Number(Big.xor(big(num.Cnt)));
+         return new Number(Big.xor(num.Big));
       }
    }
 
-   final static class Symbol implements Any {
-      Any Val, Prop[];
+   final static class Symbol extends Any {
+      Any Prop[];
       String Name;
 
-      Symbol(Any val, String name) {
-         Val = val == null? this : val;
-         Name = name;
+      Symbol(Any val, String nm) {
+         Car = val == null? this : val;
+         Name = nm;
       }
 
-      final public Any set(Any val) {return Val = val;}
-
-      final public Any put(Any key, Any val) {
-         if (key.equals(Zero))
-            Val = val;
+      final Any put(Any key, Any val) {
+         if (key.equal(Zero))
+            Car = val;
          else if (Prop != null) {
             Any x;
             int i = Prop.length, p = -1;
@@ -878,13 +1914,13 @@ public class PicoLisp {
                if ((x = Prop[--i]) == null)
                   p = i;
                else if (x instanceof Cell) {
-                  if (key == x.cdr()) {
+                  if (key == x.Cdr) {
                      if (val == Nil)
                         Prop[i] = null;
                      else if (val == T)
                         Prop[i] = key;
                      else
-                        x.set(val);
+                        x.Car = val;
                      return val;
                   }
                }
@@ -910,9 +1946,9 @@ public class PicoLisp {
          return val;
       }
 
-      final public Any get(Any key) {
-         if (key.equals(Zero))
-            return Val;
+      final Any get(Any key) {
+         if (key.equal(Zero))
+            return Car;
          if (Prop == null)
             return Nil;
          Any x;
@@ -920,8 +1956,8 @@ public class PicoLisp {
          do {
             if ((x = Prop[--i]) != null) {
                if (x instanceof Cell) {
-                  if (key == x.cdr())
-                     return x.car();
+                  if (key == x.Cdr)
+                     return x.Car;
                }
                else if (key == x)
                   return T;
@@ -930,46 +1966,79 @@ public class PicoLisp {
          return Nil;
       }
 
-      final public Any car() {return Val;}
-      final public Any cdr() {return err(null, this, "List expected");}
-      final public Any eval() {return Val;}
-      final public Any prog() {return Val;}
-      final public Any run() {return Val;}
-
-      final public Any call(Cell ex) {
-         if (Val == Nil)
-            undefined(this, ex);
-         return Val.func(ex);
+      final Any prop(Any key) {
+         if (Prop == null)
+            return Nil;
+         Any x;
+         int i = Prop.length;
+         do {
+            if ((x = Prop[--i]) != null) {
+               if (x instanceof Cell) {
+                  if (key == x.Cdr)
+                     return x;
+               }
+               else if (key == x)
+                  return key;
+            }
+         } while (i != 0);
+         return Nil;
       }
 
-      final public Any func(Cell ex) {return Val.func(ex);}
+      final Any putl(Any lst) {
+         Prop = new Any[6];
+         int i = 0;
+         for (Any y = lst; y instanceof Cell; y = y.Cdr)
+            Prop = append(Prop, i++, y.Car);
+         return lst;
+      }
 
-      final public Any apply(Cell ex, boolean cf, Any[] v, int n) {
-         if (Val == Meth.Val) {
-            Any x, y, z, o = cf? v[0].car() : v[0];
+      final Any getl() {
+         Any x = Nil;
+         if (Prop != null)
+            for (int i = Prop.length; --i >= 0;)
+               if (Prop[i] != null)
+                  x = new Cell(Prop[i], x);
+         return x;
+      }
+
+      final Any eval() {return Car;}
+      final Any prog() {return Car;}
+      final Any run() {return Car;}
+
+      final Any call(Any ex) {
+         if (Car == Nil)
+            undefined(this, ex);
+         return Car.func(ex);
+      }
+
+      final Any func(Any ex) {return Car.func(ex);}
+
+      final Any apply(Any ex, boolean cf, Any[] v, int n) {
+         if (Car == Meth.Car) {
+            Any x, y, z, o = cf? v[0].Car : v[0];
             TheCls = null;  TheKey = this;
             if ((z = method(o)) != null) {
                int i;
                Any cls = Env.Cls;  Any key = Env.Key;
                Env.Cls = TheCls;  Env.Key = TheKey;
-               Bind bnd = new Bind();  bnd.add(At.Val);  bnd.add(At);
-               for (x = z.car(), i = 0; x instanceof Cell; ++i) {
-                  bnd.add((y = x.car()).car());  // Save value
+               Bind bnd = new Bind();  bnd.add(At.Car);  bnd.add(At);
+               for (x = z.Car, i = 0; x instanceof Cell; ++i) {
+                  bnd.add((y = x.Car).Car);  // Save value
                   bnd.add(y);  // and symbol
-                  y.set(i >= n? Nil : cf? v[i].car() : v[i]);
-                  x = x.cdr();
+                  y.Car = i >= n? Nil : cf? v[i].Car : v[i];
+                  x = x.Cdr;
                }
                if (x == Nil || x != At) {
                   if (x != Nil) {
-                     bnd.add(x.car());  // Save value
+                     bnd.add(x.Car);  // Save value
                      bnd.add(x);  // and symbol
-                     x.set(Nil);  // Set to NIL
+                     x.Car = Nil;  // Set to NIL
                   }
-                  bnd.add(This.Val);
+                  bnd.add(This.Car);
                   bnd.add(This);
-                  This.Val = o;
+                  This.Car = o;
                   Env.Bind = bnd;
-                  x = z.cdr().prog();
+                  x = z.Cdr.prog();
                }
                else {
                   int next, argc, j = 0;
@@ -977,47 +2046,82 @@ public class PicoLisp {
                   if (i < n) {
                      av = new Any[6];
                      do
-                        av = append(av, j++, x.car().eval());
+                        av = append(av, j++, x.Car.eval());
                      while (++i < n);
                   }
                   next = Env.Next;  Env.Next = 0;
                   argc = Env.ArgC;  Env.ArgC = j;
                   arg = Env.Arg;    Env.Arg = Nil;
                   args = Env.Args;  Env.Args = av;
-                  bnd.add(This.Val);
+                  bnd.add(This.Car);
                   bnd.add(This);
-                  This.Val = o;
+                  This.Car = o;
                   Env.Bind = bnd;
-                  x = z.cdr().prog();
+                  x = z.Cdr.prog();
                   Env.Args = args;
                   Env.Arg = arg;
                }
                for (i = bnd.Cnt; (i -= 2) >= 0;)
-                  ((Symbol)bnd.Data[i+1]).Val = bnd.Data[i];
-               Env.Cls = cls;  Env.Key = key;
+                  bnd.Data[i+1].Car = bnd.Data[i];
                Env.Bind = bnd.Link;
+               Env.Cls = cls;  Env.Key = key;
                return x;
             }
             err(ex, o, "Bad object");
          }
-         if (Val == Nil || Val == this)
+         if (Car == Nil || Car == this)
             undefined(this, ex);
-         return Val.apply(ex, cf, v, n);
+         return Car.apply(ex, cf, v, n);
       }
 
-      final public PicoLispReader open(Any ex) {
+      final boolean equal(Any x) {return this == x || (x instanceof Symbol) && Name.equals(((Symbol)x).Name);}
+
+      final int compare(Any x) {
+         if (x == this)
+            return 0;
+         if (this == T || x == Nil || x instanceof Number)
+            return +1;
+         if (x == T  || x instanceof Cell)
+            return -1;
+         String a = Name;
+         String b = ((Symbol)x).Name;
+         if (a == null)
+            return b == null? hashCode() - x.hashCode() : -1;
+         if (b == null)
+            return +1;
+         return a.compareTo(b);
+      }
+
+      final long length() {return Name == null? 0 : Name.length();}
+      final long size() {return Name == null? 0 : Name.getBytes().length;}
+
+      final InFrame rdOpen(Any ex) {
          try {
             String nm = path(Name);
-            if (firstChar() == '+') {
-               /* ... */
-            }
-            return new PicoLispReader(new FileReader(nm), nm);
+            if (nm.charAt(0) == '+')
+               nm = nm.substring(1);  // No file reader with "rw" mode
+            return new InFrame(new PicoLispReader(new FileReader(nm), nm, -1), 1);
          }
          catch (IOException e) {
-            err(ex, this, "Can't open");
+            err(ex, this, "Read open error");
             return null;
          }
       }
+
+      final OutFrame wrOpen(Any ex) {
+         try {
+            String nm = path(Name);
+            if (nm.charAt(0) == '+')
+               return new OutFrame(new PicoLispWriter(new PrintWriter(new FileWriter(nm.substring(1), true)), nm, -1), 1);
+            return new OutFrame(new PicoLispWriter(new PrintWriter(nm), nm, -1), 1);
+         }
+         catch (IOException e) {
+            err(ex, this, "Write open error");
+            return null;
+         }
+      }
+
+      final String name() {return Name == null? "" : Name;}
 
       final public String toString() {
          if (Name == null)
@@ -1050,11 +2154,8 @@ public class PicoLisp {
          return sb.toString();
       }
 
-      final char firstChar() {
-         return Name == null? '\0' : Name.charAt(0);
-      }
-
       final Any parse(boolean skp, Any s) {
+         Any x, y;
          PicoLispReader rd;
          if (s == null)
             rd = new PicoLispReader(Name, '\n', ']');
@@ -1064,106 +2165,117 @@ public class PicoLisp {
             rd.get();
          if (s == null)
             return rd.rdList();
-         /* ... token() */
-         return Nil;
+         if ((x = token(s, '\0')) == null)
+            return Nil;
+         y = new Cell(x, Nil);
+         while ((x = token(s, '\0')) != null)
+            y = y.Cdr = new Cell(x, Nil);
+         return y;
       }
    }
 
-   final static class NilSym implements Any {
-      final public Any set(Any val) {return err(null, this, "Protected symbol");}
-      final public Any put(Any key, Any val) {return err(null, this, "Protected symbol");}
-      final public Any get(Any key) {return this;}
-      final public Any car() {return this;}
-      final public Any cdr() {return this;}
-      final public Any eval() {return this;}
-      final public Any prog() {return this;}
-      final public Any run() {return this;}
-      final public Any call(Cell ex) {return undefined(this,ex);}
-      final public Any func(Cell ex) {return undefined(this,ex);}
-      final public Any apply(Cell ex, boolean cf, Any[] v, int n) {return undefined(this,ex);}
-      final public PicoLispReader open(Any ex) {return StdIn;}
+
+   final static class NilSym extends Any {
+      NilSym() {
+         Car = this;
+         Cdr = this;
+      }
+
+      final Any put(Any key, Any val) {return protError(this);}
+      final Any get(Any key) {return this;}
+      final Any prop(Any key) {return this;}
+      final Any putl(Any lst) {return protError(this);}
+      final Any getl() {return protError(this);}
+      final Any eval() {return this;}
+      final Any prog() {return this;}
+      final Any run() {return this;}
+      final Any call(Any ex) {return undefined(this,ex);}
+      final Any func(Any ex) {return undefined(this,ex);}
+      final Any apply(Any ex, boolean cf, Any[] v, int n) {return undefined(this,ex);}
+      final boolean equal(Any x) {return x == Nil;}
+      final int compare(Any x) {return x == this? 0 : -1;}
+      final long length() {return 0;}
+      final long size() {return 0;}
+      final InFrame rdOpen(Any ex) {return new InFrame(InFiles[0], 0);}
+      final OutFrame wrOpen(Any ex) {return new OutFrame(OutFiles[1], 0);}
+      final String name() {return "";}
       final public String toString() {return "NIL";}
    }
 
-   final static class Cell implements Any {
-      Any Car, Cdr;
-
+   final static class Cell extends Any {
       Cell(Any car, Any cdr) {
          Car = car;
          Cdr = cdr;
       }
 
-      final public Any set(Any val) {return Car = val;}
-      final public Any put(Any key, Any val) {return err(null, this, "Symbol expected");}
+      final Any put(Any key, Any val) {return symError(this);}
 
-      final public Any get(Any key) {
+      final Any get(Any key) {
          Any x, y = this;
          if (key instanceof Number) {
-            int n = ((Number)key).intValue();
+            int n = ((Number)key).Cnt;
             if (n > 0) {
                while (--n != 0)
-                  y = y.cdr();
-               return y.car();
+                  y = y.Cdr;
+               return y.Car;
             }
             if (n < 0) {
                while (++n != 0)
-                  y = y.cdr();
-               return y.cdr();
+                  y = y.Cdr;
+               return y.Cdr;
             }
          }
          else
             do
-               if ((x = y.car()) instanceof Cell  &&  key == x.car())
-                  return x.cdr();
-            while ((y = y.cdr()) instanceof Cell);
+               if ((x = y.Car) instanceof Cell  &&  key == x.Car)
+                  return x.Cdr;
+            while ((y = y.Cdr) instanceof Cell);
          return Nil;
       }
 
-      final public Any car() {return Car;}
-      final public Any cdr() {return Cdr;}
-      final public Any eval() {return Car.call(this);}
+      final Any prop(Any key) {return symError(this);}
+      final Any putl(Any lst) {return symError(this);}
+      final Any getl() {return symError(this);}
+      final Any eval() {return Car.call(this);}
 
-      final public Any prog() {
-         Any x, y = this;
+      final Any prog() {
+         Any ex;
+         for (ex = this; ex.Cdr != Nil; ex = ex.Cdr)
+            ex.Car.eval();
+         return ex.Car.eval();
+      }
+
+      final Any run() {
+         Any x, at = At.Car;
+         Any ex = this;
          do
-            x = y.car().eval();
-         while ((y = y.cdr()) instanceof Cell);
+            x = ex.Car.eval();
+         while ((ex = ex.Cdr) != Nil);
+         At.Car = at;
          return x;
       }
 
-      final public Any run() {
-         Any x, y = this, at = At.Val;
-         do
-            x = y.car().eval();
-         while ((y = y.cdr()) instanceof Cell);
-         At.Val = at;
-         return x;
-      }
+      final Any call(Any ex) {return eval().func(ex);}
 
-      final public Any call(Cell ex) {return eval().func(ex);}
-
-      final public Any func(Cell ex) {
+      final Any func(Any ex) {
          int i;
-         Any x = ex.Cdr;
-         Any y = Car;
-         Bind bnd = new Bind();  bnd.add(At.Val);  bnd.add(At);
-         while (y instanceof Cell) {
-            bnd.add(x.car().eval());  // Save new value
-            bnd.add(y.car());  // and symbol
-            x = x.cdr();
-            y = y.cdr();
+         Any x, y;
+         Bind bnd = new Bind();  bnd.add(At.Car);  bnd.add(At);
+         for (x = Car; x instanceof Cell; x = x.Cdr) {
+            bnd.add((ex = ex.Cdr).Car.eval());  // Save new value
+            bnd.add(x.Car);  // and symbol
          }
-         if (y == Nil || y != At) {
+         if (x == Nil || x != At) {
             i = bnd.Cnt;
-            if (y != Nil) {
-               bnd.add(y.car());  // Save old value
-               bnd.add(y);  // and symbol
-               y.set(x);  // Set new value
+            if (x != Nil) {
+               bnd.add(x.Car);  // Save old value
+               bnd.add(x);  // and symbol
+               x.Car = ex.Cdr;  // Set new value
             }
             do {
-               Symbol sym = (Symbol)bnd.Data[--i];
-               x = sym.Val;
-               sym.Val = bnd.Data[--i];  // Set new value
+               y = bnd.Data[--i];
+               x = y.Car;
+               y.Car = bnd.Data[--i];  // Set new value
                bnd.Data[i] = x;  // Save old value
             } while (i > 0);
             Env.Bind = bnd;
@@ -1172,11 +2284,11 @@ public class PicoLisp {
          else {
             int next, argc, j = 0;
             Any arg, args[], av[] = null;
-            if (x instanceof Cell) {
+            if (ex.Cdr != Nil) {
                av = new Any[6];
                do
-                  av = append(av, j++, x.car().eval());
-               while ((x = x.cdr()) instanceof Cell);
+                  av = append(av, j++, (ex = ex.Cdr).Car.eval());
+               while (ex.Cdr != Nil);
             }
             next = Env.Next;  Env.Next = 0;
             argc = Env.ArgC;  Env.ArgC = j;
@@ -1184,9 +2296,9 @@ public class PicoLisp {
             args = Env.Args;  Env.Args = av;
             i = bnd.Cnt;
             do {
-               Symbol sym = (Symbol)bnd.Data[--i];
-               x = sym.Val;
-               sym.Val = bnd.Data[--i];  // Set new value
+               y = bnd.Data[--i];
+               x = y.Car;
+               y.Car = bnd.Data[--i];  // Set new value
                bnd.Data[i] = x;  // Save old value
             } while (i > 0);
             Env.Bind = bnd;
@@ -1195,27 +2307,25 @@ public class PicoLisp {
             Env.Arg = arg;
          }
          for (i = bnd.Cnt; (i -= 2) >= 0;)
-            ((Symbol)bnd.Data[i+1]).Val = bnd.Data[i];
+            bnd.Data[i+1].Car = bnd.Data[i];
          Env.Bind = bnd.Link;
          return x;
       }
 
-      final public Any apply(Cell ex, boolean cf, Any[] v, int n) {
+      final Any apply(Any ex, boolean cf, Any[] v, int n) {
          int i;
-         Any x = Car;
-         Any y;
-         Bind bnd = new Bind();  bnd.add(At.Val);  bnd.add(At);
-         for (i = 0; x instanceof Cell; ++i) {
-            bnd.add((y = x.car()).car());  // Save value
+         Any x, y;
+         Bind bnd = new Bind();  bnd.add(At.Car);  bnd.add(At);
+         for (x = Car, i = 0; x instanceof Cell; ++i, x = x.Cdr) {
+            bnd.add((y = x.Car).Car);  // Save value
             bnd.add(y);  // and symbol
-            y.set(i >= n? Nil : cf? v[i].car() : v[i]);
-            x = x.cdr();
+            y.Car = i >= n? Nil : cf? v[i].Car : v[i];
          }
          if (x == Nil || x != At) {
             if (x != Nil) {
-               bnd.add(x.car());  // Save value
+               bnd.add(x.Car);  // Save old value
                bnd.add(x);  // and symbol
-               x.set(Nil);  // Set to NIL
+               x.Car = Nil;  // Set to NIL
             }
             Env.Bind = bnd;
             x = Cdr.prog();
@@ -1226,7 +2336,7 @@ public class PicoLisp {
             if (i < n) {
                av = new Any[6];
                do
-                  av = append(av, j++, x.car().eval());
+                  av = append(av, j++, cf? v[i].Car : v[i]);
                while (++i < n);
             }
             next = Env.Next;  Env.Next = 0;
@@ -1239,15 +2349,147 @@ public class PicoLisp {
             Env.Arg = arg;
          }
          for (i = bnd.Cnt; (i -= 2) >= 0;)
-            ((Symbol)bnd.Data[i+1]).Val = bnd.Data[i];
+            bnd.Data[i+1].Car = bnd.Data[i];
          Env.Bind = bnd.Link;
          return x;
       }
 
-      final public PicoLispReader open(Any ex) {
-         err(ex, this, "Can't open");
-         return null;
+      final boolean equal(Any x) {
+         if (!(x instanceof Cell))
+            return false;
+         Any y = this;
+         while (x.Car == Quote) {
+            if (y.Car != Quote)
+               return false;
+            if (x == x.Cdr)
+               return y == y.Cdr;
+            if (y == y.Cdr)
+               return false;
+            if (!(x.Cdr instanceof Cell))
+               return x.Cdr.equal(y.Cdr);
+            x = x.Cdr;
+            if (!(y.Cdr instanceof Cell))
+               return false;
+            y = y;
+         }
+         Any a = x;
+         Any b = y;
+         for (;;) {
+            if (!x.Car.equal(y.Car))
+               return false;
+            if (!(x.Cdr instanceof Cell))
+               return x.Cdr.equal(y.Cdr);
+            x = x.Cdr;
+            if (!(y.Cdr instanceof Cell))
+               return false;
+            y = y.Cdr;
+            if (x == a)
+               return y == b;
+            if (y == b)
+               return false;
+         }
       }
+
+      final int compare(Any x) {
+         if (x == this)
+            return 0;
+         if (x == T)
+            return -1;
+         if (!(x instanceof Cell))
+            return +1;
+         Any y = this;
+         Any a = this;
+         Any b = x;
+         for (;;) {
+            int n;
+            if ((n = y.Car.compare(x.Car)) != 0)
+               return n;
+            if (!((y = y.Cdr) instanceof Cell))
+               return y.compare(x.Cdr);
+            if (!((x = x.Cdr) instanceof Cell))
+               return x == T? -1 : +1;
+            if (y == a && x == b)
+               return 0;
+         }
+      }
+
+      final long length() {
+         long n = 1;
+         Any x = this;
+         while (x.Car == Quote) {
+            if (x == x.Cdr)
+               return -1;
+            if (!((x = x.Cdr) instanceof Cell))
+               return n;
+            ++n;
+         }
+         Any y = x;
+         while ((x = x.Cdr) instanceof Cell) {
+            if (x == y)
+               return -1;
+            ++n;
+         }
+         return n;
+      }
+
+      final long size() {return size(this);}
+      final long size(Any x) {
+         long n;
+         Any y;
+
+         n = 1;
+         while (x.Car == Quote) {
+            if (x == x.Cdr  ||  !((x = x.Cdr) instanceof Cell))
+               return n;
+            ++n;
+         }
+         for (y = x;;) {
+            if (x.Car instanceof Cell)
+               n += size(x.Car);
+            if (!((x = x.Cdr) instanceof Cell)  ||  x == y)
+               break;
+            ++n;
+         }
+         return n;
+      }
+
+      final InFrame rdOpen(Any ex) {
+         try {
+            int len = (int)length();
+            String[] cmd = new String[len];
+            Any x = this;
+            for (int i = 0; i < len; ++i) {
+               cmd[i] = x.Car.name();
+               x = x.Cdr;
+            }
+            int pid = allocPid();
+            return new InFrame(new PicoLispReader((Pids[pid] = Runtime.getRuntime().exec(cmd)).getInputStream(), -1), pid);
+         }
+         catch (IOException e) {
+            err(ex, this, "Pipe read open error");
+            return null;
+         }
+      }
+
+      final OutFrame wrOpen(Any ex) {
+         try {
+            int len = (int)length();
+            String[] cmd = new String[len];
+            Any x = this;
+            for (int i = 0; i < len; ++i) {
+               cmd[i] = x.Car.name();
+               x = x.Cdr;
+            }
+            int pid = allocPid();
+            return new OutFrame(new PicoLispWriter((Pids[pid] = Runtime.getRuntime().exec(cmd)).getOutputStream(), -1), pid);
+         }
+         catch (IOException e) {
+            err(ex, this, "Pipe write open error");
+            return null;
+         }
+      }
+
+      final String name() {return Car.name() + Cdr.name();}
 
       final public String toString() {
          Any x, y;
@@ -1259,8 +2501,8 @@ public class PicoLisp {
          sb.append('(');
          if ((y = circ(x)) == null) {
             for (;;) {
-               sb.append(x.car().toString());
-               if ((x = x.cdr()) == Nil)
+               sb.append(x.Car.toString());
+               if ((x = x.Cdr) == Nil)
                   break;
                if (!(x instanceof Cell)) {
                   sb.append(" . ");
@@ -1272,21 +2514,21 @@ public class PicoLisp {
          }
          else if (y == x) {
             do {
-               sb.append(x.car().toString());
+               sb.append(x.Car.toString());
                sb.append(' ');
-            } while (y != (x = x.cdr()));
+            } while (y != (x = x.Cdr));
             sb.append('.');
          }
          else {
             do {
-               sb.append(x.car().toString());
+               sb.append(x.Car.toString());
                sb.append(' ');
-            } while (y != (x = x.cdr()));
+            } while (y != (x = x.Cdr));
             sb.append(". (");
             do {
-               sb.append(x.car().toString());
+               sb.append(x.Car.toString());
                sb.append(' ');
-            } while (y != (x = x.cdr()));
+            } while (y != (x = x.Cdr));
             sb.append(".)");
          }
          sb.append(')');

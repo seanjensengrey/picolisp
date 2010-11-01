@@ -1,4 +1,4 @@
-/* 03oct10abu
+/* 15oct10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -75,11 +75,6 @@ typedef struct bindFrame {
    struct {any sym; any val;} bnd[1];
 } bindFrame;
 
-typedef struct methFrame {
-   struct methFrame *link;
-   any key, cls;
-} methFrame;
-
 typedef struct inFile {
    int fd, ix, cnt, next;
    int line, src;
@@ -120,9 +115,8 @@ typedef struct parseFrame {
 typedef struct stkEnv {
    cell *stack, *arg;
    bindFrame *bind;
-   methFrame *meth;
    int next, protect, trace;
-   any task, *make, *yoke;
+   any cls, key, task, *make, *yoke;
    inFrame *inFrames;
    outFrame *outFrames;
    ctlFrame *ctlFrames;

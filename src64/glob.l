@@ -1,4 +1,4 @@
-# 30sep10abu
+# 12oct10abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Globals 0)
@@ -582,8 +582,9 @@
 : EnvCtlFrames word  0        # <VI> Control frames
 : EnvArgs      word  0        # Varargs frame
 : EnvNext      word  0        # Next vararg
+: EnvCls       word  0        # Method class
+: EnvKey       word  0        # Method key
 : EnvApply     word  0        # Apply frames
-: EnvMeth      word  0        # Method frames
 : EnvMake      word  0        # 'make' env
 : EnvYoke      word  0
 : EnvParseX    word  0        # Parser status

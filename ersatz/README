@@ -1,4 +1,4 @@
-10oct10abu
+30oct10abu
 (c) Software Lab. Alexander Burger
 
 
@@ -11,13 +11,13 @@ It should be the last resort when there is no other way to run a "real"
 PicoLisp. Also, it may be used to bootstrap the 64-bit version, which requires a
 running PicoLisp to build from the sources.
 
-Performance is rather poor. It is 10 to 20 times slower, and uses much more
-memory. But efficiency was not a major goal. Instead, performance was often
-sacrificed in favor of simpler or more modular structures.
+Performance is rather poor. It is 5 to 10 times slower, allocates a huge amount
+of memory at startup (600 MB vs. 3 MB), and needs 2.5 to 4 times the space for
+runtime Lisp data. But efficiency was not a major goal. Instead, performance was
+often sacrificed in favor of simpler or more modular structures.
 
 There is no support for child processes ('fork'), interprocess communication
-('tell', 'hear', 'ipc' etc.), PLIO ('pr', 'rd' etc.) and databases (external
-symbols).
+('tell', 'hear', 'ipc' etc.) and databases (external symbols).
 
 
       Invocation
@@ -27,6 +27,9 @@ Ersatz PicoLisp can be started - analog to 'bin/picolisp' - as
 
    $ ersatz/picolisp
 
+or, analog to 'dbg' with initial libraries and debugging environment
+
+   $ ./erl
 
 If absolutely no "bin/picolisp" can be build, you might install symbolic links
 in the "bin/" directory to Ersatz PicoLisp:
