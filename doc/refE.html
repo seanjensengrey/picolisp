@@ -131,9 +131,9 @@ If <code>cnt</code> is given, only that many bytes are actually echoed. In case
 of two <code>cnt</code> arguments, the first one specifies the number of bytes
 to skip in the input stream. Otherwise, if one or more <code>sym</code>
 arguments are given, the echo process stops as soon as one of the symbol's names
-is encountered in the input stream (in that case, the name will be read (and
-that symbol returned), but not written). Returns non-<code>NIL</code> if the
-operation was successfully completed.
+is encountered in the input stream. In this case the name will be read and
+returned, but not written. Returns non-<code>NIL</code> if the operation was
+successfully completed.
 
 <pre><code>
 : (in "x.l" (echo))  # Display file on console

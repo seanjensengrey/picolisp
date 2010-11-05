@@ -1,13 +1,18 @@
-// 01nov10abu
+// 05nov10abu
 // (c) Software Lab. Alexander Burger
 
-import java.io.*;
-import java.net.*;
 import java.util.*;
 import java.math.*;
+import java.io.*;
+import java.net.*;
+import java.nio.*;
+import java.nio.channels.*;
+import java.nio.channels.spi.*;
+import java.lang.reflect.*;
 
 /* Ersatz PicoLisp Interpreter (Poor Man's PicoLisp) */
 public class PicoLisp {
+   final static Console Term = System.console();
    final static HashMap<String,Symbol> Intern = new HashMap<String,Symbol>();
    final static HashMap<String,Symbol> Transient = new HashMap<String,Symbol>();
    final static byte MonLen[] = new byte[] {31,31,28,31,30,31,30,31,31,30,31,30,31};
@@ -40,10 +45,11 @@ public class PicoLisp {
 
    static Catch Catch;
    static Env Env = new Env();
+   static StringBuilder Line;
    static Process[] Pids = new Process[12];
    static PicoLispReader[] InFiles = new PicoLispReader[12];
    static PicoLispWriter[] OutFiles = new PicoLispWriter[12];
-   final static PicoLispReader StdIn = new PicoLispReader(System.in, 0);
+   final static PicoLispReader StdIn = new PicoLispReader(System.in, 0, null, 0);
    final static PicoLispWriter StdOut = new PicoLispWriter(System.out, 1);
    final static PicoLispWriter StdErr = new PicoLispWriter(System.err, 2);
    static PicoLispReader InFile = StdIn;
@@ -59,9 +65,8 @@ public class PicoLisp {
 
    public static void main(String[] argv) {
       Argv = argv;
-      init();
       <SYM> 1
-      USec = System.nanoTime() / 1000;
+      init();
       for (boolean first = true; ; first = false) {
          try {
             if (first)
@@ -83,6 +88,35 @@ public class PicoLisp {
                Home = s.substring(0, i+1);
             break;
          }
+      try {
+         if (Term != null) {
+            final Pipe p = Pipe.open();
+            StdIn.Chan = p.source();
+            StdIn.Ops = SelectionKey.OP_READ;
+            (new Thread() {
+               public void run() {
+                  for (;;) {
+                     String s = Term.readLine();
+                     if (s == null)
+                        Line = null;
+                     else {
+                        Line = new StringBuilder(s);
+                        Line.append('\n');
+                     }
+                     try {p.sink().write(ByteBuffer.allocate(1));}
+                     catch (IOException e) {giveup(e);}
+                  }
+               }
+            } ).start();
+         }
+      }
+      catch (IOException e) {giveup(e);}
+      USec = System.nanoTime() / 1000;
+   }
+
+   final static void giveup(Exception e) {
+      System.err.println(e);
+      System.exit(1);
    }
 
    final static Any bye(int n) {
@@ -93,6 +127,66 @@ public class PicoLisp {
       }
       System.exit(n);
       return null;  /* Brain-dead Java */
+   }
+
+   final static int waitFd(Any ex, int fd, int ms) {
+      int i;
+      Selector sel;
+      Any task = Env.Task,  at = At.Car;
+      try {
+         for (;;) {
+            sel = Selector.open();
+            int t = ms >= 0? ms : Integer.MAX_VALUE;
+            if (fd >= 0 && InFiles[fd] != null)
+               InFiles[fd].register(sel);
+            for (Any x = Env.Task = Run.Car; x instanceof Cell; x = x.Cdr) {
+               if (memq(x.Car, task) == null) {
+                  if ((i = ((Number)x.Car.Car).Cnt) < 0) {
+                     if ((i = ((Number)x.Car.Cdr.Car).Cnt) < t)
+                        t = i;
+                  }
+                  else if (i != fd) {
+                     if (i < InFiles.length && InFiles[i] != null)
+                        InFiles[i].register(sel);
+                  }
+               }
+            }
+            long d = System.currentTimeMillis();
+            if (t == 0)
+               sel.selectNow();
+            else
+               sel.select(t);
+            t = (int)(System.currentTimeMillis() - d);
+            if (ms > 0  &&  (ms -= t) < 0)
+               ms = 0;
+            for (Any x = Env.Task; x instanceof Cell; x = x.Cdr) {
+               if (memq(x.Car, task) == null) {
+                  if ((i = ((Number)x.Car.Car).Cnt) < 0) {
+                     if ((i = ((Number)x.Car.Cdr.Car).Cnt - t) > 0)
+                        ((Number)x.Car.Cdr.Car).Cnt = i;
+                     else {
+                        ((Number)x.Car.Cdr.Car).Cnt = -((Number)x.Car.Car).Cnt;
+                        At.Car = x.Car.Car;
+                        x.Car.Cdr.Cdr.prog();
+                     }
+                  }
+                  else if (i != fd) {
+                     if (i < InFiles.length && InFiles[i] != null && InFiles[i].isReady(sel)) {
+                        At.Car = x.Car.Car;
+                        x.Car.Cdr.prog();
+                     }
+                  }
+               }
+            }
+            if (ms == 0 || fd < 0 || InFiles[fd] != null && InFiles[fd].isReady(sel))
+               break;
+            sel.close();
+         }
+      }
+      catch (IOException e) {giveup(e);}
+      At.Car = at;
+      Env.Task = task;
+      return ms;
    }
 
    final static long initSeed(Any x) {
@@ -258,7 +352,7 @@ public class PicoLisp {
       unwind(null);
       Env.Args = null;
       Env.Next = 0;
-      Env.Make = Env.Yoke = null;
+      Env.Task = Env.Make = Env.Yoke = null;
    }
 
    final static Any err(Any ex, Any x, String msg) {
@@ -310,6 +404,8 @@ public class PicoLisp {
    final static Any execError(Any x) {return err(null, x, "Can't execute");}
    final static Any protError(Any x) {return err(null, x, "Protected symbol");}
    final static Any symError(Any x) {return err(null, x, "Symbol expected");}
+   final static Any  argError(Any ex, Any x) {return err(ex, x, "Bad argument");}
+   final static Any cntError(Any ex, Any x) {return err(ex, x, "Small number expected");}
    final static void needVar(Any ex, Any x) {if (x instanceof Number) err(ex, x, "Variable expected");}
 
    final static void badFd(Any ex, Any x) {err(ex, x, "Bad FD");}
@@ -409,6 +505,14 @@ public class PicoLisp {
       return i;
    }
 
+   final static Any mkSocket(SocketChannel chan) throws IOException {
+      int i = allocFd();
+      Socket sock = chan.socket();
+      new PicoLispReader(sock.getInputStream(), i, chan, SelectionKey.OP_READ);
+      new PicoLispWriter(sock.getOutputStream(), i);
+      return new Number(i);
+   }
+
    final static Any mkChar(char c) {return new Symbol(null, "" + c);}
    final static Any mkStr(String nm) {return nm == null || nm.length() == 0? Nil : new Symbol(null, nm);}
    final static Any mkStr(StringBuilder sb) {return mkStr(sb.toString());}
@@ -445,33 +549,10 @@ public class PicoLisp {
          if ((x = x.Cdr) instanceof Cell)
             ign = firstChar(x.Car.eval());
       }
-      StringBuilder sb = new StringBuilder();
-      if (z instanceof Number) {
-         String s = z.toString();
-         if (s.charAt(0) == '-') {
-            sb.append('-');
-            s = s.substring(1);
-         }
-         if ((scl = s.length() - scl - 1) < 0) {
-            sb.append('0');
-            sb.append(sep);
-            while (scl < -1) {
-               sb.append('0');
-               ++scl;
-            }
-         }
-         for (int i = 0;;) {
-            sb.append(s.charAt(i++));
-            if (i == s.length())
-               return mkStr(sb);
-            if (scl == 0)
-               sb.append(sep);
-            else if (ign != '\0'  &&  scl > 0  &&  scl % 3 == 0)
-               sb.append(ign);
-            --scl;
-         }
-      }
+      if (z instanceof Number)
+         return mkStr(((Number)z).toString(scl,sep,ign));
       String s = z.name();
+      StringBuilder sb = new StringBuilder();
       for (int i = 0; i < s.length(); ++i) {
          char c = s.charAt(i);
          if (c != ign)
@@ -1179,30 +1260,59 @@ public class PicoLisp {
       LineNumberReader Rd;
       String Name;
       char Eof1, Eof2;
-      int Fd, Chr, Src;
+      int Fd, Chr, Src, Ops;
+      SelectableChannel Chan;
+      SelectionKey Key;
 
-      PicoLispReader(Reader rd, String nm, int fd) {
-         Rd = new LineNumberReader(rd);
+      PicoLispReader(Reader rd, String nm, int fd, SelectableChannel chan, int ops) {
+         if (rd != null)
+            Rd = new LineNumberReader(rd);
          Name = nm;
-         if (fd < 0)
-            fd = allocFd();
          InFiles[Fd = fd] = this;
+         Chan = chan;
+         Ops = ops;
       }
 
-      PicoLispReader(InputStream in, int fd) {
-         this(new InputStreamReader(in), null, fd);
+      PicoLispReader(InputStream in, int fd, SelectableChannel chan, int ops) {
+         this(in == null? null : new InputStreamReader(in), null, fd, chan, ops);
       }
 
       PicoLispReader(String s, char eof1, char eof2) {
-         this(new StringReader(s), null, -1);
+         Rd = new LineNumberReader(new StringReader(s));
          Eof1 = eof1;
          Eof2 = eof2;
       }
 
+      final boolean register(Selector sel) {
+         if (Ops != 0) {
+            try {
+               Chan.configureBlocking(false);
+               Key = Chan.register(sel, Ops);
+               return true;
+            }
+            catch (IOException e) {}
+         }
+         return false;
+      }
+
+      final boolean isReady(Selector sel) {
+         boolean rdy = false;
+         if (Key != null) {
+            rdy = (Key.readyOps() & Ops) != 0;
+            Key.cancel();
+            try{Chan.configureBlocking(true);}
+            catch (IOException e) {}
+         }
+         return rdy;
+      }
+
       final void close() {
          try {
+            if (Chan != null)
+               Chan.close();
+            if (Rd != null)
+               Rd.close();
             InFiles[Fd] = null;
-            Rd.close();
          }
          catch (IOException e) {closeErr(e);}
       }
@@ -1211,7 +1321,22 @@ public class PicoLisp {
 
       final int get() {
          try {
-            if ((Chr = Rd.read()) < 0) {
+            if (this != StdIn || Term == null)
+               Chr = Rd.read();
+            else {
+               if (Line == null) {
+                  waitFd(null, 0, -1);
+                  ((Pipe.SourceChannel)StdIn.Chan).read(ByteBuffer.allocate(1));
+               }
+               if (Line == null)
+                  Chr = -1;
+               else {
+                  Chr = Line.charAt(0);
+                  if (Line.deleteCharAt(0).length() == 0)
+                     Line = null;
+               }
+            }
+            if (Chr < 0) {
                if ((Chr = Eof1) != 0)
                   Eof1 = '\0';
                else if ((Chr = Eof2) != 0)
@@ -1452,8 +1577,6 @@ public class PicoLisp {
       PicoLispWriter(PrintWriter wr, String nm, int fd) {
          Wr = wr;
          Name = nm;
-         if (fd < 0)
-            fd = allocFd();
          OutFiles[Fd = fd] = this;
       }
 
@@ -1462,8 +1585,8 @@ public class PicoLisp {
       }
 
       final void close() {
-         OutFiles[Fd] = null;
          Wr.close();
+         OutFiles[Fd] = null;
       }
 
       final void print(Any x) {Wr.print(x.toString());}
@@ -1492,7 +1615,7 @@ public class PicoLisp {
    final static class Env {
       int Next, ArgC, Trace;
       Bind Bind;
-      Any Arg, Args[], Cls, Key, Make, Yoke;
+      Any Arg, Args[], Cls, Key, Task, Make, Yoke;
       InFrame InFrames;
       OutFrame OutFrames;
 
@@ -1503,6 +1626,7 @@ public class PicoLisp {
          Bind = env.Bind;
          Arg = env.Arg;  Args = env.Args;
          Cls = env.Cls;  Key = env.Key;
+         Task = env.Task;
          Make = env.Make;  Yoke = env.Yoke;
          InFrames = env.InFrames;  OutFrames = env.OutFrames;
       }
@@ -1763,6 +1887,33 @@ public class PicoLisp {
       final String name() {return Big == null? Integer.toString(Cnt) : Big.toString();}
       final public String toString() {return name();}
 
+      final public String toString(int scl, char sep, char ign) {
+         String s = name();
+         StringBuilder sb = new StringBuilder();
+         if (s.charAt(0) == '-') {
+            sb.append('-');
+            s = s.substring(1);
+         }
+         if ((scl = s.length() - scl - 1) < 0) {
+            sb.append('0');
+            sb.append(sep);
+            while (scl < -1) {
+               sb.append('0');
+               ++scl;
+            }
+         }
+         for (int i = 0;;) {
+            sb.append(s.charAt(i++));
+            if (i == s.length())
+               return sb.toString();
+            if (scl == 0)
+               sb.append(sep);
+            else if (ign != '\0'  &&  scl > 0  &&  scl % 3 == 0)
+               sb.append(ign);
+            --scl;
+         }
+      }
+
       final Number abs() {
          if (Big == null) {
             if (Cnt >= 0)
@@ -1896,12 +2047,18 @@ public class PicoLisp {
    }
 
    final static class Symbol extends Any {
+      Object Obj;
       Any Prop[];
       String Name;
 
       Symbol(Any val, String nm) {
          Car = val == null? this : val;
          Name = nm;
+      }
+
+      Symbol(Object obj) {
+         Car = this;
+         Obj = obj;
       }
 
       final Any put(Any key, Any val) {
@@ -2074,7 +2231,18 @@ public class PicoLisp {
          return Car.apply(ex, cf, v, n);
       }
 
-      final boolean equal(Any x) {return this == x || (x instanceof Symbol) && Name.equals(((Symbol)x).Name);}
+      final boolean equal(Any x) {
+         if (x == this)
+            return true;
+         if (x instanceof Symbol) {
+            Symbol s = (Symbol)x;
+            if (Name != null)
+               return Name.equals(s.Name);
+            if (Obj != null)
+               return Obj.equals(s.Obj);
+         }
+         return false;
+      }
 
       final int compare(Any x) {
          if (x == this)
@@ -2092,15 +2260,15 @@ public class PicoLisp {
          return a.compareTo(b);
       }
 
-      final long length() {return Name == null? 0 : Name.length();}
-      final long size() {return Name == null? 0 : Name.getBytes().length;}
+      final long length() {return name().length();}
+      final long size() {return name().getBytes().length;}
 
       final InFrame rdOpen(Any ex) {
          try {
-            String nm = path(Name);
+            String nm = path(name());
             if (nm.charAt(0) == '+')
                nm = nm.substring(1);  // No file reader with "rw" mode
-            return new InFrame(new PicoLispReader(new FileReader(nm), nm, -1), 1);
+            return new InFrame(new PicoLispReader(new FileReader(nm), nm, allocFd(), null, 0), 1);
          }
          catch (IOException e) {
             err(ex, this, "Read open error");
@@ -2110,10 +2278,10 @@ public class PicoLisp {
 
       final OutFrame wrOpen(Any ex) {
          try {
-            String nm = path(Name);
+            String nm = path(name());
             if (nm.charAt(0) == '+')
-               return new OutFrame(new PicoLispWriter(new PrintWriter(new FileWriter(nm.substring(1), true)), nm, -1), 1);
-            return new OutFrame(new PicoLispWriter(new PrintWriter(nm), nm, -1), 1);
+               return new OutFrame(new PicoLispWriter(new PrintWriter(new FileWriter(nm.substring(1), true)), nm, allocFd()), 1);
+            return new OutFrame(new PicoLispWriter(new PrintWriter(nm), nm, allocFd()), 1);
          }
          catch (IOException e) {
             err(ex, this, "Write open error");
@@ -2121,11 +2289,21 @@ public class PicoLisp {
          }
       }
 
-      final String name() {return Name == null? "" : Name;}
+      final String name() {return Name != null? Name : Obj == null? "" : Obj.toString();}
 
       final public String toString() {
-         if (Name == null)
-            return "$" + hashCode();
+         if (Name == null) {
+            String s;
+            if (Obj == null)
+               return "$" + hashCode();
+            int i = (s = Obj.getClass().toString()).lastIndexOf('.');
+            if (i >= 0)
+               s = s.substring(i + 1);
+            if (s.startsWith("class "))
+               s = s.substring(6);
+            return "$" + s;
+
+         }
          if (Intern.get(Name) == this) {
             if (Name.equals("."))
                return "\\.";
@@ -2139,7 +2317,7 @@ public class PicoLisp {
             return sb.toString();
          }
          StringBuilder sb = new StringBuilder();
-         sb.append("\"");
+         sb.append('\"');
          for (int i = 0; i < Name.length(); ++i) {
             char c = Name.charAt(i);
             if (c == '\\' || c == '^' || c == '"')
@@ -2150,7 +2328,7 @@ public class PicoLisp {
                {sb.append('^');  c |= 0x40;}
             sb.append(c);
          }
-         sb.append("\"");
+         sb.append('\"');
          return sb.toString();
       }
 
@@ -2158,9 +2336,9 @@ public class PicoLisp {
          Any x, y;
          PicoLispReader rd;
          if (s == null)
-            rd = new PicoLispReader(Name, '\n', ']');
+            rd = new PicoLispReader(name(), '\n', ']');
          else
-            rd = new PicoLispReader(Name, '\0', '\0');
+            rd = new PicoLispReader(name(), '\0', '\0');
          if (skp)
             rd.get();
          if (s == null)
@@ -2463,7 +2641,7 @@ public class PicoLisp {
                x = x.Cdr;
             }
             int pid = allocPid();
-            return new InFrame(new PicoLispReader((Pids[pid] = Runtime.getRuntime().exec(cmd)).getInputStream(), -1), pid);
+            return new InFrame(new PicoLispReader((Pids[pid] = Runtime.getRuntime().exec(cmd)).getInputStream(), allocFd(), null, 0), pid);
          }
          catch (IOException e) {
             err(ex, this, "Pipe read open error");
@@ -2481,7 +2659,7 @@ public class PicoLisp {
                x = x.Cdr;
             }
             int pid = allocPid();
-            return new OutFrame(new PicoLispWriter((Pids[pid] = Runtime.getRuntime().exec(cmd)).getOutputStream(), -1), pid);
+            return new OutFrame(new PicoLispWriter((Pids[pid] = Runtime.getRuntime().exec(cmd)).getOutputStream(), allocFd()), pid);
          }
          catch (IOException e) {
             err(ex, this, "Pipe write open error");

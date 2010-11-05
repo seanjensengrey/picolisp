@@ -1,11 +1,12 @@
-30oct10abu
+03nov10abu
 (c) Software Lab. Alexander Burger
 
 
          Ersatz PicoLisp
          ===============
 
-Ersatz PicoLisp is a version of PicoLisp completely written in Java.
+Ersatz PicoLisp is a version of PicoLisp completely written in Java. It requires
+a 1.6 Java Runtime Environment.
 
 It should be the last resort when there is no other way to run a "real"
 PicoLisp. Also, it may be used to bootstrap the 64-bit version, which requires a
@@ -16,8 +17,12 @@ of memory at startup (600 MB vs. 3 MB), and needs 2.5 to 4 times the space for
 runtime Lisp data. But efficiency was not a major goal. Instead, performance was
 often sacrificed in favor of simpler or more modular structures.
 
-There is no support for child processes ('fork'), interprocess communication
-('tell', 'hear', 'ipc' etc.) and databases (external symbols).
+There is no support for
+
+- raw console inpt ('key') and line editing
+- child processes ('fork')
+- interprocess communication ('tell', 'hear', 'ipc' etc.)
+- databases (external symbols)
 
 
       Invocation
