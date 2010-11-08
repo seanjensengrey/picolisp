@@ -581,7 +581,7 @@ cell holds the symbol's value in its CDR, and the tail in its CAR. If the string
 is not longer than 7 bytes, it fits (on the 64-bit version) completely into the
 tail, and a single cell suffices. Up to 15 bytes take up two cells, 23 bytes
 three etc., so that long strings are not very efficient (needing twice the
-memory on the avarage), but this disadvantage is made up by simplicity and
+memory on the average), but this disadvantage is made up by simplicity and
 uniformity. And lots of extremely long strings are not the common case, as they
 are split up anyway during processing, and stored as plain byte sequences in
 external files and databases.

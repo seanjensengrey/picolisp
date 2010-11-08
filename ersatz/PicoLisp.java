@@ -1,4 +1,4 @@
-// 05nov10abu
+// 08nov10abu
 // (c) Software Lab. Alexander Burger
 
 import java.util.*;
@@ -431,7 +431,10 @@ public class PicoLisp {
             sel = Selector.open();
             int t = ms >= 0? ms : Integer.MAX_VALUE;
             if (fd >= 0 && InFiles[fd] != null)
-               InFiles[fd].register(sel);
+               if (InFiles[fd].Stream != null && InFiles[fd].Stream.available() > 0)
+                  t = 0;
+               else
+                  InFiles[fd].register(sel);
             for (Any x = Env.Task = Run.Car; x instanceof Cell; x = x.Cdr) {
                if (memq(x.Car, task) == null) {
                   if ((i = ((Number)x.Car.Car).Cnt) < 0) {
@@ -440,7 +443,10 @@ public class PicoLisp {
                   }
                   else if (i != fd) {
                      if (i < InFiles.length && InFiles[i] != null)
-                        InFiles[i].register(sel);
+                        if (InFiles[i].Stream != null && InFiles[i].Stream.available() > 0)
+                           t = 0;
+                        else
+                           InFiles[i].register(sel);
                   }
                }
             }
@@ -1550,16 +1556,16 @@ public class PicoLisp {
    }
 
    final static class PicoLispReader {
-      LineNumberReader Rd;
+      Reader Rd;
       String Name;
       char Eof1, Eof2;
       int Fd, Chr, Src, Ops;
+      InputStream Stream;
       SelectableChannel Chan;
       SelectionKey Key;
 
       PicoLispReader(Reader rd, String nm, int fd, SelectableChannel chan, int ops) {
-         if (rd != null)
-            Rd = new LineNumberReader(rd);
+         Rd = rd;
          Name = nm;
          InFiles[Fd = fd] = this;
          Chan = chan;
@@ -1568,10 +1574,11 @@ public class PicoLisp {
 
       PicoLispReader(InputStream in, int fd, SelectableChannel chan, int ops) {
          this(in == null? null : new InputStreamReader(in), null, fd, chan, ops);
+         Stream = in;
       }
 
       PicoLispReader(String s, char eof1, char eof2) {
-         Rd = new LineNumberReader(new StringReader(s));
+         Rd = new StringReader(s);
          Eof1 = eof1;
          Eof2 = eof2;
       }
@@ -1783,8 +1790,8 @@ public class PicoLisp {
                return Nil;
             eofErr();
          }
-         if (top && InFile != null)
-            InFile.Src = InFile.Rd.getLineNumber() + 1;
+         if (top && InFile != null && InFile.Rd instanceof LineNumberReader)
+            InFile.Src = ((LineNumberReader)InFile.Rd).getLineNumber() + 1;
          if (Chr == '(') {
             x = rdList();
             if (top  &&  Chr == ']')
@@ -2802,9 +2809,10 @@ public class PicoLisp {
       }
 
       final static Any do9(Any ex) { // double:
-         Number num;
-         num = (Number)((ex = ex.Cdr).Car.eval());
-         return new Symbol(new Double(num.toString(evInt(ex.Cdr), '.', '\0')));
+         Any x;
+         if ((x = (ex = ex.Cdr).Car.eval()) instanceof Number)
+            return new Symbol(new Double(((Number)x).toString(evInt(ex.Cdr), '.', '\0')));
+         return new Symbol(new Double(x.name()));
       }
 
       final static Any do10(Any ex) { // big:
@@ -6631,7 +6639,7 @@ public class PicoLisp {
             String nm = path(name());
             if (nm.charAt(0) == '+')
                nm = nm.substring(1);  // No file reader with "rw" mode
-            return new InFrame(new PicoLispReader(new FileReader(nm), nm, allocFd(), null, 0), 1);
+            return new InFrame(new PicoLispReader(new LineNumberReader(new FileReader(nm)), nm, allocFd(), null, 0), 1);
          }
          catch (IOException e) {
             err(ex, this, "Read open error");

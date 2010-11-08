@@ -53,10 +53,10 @@ front-end to the PicoLisp console. This is not recommended, because the PicoLisp
 debugging environment will set the console (tty) to raw mode by itself and do
 the special handling seen above during character input.
 
-<p>If you feel that you absolutely have to use an input front-end, please remove
-the entry "@lib/led.l" from "dbg.l". Note that in this case, however, you will
-not have the TAB symbol completion feature available during command line
-editing.
+<p>If you feel that you absolutely have to use an IDE, <code>rlwrap</code> or
++another input front-end, please remove the entry "@lib/led.l" from "dbg.l".
+Note that in this case, however, you will not have the TAB symbol completion
+feature available during command line editing.
 
 <h3>Table of content</h3>
 
@@ -200,8 +200,8 @@ an application server during debugging).
 <li><code>Ctrl-X</code> discards all input, abandons further processing, and
 returns to the interpreter's top level (equivalent to invoking <code><a
 href="refQ.html#quit">quit</a></code>). This is also useful when the program
-stopped at a breakpoint, or after program execution was interrupted with
-<code>Ctrl-C</code>.
+stopped at a breakpoint (see single-stepping <a href="#dbg">Debugging</a>), or
+after program execution was interrupted with <code>Ctrl-C</code>.
 
 </ul>
 
@@ -748,6 +748,16 @@ function, using <code><a href="refP.html#pass">pass</a></code>:
 <p>There are two major ways to debug functions (and methods) at runtime:
 <i>Tracing</i> and <i>single-stepping</i>.
 
+In this section we will use the REPL to explore the debugging facilities, but in
+the <a href="#script">Scripting</a> section, you will learn how to launch
+PicoLisp scripts with some selected functions debugged:
+
+<pre><code>
+$ ./dbg app/file1.l -"trace 'foo" -main -"debug 'bar" app/file2.l
+</code></pre>
+
+<h3>Tracing</h3>
+
 <p><i>Tracing</i> means letting functions of interest print their name and arguments
 when they are entered, and their name again and the return value when they are
 exited.
@@ -760,7 +770,7 @@ href="fun.l">doc/fun.l</a></code>"):
 (de fact (N)
    (if (=0 N)
       1
-      (* N (fact (- N 1))) ) )
+      (* N (fact (dec N))) ) )
 </code></pre>
 
 <p>With <code><a href="refT.html#trace">trace</a></code> we can put it in trace
@@ -791,10 +801,10 @@ space. Upon function entry, the name is separated from the arguments with a
 colon (<code>:</code>), and upon function exit with an equals sign
 (<code>=</code>) from the return value.
 
-<p>Trace works by modifying the function body, so generally only for functions
-defined as lists (lambda expressions, see <a href="ref.html#ev">Evaluation</a>).
-Tracing a C-function is possible, however, when it is a function that evaluates
-all its arguments.
+<p><code>trace</code> works by modifying the function body, so generally it
+works only for functions defined as lists (lambda expressions, see <a
+href="ref.html#ev">Evaluation</a>). Tracing a C-function is possible, however,
+when it is a function that evaluates all its arguments.
 
 <p>So let's trace the functions <code><a href="ref_.html#=0">=0</a></code> and
 <code><a href="ref_.html#*">*</a></code>:
@@ -836,7 +846,7 @@ all its arguments.
 </code></pre>
 
 <p>To reset a function to its untraced state, call <code><a
-href="refU.html#untrace">untrace</a></code>
+href="refU.html#untrace">untrace</a></code>:
 
 <pre><code>
 : (untrace 'fact)
@@ -847,12 +857,14 @@ href="refU.html#untrace">untrace</a></code>
 -> *
 </code></pre>
 
-<p>or simply
+<p>or simply use <code><a href="refM.html#mapc">mapc</a></code>:
 
 <pre><code>
 : (mapc untrace '(fact =0 *))
 -> *
 </code></pre>
+
+<h3>Single-stepping</h3>
 
 <p><i>Single-stepping</i> means to execute a function step by step, giving the
 programmer an opportunity to look more closely at what is happening. The
@@ -869,13 +881,13 @@ then
 functions
 
 <li>execute <code>(<a href="refD.html#d">d</a>)</code> to recursively debug the
-next expression
+next expression (looping through subexpressions of this expression)
 
 <li>execute <code>(<a href="refE.html#e">e</a>)</code> to evaluate the next
 expression, to see what will happen without actually advancing on
 
-<li>type ENTER (: enter an empty line) to leave the read-eval loop and continue
-with the next expression
+<li>type ENTER (that is, enter an empty line) to leave the read-eval loop and
+continue with the next expression
 
 </ul>
 
@@ -883,7 +895,25 @@ with the next expression
 repeatedly to step through the function.
 
 <p>To try it out, let's look at the <code><a
-href="refS.html#stamp">stamp</a></code> system function.
+href="refS.html#stamp">stamp</a></code> system function. You may need to have a
+look at
+
+<ul>
+<li><code><a href="ref_.html#=T">=T</a></code> (T test),</li>
+
+<li><code><a href="refD.html#date">date</a></code> and <code><a
+href="refT.html#time">time</a></code> (grab system date and time)
+
+<li><code><a href="refD.html#default">default</a></code> (conditional assignmen
+
+<li><code><a href="refP.html#pack">pack</a></code> (kind of concatenation), and
+
+<li><code><a href="refD.html#dat$">dat$</a></code> and <code><a
+href="refT.html#tim$">tim$</a></code> (date and time formats)</li>
+
+</ul>
+
+to understand this definition.
 
 <pre><code>
 : (pp 'stamp)
@@ -950,7 +980,8 @@ pretty-print it:
 -> stamp
 </code></pre>
 
-<p>To reset the function to its normal state, call
+<p>To reset the function to its normal state, calll <code><a
+href="refU.html#unbug">unbug</a></code>:
 
 <pre><code>
 : (unbug 'stamp)
@@ -987,7 +1018,7 @@ automatically skipped by <code>read</code>:
 
 <pre><code>
 : (in "doc/fun.l" (read))
--> (de fact (N) (if (=0 N) 1 (* N (fact (- N 1)))))
+-> (de fact (N) (if (=0 N) 1 (* N (fact (dec N)))))
 </code></pre>
 
 <p>The <code><a href="refS.html#skip">skip</a></code> function can also be used
@@ -1005,8 +1036,9 @@ stream for given patterns. Typically, this is not done with Lisp source files
 immediately following <code>fact</code> in the file,
 
 <pre><code>
-: (in "doc/fun.l" (make (while (from "fact ") (link (read)))))
--> ((N) (- N 1))
+: (in "doc/fun.l" (while (from "fact ") (println (read))))
+(N)
+(dec N)
 </code></pre>
 
 <p>or the word following "(de " with <code><a
@@ -1019,7 +1051,9 @@ href="refT.html#till">till</a></code>:
 
 
 <p>With <code><a href="refL.html#line">line</a></code>, a line of characters is
-read, either into a single transient symbol,
+read, either into a single transient <a
+href="ref.html#transient-io">transient</a> symbol (the type used by PicoLisp for
+strings),
 
 <pre><code>
 : (in "doc/tut.html" (line T))
@@ -1049,7 +1083,7 @@ fields. A typical way to import the contents of such a file is:
          ... use 'getStr', 'getNum' etc ...     # process them
 </code></pre>
 
-<p>Some more examples:
+<p>Some more examples with <code><a href="refE.html#echo">echo</a></code>:
 
 <pre><code>
 (in "a"                                         # Copy the first 40 Bytes
@@ -1266,11 +1300,11 @@ site, and prints it to standard output:
 
 <p>We recommend that you have a terminal window open, and try the examples by
 yourself. You may either type them in, directly to the PicoLisp interpreter, or
-edit a separate source file (e.g. <code>"test.l"</code>) in a second terminal
+edit a separate source file (e.g. <code>"doc/fun.l"</code>) in a second terminal
 window and load it into PicoLisp with
 
 <pre><code>
-: (load "test.l")
+: (load "doc/fun.l")
 </code></pre>
 
 <p>each time you have modified and saved it.
@@ -1281,11 +1315,11 @@ window and load it into PicoLisp with
 that function with
 
 <pre><code>
-: (vi 'foo)
+: (vi 'fact)
 </code></pre>
 
 <p>The function 'vi' opens the appropriate source file, and jumps to the right
-line where 'foo' is defined. When you modify it, you can simply call 'ld' to
+line where 'fact' is defined. When you modify it, you can simply call 'ld' to
 (re)load that source file
 
 <pre><code>

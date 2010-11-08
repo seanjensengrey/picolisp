@@ -1,4 +1,4 @@
-# 05nov10abu
+# 06nov10abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -121,10 +121,12 @@ int: ()
 long: ()
    return new Symbol(new Long(evLong(ex.Cdr)));
 
+# (double: 'str 'cnt) -> obj
 # (double: 'num 'cnt) -> obj
-double: (num)
-   num = (Number)((ex = ex.Cdr).Car.eval());
-   return new Symbol(new Double(num.toString(evInt(ex.Cdr), '.', '\0')));
+double: (x)
+   if ((x = (ex = ex.Cdr).Car.eval()) instanceof Number)
+      return new Symbol(new Double(((Number)x).toString(evInt(ex.Cdr), '.', '\0')));
+   return new Symbol(new Double(x.name()));
 
 # (big: 'num) -> obj
 big: (num)
