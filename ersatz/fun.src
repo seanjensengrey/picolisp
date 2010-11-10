@@ -1,4 +1,4 @@
-# 08nov10abu
+# 10nov10abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -260,7 +260,7 @@ version (i x)
    if (ex.Cdr.Car.eval() == Nil) {
       for (i = 0; i < 4; ++i)
          OutFile.Wr.print(Version[i] + (i == 3? "-" : "."));
-      OutFile.Wr.println("J");
+      OutFile.Wr.println('J');
       OutFile.Wr.flush();
    }
    for (x = Nil, i = 4; --i >= 0;)
@@ -2982,7 +2982,7 @@ read (x y)
       x = InFile.read('\0');
    else {
       y = x.Car.eval();
-      if ((x = token(y, (x = x.Cdr.Car.eval()) == Nil? '\0' : firstChar(x))) == null)
+      if ((x = InFile.token(y, (x = x.Cdr.Car.eval()) == Nil? '\0' : firstChar(x))) == null)
          x = Nil;
    }
    if (InFile.Name == null && InFile.Chr == '\n')
@@ -2996,6 +2996,30 @@ wait (i x y)
       if ((i = waitFd(ex, -1, i)) == 0)
          return x.prog();
    return y;
+
+# (poll 'cnt) -> cnt | NIL
+poll (i x)
+   if ((i = xInt(x = ex.Cdr.Car.eval())) < 0 || i >= InFiles.length)
+      badFd(ex,x);
+   if (InFiles[i] == null)
+      return Nil;
+   try {
+      Selector sel = Selector.open();
+      if (InFiles[i].ready(sel))
+         return x;
+      InFiles[i].register(sel);
+      sel.selectNow();
+      if (InFiles[i].ready(sel))
+         return x;
+   }
+   catch (IOException e) {giveup(e);}
+   return Nil;
+
+# (peek) -> sym
+peek ()
+   if (InFile.Chr == 0)
+      InFile.get();
+   return InFile.Chr<0? Nil : mkChar((char)InFile.Chr);
 
 # (char) -> sym
 # (char 'cnt) -> sym
@@ -3018,6 +3042,69 @@ skip (c)
    c = firstChar(ex.Cdr.Car.eval());
    return InFile.skip(c) < 0? Nil : mkChar(c);
 
+# (eol) -> flg
+eol ()
+   return InFile.Chr=='\n' || InFile.Chr<=0? T : Nil;
+
+# (eof ['flg]) -> flg
+eof ()
+   if (ex.Cdr.Car.eval() != Nil) {
+      InFile.Chr = -1;
+      return T;
+   }
+   if (InFile.Chr == 0)
+      InFile.get();
+   return InFile.Chr < 0? T : Nil;
+
+# (from 'any ..) -> sym
+from (i j k x v)
+   if ((k = (int)(x = ex.Cdr).length()) == 0)
+      return Nil;
+   int[] p = new int[k];
+   String[] av = new String[k];
+   for (v = new Any[k], i = 0; i < k; ++i, x = x.Cdr)
+      av[i] = (v[i] = x.Car.eval()).name();
+   if (InFile.Chr == 0)
+      InFile.get();
+   while (InFile.Chr >= 0) {
+      for (i = 0; i < k; ++i) {
+         for (;;) {
+            if (av[i].charAt(p[i]) == (char)InFile.Chr) {
+               if (++p[i] != av[i].length())
+                  break;
+               InFile.get();
+               return v[i];
+            }
+            if (p[i] == 0)
+               break;
+            for (j = 1; --p[i] != 0; ++j)
+               if (av[i].substring(0, p[i]).equals(av[i].substring(j, j + p[i])))
+                  break;
+         }
+      }
+      InFile.get();
+   }
+   return Nil;
+
+# (till 'any ['flg]) -> lst|sym
+till (x y str sb)
+   str = evString(x = ex.Cdr);
+   if (InFile.Chr == 0)
+      InFile.get();
+   if (InFile.Chr < 0 || str.indexOf((char)InFile.Chr) >= 0)
+      return Nil;
+   if (x.Cdr.Car.eval() == Nil) {
+      y = x = new Cell(mkChar((char)InFile.Chr), Nil);
+      while (InFile.get() > 0 && str.indexOf((char)InFile.Chr) < 0)
+         x = x.Cdr = new Cell(mkChar((char)InFile.Chr), Nil);
+      return y;
+   }
+   sb = new StringBuilder();
+   do
+      sb.append((char)InFile.Chr);
+   while (InFile.get() > 0 && str.indexOf((char)InFile.Chr) < 0);
+   return mkStr(sb);
+
 # (line 'flg) -> lst|sym
 line (i x y z sb)
    if (InFile.Chr == 0)
@@ -3038,6 +3125,40 @@ line (i x y z sb)
          return x;
       y = y.Cdr = new Cell(mkChar((char)InFile.Chr), Nil);
    }
+
+# (any 'sym) -> any
+any (x)
+   if ((x = ex.Cdr.Car.eval()) == Nil)
+      return Nil;
+   PicoLispReader rd = new PicoLispReader(x.name(), ' ', '\0');
+   rd.get();
+   return rd.read0(true);
+
+# (sym 'any) -> sym
+sym ()
+   StringWriter sw = new StringWriter();
+   PrintWriter wr = new PrintWriter(sw);
+   wr.print(ex.Cdr.Car.eval().toString());
+   return mkStr(sw.toString());
+
+# (str 'sym ['sym1]) -> lst
+# (str 'lst) -> sym
+str (x y)
+   if ((y = (x = ex.Cdr).Car.eval()) == Nil)
+      return Nil;
+   if (y instanceof Number)
+      argError(ex, y);
+   if (y instanceof Symbol)
+      return ((Symbol)y).parse(false, (x = x.Cdr) instanceof Cell? x.Car.eval() : null);
+   StringWriter sw = new StringWriter();
+   PrintWriter wr = new PrintWriter(sw);
+   for (;;) {
+      wr.print(y.Car.toString());
+      if (!((y = y.Cdr) instanceof Cell))
+         break;
+      wr.print(' ');
+   }
+   return mkStr(sw.toString());
 
 # (load 'any ..) -> any
 load (x y)
@@ -3086,6 +3207,84 @@ close (i x)
       }
    }
    return Nil;
+
+# (echo ['cnt ['cnt]] | ['sym ..]) -> sym
+echo (i j k n x y v)
+   y = (x = ex.Cdr).Car.eval();
+   if (InFile.Chr == 0)
+      InFile.get();
+   if (y == Nil && !(x.Cdr instanceof Cell)) {
+      while (InFile.Chr >= 0) {
+         OutFile.Wr.print((char)InFile.Chr);
+         InFile.get();
+      }
+      return T;
+   }
+   if (y instanceof Symbol) {
+      k = (int)x.length();
+      int[] p = new int[k];
+      String[] av = new String[k];
+      for (v = new Any[k], i = 0; i < k; ++i, y = (x = x.Cdr).Car.eval())
+         av[i] = (v[i] = y).name();
+      int m = -1, d, om, op = 0;  /* Brain-dead Java: 'op' _is_ initialized */
+      while (InFile.Chr >= 0) {
+         if ((om = m) >= 0)
+            op = p[m];
+         for (i = 0; i < k; ++i) {
+            for (;;) {
+               if (av[i].charAt(p[i]) == (char)InFile.Chr) {
+                  if (++p[i] != av[i].length()) {
+                     if (m < 0  ||  p[i] > p[m])
+                        m = i;
+                     break;
+                  }
+                  if (om >= 0)
+                     for (j = 0, d = op-p[i]; j <= d; ++j)
+                        OutFile.Wr.print(av[om].charAt(j));
+                  InFile.Chr = 0;
+                  return v[i];
+               }
+               if (p[i] == 0)
+                  break;
+               for (j = 1; --p[i] != 0; ++j)
+                  if (av[i].substring(0, p[i]).equals(av[i].substring(j, j + p[i])))
+                     break;
+               if (m == i)
+                  for (m = -1, j = 0; j < k; ++j)
+                     if (p[j] != 0 && (m < 0 || p[j] > p[m]))
+                        m = j;
+            }
+         }
+         if (m < 0) {
+            if (om >= 0)
+               for (i = 0; i < op; ++i)
+                  OutFile.Wr.print(av[om].charAt(i));
+            OutFile.Wr.print((char)InFile.Chr);
+         }
+         else if (om >= 0)
+            for (i = 0, d = op-p[m]; i <= d; ++i)
+               OutFile.Wr.print(av[om].charAt(i));
+         InFile.get();
+      }
+      return Nil;
+   }
+   if ((x = x.Cdr) instanceof Cell) {
+      for (n = xLong(y), y = x.Car.eval(); --n >= 0; InFile.get())
+         if (InFile.Chr < 0)
+            return Nil;
+   }
+   if ((n = xLong(y)) > 0) {
+      for (;;) {
+         if (InFile.Chr < 0)
+            return Nil;
+         OutFile.Wr.print((char)InFile.Chr);
+         if (--n == 0)
+            break;
+         InFile.get();
+      }
+   }
+   InFile.Chr = 0;
+   return T;
 
 # (prin 'any ..) -> any
 prin (x y)

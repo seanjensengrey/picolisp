@@ -1,4 +1,4 @@
-// 09nov10abu
+// 10nov10abu
 // (c) Software Lab. Alexander Burger
 
 import java.util.*;
@@ -255,7 +255,7 @@ public class PicoLisp {
       if (s.length() > 0)
          if (s.charAt(0) == '+') {
             if (s.length() > 1 && s.charAt(1) == '@')
-               return "+" + Home + s.substring(1);
+               return '+' + Home + s.substring(1);
          }
          else if (s.charAt(0) == '@')
             return Home + s.substring(1);
@@ -568,50 +568,6 @@ public class PicoLisp {
       catch (NumberFormatException e) {return Nil;}
    }
 
-   final static Any token(Any x, char c) {
-      if (InFile.Chr == 0)
-         InFile.get();
-      if (InFile.skip(c) < 0)
-         return null;
-      if (InFile.Chr == '"') {
-         InFile.get();
-         if (InFile.Chr == '"') {
-            InFile.get();
-            return Nil;
-         }
-         if (!InFile.testEsc())
-            return Nil;
-         StringBuilder sb = new StringBuilder();
-         sb.append((char)InFile.Chr);
-         while (InFile.get() != '"' && InFile.testEsc())
-            sb.append((char)InFile.Chr);
-         InFile.get();
-         return mkStr(sb);
-      }
-      if (InFile.Chr >= '0' && InFile.Chr <= '9') {
-         StringBuilder sb = new StringBuilder();
-         sb.append((char)InFile.Chr);
-         while (InFile.get() >= '0' && InFile.Chr <= '9' || InFile.Chr == '.')
-            sb.append((char)InFile.Chr);
-         return strToAtom(sb.toString());
-      }
-      String s = x.name();
-      if (InFile.Chr >= 'A' && InFile.Chr <= 'Z' || InFile.Chr == '\\' || InFile.Chr >= 'a' && InFile.Chr <= 'z' || s.indexOf(InFile.Chr) >= 0) {
-         if (InFile.Chr == '\\')
-            InFile.get();
-         StringBuilder sb = new StringBuilder();
-         sb.append((char)InFile.Chr);
-         while (InFile.get() >= '0' && InFile.Chr <= '9' || InFile.Chr >= 'A' && InFile.Chr <= 'Z' || InFile.Chr == '\\' || InFile.Chr >= 'a' && InFile.Chr <= 'z' || s.indexOf(InFile.Chr) >= 0) {
-            if (InFile.Chr == '\\')
-               InFile.get();
-            sb.append((char)InFile.Chr);
-         }
-         s = sb.toString();
-         return s.equals("NIL")? Nil : mkSymbol(Nil, s, Intern);
-      }
-      return mkChar((char)InFile.get());
-   }
-
    final static Any fish(Any ex, Any foo, Any[] v, Any res) {
       if (foo.apply(ex, false, v, 1) != Nil)
          return new Cell(v[0], res);
@@ -703,6 +659,7 @@ public class PicoLisp {
 
    final static int xInt(Any x) {return ((Number)x).Cnt;}
    final static int evInt(Any ex) {return ((Number)ex.Car.eval()).Cnt;}
+   final static long xLong(Any x) {return ((Number)x).longValue();}
    final static long evLong(Any ex) {return ((Number)ex.Car.eval()).longValue();}
    final static String evString(Any ex) {return ex.Car.eval().name();}
 
@@ -1353,7 +1310,7 @@ public class PicoLisp {
             }
             return Chr;
          }
-         catch (IOException e) {return -1;}
+         catch (IOException e) {return Chr = -1;}
       }
 
       final boolean eol() {
@@ -1497,8 +1454,8 @@ public class PicoLisp {
                return Nil;
             eofErr();
          }
-         if (top && InFile != null && InFile.Rd instanceof LineNumberReader)
-            InFile.Src = ((LineNumberReader)InFile.Rd).getLineNumber() + 1;
+         if (top && Rd instanceof LineNumberReader)
+            Src = ((LineNumberReader)Rd).getLineNumber() + 1;
          if (Chr == '(') {
             x = rdList();
             if (top  &&  Chr == ']')
@@ -1543,7 +1500,7 @@ public class PicoLisp {
             return mkSymbol(null, sb.toString(), Transient);
          }
          if (Chr == ')' || Chr == ']' || Chr == '~')
-            err(null, null, "Bad input '" + (char)Chr + "' (" + Chr + ")");
+            err(null, null, "Bad input '" + (char)Chr + "' (" + Chr + ')');
          if (Chr == '\\')
             get();
          int i = Chr;
@@ -1560,6 +1517,52 @@ public class PicoLisp {
          while (Chr != 0  &&  " \t)]".indexOf(Chr) >= 0)
             get();
          return x;
+      }
+
+      final Any token(Any x, char c) {
+         if (Chr == 0)
+            get();
+         if (skip(c) < 0)
+            return null;
+         if (Chr == '"') {
+            get();
+            if (Chr == '"') {
+               get();
+               return Nil;
+            }
+            if (!testEsc())
+               return Nil;
+            StringBuilder sb = new StringBuilder();
+            sb.append((char)Chr);
+            while (get() != '"' && testEsc())
+               sb.append((char)Chr);
+            get();
+            return mkStr(sb);
+         }
+         if (Chr >= '0' && Chr <= '9') {
+            StringBuilder sb = new StringBuilder();
+            sb.append((char)Chr);
+            while (get() >= '0' && Chr <= '9' || Chr == '.')
+               sb.append((char)Chr);
+            return strToAtom(sb.toString());
+         }
+         String s = x.name();
+         if (Chr >= 'A' && Chr <= 'Z' || Chr == '\\' || Chr >= 'a' && Chr <= 'z' || s.indexOf(Chr) >= 0) {
+            if (Chr == '\\')
+               get();
+            StringBuilder sb = new StringBuilder();
+            sb.append((char)Chr);
+            while (get() >= '0' && Chr <= '9' || Chr >= 'A' && Chr <= 'Z' || Chr == '\\' || Chr >= 'a' && Chr <= 'z' || s.indexOf(Chr) >= 0) {
+               if (Chr == '\\')
+                  get();
+               sb.append((char)Chr);
+            }
+            s = sb.toString();
+            return s.equals("NIL")? Nil : mkSymbol(Nil, s, Intern);
+         }
+         c = (char)Chr;
+         get();
+         return mkChar(c);
       }
    }
 
@@ -2308,7 +2311,7 @@ public class PicoLisp {
                s = s.substring(i + 1);
             if (s.startsWith("class "))
                s = s.substring(6);
-            return "$" + s;
+            return '$' + s;
 
          }
          if (Intern.get(Name) == this) {
@@ -2340,7 +2343,7 @@ public class PicoLisp {
       }
 
       final Any parse(boolean skp, Any s) {
-         Any x, y;
+         Any x, y, z;
          PicoLispReader rd;
          if (s == null)
             rd = new PicoLispReader(name(), '\n', ']');
@@ -2350,12 +2353,12 @@ public class PicoLisp {
             rd.get();
          if (s == null)
             return rd.rdList();
-         if ((x = token(s, '\0')) == null)
+         if ((x = rd.token(s, '\0')) == null)
             return Nil;
-         y = new Cell(x, Nil);
-         while ((x = token(s, '\0')) != null)
+         z = y = new Cell(x, Nil);
+         while ((x = rd.token(s, '\0')) != null)
             y = y.Cdr = new Cell(x, Nil);
-         return y;
+         return z;
       }
    }
 
@@ -2680,7 +2683,7 @@ public class PicoLisp {
          Any x, y;
          StringBuilder sb;
          if (Car == Quote  &&  this != Cdr)
-            return "'" + Cdr.toString();
+            return '\'' + Cdr.toString();
          x = this;
          sb = new StringBuilder();
          sb.append('(');

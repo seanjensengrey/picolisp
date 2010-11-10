@@ -1,4 +1,4 @@
-// 09nov10abu
+// 10nov10abu
 // (c) Software Lab. Alexander Burger
 
 import java.util.*;
@@ -16,7 +16,7 @@ public class PicoLisp {
    final static HashMap<String,Symbol> Intern = new HashMap<String,Symbol>();
    final static HashMap<String,Symbol> Transient = new HashMap<String,Symbol>();
    final static byte MonLen[] = new byte[] {31,31,28,31,30,31,30,31,31,30,31,30,31};
-   final static byte Version[] = new byte[] {3,0,4,4};
+   final static byte Version[] = new byte[] {3,0,4,5};
 
    final static Number Zero = new Number(0);
    final static Number One = new Number(1);
@@ -339,25 +339,35 @@ public class PicoLisp {
       mkSymbol(new Number("273"), "path", Intern);
       mkSymbol(new Number("274"), "read", Intern);
       mkSymbol(new Number("275"), "wait", Intern);
-      mkSymbol(new Number("276"), "char", Intern);
-      mkSymbol(new Number("277"), "skip", Intern);
-      mkSymbol(new Number("278"), "line", Intern);
-      mkSymbol(new Number("279"), "load", Intern);
-      mkSymbol(new Number("280"), "in", Intern);
-      mkSymbol(new Number("281"), "out", Intern);
-      mkSymbol(new Number("282"), "open", Intern);
-      mkSymbol(new Number("283"), "close", Intern);
-      mkSymbol(new Number("284"), "prin", Intern);
-      mkSymbol(new Number("285"), "prinl", Intern);
-      mkSymbol(new Number("286"), "space", Intern);
-      mkSymbol(new Number("287"), "print", Intern);
-      mkSymbol(new Number("288"), "printsp", Intern);
-      mkSymbol(new Number("289"), "println", Intern);
-      mkSymbol(new Number("290"), "flush", Intern);
-      mkSymbol(new Number("291"), "port", Intern);
-      mkSymbol(new Number("292"), "accept", Intern);
-      mkSymbol(new Number("293"), "connect", Intern);
-      MaxFun = 293;
+      mkSymbol(new Number("276"), "poll", Intern);
+      mkSymbol(new Number("277"), "peek", Intern);
+      mkSymbol(new Number("278"), "char", Intern);
+      mkSymbol(new Number("279"), "skip", Intern);
+      mkSymbol(new Number("280"), "eol", Intern);
+      mkSymbol(new Number("281"), "eof", Intern);
+      mkSymbol(new Number("282"), "from", Intern);
+      mkSymbol(new Number("283"), "till", Intern);
+      mkSymbol(new Number("284"), "line", Intern);
+      mkSymbol(new Number("285"), "any", Intern);
+      mkSymbol(new Number("286"), "sym", Intern);
+      mkSymbol(new Number("287"), "str", Intern);
+      mkSymbol(new Number("288"), "load", Intern);
+      mkSymbol(new Number("289"), "in", Intern);
+      mkSymbol(new Number("290"), "out", Intern);
+      mkSymbol(new Number("291"), "open", Intern);
+      mkSymbol(new Number("292"), "close", Intern);
+      mkSymbol(new Number("293"), "echo", Intern);
+      mkSymbol(new Number("294"), "prin", Intern);
+      mkSymbol(new Number("295"), "prinl", Intern);
+      mkSymbol(new Number("296"), "space", Intern);
+      mkSymbol(new Number("297"), "print", Intern);
+      mkSymbol(new Number("298"), "printsp", Intern);
+      mkSymbol(new Number("299"), "println", Intern);
+      mkSymbol(new Number("300"), "flush", Intern);
+      mkSymbol(new Number("301"), "port", Intern);
+      mkSymbol(new Number("302"), "accept", Intern);
+      mkSymbol(new Number("303"), "connect", Intern);
+      MaxFun = 303;
       init();
       for (boolean first = true; ; first = false) {
          try {
@@ -547,7 +557,7 @@ public class PicoLisp {
       if (s.length() > 0)
          if (s.charAt(0) == '+') {
             if (s.length() > 1 && s.charAt(1) == '@')
-               return "+" + Home + s.substring(1);
+               return '+' + Home + s.substring(1);
          }
          else if (s.charAt(0) == '@')
             return Home + s.substring(1);
@@ -860,50 +870,6 @@ public class PicoLisp {
       catch (NumberFormatException e) {return Nil;}
    }
 
-   final static Any token(Any x, char c) {
-      if (InFile.Chr == 0)
-         InFile.get();
-      if (InFile.skip(c) < 0)
-         return null;
-      if (InFile.Chr == '"') {
-         InFile.get();
-         if (InFile.Chr == '"') {
-            InFile.get();
-            return Nil;
-         }
-         if (!InFile.testEsc())
-            return Nil;
-         StringBuilder sb = new StringBuilder();
-         sb.append((char)InFile.Chr);
-         while (InFile.get() != '"' && InFile.testEsc())
-            sb.append((char)InFile.Chr);
-         InFile.get();
-         return mkStr(sb);
-      }
-      if (InFile.Chr >= '0' && InFile.Chr <= '9') {
-         StringBuilder sb = new StringBuilder();
-         sb.append((char)InFile.Chr);
-         while (InFile.get() >= '0' && InFile.Chr <= '9' || InFile.Chr == '.')
-            sb.append((char)InFile.Chr);
-         return strToAtom(sb.toString());
-      }
-      String s = x.name();
-      if (InFile.Chr >= 'A' && InFile.Chr <= 'Z' || InFile.Chr == '\\' || InFile.Chr >= 'a' && InFile.Chr <= 'z' || s.indexOf(InFile.Chr) >= 0) {
-         if (InFile.Chr == '\\')
-            InFile.get();
-         StringBuilder sb = new StringBuilder();
-         sb.append((char)InFile.Chr);
-         while (InFile.get() >= '0' && InFile.Chr <= '9' || InFile.Chr >= 'A' && InFile.Chr <= 'Z' || InFile.Chr == '\\' || InFile.Chr >= 'a' && InFile.Chr <= 'z' || s.indexOf(InFile.Chr) >= 0) {
-            if (InFile.Chr == '\\')
-               InFile.get();
-            sb.append((char)InFile.Chr);
-         }
-         s = sb.toString();
-         return s.equals("NIL")? Nil : mkSymbol(Nil, s, Intern);
-      }
-      return mkChar((char)InFile.get());
-   }
-
    final static Any fish(Any ex, Any foo, Any[] v, Any res) {
       if (foo.apply(ex, false, v, 1) != Nil)
          return new Cell(v[0], res);
@@ -995,6 +961,7 @@ public class PicoLisp {
 
    final static int xInt(Any x) {return ((Number)x).Cnt;}
    final static int evInt(Any ex) {return ((Number)ex.Car.eval()).Cnt;}
+   final static long xLong(Any x) {return ((Number)x).longValue();}
    final static long evLong(Any ex) {return ((Number)ex.Car.eval()).longValue();}
    final static String evString(Any ex) {return ex.Car.eval().name();}
 
@@ -1645,7 +1612,7 @@ public class PicoLisp {
             }
             return Chr;
          }
-         catch (IOException e) {return -1;}
+         catch (IOException e) {return Chr = -1;}
       }
 
       final boolean eol() {
@@ -1789,8 +1756,8 @@ public class PicoLisp {
                return Nil;
             eofErr();
          }
-         if (top && InFile != null && InFile.Rd instanceof LineNumberReader)
-            InFile.Src = ((LineNumberReader)InFile.Rd).getLineNumber() + 1;
+         if (top && Rd instanceof LineNumberReader)
+            Src = ((LineNumberReader)Rd).getLineNumber() + 1;
          if (Chr == '(') {
             x = rdList();
             if (top  &&  Chr == ']')
@@ -1835,7 +1802,7 @@ public class PicoLisp {
             return mkSymbol(null, sb.toString(), Transient);
          }
          if (Chr == ')' || Chr == ']' || Chr == '~')
-            err(null, null, "Bad input '" + (char)Chr + "' (" + Chr + ")");
+            err(null, null, "Bad input '" + (char)Chr + "' (" + Chr + ')');
          if (Chr == '\\')
             get();
          int i = Chr;
@@ -1852,6 +1819,52 @@ public class PicoLisp {
          while (Chr != 0  &&  " \t)]".indexOf(Chr) >= 0)
             get();
          return x;
+      }
+
+      final Any token(Any x, char c) {
+         if (Chr == 0)
+            get();
+         if (skip(c) < 0)
+            return null;
+         if (Chr == '"') {
+            get();
+            if (Chr == '"') {
+               get();
+               return Nil;
+            }
+            if (!testEsc())
+               return Nil;
+            StringBuilder sb = new StringBuilder();
+            sb.append((char)Chr);
+            while (get() != '"' && testEsc())
+               sb.append((char)Chr);
+            get();
+            return mkStr(sb);
+         }
+         if (Chr >= '0' && Chr <= '9') {
+            StringBuilder sb = new StringBuilder();
+            sb.append((char)Chr);
+            while (get() >= '0' && Chr <= '9' || Chr == '.')
+               sb.append((char)Chr);
+            return strToAtom(sb.toString());
+         }
+         String s = x.name();
+         if (Chr >= 'A' && Chr <= 'Z' || Chr == '\\' || Chr >= 'a' && Chr <= 'z' || s.indexOf(Chr) >= 0) {
+            if (Chr == '\\')
+               get();
+            StringBuilder sb = new StringBuilder();
+            sb.append((char)Chr);
+            while (get() >= '0' && Chr <= '9' || Chr >= 'A' && Chr <= 'Z' || Chr == '\\' || Chr >= 'a' && Chr <= 'z' || s.indexOf(Chr) >= 0) {
+               if (Chr == '\\')
+                  get();
+               sb.append((char)Chr);
+            }
+            s = sb.toString();
+            return s.equals("NIL")? Nil : mkSymbol(Nil, s, Intern);
+         }
+         c = (char)Chr;
+         get();
+         return mkChar(c);
       }
    }
 
@@ -2620,42 +2633,62 @@ public class PicoLisp {
                return do274(ex);
             case 275:  // wait
                return do275(ex);
-            case 276:  // char
+            case 276:  // poll
                return do276(ex);
-            case 277:  // skip
+            case 277:  // peek
                return do277(ex);
-            case 278:  // line
+            case 278:  // char
                return do278(ex);
-            case 279:  // load
+            case 279:  // skip
                return do279(ex);
-            case 280:  // in
+            case 280:  // eol
                return do280(ex);
-            case 281:  // out
+            case 281:  // eof
                return do281(ex);
-            case 282:  // open
+            case 282:  // from
                return do282(ex);
-            case 283:  // close
+            case 283:  // till
                return do283(ex);
-            case 284:  // prin
+            case 284:  // line
                return do284(ex);
-            case 285:  // prinl
+            case 285:  // any
                return do285(ex);
-            case 286:  // space
+            case 286:  // sym
                return do286(ex);
-            case 287:  // print
+            case 287:  // str
                return do287(ex);
-            case 288:  // printsp
+            case 288:  // load
                return do288(ex);
-            case 289:  // println
+            case 289:  // in
                return do289(ex);
-            case 290:  // flush
+            case 290:  // out
                return do290(ex);
-            case 291:  // port
+            case 291:  // open
                return do291(ex);
-            case 292:  // accept
+            case 292:  // close
                return do292(ex);
-            case 293:  // connect
+            case 293:  // echo
                return do293(ex);
+            case 294:  // prin
+               return do294(ex);
+            case 295:  // prinl
+               return do295(ex);
+            case 296:  // space
+               return do296(ex);
+            case 297:  // print
+               return do297(ex);
+            case 298:  // printsp
+               return do298(ex);
+            case 299:  // println
+               return do299(ex);
+            case 300:  // flush
+               return do300(ex);
+            case 301:  // port
+               return do301(ex);
+            case 302:  // accept
+               return do302(ex);
+            case 303:  // connect
+               return do303(ex);
             default:
                return undefined(this, ex);
             }
@@ -2948,7 +2981,7 @@ public class PicoLisp {
          if (ex.Cdr.Car.eval() == Nil) {
             for (i = 0; i < 4; ++i)
                OutFile.Wr.print(Version[i] + (i == 3? "-" : "."));
-            OutFile.Wr.println("J");
+            OutFile.Wr.println('J');
             OutFile.Wr.flush();
          }
          for (x = Nil, i = 4; --i >= 0;)
@@ -5955,7 +5988,7 @@ public class PicoLisp {
             x = InFile.read('\0');
          else {
             y = x.Car.eval();
-            if ((x = token(y, (x = x.Cdr.Car.eval()) == Nil? '\0' : firstChar(x))) == null)
+            if ((x = InFile.token(y, (x = x.Cdr.Car.eval()) == Nil? '\0' : firstChar(x))) == null)
                x = Nil;
          }
          if (InFile.Name == null && InFile.Chr == '\n')
@@ -5973,7 +6006,33 @@ public class PicoLisp {
          return y;
       }
 
-      final static Any do276(Any ex) { // char
+      final static Any do276(Any ex) { // poll
+         int i;
+         Any x;
+         if ((i = xInt(x = ex.Cdr.Car.eval())) < 0 || i >= InFiles.length)
+            badFd(ex,x);
+         if (InFiles[i] == null)
+            return Nil;
+         try {
+            Selector sel = Selector.open();
+            if (InFiles[i].ready(sel))
+               return x;
+            InFiles[i].register(sel);
+            sel.selectNow();
+            if (InFiles[i].ready(sel))
+               return x;
+         }
+         catch (IOException e) {giveup(e);}
+         return Nil;
+      }
+
+      final static Any do277(Any ex) { // peek
+         if (InFile.Chr == 0)
+            InFile.get();
+         return InFile.Chr<0? Nil : mkChar((char)InFile.Chr);
+      }
+
+      final static Any do278(Any ex) { // char
          Any x;
          if (!((ex = ex.Cdr) instanceof Cell)) {
             if (InFile.Chr == 0)
@@ -5987,13 +6046,82 @@ public class PicoLisp {
          return x == T? mkChar((char)0x10000) : new Number(firstChar(x));
       }
 
-      final static Any do277(Any ex) { // skip
+      final static Any do279(Any ex) { // skip
          char c;
          c = firstChar(ex.Cdr.Car.eval());
          return InFile.skip(c) < 0? Nil : mkChar(c);
       }
 
-      final static Any do278(Any ex) { // line
+      final static Any do280(Any ex) { // eol
+         return InFile.Chr=='\n' || InFile.Chr<=0? T : Nil;
+      }
+
+      final static Any do281(Any ex) { // eof
+         if (ex.Cdr.Car.eval() != Nil) {
+            InFile.Chr = -1;
+            return T;
+         }
+         if (InFile.Chr == 0)
+            InFile.get();
+         return InFile.Chr < 0? T : Nil;
+      }
+
+      final static Any do282(Any ex) { // from
+         int i, j, k;
+         Any x;
+         Any[] v;
+         if ((k = (int)(x = ex.Cdr).length()) == 0)
+            return Nil;
+         int[] p = new int[k];
+         String[] av = new String[k];
+         for (v = new Any[k], i = 0; i < k; ++i, x = x.Cdr)
+            av[i] = (v[i] = x.Car.eval()).name();
+         if (InFile.Chr == 0)
+            InFile.get();
+         while (InFile.Chr >= 0) {
+            for (i = 0; i < k; ++i) {
+               for (;;) {
+                  if (av[i].charAt(p[i]) == (char)InFile.Chr) {
+                     if (++p[i] != av[i].length())
+                        break;
+                     InFile.get();
+                     return v[i];
+                  }
+                  if (p[i] == 0)
+                     break;
+                  for (j = 1; --p[i] != 0; ++j)
+                     if (av[i].substring(0, p[i]).equals(av[i].substring(j, j + p[i])))
+                        break;
+               }
+            }
+            InFile.get();
+         }
+         return Nil;
+      }
+
+      final static Any do283(Any ex) { // till
+         Any x, y;
+         String str;
+         StringBuilder sb;
+         str = evString(x = ex.Cdr);
+         if (InFile.Chr == 0)
+            InFile.get();
+         if (InFile.Chr < 0 || str.indexOf((char)InFile.Chr) >= 0)
+            return Nil;
+         if (x.Cdr.Car.eval() == Nil) {
+            y = x = new Cell(mkChar((char)InFile.Chr), Nil);
+            while (InFile.get() > 0 && str.indexOf((char)InFile.Chr) < 0)
+               x = x.Cdr = new Cell(mkChar((char)InFile.Chr), Nil);
+            return y;
+         }
+         sb = new StringBuilder();
+         do
+            sb.append((char)InFile.Chr);
+         while (InFile.get() > 0 && str.indexOf((char)InFile.Chr) < 0);
+         return mkStr(sb);
+      }
+
+      final static Any do284(Any ex) { // line
          int i;
          Any x, y, z;
          StringBuilder sb;
@@ -6017,7 +6145,42 @@ public class PicoLisp {
          }
       }
 
-      final static Any do279(Any ex) { // load
+      final static Any do285(Any ex) { // any
+         Any x;
+         if ((x = ex.Cdr.Car.eval()) == Nil)
+            return Nil;
+         PicoLispReader rd = new PicoLispReader(x.name(), ' ', '\0');
+         rd.get();
+         return rd.read0(true);
+      }
+
+      final static Any do286(Any ex) { // sym
+         StringWriter sw = new StringWriter();
+         PrintWriter wr = new PrintWriter(sw);
+         wr.print(ex.Cdr.Car.eval().toString());
+         return mkStr(sw.toString());
+      }
+
+      final static Any do287(Any ex) { // str
+         Any x, y;
+         if ((y = (x = ex.Cdr).Car.eval()) == Nil)
+            return Nil;
+         if (y instanceof Number)
+            argError(ex, y);
+         if (y instanceof Symbol)
+            return ((Symbol)y).parse(false, (x = x.Cdr) instanceof Cell? x.Car.eval() : null);
+         StringWriter sw = new StringWriter();
+         PrintWriter wr = new PrintWriter(sw);
+         for (;;) {
+            wr.print(y.Car.toString());
+            if (!((y = y.Cdr) instanceof Cell))
+               break;
+            wr.print(' ');
+         }
+         return mkStr(sw.toString());
+      }
+
+      final static Any do288(Any ex) { // load
          Any x, y;
          x = ex.Cdr;
          do {
@@ -6029,7 +6192,7 @@ public class PicoLisp {
          return y;
       }
 
-      final static Any do280(Any ex) { // in
+      final static Any do289(Any ex) { // in
          Any x;
          Env.pushInFile((x = ex.Cdr).Car.eval().rdOpen(ex));
          x = x.Cdr.prog();
@@ -6037,7 +6200,7 @@ public class PicoLisp {
          return x;
       }
 
-      final static Any do281(Any ex) { // out
+      final static Any do290(Any ex) { // out
          Any x;
          Env.pushOutFile((x = ex.Cdr).Car.eval().wrOpen(ex));
          x = x.Cdr.prog();
@@ -6045,7 +6208,7 @@ public class PicoLisp {
          return x;
       }
 
-      final static Any do282(Any ex) { // open
+      final static Any do291(Any ex) { // open
          String str;
          str = evString(ex.Cdr);
          try {return new Number(new PicoLispReader(new FileReader(str), str, allocFd(), null, 0).Fd);}
@@ -6053,7 +6216,7 @@ public class PicoLisp {
          return Nil;
       }
 
-      final static Any do283(Any ex) { // close
+      final static Any do292(Any ex) { // close
          int i;
          Any x;
          if ((i = xInt(x = ex.Cdr.Car.eval())) >= 0 && i < InFiles.length) {
@@ -6071,20 +6234,102 @@ public class PicoLisp {
          return Nil;
       }
 
-      final static Any do284(Any ex) { // prin
+      final static Any do293(Any ex) { // echo
+         int i, j, k;
+         long n;
+         Any x, y;
+         Any[] v;
+         y = (x = ex.Cdr).Car.eval();
+         if (InFile.Chr == 0)
+            InFile.get();
+         if (y == Nil && !(x.Cdr instanceof Cell)) {
+            while (InFile.Chr >= 0) {
+               OutFile.Wr.print((char)InFile.Chr);
+               InFile.get();
+            }
+            return T;
+         }
+         if (y instanceof Symbol) {
+            k = (int)x.length();
+            int[] p = new int[k];
+            String[] av = new String[k];
+            for (v = new Any[k], i = 0; i < k; ++i, y = (x = x.Cdr).Car.eval())
+               av[i] = (v[i] = y).name();
+            int m = -1, d, om, op = 0;  /* Brain-dead Java: 'op' _is_ initialized */
+            while (InFile.Chr >= 0) {
+               if ((om = m) >= 0)
+                  op = p[m];
+               for (i = 0; i < k; ++i) {
+                  for (;;) {
+                     if (av[i].charAt(p[i]) == (char)InFile.Chr) {
+                        if (++p[i] != av[i].length()) {
+                           if (m < 0  ||  p[i] > p[m])
+                              m = i;
+                           break;
+                        }
+                        if (om >= 0)
+                           for (j = 0, d = op-p[i]; j <= d; ++j)
+                              OutFile.Wr.print(av[om].charAt(j));
+                        InFile.Chr = 0;
+                        return v[i];
+                     }
+                     if (p[i] == 0)
+                        break;
+                     for (j = 1; --p[i] != 0; ++j)
+                        if (av[i].substring(0, p[i]).equals(av[i].substring(j, j + p[i])))
+                           break;
+                     if (m == i)
+                        for (m = -1, j = 0; j < k; ++j)
+                           if (p[j] != 0 && (m < 0 || p[j] > p[m]))
+                              m = j;
+                  }
+               }
+               if (m < 0) {
+                  if (om >= 0)
+                     for (i = 0; i < op; ++i)
+                        OutFile.Wr.print(av[om].charAt(i));
+                  OutFile.Wr.print((char)InFile.Chr);
+               }
+               else if (om >= 0)
+                  for (i = 0, d = op-p[m]; i <= d; ++i)
+                     OutFile.Wr.print(av[om].charAt(i));
+               InFile.get();
+            }
+            return Nil;
+         }
+         if ((x = x.Cdr) instanceof Cell) {
+            for (n = xLong(y), y = x.Car.eval(); --n >= 0; InFile.get())
+               if (InFile.Chr < 0)
+                  return Nil;
+         }
+         if ((n = xLong(y)) > 0) {
+            for (;;) {
+               if (InFile.Chr < 0)
+                  return Nil;
+               OutFile.Wr.print((char)InFile.Chr);
+               if (--n == 0)
+                  break;
+               InFile.get();
+            }
+         }
+         InFile.Chr = 0;
+         return T;
+      }
+
+      final static Any do294(Any ex) { // prin
          Any x, y;
          for (y = Nil; (ex = ex.Cdr) instanceof Cell; OutFile.Wr.print((y = ex.Car.eval()).name()));
          return y;
       }
 
-      final static Any do285(Any ex) { // prinl
+      final static Any do295(Any ex) { // prinl
          Any x, y;
          for (y = Nil; (ex = ex.Cdr) instanceof Cell; OutFile.Wr.print((y = ex.Car.eval()).name()));
          OutFile.newline();
          return y;
       }
 
-      final static Any do286(Any ex) { // space
+      final static Any do296(Any ex) { // space
          int i;
          Any x;
          if ((x = ex.Cdr.Car.eval()) == Nil) {
@@ -6096,7 +6341,7 @@ public class PicoLisp {
          return x;
       }
 
-      final static Any do287(Any ex) { // print
+      final static Any do297(Any ex) { // print
          Any x, y;
          OutFile.print(y = (x = ex.Cdr).Car.eval());
          while ((x = x.Cdr) instanceof Cell) {
@@ -6106,7 +6351,7 @@ public class PicoLisp {
          return y;
       }
 
-      final static Any do288(Any ex) { // printsp
+      final static Any do298(Any ex) { // printsp
          Any x, y;
          x = ex.Cdr;
          do {
@@ -6116,7 +6361,7 @@ public class PicoLisp {
          return y;
       }
 
-      final static Any do289(Any ex) { // println
+      final static Any do299(Any ex) { // println
          Any x, y;
          OutFile.print(y = (x = ex.Cdr).Car.eval());
          while ((x = x.Cdr) instanceof Cell) {
@@ -6127,11 +6372,11 @@ public class PicoLisp {
          return y;
       }
 
-      final static Any do290(Any ex) { // flush
+      final static Any do300(Any ex) { // flush
          return OutFile.Wr.checkError()? Nil : T;
       }
 
-      final static Any do291(Any ex) { // port
+      final static Any do301(Any ex) { // port
          ex = ex.Cdr;  // ...
          try {
             ServerSocketChannel chan = ServerSocketChannel.open();;
@@ -6142,7 +6387,7 @@ public class PicoLisp {
          return Nil;
       }
 
-      final static Any do292(Any ex) { // accept
+      final static Any do302(Any ex) { // accept
          int i;
          Any x;
          if ((i = xInt(x = ex.Cdr.Car.eval())) < 0 || i >= InFiles.length || InFiles[i] == null || InFiles[i].Chan == null)
@@ -6152,7 +6397,7 @@ public class PicoLisp {
          return Nil;
       }
 
-      final static Any do293(Any ex) { // connect
+      final static Any do303(Any ex) { // connect
          int i;
          try {
             SocketChannel chan = SocketChannel.open();
@@ -6665,7 +6910,7 @@ public class PicoLisp {
                s = s.substring(i + 1);
             if (s.startsWith("class "))
                s = s.substring(6);
-            return "$" + s;
+            return '$' + s;
 
          }
          if (Intern.get(Name) == this) {
@@ -6697,7 +6942,7 @@ public class PicoLisp {
       }
 
       final Any parse(boolean skp, Any s) {
-         Any x, y;
+         Any x, y, z;
          PicoLispReader rd;
          if (s == null)
             rd = new PicoLispReader(name(), '\n', ']');
@@ -6707,12 +6952,12 @@ public class PicoLisp {
             rd.get();
          if (s == null)
             return rd.rdList();
-         if ((x = token(s, '\0')) == null)
+         if ((x = rd.token(s, '\0')) == null)
             return Nil;
-         y = new Cell(x, Nil);
-         while ((x = token(s, '\0')) != null)
+         z = y = new Cell(x, Nil);
+         while ((x = rd.token(s, '\0')) != null)
             y = y.Cdr = new Cell(x, Nil);
-         return y;
+         return z;
       }
    }
 
@@ -7037,7 +7282,7 @@ public class PicoLisp {
          Any x, y;
          StringBuilder sb;
          if (Car == Quote  &&  this != Cdr)
-            return "'" + Cdr.toString();
+            return '\'' + Cdr.toString();
          x = this;
          sb = new StringBuilder();
          sb.append('(');
