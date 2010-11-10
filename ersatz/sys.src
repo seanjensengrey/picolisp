@@ -1,4 +1,4 @@
-// 08nov10abu
+// 09nov10abu
 // (c) Software Lab. Alexander Burger
 
 import java.util.*;
@@ -138,7 +138,7 @@ public class PicoLisp {
             sel = Selector.open();
             int t = ms >= 0? ms : Integer.MAX_VALUE;
             if (fd >= 0 && InFiles[fd] != null)
-               if (InFiles[fd].Stream != null && InFiles[fd].Stream.available() > 0)
+               if (InFiles[fd].ready(sel))
                   t = 0;
                else
                   InFiles[fd].register(sel);
@@ -150,7 +150,7 @@ public class PicoLisp {
                   }
                   else if (i != fd) {
                      if (i < InFiles.length && InFiles[i] != null)
-                        if (InFiles[i].Stream != null && InFiles[i].Stream.available() > 0)
+                        if (InFiles[i].ready(sel))
                            t = 0;
                         else
                            InFiles[i].register(sel);
@@ -177,14 +177,14 @@ public class PicoLisp {
                      }
                   }
                   else if (i != fd) {
-                     if (i < InFiles.length && InFiles[i] != null && InFiles[i].isReady(sel)) {
+                     if (i < InFiles.length && InFiles[i] != null && InFiles[i].ready(sel)) {
                         At.Car = x.Car.Car;
                         x.Car.Cdr.prog();
                      }
                   }
                }
             }
-            if (ms == 0 || fd < 0 || InFiles[fd] != null && InFiles[fd].isReady(sel))
+            if (ms == 0 || fd < 0 || InFiles[fd] != null && InFiles[fd].ready(sel))
                break;
             sel.close();
          }
@@ -1302,14 +1302,14 @@ public class PicoLisp {
          return false;
       }
 
-      final boolean isReady(Selector sel) {
-         boolean rdy = false;
-         if (Key != null) {
-            rdy = (Key.readyOps() & Ops) != 0;
-            Key.cancel();
-            try{Chan.configureBlocking(true);}
-            catch (IOException e) {}
-         }
+      final boolean ready(Selector sel) throws IOException {
+         if (Key == null)
+            return Rd.ready() || Stream != null && Stream.available() > 0;
+         boolean rdy = (Key.readyOps() & Ops) != 0;
+         Key.cancel();
+         Key = null;
+         try{Chan.configureBlocking(true);}
+         catch (IOException e) {}
          return rdy;
       }
 

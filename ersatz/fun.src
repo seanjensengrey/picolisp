@@ -1,4 +1,4 @@
-# 06nov10abu
+# 08nov10abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -3063,10 +3063,6 @@ out (x)
    x = x.Cdr.prog();
    Env.popOutFiles();
    return x;
-
-# (ctl 'sym . prg) -> any
-ctl ()
-   return ex.Cdr.Cdr.prog();  // No locking
 
 # (open 'any) -> cnt | NIL
 open (str)

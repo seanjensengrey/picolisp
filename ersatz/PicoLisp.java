@@ -1,4 +1,4 @@
-// 08nov10abu
+// 09nov10abu
 // (c) Software Lab. Alexander Burger
 
 import java.util.*;
@@ -345,20 +345,19 @@ public class PicoLisp {
       mkSymbol(new Number("279"), "load", Intern);
       mkSymbol(new Number("280"), "in", Intern);
       mkSymbol(new Number("281"), "out", Intern);
-      mkSymbol(new Number("282"), "ctl", Intern);
-      mkSymbol(new Number("283"), "open", Intern);
-      mkSymbol(new Number("284"), "close", Intern);
-      mkSymbol(new Number("285"), "prin", Intern);
-      mkSymbol(new Number("286"), "prinl", Intern);
-      mkSymbol(new Number("287"), "space", Intern);
-      mkSymbol(new Number("288"), "print", Intern);
-      mkSymbol(new Number("289"), "printsp", Intern);
-      mkSymbol(new Number("290"), "println", Intern);
-      mkSymbol(new Number("291"), "flush", Intern);
-      mkSymbol(new Number("292"), "port", Intern);
-      mkSymbol(new Number("293"), "accept", Intern);
-      mkSymbol(new Number("294"), "connect", Intern);
-      MaxFun = 294;
+      mkSymbol(new Number("282"), "open", Intern);
+      mkSymbol(new Number("283"), "close", Intern);
+      mkSymbol(new Number("284"), "prin", Intern);
+      mkSymbol(new Number("285"), "prinl", Intern);
+      mkSymbol(new Number("286"), "space", Intern);
+      mkSymbol(new Number("287"), "print", Intern);
+      mkSymbol(new Number("288"), "printsp", Intern);
+      mkSymbol(new Number("289"), "println", Intern);
+      mkSymbol(new Number("290"), "flush", Intern);
+      mkSymbol(new Number("291"), "port", Intern);
+      mkSymbol(new Number("292"), "accept", Intern);
+      mkSymbol(new Number("293"), "connect", Intern);
+      MaxFun = 293;
       init();
       for (boolean first = true; ; first = false) {
          try {
@@ -431,7 +430,7 @@ public class PicoLisp {
             sel = Selector.open();
             int t = ms >= 0? ms : Integer.MAX_VALUE;
             if (fd >= 0 && InFiles[fd] != null)
-               if (InFiles[fd].Stream != null && InFiles[fd].Stream.available() > 0)
+               if (InFiles[fd].ready(sel))
                   t = 0;
                else
                   InFiles[fd].register(sel);
@@ -443,7 +442,7 @@ public class PicoLisp {
                   }
                   else if (i != fd) {
                      if (i < InFiles.length && InFiles[i] != null)
-                        if (InFiles[i].Stream != null && InFiles[i].Stream.available() > 0)
+                        if (InFiles[i].ready(sel))
                            t = 0;
                         else
                            InFiles[i].register(sel);
@@ -470,14 +469,14 @@ public class PicoLisp {
                      }
                   }
                   else if (i != fd) {
-                     if (i < InFiles.length && InFiles[i] != null && InFiles[i].isReady(sel)) {
+                     if (i < InFiles.length && InFiles[i] != null && InFiles[i].ready(sel)) {
                         At.Car = x.Car.Car;
                         x.Car.Cdr.prog();
                      }
                   }
                }
             }
-            if (ms == 0 || fd < 0 || InFiles[fd] != null && InFiles[fd].isReady(sel))
+            if (ms == 0 || fd < 0 || InFiles[fd] != null && InFiles[fd].ready(sel))
                break;
             sel.close();
          }
@@ -1595,14 +1594,14 @@ public class PicoLisp {
          return false;
       }
 
-      final boolean isReady(Selector sel) {
-         boolean rdy = false;
-         if (Key != null) {
-            rdy = (Key.readyOps() & Ops) != 0;
-            Key.cancel();
-            try{Chan.configureBlocking(true);}
-            catch (IOException e) {}
-         }
+      final boolean ready(Selector sel) throws IOException {
+         if (Key == null)
+            return Rd.ready() || Stream != null && Stream.available() > 0;
+         boolean rdy = (Key.readyOps() & Ops) != 0;
+         Key.cancel();
+         Key = null;
+         try{Chan.configureBlocking(true);}
+         catch (IOException e) {}
          return rdy;
       }
 
@@ -2633,32 +2632,30 @@ public class PicoLisp {
                return do280(ex);
             case 281:  // out
                return do281(ex);
-            case 282:  // ctl
+            case 282:  // open
                return do282(ex);
-            case 283:  // open
+            case 283:  // close
                return do283(ex);
-            case 284:  // close
+            case 284:  // prin
                return do284(ex);
-            case 285:  // prin
+            case 285:  // prinl
                return do285(ex);
-            case 286:  // prinl
+            case 286:  // space
                return do286(ex);
-            case 287:  // space
+            case 287:  // print
                return do287(ex);
-            case 288:  // print
+            case 288:  // printsp
                return do288(ex);
-            case 289:  // printsp
+            case 289:  // println
                return do289(ex);
-            case 290:  // println
+            case 290:  // flush
                return do290(ex);
-            case 291:  // flush
+            case 291:  // port
                return do291(ex);
-            case 292:  // port
+            case 292:  // accept
                return do292(ex);
-            case 293:  // accept
+            case 293:  // connect
                return do293(ex);
-            case 294:  // connect
-               return do294(ex);
             default:
                return undefined(this, ex);
             }
@@ -6048,11 +6045,7 @@ public class PicoLisp {
          return x;
       }
 
-      final static Any do282(Any ex) { // ctl
-         return ex.Cdr.Cdr.prog();  // No locking
-      }
-
-      final static Any do283(Any ex) { // open
+      final static Any do282(Any ex) { // open
          String str;
          str = evString(ex.Cdr);
          try {return new Number(new PicoLispReader(new FileReader(str), str, allocFd(), null, 0).Fd);}
@@ -6060,7 +6053,7 @@ public class PicoLisp {
          return Nil;
       }
 
-      final static Any do284(Any ex) { // close
+      final static Any do283(Any ex) { // close
          int i;
          Any x;
          if ((i = xInt(x = ex.Cdr.Car.eval())) >= 0 && i < InFiles.length) {
@@ -6078,20 +6071,20 @@ public class PicoLisp {
          return Nil;
       }
 
-      final static Any do285(Any ex) { // prin
+      final static Any do284(Any ex) { // prin
          Any x, y;
          for (y = Nil; (ex = ex.Cdr) instanceof Cell; OutFile.Wr.print((y = ex.Car.eval()).name()));
          return y;
       }
 
-      final static Any do286(Any ex) { // prinl
+      final static Any do285(Any ex) { // prinl
          Any x, y;
          for (y = Nil; (ex = ex.Cdr) instanceof Cell; OutFile.Wr.print((y = ex.Car.eval()).name()));
          OutFile.newline();
          return y;
       }
 
-      final static Any do287(Any ex) { // space
+      final static Any do286(Any ex) { // space
          int i;
          Any x;
          if ((x = ex.Cdr.Car.eval()) == Nil) {
@@ -6103,7 +6096,7 @@ public class PicoLisp {
          return x;
       }
 
-      final static Any do288(Any ex) { // print
+      final static Any do287(Any ex) { // print
          Any x, y;
          OutFile.print(y = (x = ex.Cdr).Car.eval());
          while ((x = x.Cdr) instanceof Cell) {
@@ -6113,7 +6106,7 @@ public class PicoLisp {
          return y;
       }
 
-      final static Any do289(Any ex) { // printsp
+      final static Any do288(Any ex) { // printsp
          Any x, y;
          x = ex.Cdr;
          do {
@@ -6123,7 +6116,7 @@ public class PicoLisp {
          return y;
       }
 
-      final static Any do290(Any ex) { // println
+      final static Any do289(Any ex) { // println
          Any x, y;
          OutFile.print(y = (x = ex.Cdr).Car.eval());
          while ((x = x.Cdr) instanceof Cell) {
@@ -6134,11 +6127,11 @@ public class PicoLisp {
          return y;
       }
 
-      final static Any do291(Any ex) { // flush
+      final static Any do290(Any ex) { // flush
          return OutFile.Wr.checkError()? Nil : T;
       }
 
-      final static Any do292(Any ex) { // port
+      final static Any do291(Any ex) { // port
          ex = ex.Cdr;  // ...
          try {
             ServerSocketChannel chan = ServerSocketChannel.open();;
@@ -6149,7 +6142,7 @@ public class PicoLisp {
          return Nil;
       }
 
-      final static Any do293(Any ex) { // accept
+      final static Any do292(Any ex) { // accept
          int i;
          Any x;
          if ((i = xInt(x = ex.Cdr.Car.eval())) < 0 || i >= InFiles.length || InFiles[i] == null || InFiles[i].Chan == null)
@@ -6159,7 +6152,7 @@ public class PicoLisp {
          return Nil;
       }
 
-      final static Any do294(Any ex) { // connect
+      final static Any do293(Any ex) { // connect
          int i;
          try {
             SocketChannel chan = SocketChannel.open();
