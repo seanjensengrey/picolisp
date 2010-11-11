@@ -1,4 +1,4 @@
-03nov10abu
+11nov10abu
 (c) Software Lab. Alexander Burger
 
 
@@ -23,6 +23,7 @@ There is no support for
 - child processes ('fork')
 - interprocess communication ('tell', 'hear', 'ipc' etc.)
 - databases (external symbols)
+- signal handling
 
 
       Invocation

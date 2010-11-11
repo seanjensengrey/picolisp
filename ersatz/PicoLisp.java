@@ -1,4 +1,4 @@
-// 10nov10abu
+// 11nov10abu
 // (c) Software Lab. Alexander Burger
 
 import java.util.*;
@@ -13,6 +13,7 @@ import java.lang.reflect.*;
 /* Ersatz PicoLisp Interpreter (Poor Man's PicoLisp) */
 public class PicoLisp {
    final static Console Term = System.console();
+   final static StringBuffer Line = new StringBuffer();
    final static HashMap<String,Symbol> Intern = new HashMap<String,Symbol>();
    final static HashMap<String,Symbol> Transient = new HashMap<String,Symbol>();
    final static byte MonLen[] = new byte[] {31,31,28,31,30,31,30,31,31,30,31,30,31};
@@ -45,7 +46,6 @@ public class PicoLisp {
 
    static Catch Catch;
    static Env Env = new Env();
-   static StringBuilder Line;
    static Process[] Pids = new Process[12];
    static PicoLispReader[] InFiles = new PicoLispReader[12];
    static PicoLispWriter[] OutFiles = new PicoLispWriter[12];
@@ -400,9 +400,9 @@ public class PicoLisp {
                   for (;;) {
                      String s = Term.readLine();
                      if (s == null)
-                        Line = null;
+                        Line.append('\0');
                      else {
-                        Line = new StringBuilder(s);
+                        Line.append(s);
                         Line.append('\n');
                      }
                      try {p.sink().write(ByteBuffer.allocate(1));}
@@ -1590,17 +1590,13 @@ public class PicoLisp {
             if (this != StdIn || Term == null)
                Chr = Rd.read();
             else {
-               if (Line == null) {
+               while (Line.length() == 0) {
                   waitFd(null, 0, -1);
                   ((Pipe.SourceChannel)StdIn.Chan).read(ByteBuffer.allocate(1));
                }
-               if (Line == null)
+               if ((Chr = Line.charAt(0)) == '\0')
                   Chr = -1;
-               else {
-                  Chr = Line.charAt(0);
-                  if (Line.deleteCharAt(0).length() == 0)
-                     Line = null;
-               }
+               Line.deleteCharAt(0);
             }
             if (Chr < 0) {
                if ((Chr = Eof1) != 0)
