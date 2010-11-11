@@ -18,9 +18,11 @@
 example. For a general description of the PicoLisp kernel please look at the <a
 href="ref.html">PicoLisp Reference</a>.
 
-<p>This is <i>not</i> a Lisp tutorial, as it assumes some working knowledge of
-Lisp (and programming in general). It concentrates on the specialties of
-PicoLisp, and its differences to other Lisp dialects.
+<p>This is <i>not</i> a Lisp tutorial, as it assumes some basic knowledge of
+programming, Lisp, and even PicoLisp. Please read these sections before coming
+back here: <a href="ref.html#intro">Introduction</a> and <a
+href="ref.html#vm">The PicoLisp Machine</a>. This tutorial concentrates on the
+specificities of PicoLisp, and its differences with other Lisp dialects.
 
 <h3>Now let's start</h3>
 
@@ -54,7 +56,7 @@ debugging environment will set the console (tty) to raw mode by itself and do
 the special handling seen above during character input.
 
 <p>If you feel that you absolutely have to use an IDE, <code>rlwrap</code> or
-+another input front-end, please remove the entry "@lib/led.l" from "dbg.l".
+another input front-end, please remove the entry "@lib/led.l" from "dbg.l".
 Note that in this case, however, you will not have the TAB symbol completion
 feature available during command line editing.
 
@@ -257,7 +259,10 @@ to know:
 <p>The most commonly used tool is probably the <code><a
 href="refS.html#show">show</a></code> function. It takes a symbolic argument,
 and shows the symbol's name (if any), followed by its value cell, and then the
-contents of the property list on the following lines.
+contents of the property list on the following lines (assignment of such things
+to a symbol can be done with <code><a href="refS.html#set">set</a></code>,
+<code><a href="refS.html#setq">setq</a></code>, and <code><a
+href="refP.html#put">put</a></code>).
 
 <pre><code>
 : (setq A '(This is the value))  # Set the value cell of 'A'
@@ -741,6 +746,26 @@ function, using <code><a href="refP.html#pass">pass</a></code>:
 -> 1350                       # Return the result
 </code></pre>
 
+<h3>Anonymous functions without the <i>lambda</i> keyword</h3>
+
+There's no distinction between code and data in PicoLisp,
+<code><a href="refQ.html#quote">quote</a></code> will do what you want (see
+also <a href="faq.html#lambda">this FAQ entry</a>).
+
+<pre><code>
+: ((quote (X) (* X X)) 9)
+-> 81
+</code></pre>
+
+<pre><code>
+: (setq f '((X) (* X X)))
+-> ((X) (* X X))
+: f
+-> ((X) (* X X))
+: (f 3)
+-> 9
+</code></pre>
+
 
 <p><hr>
 <h2><a name="dbg">Debugging</a></h2>
@@ -904,7 +929,8 @@ look at
 <li><code><a href="refD.html#date">date</a></code> and <code><a
 href="refT.html#time">time</a></code> (grab system date and time)
 
-<li><code><a href="refD.html#default">default</a></code> (conditional assignmen
+<li><code><a href="refD.html#default">default</a></code> (conditional
+assignments)
 
 <li><code><a href="refP.html#pack">pack</a></code> (kind of concatenation), and
 
@@ -980,7 +1006,7 @@ pretty-print it:
 -> stamp
 </code></pre>
 
-<p>To reset the function to its normal state, calll <code><a
+<p>To reset the function to its normal state, call <code><a
 href="refU.html#unbug">unbug</a></code>:
 
 <pre><code>
@@ -1051,9 +1077,8 @@ href="refT.html#till">till</a></code>:
 
 
 <p>With <code><a href="refL.html#line">line</a></code>, a line of characters is
-read, either into a single transient <a
-href="ref.html#transient-io">transient</a> symbol (the type used by PicoLisp for
-strings),
+read, either into a single <a href="ref.html#transient-io">transient</a> symbol
+(the type used by PicoLisp for strings),
 
 <pre><code>
 : (in "doc/tut.html" (line T))
@@ -1122,7 +1147,7 @@ work: via command line arguments, or as a stand-alone script.
 <p>The command line can specify either files for execution, or arbitrary Lisp
 expressions for direct evaluation (see <code><a
 href="ref.html#invoc">Invocation</a></code>): if an argument starts with a
-hyphen, it is evaluated, otherwise <code><a
+hyphen, it is evaluated, otherwise it is <code><a
 href="refL.html#load">load</a></code>ed as a file. A typical invocation might
 look like:
 
@@ -1181,8 +1206,8 @@ Then a simple hello-world script might look like:
 </code></pre>
 
 <p>If you write this into a text file, and use <code>chmod</code> to set it to
-"executable", it can be executed like any other command. Note that - because
-<code>#</code> is the comment character in PicoLisp - the first line will not be
+"executable", it can be executed like any other command. Note that (because
+<code>#</code> is the comment character in PicoLisp) the first line will not be
 interpreted, and you can still use that file as a normal command line argument
 to PicoLisp (useful during debugging).
 
