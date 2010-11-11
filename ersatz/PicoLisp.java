@@ -82,292 +82,297 @@ public class PicoLisp {
       mkSymbol(new Number("16"), "date", Intern);
       mkSymbol(new Number("17"), "time", Intern);
       mkSymbol(new Number("18"), "usec", Intern);
-      mkSymbol(new Number("19"), "file", Intern);
-      mkSymbol(new Number("20"), "version", Intern);
-      mkSymbol(new Number("21"), "apply", Intern);
-      mkSymbol(new Number("22"), "pass", Intern);
-      mkSymbol(new Number("23"), "maps", Intern);
-      mkSymbol(new Number("24"), "map", Intern);
-      mkSymbol(new Number("25"), "mapc", Intern);
-      mkSymbol(new Number("26"), "maplist", Intern);
-      mkSymbol(new Number("27"), "mapcar", Intern);
-      mkSymbol(new Number("28"), "mapcon", Intern);
-      mkSymbol(new Number("29"), "mapcan", Intern);
-      mkSymbol(new Number("30"), "filter", Intern);
-      mkSymbol(new Number("31"), "extract", Intern);
-      mkSymbol(new Number("32"), "seek", Intern);
-      mkSymbol(new Number("33"), "find", Intern);
-      mkSymbol(new Number("34"), "pick", Intern);
-      mkSymbol(new Number("35"), "cnt", Intern);
-      mkSymbol(new Number("36"), "sum", Intern);
-      mkSymbol(new Number("37"), "maxi", Intern);
-      mkSymbol(new Number("38"), "mini", Intern);
-      mkSymbol(new Number("39"), "fish", Intern);
-      mkSymbol(new Number("40"), "by", Intern);
-      mkSymbol(new Number("41"), "as", Intern);
-      mkSymbol(new Number("42"), "lit", Intern);
-      mkSymbol(new Number("43"), "eval", Intern);
-      mkSymbol(new Number("44"), "run", Intern);
-      mkSymbol(new Number("45"), "def", Intern);
-      mkSymbol(new Number("46"), "de", Intern);
-      mkSymbol(new Number("47"), "dm", Intern);
-      mkSymbol(new Number("48"), "box", Intern);
-      mkSymbol(new Number("49"), "new", Intern);
-      mkSymbol(new Number("50"), "type", Intern);
-      mkSymbol(new Number("51"), "isa", Intern);
-      mkSymbol(new Number("52"), "method", Intern);
-      mkSymbol(new Number("53"), "send", Intern);
-      mkSymbol(new Number("54"), "try", Intern);
-      mkSymbol(new Number("55"), "super", Intern);
-      mkSymbol(new Number("56"), "extra", Intern);
-      mkSymbol(new Number("57"), "with", Intern);
-      mkSymbol(new Number("58"), "bind", Intern);
-      mkSymbol(new Number("59"), "job", Intern);
-      mkSymbol(new Number("60"), "let", Intern);
-      mkSymbol(new Number("61"), "let?", Intern);
-      mkSymbol(new Number("62"), "use", Intern);
-      mkSymbol(new Number("63"), "and", Intern);
-      mkSymbol(new Number("64"), "or", Intern);
-      mkSymbol(new Number("65"), "nand", Intern);
-      mkSymbol(new Number("66"), "nor", Intern);
-      mkSymbol(new Number("67"), "xor", Intern);
-      mkSymbol(new Number("68"), "bool", Intern);
-      mkSymbol(new Number("69"), "not", Intern);
-      mkSymbol(new Number("70"), "nil", Intern);
-      mkSymbol(new Number("71"), "t", Intern);
-      mkSymbol(new Number("72"), "prog", Intern);
-      mkSymbol(new Number("73"), "prog1", Intern);
-      mkSymbol(new Number("74"), "prog2", Intern);
-      mkSymbol(new Number("75"), "if", Intern);
-      mkSymbol(new Number("76"), "if2", Intern);
-      mkSymbol(new Number("77"), "ifn", Intern);
-      mkSymbol(new Number("78"), "when", Intern);
-      mkSymbol(new Number("79"), "unless", Intern);
-      mkSymbol(new Number("80"), "cond", Intern);
-      mkSymbol(new Number("81"), "nond", Intern);
-      mkSymbol(new Number("82"), "case", Intern);
-      mkSymbol(new Number("83"), "state", Intern);
-      mkSymbol(new Number("84"), "while", Intern);
-      mkSymbol(new Number("85"), "until", Intern);
-      mkSymbol(new Number("86"), "do", Intern);
-      mkSymbol(new Number("87"), "loop", Intern);
-      mkSymbol(new Number("88"), "at", Intern);
-      mkSymbol(new Number("89"), "for", Intern);
-      mkSymbol(new Number("90"), "catch", Intern);
-      mkSymbol(new Number("91"), "throw", Intern);
-      mkSymbol(new Number("92"), "finally", Intern);
-      mkSymbol(new Number("93"), "!", Intern);
-      mkSymbol(new Number("94"), "e", Intern);
-      mkSymbol(new Number("95"), "$", Intern);
-      mkSymbol(new Number("96"), "sys", Intern);
-      mkSymbol(new Number("97"), "call", Intern);
-      mkSymbol(new Number("98"), "ipid", Intern);
-      mkSymbol(new Number("99"), "opid", Intern);
-      mkSymbol(new Number("100"), "kill", Intern);
-      mkSymbol(new Number("101"), "bye", Intern);
-      mkSymbol(new Number("102"), "name", Intern);
-      mkSymbol(new Number("103"), "sp?", Intern);
-      mkSymbol(new Number("104"), "pat?", Intern);
-      mkSymbol(new Number("105"), "fun?", Intern);
-      mkSymbol(new Number("106"), "getd", Intern);
-      mkSymbol(new Number("107"), "all", Intern);
-      mkSymbol(new Number("108"), "intern", Intern);
-      mkSymbol(new Number("109"), "====", Intern);
-      mkSymbol(new Number("110"), "box?", Intern);
-      mkSymbol(new Number("111"), "str?", Intern);
-      mkSymbol(new Number("112"), "zap", Intern);
-      mkSymbol(new Number("113"), "chop", Intern);
-      mkSymbol(new Number("114"), "pack", Intern);
-      mkSymbol(new Number("115"), "glue", Intern);
-      mkSymbol(new Number("116"), "text", Intern);
-      mkSymbol(new Number("117"), "pre?", Intern);
-      mkSymbol(new Number("118"), "sub?", Intern);
-      mkSymbol(new Number("119"), "val", Intern);
-      mkSymbol(new Number("120"), "set", Intern);
-      mkSymbol(new Number("121"), "setq", Intern);
-      mkSymbol(new Number("122"), "xchg", Intern);
-      mkSymbol(new Number("123"), "on", Intern);
-      mkSymbol(new Number("124"), "off", Intern);
-      mkSymbol(new Number("125"), "onOff", Intern);
-      mkSymbol(new Number("126"), "zero", Intern);
-      mkSymbol(new Number("127"), "one", Intern);
-      mkSymbol(new Number("128"), "default", Intern);
-      mkSymbol(new Number("129"), "push", Intern);
-      mkSymbol(new Number("130"), "push1", Intern);
-      mkSymbol(new Number("131"), "pop", Intern);
-      mkSymbol(new Number("132"), "cut", Intern);
-      mkSymbol(new Number("133"), "del", Intern);
-      mkSymbol(new Number("134"), "queue", Intern);
-      mkSymbol(new Number("135"), "fifo", Intern);
-      mkSymbol(new Number("136"), "idx", Intern);
-      mkSymbol(new Number("137"), "lup", Intern);
-      mkSymbol(new Number("138"), "put", Intern);
-      mkSymbol(new Number("139"), "get", Intern);
-      mkSymbol(new Number("140"), "prop", Intern);
-      mkSymbol(new Number("141"), ";", Intern);
-      mkSymbol(new Number("142"), "=:", Intern);
-      mkSymbol(new Number("143"), ":", Intern);
-      mkSymbol(new Number("144"), "::", Intern);
-      mkSymbol(new Number("145"), "putl", Intern);
-      mkSymbol(new Number("146"), "getl", Intern);
-      mkSymbol(new Number("147"), "meta", Intern);
-      mkSymbol(new Number("148"), "low?", Intern);
-      mkSymbol(new Number("149"), "upp?", Intern);
-      mkSymbol(new Number("150"), "lowc", Intern);
-      mkSymbol(new Number("151"), "uppc", Intern);
-      mkSymbol(new Number("152"), "fold", Intern);
-      mkSymbol(new Number("153"), "car", Intern);
-      mkSymbol(new Number("154"), "cdr", Intern);
-      mkSymbol(new Number("155"), "caar", Intern);
-      mkSymbol(new Number("156"), "cadr", Intern);
-      mkSymbol(new Number("157"), "cdar", Intern);
-      mkSymbol(new Number("158"), "cddr", Intern);
-      mkSymbol(new Number("159"), "caaar", Intern);
-      mkSymbol(new Number("160"), "caadr", Intern);
-      mkSymbol(new Number("161"), "cadar", Intern);
-      mkSymbol(new Number("162"), "caddr", Intern);
-      mkSymbol(new Number("163"), "cdaar", Intern);
-      mkSymbol(new Number("164"), "cdadr", Intern);
-      mkSymbol(new Number("165"), "cddar", Intern);
-      mkSymbol(new Number("166"), "cdddr", Intern);
-      mkSymbol(new Number("167"), "caaaar", Intern);
-      mkSymbol(new Number("168"), "caaadr", Intern);
-      mkSymbol(new Number("169"), "caadar", Intern);
-      mkSymbol(new Number("170"), "caaddr", Intern);
-      mkSymbol(new Number("171"), "cadaar", Intern);
-      mkSymbol(new Number("172"), "cadadr", Intern);
-      mkSymbol(new Number("173"), "caddar", Intern);
-      mkSymbol(new Number("174"), "cadddr", Intern);
-      mkSymbol(new Number("175"), "cdaaar", Intern);
-      mkSymbol(new Number("176"), "cdaadr", Intern);
-      mkSymbol(new Number("177"), "cdadar", Intern);
-      mkSymbol(new Number("178"), "cdaddr", Intern);
-      mkSymbol(new Number("179"), "cddaar", Intern);
-      mkSymbol(new Number("180"), "cddadr", Intern);
-      mkSymbol(new Number("181"), "cdddar", Intern);
-      mkSymbol(new Number("182"), "cddddr", Intern);
-      mkSymbol(new Number("183"), "nth", Intern);
-      mkSymbol(new Number("184"), "con", Intern);
-      mkSymbol(new Number("185"), "cons", Intern);
-      mkSymbol(new Number("186"), "conc", Intern);
-      mkSymbol(new Number("187"), "circ", Intern);
-      mkSymbol(new Number("188"), "rot", Intern);
-      mkSymbol(new Number("189"), "list", Intern);
-      mkSymbol(new Number("190"), "need", Intern);
-      mkSymbol(new Number("191"), "range", Intern);
-      mkSymbol(new Number("192"), "full", Intern);
-      mkSymbol(new Number("193"), "make", Intern);
-      mkSymbol(new Number("194"), "made", Intern);
-      mkSymbol(new Number("195"), "chain", Intern);
-      mkSymbol(new Number("196"), "link", Intern);
-      mkSymbol(new Number("197"), "yoke", Intern);
-      mkSymbol(new Number("198"), "copy", Intern);
-      mkSymbol(new Number("199"), "mix", Intern);
-      mkSymbol(new Number("200"), "append", Intern);
-      mkSymbol(new Number("201"), "delete", Intern);
-      mkSymbol(new Number("202"), "delq", Intern);
-      mkSymbol(new Number("203"), "replace", Intern);
-      mkSymbol(new Number("204"), "strip", Intern);
-      mkSymbol(new Number("205"), "split", Intern);
-      mkSymbol(new Number("206"), "reverse", Intern);
-      mkSymbol(new Number("207"), "flip", Intern);
-      mkSymbol(new Number("208"), "trim", Intern);
-      mkSymbol(new Number("209"), "clip", Intern);
-      mkSymbol(new Number("210"), "head", Intern);
-      mkSymbol(new Number("211"), "tail", Intern);
-      mkSymbol(new Number("212"), "stem", Intern);
-      mkSymbol(new Number("213"), "fin", Intern);
-      mkSymbol(new Number("214"), "last", Intern);
-      mkSymbol(new Number("215"), "==", Intern);
-      mkSymbol(new Number("216"), "n==", Intern);
-      mkSymbol(new Number("217"), "=", Intern);
-      mkSymbol(new Number("218"), "<>", Intern);
-      mkSymbol(new Number("219"), "=0", Intern);
-      mkSymbol(new Number("220"), "=T", Intern);
-      mkSymbol(new Number("221"), "n0", Intern);
-      mkSymbol(new Number("222"), "nT", Intern);
-      mkSymbol(new Number("223"), "<", Intern);
-      mkSymbol(new Number("224"), "<=", Intern);
-      mkSymbol(new Number("225"), ">", Intern);
-      mkSymbol(new Number("226"), ">=", Intern);
-      mkSymbol(new Number("227"), "max", Intern);
-      mkSymbol(new Number("228"), "min", Intern);
-      mkSymbol(new Number("229"), "atom", Intern);
-      mkSymbol(new Number("230"), "pair", Intern);
-      mkSymbol(new Number("231"), "lst?", Intern);
-      mkSymbol(new Number("232"), "num?", Intern);
-      mkSymbol(new Number("233"), "sym?", Intern);
-      mkSymbol(new Number("234"), "flg?", Intern);
-      mkSymbol(new Number("235"), "member", Intern);
-      mkSymbol(new Number("236"), "memq", Intern);
-      mkSymbol(new Number("237"), "mmeq", Intern);
-      mkSymbol(new Number("238"), "sect", Intern);
-      mkSymbol(new Number("239"), "diff", Intern);
-      mkSymbol(new Number("240"), "index", Intern);
-      mkSymbol(new Number("241"), "offset", Intern);
-      mkSymbol(new Number("242"), "length", Intern);
-      mkSymbol(new Number("243"), "size", Intern);
-      mkSymbol(new Number("244"), "assoc", Intern);
-      mkSymbol(new Number("245"), "asoq", Intern);
-      mkSymbol(new Number("246"), "rank", Intern);
-      mkSymbol(new Number("247"), "match", Intern);
-      mkSymbol(new Number("248"), "fill", Intern);
-      mkSymbol(new Number("249"), "prove", Intern);
-      mkSymbol(new Number("250"), "->", Intern);
-      mkSymbol(new Number("251"), "unify", Intern);
-      mkSymbol(new Number("252"), "sort", Intern);
-      mkSymbol(new Number("253"), "format", Intern);
-      mkSymbol(new Number("254"), "+", Intern);
-      mkSymbol(new Number("255"), "-", Intern);
-      mkSymbol(new Number("256"), "inc", Intern);
-      mkSymbol(new Number("257"), "dec", Intern);
-      mkSymbol(new Number("258"), "*", Intern);
-      mkSymbol(new Number("259"), "*/", Intern);
-      mkSymbol(new Number("260"), "/", Intern);
-      mkSymbol(new Number("261"), "%", Intern);
-      mkSymbol(new Number("262"), ">>", Intern);
-      mkSymbol(new Number("263"), "lt0", Intern);
-      mkSymbol(new Number("264"), "ge0", Intern);
-      mkSymbol(new Number("265"), "gt0", Intern);
-      mkSymbol(new Number("266"), "abs", Intern);
-      mkSymbol(new Number("267"), "bit?", Intern);
-      mkSymbol(new Number("268"), "&", Intern);
-      mkSymbol(new Number("269"), "|", Intern);
-      mkSymbol(new Number("270"), "x|", Intern);
-      mkSymbol(new Number("271"), "seed", Intern);
-      mkSymbol(new Number("272"), "rand", Intern);
-      mkSymbol(new Number("273"), "path", Intern);
-      mkSymbol(new Number("274"), "read", Intern);
-      mkSymbol(new Number("275"), "wait", Intern);
-      mkSymbol(new Number("276"), "poll", Intern);
-      mkSymbol(new Number("277"), "peek", Intern);
-      mkSymbol(new Number("278"), "char", Intern);
-      mkSymbol(new Number("279"), "skip", Intern);
-      mkSymbol(new Number("280"), "eol", Intern);
-      mkSymbol(new Number("281"), "eof", Intern);
-      mkSymbol(new Number("282"), "from", Intern);
-      mkSymbol(new Number("283"), "till", Intern);
-      mkSymbol(new Number("284"), "line", Intern);
-      mkSymbol(new Number("285"), "any", Intern);
-      mkSymbol(new Number("286"), "sym", Intern);
-      mkSymbol(new Number("287"), "str", Intern);
-      mkSymbol(new Number("288"), "load", Intern);
-      mkSymbol(new Number("289"), "in", Intern);
-      mkSymbol(new Number("290"), "out", Intern);
-      mkSymbol(new Number("291"), "open", Intern);
-      mkSymbol(new Number("292"), "close", Intern);
-      mkSymbol(new Number("293"), "echo", Intern);
-      mkSymbol(new Number("294"), "prin", Intern);
-      mkSymbol(new Number("295"), "prinl", Intern);
-      mkSymbol(new Number("296"), "space", Intern);
-      mkSymbol(new Number("297"), "print", Intern);
-      mkSymbol(new Number("298"), "printsp", Intern);
-      mkSymbol(new Number("299"), "println", Intern);
-      mkSymbol(new Number("300"), "flush", Intern);
-      mkSymbol(new Number("301"), "port", Intern);
-      mkSymbol(new Number("302"), "accept", Intern);
-      mkSymbol(new Number("303"), "connect", Intern);
-      MaxFun = 303;
+      mkSymbol(new Number("19"), "pwd", Intern);
+      mkSymbol(new Number("20"), "info", Intern);
+      mkSymbol(new Number("21"), "file", Intern);
+      mkSymbol(new Number("22"), "dir", Intern);
+      mkSymbol(new Number("23"), "argv", Intern);
+      mkSymbol(new Number("24"), "opt", Intern);
+      mkSymbol(new Number("25"), "version", Intern);
+      mkSymbol(new Number("26"), "apply", Intern);
+      mkSymbol(new Number("27"), "pass", Intern);
+      mkSymbol(new Number("28"), "maps", Intern);
+      mkSymbol(new Number("29"), "map", Intern);
+      mkSymbol(new Number("30"), "mapc", Intern);
+      mkSymbol(new Number("31"), "maplist", Intern);
+      mkSymbol(new Number("32"), "mapcar", Intern);
+      mkSymbol(new Number("33"), "mapcon", Intern);
+      mkSymbol(new Number("34"), "mapcan", Intern);
+      mkSymbol(new Number("35"), "filter", Intern);
+      mkSymbol(new Number("36"), "extract", Intern);
+      mkSymbol(new Number("37"), "seek", Intern);
+      mkSymbol(new Number("38"), "find", Intern);
+      mkSymbol(new Number("39"), "pick", Intern);
+      mkSymbol(new Number("40"), "cnt", Intern);
+      mkSymbol(new Number("41"), "sum", Intern);
+      mkSymbol(new Number("42"), "maxi", Intern);
+      mkSymbol(new Number("43"), "mini", Intern);
+      mkSymbol(new Number("44"), "fish", Intern);
+      mkSymbol(new Number("45"), "by", Intern);
+      mkSymbol(new Number("46"), "as", Intern);
+      mkSymbol(new Number("47"), "lit", Intern);
+      mkSymbol(new Number("48"), "eval", Intern);
+      mkSymbol(new Number("49"), "run", Intern);
+      mkSymbol(new Number("50"), "def", Intern);
+      mkSymbol(new Number("51"), "de", Intern);
+      mkSymbol(new Number("52"), "dm", Intern);
+      mkSymbol(new Number("53"), "box", Intern);
+      mkSymbol(new Number("54"), "new", Intern);
+      mkSymbol(new Number("55"), "type", Intern);
+      mkSymbol(new Number("56"), "isa", Intern);
+      mkSymbol(new Number("57"), "method", Intern);
+      mkSymbol(new Number("58"), "send", Intern);
+      mkSymbol(new Number("59"), "try", Intern);
+      mkSymbol(new Number("60"), "super", Intern);
+      mkSymbol(new Number("61"), "extra", Intern);
+      mkSymbol(new Number("62"), "with", Intern);
+      mkSymbol(new Number("63"), "bind", Intern);
+      mkSymbol(new Number("64"), "job", Intern);
+      mkSymbol(new Number("65"), "let", Intern);
+      mkSymbol(new Number("66"), "let?", Intern);
+      mkSymbol(new Number("67"), "use", Intern);
+      mkSymbol(new Number("68"), "and", Intern);
+      mkSymbol(new Number("69"), "or", Intern);
+      mkSymbol(new Number("70"), "nand", Intern);
+      mkSymbol(new Number("71"), "nor", Intern);
+      mkSymbol(new Number("72"), "xor", Intern);
+      mkSymbol(new Number("73"), "bool", Intern);
+      mkSymbol(new Number("74"), "not", Intern);
+      mkSymbol(new Number("75"), "nil", Intern);
+      mkSymbol(new Number("76"), "t", Intern);
+      mkSymbol(new Number("77"), "prog", Intern);
+      mkSymbol(new Number("78"), "prog1", Intern);
+      mkSymbol(new Number("79"), "prog2", Intern);
+      mkSymbol(new Number("80"), "if", Intern);
+      mkSymbol(new Number("81"), "if2", Intern);
+      mkSymbol(new Number("82"), "ifn", Intern);
+      mkSymbol(new Number("83"), "when", Intern);
+      mkSymbol(new Number("84"), "unless", Intern);
+      mkSymbol(new Number("85"), "cond", Intern);
+      mkSymbol(new Number("86"), "nond", Intern);
+      mkSymbol(new Number("87"), "case", Intern);
+      mkSymbol(new Number("88"), "state", Intern);
+      mkSymbol(new Number("89"), "while", Intern);
+      mkSymbol(new Number("90"), "until", Intern);
+      mkSymbol(new Number("91"), "do", Intern);
+      mkSymbol(new Number("92"), "loop", Intern);
+      mkSymbol(new Number("93"), "at", Intern);
+      mkSymbol(new Number("94"), "for", Intern);
+      mkSymbol(new Number("95"), "catch", Intern);
+      mkSymbol(new Number("96"), "throw", Intern);
+      mkSymbol(new Number("97"), "finally", Intern);
+      mkSymbol(new Number("98"), "!", Intern);
+      mkSymbol(new Number("99"), "e", Intern);
+      mkSymbol(new Number("100"), "$", Intern);
+      mkSymbol(new Number("101"), "sys", Intern);
+      mkSymbol(new Number("102"), "call", Intern);
+      mkSymbol(new Number("103"), "ipid", Intern);
+      mkSymbol(new Number("104"), "opid", Intern);
+      mkSymbol(new Number("105"), "kill", Intern);
+      mkSymbol(new Number("106"), "bye", Intern);
+      mkSymbol(new Number("107"), "name", Intern);
+      mkSymbol(new Number("108"), "sp?", Intern);
+      mkSymbol(new Number("109"), "pat?", Intern);
+      mkSymbol(new Number("110"), "fun?", Intern);
+      mkSymbol(new Number("111"), "getd", Intern);
+      mkSymbol(new Number("112"), "all", Intern);
+      mkSymbol(new Number("113"), "intern", Intern);
+      mkSymbol(new Number("114"), "====", Intern);
+      mkSymbol(new Number("115"), "box?", Intern);
+      mkSymbol(new Number("116"), "str?", Intern);
+      mkSymbol(new Number("117"), "zap", Intern);
+      mkSymbol(new Number("118"), "chop", Intern);
+      mkSymbol(new Number("119"), "pack", Intern);
+      mkSymbol(new Number("120"), "glue", Intern);
+      mkSymbol(new Number("121"), "text", Intern);
+      mkSymbol(new Number("122"), "pre?", Intern);
+      mkSymbol(new Number("123"), "sub?", Intern);
+      mkSymbol(new Number("124"), "val", Intern);
+      mkSymbol(new Number("125"), "set", Intern);
+      mkSymbol(new Number("126"), "setq", Intern);
+      mkSymbol(new Number("127"), "xchg", Intern);
+      mkSymbol(new Number("128"), "on", Intern);
+      mkSymbol(new Number("129"), "off", Intern);
+      mkSymbol(new Number("130"), "onOff", Intern);
+      mkSymbol(new Number("131"), "zero", Intern);
+      mkSymbol(new Number("132"), "one", Intern);
+      mkSymbol(new Number("133"), "default", Intern);
+      mkSymbol(new Number("134"), "push", Intern);
+      mkSymbol(new Number("135"), "push1", Intern);
+      mkSymbol(new Number("136"), "pop", Intern);
+      mkSymbol(new Number("137"), "cut", Intern);
+      mkSymbol(new Number("138"), "del", Intern);
+      mkSymbol(new Number("139"), "queue", Intern);
+      mkSymbol(new Number("140"), "fifo", Intern);
+      mkSymbol(new Number("141"), "idx", Intern);
+      mkSymbol(new Number("142"), "lup", Intern);
+      mkSymbol(new Number("143"), "put", Intern);
+      mkSymbol(new Number("144"), "get", Intern);
+      mkSymbol(new Number("145"), "prop", Intern);
+      mkSymbol(new Number("146"), ";", Intern);
+      mkSymbol(new Number("147"), "=:", Intern);
+      mkSymbol(new Number("148"), ":", Intern);
+      mkSymbol(new Number("149"), "::", Intern);
+      mkSymbol(new Number("150"), "putl", Intern);
+      mkSymbol(new Number("151"), "getl", Intern);
+      mkSymbol(new Number("152"), "meta", Intern);
+      mkSymbol(new Number("153"), "low?", Intern);
+      mkSymbol(new Number("154"), "upp?", Intern);
+      mkSymbol(new Number("155"), "lowc", Intern);
+      mkSymbol(new Number("156"), "uppc", Intern);
+      mkSymbol(new Number("157"), "fold", Intern);
+      mkSymbol(new Number("158"), "car", Intern);
+      mkSymbol(new Number("159"), "cdr", Intern);
+      mkSymbol(new Number("160"), "caar", Intern);
+      mkSymbol(new Number("161"), "cadr", Intern);
+      mkSymbol(new Number("162"), "cdar", Intern);
+      mkSymbol(new Number("163"), "cddr", Intern);
+      mkSymbol(new Number("164"), "caaar", Intern);
+      mkSymbol(new Number("165"), "caadr", Intern);
+      mkSymbol(new Number("166"), "cadar", Intern);
+      mkSymbol(new Number("167"), "caddr", Intern);
+      mkSymbol(new Number("168"), "cdaar", Intern);
+      mkSymbol(new Number("169"), "cdadr", Intern);
+      mkSymbol(new Number("170"), "cddar", Intern);
+      mkSymbol(new Number("171"), "cdddr", Intern);
+      mkSymbol(new Number("172"), "caaaar", Intern);
+      mkSymbol(new Number("173"), "caaadr", Intern);
+      mkSymbol(new Number("174"), "caadar", Intern);
+      mkSymbol(new Number("175"), "caaddr", Intern);
+      mkSymbol(new Number("176"), "cadaar", Intern);
+      mkSymbol(new Number("177"), "cadadr", Intern);
+      mkSymbol(new Number("178"), "caddar", Intern);
+      mkSymbol(new Number("179"), "cadddr", Intern);
+      mkSymbol(new Number("180"), "cdaaar", Intern);
+      mkSymbol(new Number("181"), "cdaadr", Intern);
+      mkSymbol(new Number("182"), "cdadar", Intern);
+      mkSymbol(new Number("183"), "cdaddr", Intern);
+      mkSymbol(new Number("184"), "cddaar", Intern);
+      mkSymbol(new Number("185"), "cddadr", Intern);
+      mkSymbol(new Number("186"), "cdddar", Intern);
+      mkSymbol(new Number("187"), "cddddr", Intern);
+      mkSymbol(new Number("188"), "nth", Intern);
+      mkSymbol(new Number("189"), "con", Intern);
+      mkSymbol(new Number("190"), "cons", Intern);
+      mkSymbol(new Number("191"), "conc", Intern);
+      mkSymbol(new Number("192"), "circ", Intern);
+      mkSymbol(new Number("193"), "rot", Intern);
+      mkSymbol(new Number("194"), "list", Intern);
+      mkSymbol(new Number("195"), "need", Intern);
+      mkSymbol(new Number("196"), "range", Intern);
+      mkSymbol(new Number("197"), "full", Intern);
+      mkSymbol(new Number("198"), "make", Intern);
+      mkSymbol(new Number("199"), "made", Intern);
+      mkSymbol(new Number("200"), "chain", Intern);
+      mkSymbol(new Number("201"), "link", Intern);
+      mkSymbol(new Number("202"), "yoke", Intern);
+      mkSymbol(new Number("203"), "copy", Intern);
+      mkSymbol(new Number("204"), "mix", Intern);
+      mkSymbol(new Number("205"), "append", Intern);
+      mkSymbol(new Number("206"), "delete", Intern);
+      mkSymbol(new Number("207"), "delq", Intern);
+      mkSymbol(new Number("208"), "replace", Intern);
+      mkSymbol(new Number("209"), "strip", Intern);
+      mkSymbol(new Number("210"), "split", Intern);
+      mkSymbol(new Number("211"), "reverse", Intern);
+      mkSymbol(new Number("212"), "flip", Intern);
+      mkSymbol(new Number("213"), "trim", Intern);
+      mkSymbol(new Number("214"), "clip", Intern);
+      mkSymbol(new Number("215"), "head", Intern);
+      mkSymbol(new Number("216"), "tail", Intern);
+      mkSymbol(new Number("217"), "stem", Intern);
+      mkSymbol(new Number("218"), "fin", Intern);
+      mkSymbol(new Number("219"), "last", Intern);
+      mkSymbol(new Number("220"), "==", Intern);
+      mkSymbol(new Number("221"), "n==", Intern);
+      mkSymbol(new Number("222"), "=", Intern);
+      mkSymbol(new Number("223"), "<>", Intern);
+      mkSymbol(new Number("224"), "=0", Intern);
+      mkSymbol(new Number("225"), "=T", Intern);
+      mkSymbol(new Number("226"), "n0", Intern);
+      mkSymbol(new Number("227"), "nT", Intern);
+      mkSymbol(new Number("228"), "<", Intern);
+      mkSymbol(new Number("229"), "<=", Intern);
+      mkSymbol(new Number("230"), ">", Intern);
+      mkSymbol(new Number("231"), ">=", Intern);
+      mkSymbol(new Number("232"), "max", Intern);
+      mkSymbol(new Number("233"), "min", Intern);
+      mkSymbol(new Number("234"), "atom", Intern);
+      mkSymbol(new Number("235"), "pair", Intern);
+      mkSymbol(new Number("236"), "lst?", Intern);
+      mkSymbol(new Number("237"), "num?", Intern);
+      mkSymbol(new Number("238"), "sym?", Intern);
+      mkSymbol(new Number("239"), "flg?", Intern);
+      mkSymbol(new Number("240"), "member", Intern);
+      mkSymbol(new Number("241"), "memq", Intern);
+      mkSymbol(new Number("242"), "mmeq", Intern);
+      mkSymbol(new Number("243"), "sect", Intern);
+      mkSymbol(new Number("244"), "diff", Intern);
+      mkSymbol(new Number("245"), "index", Intern);
+      mkSymbol(new Number("246"), "offset", Intern);
+      mkSymbol(new Number("247"), "length", Intern);
+      mkSymbol(new Number("248"), "size", Intern);
+      mkSymbol(new Number("249"), "assoc", Intern);
+      mkSymbol(new Number("250"), "asoq", Intern);
+      mkSymbol(new Number("251"), "rank", Intern);
+      mkSymbol(new Number("252"), "match", Intern);
+      mkSymbol(new Number("253"), "fill", Intern);
+      mkSymbol(new Number("254"), "prove", Intern);
+      mkSymbol(new Number("255"), "->", Intern);
+      mkSymbol(new Number("256"), "unify", Intern);
+      mkSymbol(new Number("257"), "sort", Intern);
+      mkSymbol(new Number("258"), "format", Intern);
+      mkSymbol(new Number("259"), "+", Intern);
+      mkSymbol(new Number("260"), "-", Intern);
+      mkSymbol(new Number("261"), "inc", Intern);
+      mkSymbol(new Number("262"), "dec", Intern);
+      mkSymbol(new Number("263"), "*", Intern);
+      mkSymbol(new Number("264"), "*/", Intern);
+      mkSymbol(new Number("265"), "/", Intern);
+      mkSymbol(new Number("266"), "%", Intern);
+      mkSymbol(new Number("267"), ">>", Intern);
+      mkSymbol(new Number("268"), "lt0", Intern);
+      mkSymbol(new Number("269"), "ge0", Intern);
+      mkSymbol(new Number("270"), "gt0", Intern);
+      mkSymbol(new Number("271"), "abs", Intern);
+      mkSymbol(new Number("272"), "bit?", Intern);
+      mkSymbol(new Number("273"), "&", Intern);
+      mkSymbol(new Number("274"), "|", Intern);
+      mkSymbol(new Number("275"), "x|", Intern);
+      mkSymbol(new Number("276"), "seed", Intern);
+      mkSymbol(new Number("277"), "rand", Intern);
+      mkSymbol(new Number("278"), "path", Intern);
+      mkSymbol(new Number("279"), "read", Intern);
+      mkSymbol(new Number("280"), "wait", Intern);
+      mkSymbol(new Number("281"), "poll", Intern);
+      mkSymbol(new Number("282"), "peek", Intern);
+      mkSymbol(new Number("283"), "char", Intern);
+      mkSymbol(new Number("284"), "skip", Intern);
+      mkSymbol(new Number("285"), "eol", Intern);
+      mkSymbol(new Number("286"), "eof", Intern);
+      mkSymbol(new Number("287"), "from", Intern);
+      mkSymbol(new Number("288"), "till", Intern);
+      mkSymbol(new Number("289"), "line", Intern);
+      mkSymbol(new Number("290"), "any", Intern);
+      mkSymbol(new Number("291"), "sym", Intern);
+      mkSymbol(new Number("292"), "str", Intern);
+      mkSymbol(new Number("293"), "load", Intern);
+      mkSymbol(new Number("294"), "in", Intern);
+      mkSymbol(new Number("295"), "out", Intern);
+      mkSymbol(new Number("296"), "open", Intern);
+      mkSymbol(new Number("297"), "close", Intern);
+      mkSymbol(new Number("298"), "echo", Intern);
+      mkSymbol(new Number("299"), "prin", Intern);
+      mkSymbol(new Number("300"), "prinl", Intern);
+      mkSymbol(new Number("301"), "space", Intern);
+      mkSymbol(new Number("302"), "print", Intern);
+      mkSymbol(new Number("303"), "printsp", Intern);
+      mkSymbol(new Number("304"), "println", Intern);
+      mkSymbol(new Number("305"), "flush", Intern);
+      mkSymbol(new Number("306"), "port", Intern);
+      mkSymbol(new Number("307"), "accept", Intern);
+      mkSymbol(new Number("308"), "connect", Intern);
+      MaxFun = 308;
       init();
       for (boolean first = true; ; first = false) {
          try {
@@ -759,14 +764,21 @@ public class PicoLisp {
       return x;
    }
 
+   final static String opt() {
+      if (Argv.length == 0 || Argv[0].equals("-"))
+         return null;
+      String s = Argv[0];
+      String[] a = new String[Argv.length-1];
+      System.arraycopy(Argv, 1, a, 0, a.length);
+      Argv = a;
+      return s;
+   }
+
    final static Any loadAll(Any ex) {
+      String s;
       Any x = Nil;
-      while (Argv.length > 0  &&  !Argv[0].equals("-")) {
-         x = load(ex, '\0', mkStr(Argv[0]));
-         String[] a = new String[Argv.length-1];
-         System.arraycopy(Argv, 1, a, 0, a.length);
-         Argv = a;
-      }
+      while ((s = opt()) != null)
+         x = load(ex, '\0', mkStr(s));
       return x;
    }
 
@@ -2115,576 +2127,586 @@ public class PicoLisp {
                return do17(ex);
             case 18:  // usec
                return do18(ex);
-            case 19:  // file
-               return do19(ex);
-            case 20:  // version
+            case 19:  // pwd
+               return mkStr(System.getProperty("user.dir"));
+            case 20:  // info
                return do20(ex);
-            case 21:  // apply
+            case 21:  // file
                return do21(ex);
-            case 22:  // pass
+            case 22:  // dir
                return do22(ex);
-            case 23:  // maps
+            case 23:  // argv
                return do23(ex);
-            case 24:  // map
+            case 24:  // opt
                return do24(ex);
-            case 25:  // mapc
+            case 25:  // version
                return do25(ex);
-            case 26:  // maplist
+            case 26:  // apply
                return do26(ex);
-            case 27:  // mapcar
+            case 27:  // pass
                return do27(ex);
-            case 28:  // mapcon
+            case 28:  // maps
                return do28(ex);
-            case 29:  // mapcan
+            case 29:  // map
                return do29(ex);
-            case 30:  // filter
+            case 30:  // mapc
                return do30(ex);
-            case 31:  // extract
+            case 31:  // maplist
                return do31(ex);
-            case 32:  // seek
+            case 32:  // mapcar
                return do32(ex);
-            case 33:  // find
+            case 33:  // mapcon
                return do33(ex);
-            case 34:  // pick
+            case 34:  // mapcan
                return do34(ex);
-            case 35:  // cnt
+            case 35:  // filter
                return do35(ex);
-            case 36:  // sum
+            case 36:  // extract
                return do36(ex);
-            case 37:  // maxi
+            case 37:  // seek
                return do37(ex);
-            case 38:  // mini
+            case 38:  // find
                return do38(ex);
-            case 39:  // fish
+            case 39:  // pick
                return do39(ex);
-            case 40:  // by
+            case 40:  // cnt
                return do40(ex);
-            case 41:  // as
+            case 41:  // sum
                return do41(ex);
-            case 42:  // lit
+            case 42:  // maxi
                return do42(ex);
-            case 43:  // eval
+            case 43:  // mini
                return do43(ex);
-            case 44:  // run
+            case 44:  // fish
                return do44(ex);
-            case 45:  // def
+            case 45:  // by
                return do45(ex);
-            case 46:  // de
+            case 46:  // as
                return do46(ex);
-            case 47:  // dm
+            case 47:  // lit
                return do47(ex);
-            case 48:  // box
+            case 48:  // eval
                return do48(ex);
-            case 49:  // new
+            case 49:  // run
                return do49(ex);
-            case 50:  // type
+            case 50:  // def
                return do50(ex);
-            case 51:  // isa
+            case 51:  // de
                return do51(ex);
-            case 52:  // method
+            case 52:  // dm
                return do52(ex);
-            case 53:  // send
+            case 53:  // box
                return do53(ex);
-            case 54:  // try
+            case 54:  // new
                return do54(ex);
-            case 55:  // super
+            case 55:  // type
                return do55(ex);
-            case 56:  // extra
+            case 56:  // isa
                return do56(ex);
-            case 57:  // with
+            case 57:  // method
                return do57(ex);
-            case 58:  // bind
+            case 58:  // send
                return do58(ex);
-            case 59:  // job
+            case 59:  // try
                return do59(ex);
-            case 60:  // let
+            case 60:  // super
                return do60(ex);
-            case 61:  // let?
+            case 61:  // extra
                return do61(ex);
-            case 62:  // use
+            case 62:  // with
                return do62(ex);
-            case 63:  // and
+            case 63:  // bind
                return do63(ex);
-            case 64:  // or
+            case 64:  // job
                return do64(ex);
-            case 65:  // nand
+            case 65:  // let
                return do65(ex);
-            case 66:  // nor
+            case 66:  // let?
                return do66(ex);
-            case 67:  // xor
+            case 67:  // use
                return do67(ex);
-            case 68:  // bool
+            case 68:  // and
                return do68(ex);
-            case 69:  // not
+            case 69:  // or
                return do69(ex);
-            case 70:  // nil
+            case 70:  // nand
                return do70(ex);
-            case 71:  // t
+            case 71:  // nor
                return do71(ex);
-            case 72:  // prog
-               return ex.Cdr.prog();
-            case 73:  // prog1
+            case 72:  // xor
+               return do72(ex);
+            case 73:  // bool
                return do73(ex);
-            case 74:  // prog2
+            case 74:  // not
                return do74(ex);
-            case 75:  // if
+            case 75:  // nil
                return do75(ex);
-            case 76:  // if2
+            case 76:  // t
                return do76(ex);
-            case 77:  // ifn
-               return do77(ex);
-            case 78:  // when
+            case 77:  // prog
+               return ex.Cdr.prog();
+            case 78:  // prog1
                return do78(ex);
-            case 79:  // unless
+            case 79:  // prog2
                return do79(ex);
-            case 80:  // cond
+            case 80:  // if
                return do80(ex);
-            case 81:  // nond
+            case 81:  // if2
                return do81(ex);
-            case 82:  // case
+            case 82:  // ifn
                return do82(ex);
-            case 83:  // state
+            case 83:  // when
                return do83(ex);
-            case 84:  // while
+            case 84:  // unless
                return do84(ex);
-            case 85:  // until
+            case 85:  // cond
                return do85(ex);
-            case 86:  // do
+            case 86:  // nond
                return do86(ex);
-            case 87:  // loop
-               return loop(ex.Cdr);
-            case 88:  // at
+            case 87:  // case
+               return do87(ex);
+            case 88:  // state
                return do88(ex);
-            case 89:  // for
+            case 89:  // while
                return do89(ex);
-            case 90:  // catch
+            case 90:  // until
                return do90(ex);
-            case 91:  // throw
+            case 91:  // do
                return do91(ex);
-            case 92:  // finally
-               return do92(ex);
-            case 93:  // !
+            case 92:  // loop
+               return loop(ex.Cdr);
+            case 93:  // at
                return do93(ex);
-            case 94:  // e
+            case 94:  // for
                return do94(ex);
-            case 95:  // $
+            case 95:  // catch
                return do95(ex);
-            case 96:  // sys
+            case 96:  // throw
                return do96(ex);
-            case 97:  // call
+            case 97:  // finally
                return do97(ex);
-            case 98:  // ipid
+            case 98:  // !
                return do98(ex);
-            case 99:  // opid
+            case 99:  // e
                return do99(ex);
-            case 100:  // kill
+            case 100:  // $
                return do100(ex);
-            case 101:  // bye
+            case 101:  // sys
                return do101(ex);
-            case 102:  // name
+            case 102:  // call
                return do102(ex);
-            case 103:  // sp?
+            case 103:  // ipid
                return do103(ex);
-            case 104:  // pat?
+            case 104:  // opid
                return do104(ex);
-            case 105:  // fun?
+            case 105:  // kill
                return do105(ex);
-            case 106:  // getd
+            case 106:  // bye
                return do106(ex);
-            case 107:  // all
+            case 107:  // name
                return do107(ex);
-            case 108:  // intern
+            case 108:  // sp?
                return do108(ex);
-            case 109:  // ====
+            case 109:  // pat?
                return do109(ex);
-            case 110:  // box?
+            case 110:  // fun?
                return do110(ex);
-            case 111:  // str?
+            case 111:  // getd
                return do111(ex);
-            case 112:  // zap
+            case 112:  // all
                return do112(ex);
-            case 113:  // chop
+            case 113:  // intern
                return do113(ex);
-            case 114:  // pack
+            case 114:  // ====
                return do114(ex);
-            case 115:  // glue
+            case 115:  // box?
                return do115(ex);
-            case 116:  // text
+            case 116:  // str?
                return do116(ex);
-            case 117:  // pre?
+            case 117:  // zap
                return do117(ex);
-            case 118:  // sub?
+            case 118:  // chop
                return do118(ex);
-            case 119:  // val
-               return ex.Cdr.Car.eval().Car;
-            case 120:  // set
+            case 119:  // pack
+               return do119(ex);
+            case 120:  // glue
                return do120(ex);
-            case 121:  // setq
+            case 121:  // text
                return do121(ex);
-            case 122:  // xchg
+            case 122:  // pre?
                return do122(ex);
-            case 123:  // on
+            case 123:  // sub?
                return do123(ex);
-            case 124:  // off
-               return do124(ex);
-            case 125:  // onOff
-               return do125(ex);
-            case 126:  // zero
-               return do126(ex);
-            case 127:  // one
-               return do127(ex);
-            case 128:  // default
-               return do128(ex);
-            case 129:  // push
-               return do129(ex);
-            case 130:  // push1
-               return do130(ex);
-            case 131:  // pop
-               return do131(ex);
-            case 132:  // cut
-               return do132(ex);
-            case 133:  // del
-               return do133(ex);
-            case 134:  // queue
-               return do134(ex);
-            case 135:  // fifo
-               return do135(ex);
-            case 136:  // idx
-               return do136(ex);
-            case 137:  // lup
-               return do137(ex);
-            case 138:  // put
-               return do138(ex);
-            case 139:  // get
-               return do139(ex);
-            case 140:  // prop
-               return do140(ex);
-            case 141:  // ;
-               return do141(ex);
-            case 142:  // =:
-               return do142(ex);
-            case 143:  // :
-               return do143(ex);
-            case 144:  // ::
-               return do144(ex);
-            case 145:  // putl
-               return do145(ex);
-            case 146:  // getl
-               return do146(ex);
-            case 147:  // meta
-               return do147(ex);
-            case 148:  // low?
-               return do148(ex);
-            case 149:  // upp?
-               return do149(ex);
-            case 150:  // lowc
-               return do150(ex);
-            case 151:  // uppc
-               return do151(ex);
-            case 152:  // fold
-               return do152(ex);
-            case 153:  // car
+            case 124:  // val
                return ex.Cdr.Car.eval().Car;
-            case 154:  // cdr
+            case 125:  // set
+               return do125(ex);
+            case 126:  // setq
+               return do126(ex);
+            case 127:  // xchg
+               return do127(ex);
+            case 128:  // on
+               return do128(ex);
+            case 129:  // off
+               return do129(ex);
+            case 130:  // onOff
+               return do130(ex);
+            case 131:  // zero
+               return do131(ex);
+            case 132:  // one
+               return do132(ex);
+            case 133:  // default
+               return do133(ex);
+            case 134:  // push
+               return do134(ex);
+            case 135:  // push1
+               return do135(ex);
+            case 136:  // pop
+               return do136(ex);
+            case 137:  // cut
+               return do137(ex);
+            case 138:  // del
+               return do138(ex);
+            case 139:  // queue
+               return do139(ex);
+            case 140:  // fifo
+               return do140(ex);
+            case 141:  // idx
+               return do141(ex);
+            case 142:  // lup
+               return do142(ex);
+            case 143:  // put
+               return do143(ex);
+            case 144:  // get
+               return do144(ex);
+            case 145:  // prop
+               return do145(ex);
+            case 146:  // ;
+               return do146(ex);
+            case 147:  // =:
+               return do147(ex);
+            case 148:  // :
+               return do148(ex);
+            case 149:  // ::
+               return do149(ex);
+            case 150:  // putl
+               return do150(ex);
+            case 151:  // getl
+               return do151(ex);
+            case 152:  // meta
+               return do152(ex);
+            case 153:  // low?
+               return do153(ex);
+            case 154:  // upp?
+               return do154(ex);
+            case 155:  // lowc
+               return do155(ex);
+            case 156:  // uppc
+               return do156(ex);
+            case 157:  // fold
+               return do157(ex);
+            case 158:  // car
+               return ex.Cdr.Car.eval().Car;
+            case 159:  // cdr
                return ex.Cdr.Car.eval().Cdr;
-            case 155:  // caar
+            case 160:  // caar
                return ex.Cdr.Car.eval().Car.Car;
-            case 156:  // cadr
+            case 161:  // cadr
                return ex.Cdr.Car.eval().Cdr.Car;
-            case 157:  // cdar
+            case 162:  // cdar
                return ex.Cdr.Car.eval().Car.Cdr;
-            case 158:  // cddr
+            case 163:  // cddr
                return ex.Cdr.Car.eval().Cdr.Cdr;
-            case 159:  // caaar
-               return do159(ex);
-            case 160:  // caadr
-               return do160(ex);
-            case 161:  // cadar
-               return do161(ex);
-            case 162:  // caddr
-               return do162(ex);
-            case 163:  // cdaar
-               return do163(ex);
-            case 164:  // cdadr
+            case 164:  // caaar
                return do164(ex);
-            case 165:  // cddar
+            case 165:  // caadr
                return do165(ex);
-            case 166:  // cdddr
+            case 166:  // cadar
                return do166(ex);
-            case 167:  // caaaar
+            case 167:  // caddr
                return do167(ex);
-            case 168:  // caaadr
+            case 168:  // cdaar
                return do168(ex);
-            case 169:  // caadar
+            case 169:  // cdadr
                return do169(ex);
-            case 170:  // caaddr
+            case 170:  // cddar
                return do170(ex);
-            case 171:  // cadaar
+            case 171:  // cdddr
                return do171(ex);
-            case 172:  // cadadr
+            case 172:  // caaaar
                return do172(ex);
-            case 173:  // caddar
+            case 173:  // caaadr
                return do173(ex);
-            case 174:  // cadddr
+            case 174:  // caadar
                return do174(ex);
-            case 175:  // cdaaar
+            case 175:  // caaddr
                return do175(ex);
-            case 176:  // cdaadr
+            case 176:  // cadaar
                return do176(ex);
-            case 177:  // cdadar
+            case 177:  // cadadr
                return do177(ex);
-            case 178:  // cdaddr
+            case 178:  // caddar
                return do178(ex);
-            case 179:  // cddaar
+            case 179:  // cadddr
                return do179(ex);
-            case 180:  // cddadr
+            case 180:  // cdaaar
                return do180(ex);
-            case 181:  // cdddar
+            case 181:  // cdaadr
                return do181(ex);
-            case 182:  // cddddr
+            case 182:  // cdadar
                return do182(ex);
-            case 183:  // nth
+            case 183:  // cdaddr
                return do183(ex);
-            case 184:  // con
+            case 184:  // cddaar
                return do184(ex);
-            case 185:  // cons
+            case 185:  // cddadr
                return do185(ex);
-            case 186:  // conc
+            case 186:  // cdddar
                return do186(ex);
-            case 187:  // circ
+            case 187:  // cddddr
                return do187(ex);
-            case 188:  // rot
+            case 188:  // nth
                return do188(ex);
-            case 189:  // list
+            case 189:  // con
                return do189(ex);
-            case 190:  // need
+            case 190:  // cons
                return do190(ex);
-            case 191:  // range
+            case 191:  // conc
                return do191(ex);
-            case 192:  // full
+            case 192:  // circ
                return do192(ex);
-            case 193:  // make
+            case 193:  // rot
                return do193(ex);
-            case 194:  // made
+            case 194:  // list
                return do194(ex);
-            case 195:  // chain
+            case 195:  // need
                return do195(ex);
-            case 196:  // link
+            case 196:  // range
                return do196(ex);
-            case 197:  // yoke
+            case 197:  // full
                return do197(ex);
-            case 198:  // copy
+            case 198:  // make
                return do198(ex);
-            case 199:  // mix
+            case 199:  // made
                return do199(ex);
-            case 200:  // append
+            case 200:  // chain
                return do200(ex);
-            case 201:  // delete
+            case 201:  // link
                return do201(ex);
-            case 202:  // delq
+            case 202:  // yoke
                return do202(ex);
-            case 203:  // replace
+            case 203:  // copy
                return do203(ex);
-            case 204:  // strip
+            case 204:  // mix
                return do204(ex);
-            case 205:  // split
+            case 205:  // append
                return do205(ex);
-            case 206:  // reverse
+            case 206:  // delete
                return do206(ex);
-            case 207:  // flip
+            case 207:  // delq
                return do207(ex);
-            case 208:  // trim
+            case 208:  // replace
                return do208(ex);
-            case 209:  // clip
+            case 209:  // strip
                return do209(ex);
-            case 210:  // head
+            case 210:  // split
                return do210(ex);
-            case 211:  // tail
+            case 211:  // reverse
                return do211(ex);
-            case 212:  // stem
+            case 212:  // flip
                return do212(ex);
-            case 213:  // fin
+            case 213:  // trim
                return do213(ex);
-            case 214:  // last
+            case 214:  // clip
                return do214(ex);
-            case 215:  // ==
+            case 215:  // head
                return do215(ex);
-            case 216:  // n==
+            case 216:  // tail
                return do216(ex);
-            case 217:  // =
+            case 217:  // stem
                return do217(ex);
-            case 218:  // <>
+            case 218:  // fin
                return do218(ex);
-            case 219:  // =0
+            case 219:  // last
                return do219(ex);
-            case 220:  // =T
+            case 220:  // ==
                return do220(ex);
-            case 221:  // n0
+            case 221:  // n==
                return do221(ex);
-            case 222:  // nT
+            case 222:  // =
                return do222(ex);
-            case 223:  // <
+            case 223:  // <>
                return do223(ex);
-            case 224:  // <=
+            case 224:  // =0
                return do224(ex);
-            case 225:  // >
+            case 225:  // =T
                return do225(ex);
-            case 226:  // >=
+            case 226:  // n0
                return do226(ex);
-            case 227:  // max
+            case 227:  // nT
                return do227(ex);
-            case 228:  // min
+            case 228:  // <
                return do228(ex);
-            case 229:  // atom
+            case 229:  // <=
                return do229(ex);
-            case 230:  // pair
+            case 230:  // >
                return do230(ex);
-            case 231:  // lst?
+            case 231:  // >=
                return do231(ex);
-            case 232:  // num?
+            case 232:  // max
                return do232(ex);
-            case 233:  // sym?
+            case 233:  // min
                return do233(ex);
-            case 234:  // flg?
+            case 234:  // atom
                return do234(ex);
-            case 235:  // member
+            case 235:  // pair
                return do235(ex);
-            case 236:  // memq
+            case 236:  // lst?
                return do236(ex);
-            case 237:  // mmeq
+            case 237:  // num?
                return do237(ex);
-            case 238:  // sect
+            case 238:  // sym?
                return do238(ex);
-            case 239:  // diff
+            case 239:  // flg?
                return do239(ex);
-            case 240:  // index
+            case 240:  // member
                return do240(ex);
-            case 241:  // offset
+            case 241:  // memq
                return do241(ex);
-            case 242:  // length
+            case 242:  // mmeq
                return do242(ex);
-            case 243:  // size
+            case 243:  // sect
                return do243(ex);
-            case 244:  // assoc
+            case 244:  // diff
                return do244(ex);
-            case 245:  // asoq
+            case 245:  // index
                return do245(ex);
-            case 246:  // rank
+            case 246:  // offset
                return do246(ex);
-            case 247:  // match
+            case 247:  // length
                return do247(ex);
-            case 248:  // fill
+            case 248:  // size
                return do248(ex);
-            case 249:  // prove
+            case 249:  // assoc
                return do249(ex);
-            case 250:  // ->
+            case 250:  // asoq
                return do250(ex);
-            case 251:  // unify
+            case 251:  // rank
                return do251(ex);
-            case 252:  // sort
+            case 252:  // match
                return do252(ex);
-            case 253:  // format
+            case 253:  // fill
                return do253(ex);
-            case 254:  // +
+            case 254:  // prove
                return do254(ex);
-            case 255:  // -
+            case 255:  // ->
                return do255(ex);
-            case 256:  // inc
+            case 256:  // unify
                return do256(ex);
-            case 257:  // dec
+            case 257:  // sort
                return do257(ex);
-            case 258:  // *
+            case 258:  // format
                return do258(ex);
-            case 259:  // */
+            case 259:  // +
                return do259(ex);
-            case 260:  // /
+            case 260:  // -
                return do260(ex);
-            case 261:  // %
+            case 261:  // inc
                return do261(ex);
-            case 262:  // >>
+            case 262:  // dec
                return do262(ex);
-            case 263:  // lt0
+            case 263:  // *
                return do263(ex);
-            case 264:  // ge0
+            case 264:  // */
                return do264(ex);
-            case 265:  // gt0
+            case 265:  // /
                return do265(ex);
-            case 266:  // abs
+            case 266:  // %
                return do266(ex);
-            case 267:  // bit?
+            case 267:  // >>
                return do267(ex);
-            case 268:  // &
+            case 268:  // lt0
                return do268(ex);
-            case 269:  // |
+            case 269:  // ge0
                return do269(ex);
-            case 270:  // x|
+            case 270:  // gt0
                return do270(ex);
-            case 271:  // seed
+            case 271:  // abs
                return do271(ex);
-            case 272:  // rand
+            case 272:  // bit?
                return do272(ex);
-            case 273:  // path
+            case 273:  // &
                return do273(ex);
-            case 274:  // read
+            case 274:  // |
                return do274(ex);
-            case 275:  // wait
+            case 275:  // x|
                return do275(ex);
-            case 276:  // poll
+            case 276:  // seed
                return do276(ex);
-            case 277:  // peek
+            case 277:  // rand
                return do277(ex);
-            case 278:  // char
+            case 278:  // path
                return do278(ex);
-            case 279:  // skip
+            case 279:  // read
                return do279(ex);
-            case 280:  // eol
+            case 280:  // wait
                return do280(ex);
-            case 281:  // eof
+            case 281:  // poll
                return do281(ex);
-            case 282:  // from
+            case 282:  // peek
                return do282(ex);
-            case 283:  // till
+            case 283:  // char
                return do283(ex);
-            case 284:  // line
+            case 284:  // skip
                return do284(ex);
-            case 285:  // any
+            case 285:  // eol
                return do285(ex);
-            case 286:  // sym
+            case 286:  // eof
                return do286(ex);
-            case 287:  // str
+            case 287:  // from
                return do287(ex);
-            case 288:  // load
+            case 288:  // till
                return do288(ex);
-            case 289:  // in
+            case 289:  // line
                return do289(ex);
-            case 290:  // out
+            case 290:  // any
                return do290(ex);
-            case 291:  // open
+            case 291:  // sym
                return do291(ex);
-            case 292:  // close
+            case 292:  // str
                return do292(ex);
-            case 293:  // echo
+            case 293:  // load
                return do293(ex);
-            case 294:  // prin
+            case 294:  // in
                return do294(ex);
-            case 295:  // prinl
+            case 295:  // out
                return do295(ex);
-            case 296:  // space
+            case 296:  // open
                return do296(ex);
-            case 297:  // print
+            case 297:  // close
                return do297(ex);
-            case 298:  // printsp
+            case 298:  // echo
                return do298(ex);
-            case 299:  // println
+            case 299:  // prin
                return do299(ex);
-            case 300:  // flush
+            case 300:  // prinl
                return do300(ex);
-            case 301:  // port
+            case 301:  // space
                return do301(ex);
-            case 302:  // accept
+            case 302:  // print
                return do302(ex);
-            case 303:  // connect
+            case 303:  // printsp
                return do303(ex);
+            case 304:  // println
+               return do304(ex);
+            case 305:  // flush
+               return do305(ex);
+            case 306:  // port
+               return do306(ex);
+            case 307:  // accept
+               return do307(ex);
+            case 308:  // connect
+               return do308(ex);
             default:
                return undefined(this, ex);
             }
@@ -2960,7 +2982,21 @@ public class PicoLisp {
          return new Number(System.nanoTime()/1000 - USec);
       }
 
-      final static Any do19(Any ex) { // file
+      final static Any do20(Any ex) { // info
+         File f = new File(path(evString(ex.Cdr)));
+         if (!f.exists())
+            return Nil;
+         Calendar c = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
+         c.setTimeInMillis(f.lastModified());
+         return
+            new Cell(
+               f.isDirectory()? T : new Number(f.length()),
+               new Cell(
+                  date(c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1, c.get(Calendar.DATE)),
+                  time(c) ) );
+      }
+
+      final static Any do21(Any ex) { // file
          int i;
          Any x;
          if (InFile.Name == null)
@@ -2971,7 +3007,50 @@ public class PicoLisp {
          return new Cell(mkStr("./"), new Cell(mkStr(InFile.Name), x));
       }
 
-      final static Any do20(Any ex) { // version
+      final static Any do22(Any ex) { // dir
+         int i;
+         Any x, y;
+         String str;
+         String[] lst = new File((str = evString(x = ex.Cdr)).length() == 0? "." : path(str)).list();
+         x = x.Cdr.Car.eval();
+         if (lst == null)
+            return Nil;
+         for (y = Nil, i = lst.length; --i >= 0;)
+            if (x != Nil || lst[i].charAt(0) != '.')
+               y = new Cell(mkStr(lst[i]), y);
+         return y;
+      }
+
+      final static Any do23(Any ex) { // argv
+         int i, j;
+         Any x, y;
+         i = Argv.length > 0 && Argv[0].equals("-")? 1 : 0;
+         if ((x = ex.Cdr) == Nil) {
+            if (i == Argv.length)
+               return Nil;
+            for (j = Argv.length; --j >= i;)
+               x = new Cell(mkStr(Argv[j]), x);
+            return x;
+         }
+         do {
+            if (!(x instanceof Cell)) {
+               if (i == Argv.length)
+                  return x.Car = Nil;
+               for (y = Nil, j = Argv.length; --j >= i;)
+                  y = new Cell(mkStr(Argv[j]), y);
+               return x.Car = y;
+            }
+            (y = x.Car).Car = i == Argv.length? Nil : mkStr(Argv[i++]);
+         } while ((x = x.Cdr) != Nil);
+         return y.Car;
+      }
+
+      final static Any do24(Any ex) { // opt
+         String str;
+         return (str = opt()) == null? Nil : mkStr(str);
+      }
+
+      final static Any do25(Any ex) { // version
          int i;
          Any x;
          if (ex.Cdr.Car.eval() == Nil) {
@@ -2985,7 +3064,7 @@ public class PicoLisp {
          return x;
       }
 
-      final static Any do21(Any ex) { // apply
+      final static Any do26(Any ex) { // apply
          int i;
          Any w, x, y;
          Any[] v;
@@ -3000,7 +3079,7 @@ public class PicoLisp {
          return w.apply(ex, false, v, i);
       }
 
-      final static Any do22(Any ex) { // pass
+      final static Any do27(Any ex) { // pass
          int i, j;
          Any w, x;
          Any[] v;
@@ -3012,7 +3091,7 @@ public class PicoLisp {
          return w.apply(ex, false, v, i);
       }
 
-      final static Any do23(Any ex) { // maps
+      final static Any do28(Any ex) { // maps
          int i, j, k;
          Any w, x, y;
          Symbol s;
@@ -3037,7 +3116,7 @@ public class PicoLisp {
          return x;
       }
 
-      final static Any do24(Any ex) { // map
+      final static Any do29(Any ex) { // map
          int i, j;
          Any w, x, y;
          Any[] v;
@@ -3057,7 +3136,7 @@ public class PicoLisp {
          return x;
       }
 
-      final static Any do25(Any ex) { // mapc
+      final static Any do30(Any ex) { // mapc
          int i, j;
          Any w, x, y;
          Any[] v;
@@ -3077,7 +3156,7 @@ public class PicoLisp {
          return x;
       }
 
-      final static Any do26(Any ex) { // maplist
+      final static Any do31(Any ex) { // maplist
          int i, j;
          Any w, x, z;
          Any[] v;
@@ -3101,7 +3180,7 @@ public class PicoLisp {
          return z;
       }
 
-      final static Any do27(Any ex) { // mapcar
+      final static Any do32(Any ex) { // mapcar
          int i, j;
          Any w, x, z;
          Any[] v;
@@ -3125,7 +3204,7 @@ public class PicoLisp {
          return z;
       }
 
-      final static Any do28(Any ex) { // mapcon
+      final static Any do33(Any ex) { // mapcon
          int i, j;
          Any w, x, z;
          Any[] v;
@@ -3157,7 +3236,7 @@ public class PicoLisp {
          return z;
       }
 
-      final static Any do29(Any ex) { // mapcan
+      final static Any do34(Any ex) { // mapcan
          int i, j;
          Any w, x, z;
          Any[] v;
@@ -3189,7 +3268,7 @@ public class PicoLisp {
          return z;
       }
 
-      final static Any do30(Any ex) { // filter
+      final static Any do35(Any ex) { // filter
          int i, j;
          Any w, x, z;
          Any[] v;
@@ -3220,7 +3299,7 @@ public class PicoLisp {
          return z;
       }
 
-      final static Any do31(Any ex) { // extract
+      final static Any do36(Any ex) { // extract
          int i, j;
          Any w, x, y, z;
          Any[] v;
@@ -3251,7 +3330,7 @@ public class PicoLisp {
          return z;
       }
 
-      final static Any do32(Any ex) { // seek
+      final static Any do37(Any ex) { // seek
          int i, j;
          Any w, x;
          Any[] v;
@@ -3272,7 +3351,7 @@ public class PicoLisp {
          return Nil;
       }
 
-      final static Any do33(Any ex) { // find
+      final static Any do38(Any ex) { // find
          int i, j;
          Any w, x;
          Any[] v;
@@ -3293,7 +3372,7 @@ public class PicoLisp {
          return Nil;
       }
 
-      final static Any do34(Any ex) { // pick
+      final static Any do39(Any ex) { // pick
          int i, j;
          Any w, x;
          Any[] v;
@@ -3314,7 +3393,7 @@ public class PicoLisp {
          return Nil;
       }
 
-      final static Any do35(Any ex) { // cnt
+      final static Any do40(Any ex) { // cnt
          int i, j;
          long n;
          Any w, x;
@@ -3337,7 +3416,7 @@ public class PicoLisp {
          return new Number(n);
       }
 
-      final static Any do36(Any ex) { // sum
+      final static Any do41(Any ex) { // sum
          int i, j;
          Any w, x, y;
          Number num;
@@ -3360,7 +3439,7 @@ public class PicoLisp {
          return num;
       }
 
-      final static Any do37(Any ex) { // maxi
+      final static Any do42(Any ex) { // maxi
          int i, j;
          Any w, x, y, z;
          Any[] v;
@@ -3384,7 +3463,7 @@ public class PicoLisp {
          return z;
       }
 
-      final static Any do38(Any ex) { // mini
+      final static Any do43(Any ex) { // mini
          int i, j;
          Any w, x, y, z;
          Any[] v;
@@ -3409,7 +3488,7 @@ public class PicoLisp {
          return z;
       }
 
-      final static Any do39(Any ex) { // fish
+      final static Any do44(Any ex) { // fish
          Any w;
          Any[] v;
          w = ex.Cdr.Car.eval();
@@ -3417,7 +3496,7 @@ public class PicoLisp {
          return fish(ex, w, v, Nil);
       }
 
-      final static Any do40(Any ex) { // by
+      final static Any do45(Any ex) { // by
          int i, j;
          Any w, x, y, z;
          Any[] v;
@@ -3444,16 +3523,16 @@ public class PicoLisp {
          return z;
       }
 
-      final static Any do41(Any ex) { // as
+      final static Any do46(Any ex) { // as
          return ex.Cdr.Car.eval() == Nil? Nil : ex.Cdr.Cdr;
       }
 
-      final static Any do42(Any ex) { // lit
+      final static Any do47(Any ex) { // lit
          Any x;
          return (x = ex.Cdr.Car.eval()) instanceof Number || x == Nil || x == T || x instanceof Cell && x.Car instanceof Number? x : new Cell(Quote, x);
       }
 
-      final static Any do43(Any ex) { // eval
+      final static Any do48(Any ex) { // eval
          Any y;
          if ((y = (ex = ex.Cdr).Car.eval()) instanceof Number)
             return y;
@@ -3462,7 +3541,7 @@ public class PicoLisp {
          return evRun(true, y, evInt(ex.Cdr), ex.Cdr.Cdr.Car.eval());
       }
 
-      final static Any do44(Any ex) { // run
+      final static Any do49(Any ex) { // run
          Any y;
          if ((y = (ex = ex.Cdr).Car.eval()) instanceof Number)
             return y;
@@ -3471,7 +3550,7 @@ public class PicoLisp {
          return evRun(false, y, evInt(ex.Cdr), ex.Cdr.Cdr.Car.eval());
       }
 
-      final static Any do45(Any ex) { // def
+      final static Any do50(Any ex) { // def
          Any w, x, y;
          Symbol s;
          s = (Symbol)(ex = ex.Cdr).Car.eval();
@@ -3492,13 +3571,13 @@ public class PicoLisp {
          return s;
       }
 
-      final static Any do46(Any ex) { // de
+      final static Any do51(Any ex) { // de
          ex = ex.Cdr;
          redefine((Symbol)ex.Car, ex.Cdr);
          return ex.Car;
       }
 
-      final static Any do47(Any ex) { // dm
+      final static Any do52(Any ex) { // dm
          Any x, y;
          Symbol s, t;
          if (!((x = ex.Cdr).Car instanceof Cell)) {
@@ -3541,11 +3620,11 @@ public class PicoLisp {
          return s;
       }
 
-      final static Any do48(Any ex) { // box
+      final static Any do53(Any ex) { // box
          return mkSymbol(ex.Cdr.Car.eval());
       }
 
-      final static Any do49(Any ex) { // new
+      final static Any do54(Any ex) { // new
          Any x;
          Symbol s;
          s = mkSymbol((ex = ex.Cdr).Car.eval());
@@ -3561,7 +3640,7 @@ public class PicoLisp {
          return s;
       }
 
-      final static Any do50(Any ex) { // type
+      final static Any do55(Any ex) { // type
          Any x, y, z;
          if ((x = ex.Cdr.Car.eval()) instanceof Symbol) {
             z = x = x.Car;
@@ -3583,7 +3662,7 @@ public class PicoLisp {
          return Nil;
       }
 
-      final static Any do51(Any ex) { // isa
+      final static Any do56(Any ex) { // isa
          Any x, y;
          x = (ex = ex.Cdr).Car.eval();
          if ((y = ex.Cdr.Car.eval()) instanceof Symbol) {
@@ -3599,7 +3678,7 @@ public class PicoLisp {
          return Nil;
       }
 
-      final static Any do52(Any ex) { // method
+      final static Any do57(Any ex) { // method
          Any x, y;
          x = (ex = ex.Cdr).Car.eval();
          y = ex.Cdr.Car.eval();
@@ -3607,7 +3686,7 @@ public class PicoLisp {
          return (x = method(y)) == null? Nil : x;
       }
 
-      final static Any do53(Any ex) { // send
+      final static Any do58(Any ex) { // send
          Any x, y, z;
          y = (x = ex.Cdr).Car.eval();
          z = (x = x.Cdr).Car.eval();
@@ -3617,7 +3696,7 @@ public class PicoLisp {
          return evMethod(z, y, x.Cdr);
       }
 
-      final static Any do54(Any ex) { // try
+      final static Any do59(Any ex) { // try
          Any x, y;
          x = (ex = ex.Cdr).Car.eval();
          if ((y = (ex = ex.Cdr).Car.eval()) instanceof Symbol) {
@@ -3628,7 +3707,7 @@ public class PicoLisp {
          return Nil;
       }
 
-      final static Any do55(Any ex) { // super
+      final static Any do60(Any ex) { // super
          Any w, x, y, z;
          TheKey = Env.Key;
          x = Env.Cls == null? This.Car : Env.Cls.Car.Car;
@@ -3648,7 +3727,7 @@ public class PicoLisp {
          }
       }
 
-      final static Any do56(Any ex) { // extra
+      final static Any do61(Any ex) { // extra
          Any x, y, z;
          TheKey = Env.Key;
          if ((x = extra(This.Car)) == null  ||  x == T)
@@ -3660,7 +3739,7 @@ public class PicoLisp {
          return x;
       }
 
-      final static Any do57(Any ex) { // with
+      final static Any do62(Any ex) { // with
          Any x;
          Bind bnd;
          if ((x = ex.Cdr.Car.eval()) != Nil) {
@@ -3674,7 +3753,7 @@ public class PicoLisp {
          return x;
       }
 
-      final static Any do58(Any ex) { // bind
+      final static Any do63(Any ex) { // bind
          int i;
          Any x, y, z;
          Bind bnd;
@@ -3707,7 +3786,7 @@ public class PicoLisp {
          return x;
       }
 
-      final static Any do59(Any ex) { // job
+      final static Any do64(Any ex) { // job
          int i;
          Any w, x, y, z;
          Bind bnd;
@@ -3729,7 +3808,7 @@ public class PicoLisp {
          return x;
       }
 
-      final static Any do60(Any ex) { // let
+      final static Any do65(Any ex) { // let
          int i;
          Any x, y, z;
          Bind bnd;
@@ -3755,7 +3834,7 @@ public class PicoLisp {
          return x;
       }
 
-      final static Any do61(Any ex) { // let?
+      final static Any do66(Any ex) { // let?
          Any x, y, z;
          Bind bnd;
          z = (x = ex.Cdr).Car;
@@ -3770,7 +3849,7 @@ public class PicoLisp {
          return y;
       }
 
-      final static Any do62(Any ex) { // use
+      final static Any do67(Any ex) { // use
          int i;
          Any x, y;
          Bind bnd;
@@ -3793,7 +3872,7 @@ public class PicoLisp {
          return x;
       }
 
-      final static Any do63(Any ex) { // and
+      final static Any do68(Any ex) { // and
          Any w;
          ex = ex.Cdr;
          do {
@@ -3804,7 +3883,7 @@ public class PicoLisp {
          return w;
       }
 
-      final static Any do64(Any ex) { // or
+      final static Any do69(Any ex) { // or
          Any w;
          ex = ex.Cdr;
          do
@@ -3814,7 +3893,7 @@ public class PicoLisp {
          return Nil;
       }
 
-      final static Any do65(Any ex) { // nand
+      final static Any do70(Any ex) { // nand
          Any w;
          ex = ex.Cdr;
          do {
@@ -3825,7 +3904,7 @@ public class PicoLisp {
          return Nil;
       }
 
-      final static Any do66(Any ex) { // nor
+      final static Any do71(Any ex) { // nor
          Any w;
          ex = ex.Cdr;
          do
@@ -3837,18 +3916,18 @@ public class PicoLisp {
          return T;
       }
 
-      final static Any do67(Any ex) { // xor
+      final static Any do72(Any ex) { // xor
          Any x, y;
          y = (x = ex.Cdr).Car.eval();
          x = x.Cdr.Car.eval();
          return y == Nil ^ x == Nil? T : Nil;
       }
 
-      final static Any do68(Any ex) { // bool
+      final static Any do73(Any ex) { // bool
          return ex.Cdr.Car.eval() == Nil? Nil : T;
       }
 
-      final static Any do69(Any ex) { // not
+      final static Any do74(Any ex) { // not
          Any w;
          if ((w = ex.Cdr.Car.eval()) == Nil)
             return T;
@@ -3856,24 +3935,24 @@ public class PicoLisp {
          return Nil;
       }
 
-      final static Any do70(Any ex) { // nil
+      final static Any do75(Any ex) { // nil
          ex.Cdr.prog();
          return Nil;
       }
 
-      final static Any do71(Any ex) { // t
+      final static Any do76(Any ex) { // t
          ex.Cdr.prog();
          return T;
       }
 
-      final static Any do73(Any ex) { // prog1
+      final static Any do78(Any ex) { // prog1
          Any w;
          w = At.Car = ex.Cdr.Car.eval();
          ex.Cdr.Cdr.prog();
          return w;
       }
 
-      final static Any do74(Any ex) { // prog2
+      final static Any do79(Any ex) { // prog2
          Any w;
          (ex = ex.Cdr).Car.eval();
          w = At.Car = (ex = ex.Cdr).Car.eval();
@@ -3881,7 +3960,7 @@ public class PicoLisp {
          return w;
       }
 
-      final static Any do75(Any ex) { // if
+      final static Any do80(Any ex) { // if
          Any w;
          if ((w = (ex = ex.Cdr).Car.eval()) == Nil)
             return ex.Cdr.Cdr.prog();
@@ -3889,7 +3968,7 @@ public class PicoLisp {
          return ex.Cdr.Car.eval();
       }
 
-      final static Any do76(Any ex) { // if2
+      final static Any do81(Any ex) { // if2
          Any w;
          if ((w = (ex = ex.Cdr).Car.eval()) == Nil) {
             if ((w = (ex = ex.Cdr).Car.eval()) == Nil)
@@ -3904,7 +3983,7 @@ public class PicoLisp {
          return ex.Cdr.Car.eval();
       }
 
-      final static Any do77(Any ex) { // ifn
+      final static Any do82(Any ex) { // ifn
          Any w;
          if ((w = (ex = ex.Cdr).Car.eval()) != Nil) {
             At.Car = w;
@@ -3913,7 +3992,7 @@ public class PicoLisp {
          return ex.Cdr.Car.eval();
       }
 
-      final static Any do78(Any ex) { // when
+      final static Any do83(Any ex) { // when
          Any w;
          if ((w = (ex = ex.Cdr).Car.eval()) == Nil)
             return Nil;
@@ -3921,7 +4000,7 @@ public class PicoLisp {
          return ex.Cdr.prog();
       }
 
-      final static Any do79(Any ex) { // unless
+      final static Any do84(Any ex) { // unless
          Any w;
          if ((w = (ex = ex.Cdr).Car.eval()) != Nil)
             return Nil;
@@ -3929,7 +4008,7 @@ public class PicoLisp {
          return ex.Cdr.prog();
       }
 
-      final static Any do80(Any ex) { // cond
+      final static Any do85(Any ex) { // cond
          Any w;
          while ((ex = ex.Cdr) instanceof Cell)
             if ((w = ex.Car.Car.eval()) != Nil) {
@@ -3939,7 +4018,7 @@ public class PicoLisp {
          return Nil;
       }
 
-      final static Any do81(Any ex) { // nond
+      final static Any do86(Any ex) { // nond
          Any w;
          while ((ex = ex.Cdr) instanceof Cell) {
             if ((w = ex.Car.Car.eval()) == Nil)
@@ -3949,7 +4028,7 @@ public class PicoLisp {
          return Nil;
       }
 
-      final static Any do82(Any ex) { // case
+      final static Any do87(Any ex) { // case
          Any x, y;
          At.Car = (ex = ex.Cdr).Car.eval();
          while ((ex = ex.Cdr) instanceof Cell) {
@@ -3966,7 +4045,7 @@ public class PicoLisp {
          return Nil;
       }
 
-      final static Any do83(Any ex) { // state
+      final static Any do88(Any ex) { // state
          Any w, x, y, z;
          z = (x = ex.Cdr).Car.eval();
          while ((x = x.Cdr) instanceof Cell) {
@@ -3982,7 +4061,7 @@ public class PicoLisp {
          return Nil;
       }
 
-      final static Any do84(Any ex) { // while
+      final static Any do89(Any ex) { // while
          Any w, x, y;
          x = (ex = ex.Cdr).Car;
          ex = ex.Cdr;
@@ -3994,7 +4073,7 @@ public class PicoLisp {
          return y;
       }
 
-      final static Any do85(Any ex) { // until
+      final static Any do90(Any ex) { // until
          Any w, x, y;
          x = (ex = ex.Cdr).Car;
          ex = ex.Cdr;
@@ -4005,7 +4084,7 @@ public class PicoLisp {
          return y;
       }
 
-      final static Any do86(Any ex) { // do
+      final static Any do91(Any ex) { // do
          long n;
          Any w, x, y;
          if ((x = (ex = ex.Cdr).Car.eval()) == Nil)
@@ -4037,7 +4116,7 @@ public class PicoLisp {
          return y;
       }
 
-      final static Any do88(Any ex) { // at
+      final static Any do93(Any ex) { // at
          Any x;
          Number num;
          x = (ex = ex.Cdr).Car.eval();
@@ -4049,7 +4128,7 @@ public class PicoLisp {
          return ex.Cdr.prog();
       }
 
-      final static Any do89(Any ex) { // for
+      final static Any do94(Any ex) { // for
          int i;
          Any w, x, y, z;
          Bind bnd;
@@ -4162,7 +4241,7 @@ public class PicoLisp {
          return y;
       }
 
-      final static Any do90(Any ex) { // catch
+      final static Any do95(Any ex) { // catch
          Any x, y;
          new Catch(y = (x = ex.Cdr).Car.eval(), Zero, Env);
          try {
@@ -4182,13 +4261,13 @@ public class PicoLisp {
          }
       }
 
-      final static Any do91(Any ex) { // throw
+      final static Any do96(Any ex) { // throw
          Any x, y;
          y = (x = ex.Cdr).Car.eval();
          throw new Control(ex, y, x.Cdr.Car.eval());
       }
 
-      final static Any do92(Any ex) { // finally
+      final static Any do97(Any ex) { // finally
          Any x, y;
          new Catch(null, y = (x = ex.Cdr).Car, Env);
          x = x.Cdr.prog();
@@ -4197,7 +4276,7 @@ public class PicoLisp {
          return x;
       }
 
-      final static Any do93(Any ex) { // !
+      final static Any do98(Any ex) { // !
          Any x;
          x = ex.Cdr;
          if (Dbg.Car != Nil)
@@ -4205,7 +4284,7 @@ public class PicoLisp {
          return x.eval();
       }
 
-      final static Any do94(Any ex) { // e
+      final static Any do99(Any ex) { // e
          Any w, x, y, z;
          if (!Break)
             err(ex, null, "No Break");
@@ -4224,7 +4303,7 @@ public class PicoLisp {
          return z;
       }
 
-      final static Any do95(Any ex) { // $
+      final static Any do100(Any ex) { // $
          int i;
          Any x;
          ex = ex.Cdr;
@@ -4254,11 +4333,11 @@ public class PicoLisp {
          return x;
       }
 
-      final static Any do96(Any ex) { // sys
+      final static Any do101(Any ex) { // sys
          return mkStr(System.getenv(evString(ex.Cdr)));
       }
 
-      final static Any do97(Any ex) { // call
+      final static Any do102(Any ex) { // call
          int i, j;
          Any x;
          j = (int)(x = ex.Cdr).length();
@@ -4273,15 +4352,15 @@ public class PicoLisp {
          return i == 0? T : Nil;
       }
 
-      final static Any do98(Any ex) { // ipid
+      final static Any do103(Any ex) { // ipid
          return Env.InFrames != null && Env.InFrames.Pid > 1? new Number(Env.InFrames.Pid) : Nil;
       }
 
-      final static Any do99(Any ex) { // opid
+      final static Any do104(Any ex) { // opid
          return Env.OutFrames != null && Env.OutFrames.Pid > 1? new Number(Env.OutFrames.Pid) : Nil;
       }
 
-      final static Any do100(Any ex) { // kill
+      final static Any do105(Any ex) { // kill
          int i;
          if (Pids[i = evInt(ex = ex.Cdr)] == null)
             return Nil;
@@ -4291,13 +4370,13 @@ public class PicoLisp {
          return T;
       }
 
-      final static Any do101(Any ex) { // bye
+      final static Any do106(Any ex) { // bye
          Any x;
          x = ex.Cdr.Car.eval();
          return bye(x == Nil? 0 : ((Number)x).Cnt);
       }
 
-      final static Any do102(Any ex) { // name
+      final static Any do107(Any ex) { // name
          Any x, y;
          Symbol s;
          y = (x = ex.Cdr).Car.eval();
@@ -4309,31 +4388,31 @@ public class PicoLisp {
          return s;
       }
 
-      final static Any do103(Any ex) { // sp?
+      final static Any do108(Any ex) { // sp?
          return isBlank(ex.Cdr.Car.eval())? T : Nil;
       }
 
-      final static Any do104(Any ex) { // pat?
+      final static Any do109(Any ex) { // pat?
          Any x;
          return ((x = ex.Cdr.Car.eval()) instanceof Symbol) && firstChar(x) == '@'? x : Nil;
       }
 
-      final static Any do105(Any ex) { // fun?
+      final static Any do110(Any ex) { // fun?
          return funq(ex.Cdr.Car.eval());
       }
 
-      final static Any do106(Any ex) { // getd
+      final static Any do111(Any ex) { // getd
          Any x;
          if (!((x = ex.Cdr.Car.eval()) instanceof Symbol))
             return Nil;
          return funq(x.Car) != Nil? x.Car : Nil;  // ... reflection
       }
 
-      final static Any do107(Any ex) { // all
+      final static Any do112(Any ex) { // all
          return all(ex.Cdr.Car.eval() == Nil? Intern : Transient);
       }
 
-      final static Any do108(Any ex) { // intern
+      final static Any do113(Any ex) { // intern
          Symbol s, t;
          String str;
          s = (Symbol)ex.Cdr.Car.eval();
@@ -4345,7 +4424,7 @@ public class PicoLisp {
          return s;
       }
 
-      final static Any do109(Any ex) { // ====
+      final static Any do114(Any ex) { // ====
          Any x, y;
          Transient.clear();
          for (x = ex.Cdr; x instanceof Cell; x = x.Cdr) {
@@ -4355,24 +4434,24 @@ public class PicoLisp {
          return Nil;
       }
 
-      final static Any do110(Any ex) { // box?
+      final static Any do115(Any ex) { // box?
          Any x;
          return ((x = ex.Cdr.Car.eval()) instanceof Symbol) && x.name().length() == 0? x : Nil;
       }
 
-      final static Any do111(Any ex) { // str?
+      final static Any do116(Any ex) { // str?
          Any x;
          return ((x = ex.Cdr.Car.eval()) instanceof Symbol) && Intern.get(x.name()) == null? x : Nil;
       }
 
-      final static Any do112(Any ex) { // zap
+      final static Any do117(Any ex) { // zap
          Symbol s;
          s = (Symbol)ex.Cdr.Car.eval();
          Intern.remove(s.name());
          return s;
       }
 
-      final static Any do113(Any ex) { // chop
+      final static Any do118(Any ex) { // chop
          Any x, y;
          String str;
          x = ex.Cdr.Car.eval();
@@ -4387,7 +4466,7 @@ public class PicoLisp {
          return x;
       }
 
-      final static Any do114(Any ex) { // pack
+      final static Any do119(Any ex) { // pack
          StringBuilder sb;
          sb = new StringBuilder();
          for (ex = ex.Cdr; ex instanceof Cell; ex = ex.Cdr)
@@ -4395,7 +4474,7 @@ public class PicoLisp {
          return mkStr(sb);
       }
 
-      final static Any do115(Any ex) { // glue
+      final static Any do120(Any ex) { // glue
          Any x, y;
          StringBuilder sb;
          x = ex.Cdr.Car.eval();
@@ -4408,7 +4487,7 @@ public class PicoLisp {
          return mkStr(sb);
       }
 
-      final static Any do116(Any ex) { // text
+      final static Any do121(Any ex) { // text
          int i, j, k;
          char c;
          String str;
@@ -4437,21 +4516,21 @@ public class PicoLisp {
          return mkStr(sb);
       }
 
-      final static Any do117(Any ex) { // pre?
+      final static Any do122(Any ex) { // pre?
          Any x;
          String str;
          str = evString(ex = ex.Cdr);
          return (x = ex.Cdr.Car.eval()).name().startsWith(str)? x : Nil;
       }
 
-      final static Any do118(Any ex) { // sub?
+      final static Any do123(Any ex) { // sub?
          Any x;
          String str;
          str = evString(ex = ex.Cdr);
          return (x = ex.Cdr.Car.eval()).name().indexOf(str) >= 0? x : Nil;
       }
 
-      final static Any do120(Any ex) { // set
+      final static Any do125(Any ex) { // set
          Any x, y;
          x = ex.Cdr;
          do {
@@ -4462,7 +4541,7 @@ public class PicoLisp {
          return y.Car;
       }
 
-      final static Any do121(Any ex) { // setq
+      final static Any do126(Any ex) { // setq
          Any x, y;
          x = ex.Cdr;
          do {
@@ -4473,7 +4552,7 @@ public class PicoLisp {
          return y.Car;
       }
 
-      final static Any do122(Any ex) { // xchg
+      final static Any do127(Any ex) { // xchg
          Any w, x, y, z;
          x = ex.Cdr;
          do {
@@ -4484,7 +4563,7 @@ public class PicoLisp {
          return w;
       }
 
-      final static Any do123(Any ex) { // on
+      final static Any do128(Any ex) { // on
          Any x;
          x = ex.Cdr;
          do
@@ -4493,7 +4572,7 @@ public class PicoLisp {
          return T;
       }
 
-      final static Any do124(Any ex) { // off
+      final static Any do129(Any ex) { // off
          Any x;
          x = ex.Cdr;
          do
@@ -4502,7 +4581,7 @@ public class PicoLisp {
          return Nil;
       }
 
-      final static Any do125(Any ex) { // onOff
+      final static Any do130(Any ex) { // onOff
          Any x, y;
          x = ex.Cdr;
          do
@@ -4511,7 +4590,7 @@ public class PicoLisp {
          return y;
       }
 
-      final static Any do126(Any ex) { // zero
+      final static Any do131(Any ex) { // zero
          Any x;
          x = ex.Cdr;
          do
@@ -4520,7 +4599,7 @@ public class PicoLisp {
          return Zero;
       }
 
-      final static Any do127(Any ex) { // one
+      final static Any do132(Any ex) { // one
          Any x;
          x = ex.Cdr;
          do
@@ -4529,7 +4608,7 @@ public class PicoLisp {
          return One;
       }
 
-      final static Any do128(Any ex) { // default
+      final static Any do133(Any ex) { // default
          Any x, y;
          x = ex.Cdr;
          do {
@@ -4542,7 +4621,7 @@ public class PicoLisp {
          return y.Car;
       }
 
-      final static Any do129(Any ex) { // push
+      final static Any do134(Any ex) { // push
          Any x, y, z;
          needVar(ex, y = (x = ex.Cdr).Car.eval());
          do
@@ -4551,7 +4630,7 @@ public class PicoLisp {
          return z;
       }
 
-      final static Any do130(Any ex) { // push1
+      final static Any do135(Any ex) { // push1
          Any x, y, z;
          needVar(ex, y = (x = ex.Cdr).Car.eval());
          do
@@ -4561,7 +4640,7 @@ public class PicoLisp {
          return z;
       }
 
-      final static Any do131(Any ex) { // pop
+      final static Any do136(Any ex) { // pop
          Any x, y;
          needVar(ex, x = ex.Cdr.Car.eval());
          if ((y = x.Car) instanceof Cell) {
@@ -4571,7 +4650,7 @@ public class PicoLisp {
          return y;
       }
 
-      final static Any do132(Any ex) { // cut
+      final static Any do137(Any ex) { // cut
          long n;
          Any x, y, z;
          if ((n = evLong(ex.Cdr)) <= 0)
@@ -4586,7 +4665,7 @@ public class PicoLisp {
          return x.Car;
       }
 
-      final static Any do133(Any ex) { // del
+      final static Any do138(Any ex) { // del
          Any w, lst, x, y, z;
          w = ex.Cdr.Car.eval();
          needVar(ex, x = ex.Cdr.Cdr.Car.eval());
@@ -4602,7 +4681,7 @@ public class PicoLisp {
          return x.Car;
       }
 
-      final static Any do134(Any ex) { // queue
+      final static Any do139(Any ex) { // queue
          Any x, y;
          needVar(ex, x = ex.Cdr.Car.eval());
          y = ex.Cdr.Cdr.Car.eval();
@@ -4615,7 +4694,7 @@ public class PicoLisp {
          return y;
       }
 
-      final static Any do135(Any ex) { // fifo
+      final static Any do140(Any ex) { // fifo
          Any x, y, z, lst;
          needVar(ex, y = (x = ex.Cdr).Car.eval());
          if ((x = x.Cdr) instanceof Cell) {
@@ -4643,7 +4722,7 @@ public class PicoLisp {
          return z;
       }
 
-      final static Any do136(Any ex) { // idx
+      final static Any do141(Any ex) { // idx
          Any x, y;
          needVar(ex, x = (ex = ex.Cdr).Car.eval());
          if (!((ex = ex.Cdr) instanceof Cell))
@@ -4652,7 +4731,7 @@ public class PicoLisp {
          return idx(x, y, ex.Cdr instanceof Cell? (ex.Cdr.Car.eval() == Nil? -1 : +1) : 0);
       }
 
-      final static Any do137(Any ex) { // lup
+      final static Any do142(Any ex) { // lup
          int i;
          Any x, y, z;
          x = (ex = ex.Cdr).Car.eval();
@@ -4672,7 +4751,7 @@ public class PicoLisp {
          return Nil;
       }
 
-      final static Any do138(Any ex) { // put
+      final static Any do143(Any ex) { // put
          Any x, y;
          x = (ex = ex.Cdr).Car.eval();
          for (;;) {
@@ -4683,7 +4762,7 @@ public class PicoLisp {
          }
       }
 
-      final static Any do139(Any ex) { // get
+      final static Any do144(Any ex) { // get
          Any x;
          x = (ex = ex.Cdr).Car.eval();
          while ((ex = ex.Cdr) instanceof Cell)
@@ -4691,7 +4770,7 @@ public class PicoLisp {
          return x;
       }
 
-      final static Any do140(Any ex) { // prop
+      final static Any do145(Any ex) { // prop
          Any x;
          x = (ex = ex.Cdr).Car.eval();
          while ((ex = ex.Cdr).Cdr instanceof Cell)
@@ -4699,7 +4778,7 @@ public class PicoLisp {
          return x.prop(ex.Car.eval());
       }
 
-      final static Any do141(Any ex) { // ;
+      final static Any do146(Any ex) { // ;
          Any x;
          x = (ex = ex.Cdr).Car.eval();
          while ((ex = ex.Cdr) instanceof Cell)
@@ -4707,7 +4786,7 @@ public class PicoLisp {
          return x;
       }
 
-      final static Any do142(Any ex) { // =:
+      final static Any do147(Any ex) { // =:
          Any x, y;
          for (x = This.Car;;) {
             y = (ex = ex.Cdr).Car;
@@ -4717,7 +4796,7 @@ public class PicoLisp {
          }
       }
 
-      final static Any do143(Any ex) { // :
+      final static Any do148(Any ex) { // :
          Any x;
          x = This.Car;
          do
@@ -4726,7 +4805,7 @@ public class PicoLisp {
          return x;
       }
 
-      final static Any do144(Any ex) { // ::
+      final static Any do149(Any ex) { // ::
          Any x;
          x = This.Car;
          while ((ex = ex.Cdr).Cdr instanceof Cell)
@@ -4734,7 +4813,7 @@ public class PicoLisp {
          return x.prop(ex.Car);
       }
 
-      final static Any do145(Any ex) { // putl
+      final static Any do150(Any ex) { // putl
          Any x;
          x = (ex = ex.Cdr).Car.eval();
          while ((ex = ex.Cdr).Cdr instanceof Cell)
@@ -4742,7 +4821,7 @@ public class PicoLisp {
          return x.putl(ex.Car.eval());
       }
 
-      final static Any do146(Any ex) { // getl
+      final static Any do151(Any ex) { // getl
          Any x;
          x = (ex = ex.Cdr).Car.eval();
          while ((ex = ex.Cdr) instanceof Cell)
@@ -4750,7 +4829,7 @@ public class PicoLisp {
          return x.getl();
       }
 
-      final static Any do147(Any ex) { // meta
+      final static Any do152(Any ex) { // meta
          Any x, y;
          if ((x = (ex = ex.Cdr).Car.eval()) instanceof Symbol)
             x = x.Car;
@@ -4759,17 +4838,17 @@ public class PicoLisp {
          return x;
       }
 
-      final static Any do148(Any ex) { // low?
+      final static Any do153(Any ex) { // low?
          Any x;
          return (x = ex.Cdr.Car.eval()) instanceof Symbol && Character.isLowerCase(firstChar(x))? x : Nil;
       }
 
-      final static Any do149(Any ex) { // upp?
+      final static Any do154(Any ex) { // upp?
          Any x;
          return (x = ex.Cdr.Car.eval()) instanceof Symbol && Character.isUpperCase(firstChar(x))? x : Nil;
       }
 
-      final static Any do150(Any ex) { // lowc
+      final static Any do155(Any ex) { // lowc
          int i, j;
          Any x;
          String str;
@@ -4782,7 +4861,7 @@ public class PicoLisp {
          return mkStr(sb);
       }
 
-      final static Any do151(Any ex) { // uppc
+      final static Any do156(Any ex) { // uppc
          int i, j;
          Any x;
          String str;
@@ -4795,7 +4874,7 @@ public class PicoLisp {
          return mkStr(sb);
       }
 
-      final static Any do152(Any ex) { // fold
+      final static Any do157(Any ex) { // fold
          int i, j, k;
          char c;
          Any x;
@@ -4818,103 +4897,103 @@ public class PicoLisp {
          return mkStr(sb);
       }
 
-      final static Any do159(Any ex) { // caaar
+      final static Any do164(Any ex) { // caaar
          return ex.Cdr.Car.eval().Car.Car.Car;
       }
 
-      final static Any do160(Any ex) { // caadr
+      final static Any do165(Any ex) { // caadr
          return ex.Cdr.Car.eval().Cdr.Car.Car;
       }
 
-      final static Any do161(Any ex) { // cadar
+      final static Any do166(Any ex) { // cadar
          return ex.Cdr.Car.eval().Car.Cdr.Car;
       }
 
-      final static Any do162(Any ex) { // caddr
+      final static Any do167(Any ex) { // caddr
          return ex.Cdr.Car.eval().Cdr.Cdr.Car;
       }
 
-      final static Any do163(Any ex) { // cdaar
+      final static Any do168(Any ex) { // cdaar
          return ex.Cdr.Car.eval().Car.Car.Cdr;
       }
 
-      final static Any do164(Any ex) { // cdadr
+      final static Any do169(Any ex) { // cdadr
          return ex.Cdr.Car.eval().Cdr.Car.Cdr;
       }
 
-      final static Any do165(Any ex) { // cddar
+      final static Any do170(Any ex) { // cddar
          return ex.Cdr.Car.eval().Car.Cdr.Cdr;
       }
 
-      final static Any do166(Any ex) { // cdddr
+      final static Any do171(Any ex) { // cdddr
          return ex.Cdr.Car.eval().Cdr.Cdr.Cdr;
       }
 
-      final static Any do167(Any ex) { // caaaar
+      final static Any do172(Any ex) { // caaaar
          return ex.Cdr.Car.eval().Car.Car.Car.Car;
       }
 
-      final static Any do168(Any ex) { // caaadr
+      final static Any do173(Any ex) { // caaadr
          return ex.Cdr.Car.eval().Cdr.Car.Car.Car;
       }
 
-      final static Any do169(Any ex) { // caadar
+      final static Any do174(Any ex) { // caadar
          return ex.Cdr.Car.eval().Car.Cdr.Car.Car;
       }
 
-      final static Any do170(Any ex) { // caaddr
+      final static Any do175(Any ex) { // caaddr
          return ex.Cdr.Car.eval().Cdr.Cdr.Car.Car;
       }
 
-      final static Any do171(Any ex) { // cadaar
+      final static Any do176(Any ex) { // cadaar
          return ex.Cdr.Car.eval().Car.Car.Cdr.Car;
       }
 
-      final static Any do172(Any ex) { // cadadr
+      final static Any do177(Any ex) { // cadadr
          return ex.Cdr.Car.eval().Cdr.Car.Cdr.Car;
       }
 
-      final static Any do173(Any ex) { // caddar
+      final static Any do178(Any ex) { // caddar
          return ex.Cdr.Car.eval().Car.Cdr.Cdr.Car;
       }
 
-      final static Any do174(Any ex) { // cadddr
+      final static Any do179(Any ex) { // cadddr
          return ex.Cdr.Car.eval().Cdr.Cdr.Cdr.Car;
       }
 
-      final static Any do175(Any ex) { // cdaaar
+      final static Any do180(Any ex) { // cdaaar
          return ex.Cdr.Car.eval().Car.Car.Car.Cdr;
       }
 
-      final static Any do176(Any ex) { // cdaadr
+      final static Any do181(Any ex) { // cdaadr
          return ex.Cdr.Car.eval().Cdr.Car.Car.Cdr;
       }
 
-      final static Any do177(Any ex) { // cdadar
+      final static Any do182(Any ex) { // cdadar
          return ex.Cdr.Car.eval().Car.Cdr.Car.Cdr;
       }
 
-      final static Any do178(Any ex) { // cdaddr
+      final static Any do183(Any ex) { // cdaddr
          return ex.Cdr.Car.eval().Cdr.Cdr.Car.Cdr;
       }
 
-      final static Any do179(Any ex) { // cddaar
+      final static Any do184(Any ex) { // cddaar
          return ex.Cdr.Car.eval().Car.Car.Cdr.Cdr;
       }
 
-      final static Any do180(Any ex) { // cddadr
+      final static Any do185(Any ex) { // cddadr
          return ex.Cdr.Car.eval().Cdr.Car.Cdr.Cdr;
       }
 
-      final static Any do181(Any ex) { // cdddar
+      final static Any do186(Any ex) { // cdddar
          return ex.Cdr.Car.eval().Car.Cdr.Cdr.Cdr;
       }
 
-      final static Any do182(Any ex) { // cddddr
+      final static Any do187(Any ex) { // cddddr
          return ex.Cdr.Car.eval().Cdr.Cdr.Cdr.Cdr;
       }
 
-      final static Any do183(Any ex) { // nth
+      final static Any do188(Any ex) { // nth
          Any x;
          x = (ex = ex.Cdr).Car.eval();
          for (;;) {
@@ -4927,13 +5006,13 @@ public class PicoLisp {
          }
       }
 
-      final static Any do184(Any ex) { // con
+      final static Any do189(Any ex) { // con
          Any x;
          x = ex.Cdr.Car.eval();
          return x.Cdr = ex.Cdr.Cdr.Car.eval();
       }
 
-      final static Any do185(Any ex) { // cons
+      final static Any do190(Any ex) { // cons
          Any x, y;
          y = x = new Cell((ex = ex.Cdr).Car.eval(), Nil);
          while ((ex = ex.Cdr).Cdr instanceof Cell)
@@ -4942,7 +5021,7 @@ public class PicoLisp {
          return y;
       }
 
-      final static Any do186(Any ex) { // conc
+      final static Any do191(Any ex) { // conc
          Any x, y, z;
          z = x = (ex = ex.Cdr).Car.eval();
          while ((ex = ex.Cdr) instanceof Cell) {
@@ -4957,7 +5036,7 @@ public class PicoLisp {
          return z;
       }
 
-      final static Any do187(Any ex) { // circ
+      final static Any do192(Any ex) { // circ
          Any x, y;
          y = x = new Cell((ex = ex.Cdr).Car.eval(), Nil);
          while ((ex = ex.Cdr) instanceof Cell)
@@ -4966,7 +5045,7 @@ public class PicoLisp {
          return y;
       }
 
-      final static Any do188(Any ex) { // rot
+      final static Any do193(Any ex) { // rot
          int i;
          Any w, x, y, z;
          w = y = (ex = ex.Cdr).Car.eval();
@@ -4981,7 +5060,7 @@ public class PicoLisp {
          return w;
       }
 
-      final static Any do189(Any ex) { // list
+      final static Any do194(Any ex) { // list
          Any x, y;
          x = y = new Cell((ex = ex.Cdr).Car.eval(), Nil);
          while ((ex = ex.Cdr) instanceof Cell)
@@ -4989,7 +5068,7 @@ public class PicoLisp {
          return y;
       }
 
-      final static Any do190(Any ex) { // need
+      final static Any do195(Any ex) { // need
          long n;
          Any x, y, z;
          n = evLong(ex = ex.Cdr);
@@ -5012,7 +5091,7 @@ public class PicoLisp {
          return z;
       }
 
-      final static Any do191(Any ex) { // range
+      final static Any do196(Any ex) { // range
          Any x, y;
          Number num;
          num = (Number)(y = (x = ex.Cdr).Car.eval());
@@ -5028,7 +5107,7 @@ public class PicoLisp {
          return y;
       }
 
-      final static Any do192(Any ex) { // full
+      final static Any do197(Any ex) { // full
          Any x;
          for (x = ex.Cdr.Car.eval(); x instanceof Cell; x = x.Cdr)
             if (x.Car == Nil)
@@ -5036,7 +5115,7 @@ public class PicoLisp {
          return T;
       }
 
-      final static Any do193(Any ex) { // make
+      final static Any do198(Any ex) { // make
          Any x, y, z;
          x = Env.Make;  Env.Make = Nil;
          y = Env.Yoke;  Env.Yoke = Nil;
@@ -5047,7 +5126,7 @@ public class PicoLisp {
          return z;
       }
 
-      final static Any do194(Any ex) { // made
+      final static Any do199(Any ex) { // made
          Any x;
          if ((x = ex.Cdr) instanceof Cell) {
             Env.Yoke = x.Car.eval();
@@ -5059,7 +5138,7 @@ public class PicoLisp {
          return Env.Yoke;
       }
 
-      final static Any do195(Any ex) { // chain
+      final static Any do200(Any ex) { // chain
          Any x, y;
          ex = ex.Cdr;
          do {
@@ -5074,7 +5153,7 @@ public class PicoLisp {
          return x;
       }
 
-      final static Any do196(Any ex) { // link
+      final static Any do201(Any ex) { // link
          Any x;
          ex = ex.Cdr;
          do {
@@ -5087,7 +5166,7 @@ public class PicoLisp {
          return x;
       }
 
-      final static Any do197(Any ex) { // yoke
+      final static Any do202(Any ex) { // yoke
          Any x;
          ex = ex.Cdr;
          do {
@@ -5099,7 +5178,7 @@ public class PicoLisp {
          return x;
       }
 
-      final static Any do198(Any ex) { // copy
+      final static Any do203(Any ex) { // copy
          Any w, x, y, z;
          if (!((x = ex.Cdr.Car.eval()) instanceof Cell))
             return x;
@@ -5111,7 +5190,7 @@ public class PicoLisp {
          return w;
       }
 
-      final static Any do199(Any ex) { // mix
+      final static Any do204(Any ex) { // mix
          Any x, y, z;
          if (!((y = (ex = ex.Cdr).Car.eval()) instanceof Cell) && y != Nil)
             return y;
@@ -5123,7 +5202,7 @@ public class PicoLisp {
          return z;
       }
 
-      final static Any do200(Any ex) { // append
+      final static Any do205(Any ex) { // append
          Any x, y, z;
          for (ex = ex.Cdr; (z = ex.Cdr) instanceof Cell; ex = z) {
             if ((x = ex.Car.eval()) instanceof Cell) {
@@ -5142,7 +5221,7 @@ public class PicoLisp {
          return ex.Car.eval();
       }
 
-      final static Any do201(Any ex) { // delete
+      final static Any do206(Any ex) { // delete
          Any w, x, y, z;
          y = (x = ex.Cdr).Car.eval();
          if (!((x = x.Cdr.Car.eval()) instanceof Cell))
@@ -5161,7 +5240,7 @@ public class PicoLisp {
          return w;
       }
 
-      final static Any do202(Any ex) { // delq
+      final static Any do207(Any ex) { // delq
          Any w, x, y, z;
          y = (x = ex.Cdr).Car.eval();
          if (!((x = x.Cdr.Car.eval()) instanceof Cell))
@@ -5180,7 +5259,7 @@ public class PicoLisp {
          return w;
       }
 
-      final static Any do203(Any ex) { // replace
+      final static Any do208(Any ex) { // replace
          int i, j;
          Any w, x, y, z;
          Any[] v;
@@ -5203,13 +5282,13 @@ public class PicoLisp {
          return w;
       }
 
-      final static Any do204(Any ex) { // strip
+      final static Any do209(Any ex) { // strip
          Any x;
          for (x = ex.Cdr.Car.eval();  x instanceof Cell && x.Car == Quote && x != x.Cdr;  x = x.Cdr);
          return x;
       }
 
-      final static Any do205(Any ex) { // split
+      final static Any do210(Any ex) { // split
          int i, j;
          Any x, y, z;
          Any[] v;
@@ -5243,7 +5322,7 @@ public class PicoLisp {
          return res;
       }
 
-      final static Any do206(Any ex) { // reverse
+      final static Any do211(Any ex) { // reverse
          Any x, y;
          x = ex.Cdr.Car.eval();
          for (y = Nil; x instanceof Cell; x = x.Cdr)
@@ -5251,7 +5330,7 @@ public class PicoLisp {
          return y;
       }
 
-      final static Any do207(Any ex) { // flip
+      final static Any do212(Any ex) { // flip
          int i;
          Any x, y, z;
          if (!((y = (ex = ex.Cdr).Car.eval()) instanceof Cell) || !((z = y.Cdr) instanceof Cell))
@@ -5274,17 +5353,17 @@ public class PicoLisp {
          return z;
       }
 
-      final static Any do208(Any ex) { // trim
+      final static Any do213(Any ex) { // trim
          return trim(ex.Cdr.Car.eval());
       }
 
-      final static Any do209(Any ex) { // clip
+      final static Any do214(Any ex) { // clip
          Any x;
          for (x = ex.Cdr.Car.eval(); x instanceof Cell && isBlank(x.Car); x = x.Cdr);
          return trim(x);
       }
 
-      final static Any do210(Any ex) { // head
+      final static Any do215(Any ex) { // head
          int i;
          Any x, y, z;
          if ((z = (x = ex.Cdr).Car.eval()) == Nil)
@@ -5310,7 +5389,7 @@ public class PicoLisp {
          return z;
       }
 
-      final static Any do211(Any ex) { // tail
+      final static Any do216(Any ex) { // tail
          int i;
          Any x, y, z;
          if ((z = (x = ex.Cdr).Car.eval()) == Nil)
@@ -5340,7 +5419,7 @@ public class PicoLisp {
          return x;
       }
 
-      final static Any do212(Any ex) { // stem
+      final static Any do217(Any ex) { // stem
          int i, j;
          Any x, y;
          Any[] v;
@@ -5356,13 +5435,13 @@ public class PicoLisp {
          return y;
       }
 
-      final static Any do213(Any ex) { // fin
+      final static Any do218(Any ex) { // fin
          Any x;
          for (x = ex.Cdr.Car.eval(); x instanceof Cell; x = x.Cdr);
          return x;
       }
 
-      final static Any do214(Any ex) { // last
+      final static Any do219(Any ex) { // last
          Any x;
          if (!((x = ex.Cdr.Car.eval()) instanceof Cell))
             return x;
@@ -5371,7 +5450,7 @@ public class PicoLisp {
          return x.Car;
       }
 
-      final static Any do215(Any ex) { // ==
+      final static Any do220(Any ex) { // ==
          Any x, y;
          y = (x = ex.Cdr).Car.eval();
          while ((x = x.Cdr) instanceof Cell)
@@ -5380,7 +5459,7 @@ public class PicoLisp {
          return T;
       }
 
-      final static Any do216(Any ex) { // n==
+      final static Any do221(Any ex) { // n==
          Any x, y;
          y = (x = ex.Cdr).Car.eval();
          while ((x = x.Cdr) instanceof Cell)
@@ -5389,7 +5468,7 @@ public class PicoLisp {
          return Nil;
       }
 
-      final static Any do217(Any ex) { // =
+      final static Any do222(Any ex) { // =
          Any x, y;
          y = (x = ex.Cdr).Car.eval();
          while ((x = x.Cdr) instanceof Cell)
@@ -5398,7 +5477,7 @@ public class PicoLisp {
          return T;
       }
 
-      final static Any do218(Any ex) { // <>
+      final static Any do223(Any ex) { // <>
          Any x, y;
          y = (x = ex.Cdr).Car.eval();
          while ((x = x.Cdr) instanceof Cell)
@@ -5407,24 +5486,24 @@ public class PicoLisp {
          return Nil;
       }
 
-      final static Any do219(Any ex) { // =0
+      final static Any do224(Any ex) { // =0
          Any x;
          return ex.Cdr.Car.eval().equal(Zero)? Zero : Nil;
       }
 
-      final static Any do220(Any ex) { // =T
+      final static Any do225(Any ex) { // =T
          return T == ex.Cdr.Car.eval()? T : Nil;
       }
 
-      final static Any do221(Any ex) { // n0
+      final static Any do226(Any ex) { // n0
          return ex.Cdr.Car.eval().equal(Zero)? Nil : T;
       }
 
-      final static Any do222(Any ex) { // nT
+      final static Any do227(Any ex) { // nT
          return T == ex.Cdr.Car.eval()? Nil : T;
       }
 
-      final static Any do223(Any ex) { // <
+      final static Any do228(Any ex) { // <
          Any x, y, z;
          y = (x = ex.Cdr).Car.eval();
          while ((x = x.Cdr) instanceof Cell) {
@@ -5436,7 +5515,7 @@ public class PicoLisp {
          return T;
       }
 
-      final static Any do224(Any ex) { // <=
+      final static Any do229(Any ex) { // <=
          Any x, y, z;
          y = (x = ex.Cdr).Car.eval();
          while ((x = x.Cdr) instanceof Cell) {
@@ -5448,7 +5527,7 @@ public class PicoLisp {
          return T;
       }
 
-      final static Any do225(Any ex) { // >
+      final static Any do230(Any ex) { // >
          Any x, y;
          x = (ex = ex.Cdr).Car.eval();
          while (ex.Cdr instanceof Cell) {
@@ -5460,7 +5539,7 @@ public class PicoLisp {
          return T;
       }
 
-      final static Any do226(Any ex) { // >=
+      final static Any do231(Any ex) { // >=
          Any x, y, z;
          y = (x = ex.Cdr).Car.eval();
          while ((x = x.Cdr) instanceof Cell) {
@@ -5472,7 +5551,7 @@ public class PicoLisp {
          return T;
       }
 
-      final static Any do227(Any ex) { // max
+      final static Any do232(Any ex) { // max
          Any x, y;
          for (y = (ex = ex.Cdr).Car.eval(); (ex = ex.Cdr) instanceof Cell;)
             if ((x = ex.Car.eval()).compare(y) > 0)
@@ -5480,7 +5559,7 @@ public class PicoLisp {
          return y;
       }
 
-      final static Any do228(Any ex) { // min
+      final static Any do233(Any ex) { // min
          Any x, y;
          for (y = (ex = ex.Cdr).Car.eval(); (ex = ex.Cdr) instanceof Cell;)
             if ((x = ex.Car.eval()).compare(y) < 0)
@@ -5488,48 +5567,48 @@ public class PicoLisp {
          return y;
       }
 
-      final static Any do229(Any ex) { // atom
+      final static Any do234(Any ex) { // atom
          return ex.Cdr.Car.eval() instanceof Cell? Nil : T;
       }
 
-      final static Any do230(Any ex) { // pair
+      final static Any do235(Any ex) { // pair
          Any x;
          return (x = ex.Cdr.Car.eval()) instanceof Cell? x : Nil;
       }
 
-      final static Any do231(Any ex) { // lst?
+      final static Any do236(Any ex) { // lst?
          Any x;
          return (x = ex.Cdr.Car.eval()) instanceof Cell || x == Nil? T : Nil;
       }
 
-      final static Any do232(Any ex) { // num?
+      final static Any do237(Any ex) { // num?
          Any x;
          return (x = ex.Cdr.Car.eval()) instanceof Number? x : Nil;
       }
 
-      final static Any do233(Any ex) { // sym?
+      final static Any do238(Any ex) { // sym?
          Any x;
          return (x = ex.Cdr.Car.eval()) instanceof Symbol || x == Nil? T : Nil;
       }
 
-      final static Any do234(Any ex) { // flg?
+      final static Any do239(Any ex) { // flg?
          Any x;
          return (x = ex.Cdr.Car.eval()) == Nil || x == T? T : Nil;
       }
 
-      final static Any do235(Any ex) { // member
+      final static Any do240(Any ex) { // member
          Any x;
          x = (ex = ex.Cdr).Car.eval();
          return (x = member(x, ex.Cdr.Car.eval())) == null? Nil : x;
       }
 
-      final static Any do236(Any ex) { // memq
+      final static Any do241(Any ex) { // memq
          Any x;
          x = (ex = ex.Cdr).Car.eval();
          return (x = memq(x, ex.Cdr.Car.eval())) == null? Nil : x;
       }
 
-      final static Any do237(Any ex) { // mmeq
+      final static Any do242(Any ex) { // mmeq
          Any x, y, z;
          x = (ex = ex.Cdr).Car.eval();
          for (y = (ex = ex.Cdr).Car.eval(); x instanceof Cell; x = x.Cdr)
@@ -5538,7 +5617,7 @@ public class PicoLisp {
          return Nil;
       }
 
-      final static Any do238(Any ex) { // sect
+      final static Any do243(Any ex) { // sect
          Any w, x, y, z;
          y = (x = ex.Cdr).Car.eval();
          z = x.Cdr.Car.eval();
@@ -5554,7 +5633,7 @@ public class PicoLisp {
          return w;
       }
 
-      final static Any do239(Any ex) { // diff
+      final static Any do244(Any ex) { // diff
          Any w, x, y, z;
          y = (x = ex.Cdr).Car.eval();
          z = x.Cdr.Car.eval();
@@ -5570,14 +5649,14 @@ public class PicoLisp {
          return w;
       }
 
-      final static Any do240(Any ex) { // index
+      final static Any do245(Any ex) { // index
          int i;
          Any x, y;
          y = (x = ex.Cdr).Car.eval();
          return (i = indx(y, x.Cdr.Car.eval())) == 0? Nil : new Number(i);
       }
 
-      final static Any do241(Any ex) { // offset
+      final static Any do246(Any ex) { // offset
          int i;
          Any x, y;
          y = (x = ex.Cdr).Car.eval();
@@ -5588,16 +5667,16 @@ public class PicoLisp {
          return Nil;
       }
 
-      final static Any do242(Any ex) { // length
+      final static Any do247(Any ex) { // length
          long n;
          return (n = ex.Cdr.Car.eval().length()) >= 0? new Number(n) : T;
       }
 
-      final static Any do243(Any ex) { // size
+      final static Any do248(Any ex) { // size
          return new Number(ex.Cdr.Car.eval().size());
       }
 
-      final static Any do244(Any ex) { // assoc
+      final static Any do249(Any ex) { // assoc
          Any x, y, z;
          y = (x = ex.Cdr).Car.eval();
          x = x.Cdr.Car.eval();
@@ -5607,7 +5686,7 @@ public class PicoLisp {
          return Nil;
       }
 
-      final static Any do245(Any ex) { // asoq
+      final static Any do250(Any ex) { // asoq
          Any x, y, z;
          y = (x = ex.Cdr).Car.eval();
          x = x.Cdr.Car.eval();
@@ -5617,7 +5696,7 @@ public class PicoLisp {
          return Nil;
       }
 
-      final static Any do246(Any ex) { // rank
+      final static Any do251(Any ex) { // rank
          Any w, x, y, z;
          w = (x = ex.Cdr).Car.eval();
          y = (x = x.Cdr).Car.eval();
@@ -5637,19 +5716,19 @@ public class PicoLisp {
          return z.Car;
       }
 
-      final static Any do247(Any ex) { // match
+      final static Any do252(Any ex) { // match
          Any x, y;
          y = (x = ex.Cdr).Car.eval();
          return match(y, x.Cdr.Car.eval())? T : Nil;
       }
 
-      final static Any do248(Any ex) { // fill
+      final static Any do253(Any ex) { // fill
          Any x, y;
          y = (x = ex.Cdr).Car.eval();
          return (x = fill(y, x.Cdr.Car.eval())) == null? y : x;
       }
 
-      final static Any do249(Any ex) { // prove
+      final static Any do254(Any ex) { // prove
          int i;
          Any x, y;
          if (!((y = (ex = ex.Cdr).Car.eval()) instanceof Cell))
@@ -5745,7 +5824,7 @@ public class PicoLisp {
          return x;
       }
 
-      final static Any do250(Any ex) { // ->
+      final static Any do255(Any ex) { // ->
          int i;
          Any x;
          if (!(ex.Cdr.Cdr.Car instanceof Number))
@@ -5755,18 +5834,18 @@ public class PicoLisp {
          return lookup((Number)x.Car, ex.Cdr.Car);
       }
 
-      final static Any do251(Any ex) { // unify
+      final static Any do256(Any ex) { // unify
          Any x;
          x = ex.Cdr.Car.eval();
          return unify((Number)Pnl.Cdr.Car, x, (Number)Pnl.Car, x)? Penv : Nil;
       }
 
-      final static Any do252(Any ex) { // sort
+      final static Any do257(Any ex) { // sort
          Any x;
          return (x = ex.Cdr.Car.eval()) instanceof Cell && x.Cdr instanceof Cell? sort(ex, x, ex.Cdr.Cdr.Car.eval()) : x;
       }
 
-      final static Any do253(Any ex) { // format
+      final static Any do258(Any ex) { // format
          int i;
          Any x, y;
          x = (ex = ex.Cdr).Car.eval();
@@ -5774,7 +5853,7 @@ public class PicoLisp {
          return format(x, i, ex.Cdr);
       }
 
-      final static Any do254(Any ex) { // +
+      final static Any do259(Any ex) { // +
          Any x;
          Number num;
          if ((x = (ex = ex.Cdr).Car.eval()) == Nil)
@@ -5785,7 +5864,7 @@ public class PicoLisp {
          return num;
       }
 
-      final static Any do255(Any ex) { // -
+      final static Any do260(Any ex) { // -
          Any x;
          Number num;
          if ((x = (ex = ex.Cdr).Car.eval()) == Nil)
@@ -5801,7 +5880,7 @@ public class PicoLisp {
          return num;
       }
 
-      final static Any do256(Any ex) { // inc
+      final static Any do261(Any ex) { // inc
          Any x, y;
          if ((x = (ex = ex.Cdr).Car.eval()) == Nil)
             return Nil;
@@ -5821,7 +5900,7 @@ public class PicoLisp {
          return y;
       }
 
-      final static Any do257(Any ex) { // dec
+      final static Any do262(Any ex) { // dec
          Any x, y;
          if ((x = (ex = ex.Cdr).Car.eval()) == Nil)
             return Nil;
@@ -5841,7 +5920,7 @@ public class PicoLisp {
          return y;
       }
 
-      final static Any do258(Any ex) { // *
+      final static Any do263(Any ex) { // *
          Any x;
          Number num;
          if ((x = (ex = ex.Cdr).Car.eval()) == Nil)
@@ -5852,7 +5931,7 @@ public class PicoLisp {
          return num;
       }
 
-      final static Any do259(Any ex) { // */
+      final static Any do264(Any ex) { // */
          Any x;
          Number num;
          if ((x = (ex = ex.Cdr).Car.eval()) == Nil)
@@ -5865,7 +5944,7 @@ public class PicoLisp {
          }
       }
 
-      final static Any do260(Any ex) { // /
+      final static Any do265(Any ex) { // /
          Any x;
          Number num;
          if ((x = (ex = ex.Cdr).Car.eval()) == Nil)
@@ -5876,7 +5955,7 @@ public class PicoLisp {
          return num;
       }
 
-      final static Any do261(Any ex) { // %
+      final static Any do266(Any ex) { // %
          Any x;
          Number num;
          if ((x = (ex = ex.Cdr).Car.eval()) == Nil)
@@ -5887,7 +5966,7 @@ public class PicoLisp {
          return num;
       }
 
-      final static Any do262(Any ex) { // >>
+      final static Any do267(Any ex) { // >>
          int i;
          Any x;
          i = evInt(ex = ex.Cdr);
@@ -5896,26 +5975,26 @@ public class PicoLisp {
          return ((Number)x).shift(i);
       }
 
-      final static Any do263(Any ex) { // lt0
+      final static Any do268(Any ex) { // lt0
          Any x;
          return (x = ex.Cdr.Car.eval()) instanceof Number && x.compare(Zero) < 0? x : Nil;
       }
 
-      final static Any do264(Any ex) { // ge0
+      final static Any do269(Any ex) { // ge0
          Any x;
          return (x = ex.Cdr.Car.eval()) instanceof Number && x.compare(Zero) >= 0? x : Nil;
       }
 
-      final static Any do265(Any ex) { // gt0
+      final static Any do270(Any ex) { // gt0
          Any x;
          return (x = ex.Cdr.Car.eval()) instanceof Number && x.compare(Zero) > 0? x : Nil;
       }
 
-      final static Any do266(Any ex) { // abs
+      final static Any do271(Any ex) { // abs
          return ((Number)ex.Cdr.Car.eval()).abs();
       }
 
-      final static Any do267(Any ex) { // bit?
+      final static Any do272(Any ex) { // bit?
          Any x;
          Number num;
          num = (Number)(ex = ex.Cdr).Car.eval();
@@ -5925,7 +6004,7 @@ public class PicoLisp {
          return num;
       }
 
-      final static Any do268(Any ex) { // &
+      final static Any do273(Any ex) { // &
          Any x;
          Number num;
          if ((x = (ex = ex.Cdr).Car.eval()) == Nil)
@@ -5936,7 +6015,7 @@ public class PicoLisp {
          return num;
       }
 
-      final static Any do269(Any ex) { // |
+      final static Any do274(Any ex) { // |
          Any x;
          Number num;
          if ((x = (ex = ex.Cdr).Car.eval()) == Nil)
@@ -5947,7 +6026,7 @@ public class PicoLisp {
          return num;
       }
 
-      final static Any do270(Any ex) { // x|
+      final static Any do275(Any ex) { // x|
          Any x;
          Number num;
          if ((x = (ex = ex.Cdr).Car.eval()) == Nil)
@@ -5958,13 +6037,13 @@ public class PicoLisp {
          return num;
       }
 
-      final static Any do271(Any ex) { // seed
+      final static Any do276(Any ex) { // seed
          long n;
          n = initSeed(ex.Cdr.Car.eval()) * 6364136223846793005L + 1;
          return new Number(Seed = n);
       }
 
-      final static Any do272(Any ex) { // rand
+      final static Any do277(Any ex) { // rand
          Any x;
          Seed = Seed * 6364136223846793005L + 1;
          if ((x = (ex = ex.Cdr).Car.eval()) == Nil)
@@ -5974,11 +6053,11 @@ public class PicoLisp {
          return new Number(((Number)x).Cnt + (int)(Seed >>> 33) % (evInt(ex.Cdr) + 1 - ((Number)x).Cnt));
       }
 
-      final static Any do273(Any ex) { // path
+      final static Any do278(Any ex) { // path
          return mkStr(path(evString(ex.Cdr)));
       }
 
-      final static Any do274(Any ex) { // read
+      final static Any do279(Any ex) { // read
          Any x, y;
          if (!((x = ex.Cdr) instanceof Cell))
             x = InFile.read('\0');
@@ -5992,7 +6071,7 @@ public class PicoLisp {
          return x;
       }
 
-      final static Any do275(Any ex) { // wait
+      final static Any do280(Any ex) { // wait
          int i;
          Any x, y;
          i = (y = (x = ex.Cdr).Car.eval()) == Nil? -1 : xInt(y);
@@ -6002,7 +6081,7 @@ public class PicoLisp {
          return y;
       }
 
-      final static Any do276(Any ex) { // poll
+      final static Any do281(Any ex) { // poll
          int i;
          Any x;
          if ((i = xInt(x = ex.Cdr.Car.eval())) < 0 || i >= InFiles.length)
@@ -6022,13 +6101,13 @@ public class PicoLisp {
          return Nil;
       }
 
-      final static Any do277(Any ex) { // peek
+      final static Any do282(Any ex) { // peek
          if (InFile.Chr == 0)
             InFile.get();
          return InFile.Chr<0? Nil : mkChar((char)InFile.Chr);
       }
 
-      final static Any do278(Any ex) { // char
+      final static Any do283(Any ex) { // char
          Any x;
          if (!((ex = ex.Cdr) instanceof Cell)) {
             if (InFile.Chr == 0)
@@ -6042,17 +6121,17 @@ public class PicoLisp {
          return x == T? mkChar((char)0x10000) : new Number(firstChar(x));
       }
 
-      final static Any do279(Any ex) { // skip
+      final static Any do284(Any ex) { // skip
          char c;
          c = firstChar(ex.Cdr.Car.eval());
          return InFile.skip(c) < 0? Nil : mkChar(c);
       }
 
-      final static Any do280(Any ex) { // eol
+      final static Any do285(Any ex) { // eol
          return InFile.Chr=='\n' || InFile.Chr<=0? T : Nil;
       }
 
-      final static Any do281(Any ex) { // eof
+      final static Any do286(Any ex) { // eof
          if (ex.Cdr.Car.eval() != Nil) {
             InFile.Chr = -1;
             return T;
@@ -6062,7 +6141,7 @@ public class PicoLisp {
          return InFile.Chr < 0? T : Nil;
       }
 
-      final static Any do282(Any ex) { // from
+      final static Any do287(Any ex) { // from
          int i, j, k;
          Any x;
          Any[] v;
@@ -6095,7 +6174,7 @@ public class PicoLisp {
          return Nil;
       }
 
-      final static Any do283(Any ex) { // till
+      final static Any do288(Any ex) { // till
          Any x, y;
          String str;
          StringBuilder sb;
@@ -6117,7 +6196,7 @@ public class PicoLisp {
          return mkStr(sb);
       }
 
-      final static Any do284(Any ex) { // line
+      final static Any do289(Any ex) { // line
          int i;
          Any x, y, z;
          StringBuilder sb;
@@ -6141,7 +6220,7 @@ public class PicoLisp {
          }
       }
 
-      final static Any do285(Any ex) { // any
+      final static Any do290(Any ex) { // any
          Any x;
          if ((x = ex.Cdr.Car.eval()) == Nil)
             return Nil;
@@ -6150,14 +6229,14 @@ public class PicoLisp {
          return rd.read0(true);
       }
 
-      final static Any do286(Any ex) { // sym
+      final static Any do291(Any ex) { // sym
          StringWriter sw = new StringWriter();
          PrintWriter wr = new PrintWriter(sw);
          wr.print(ex.Cdr.Car.eval().toString());
          return mkStr(sw.toString());
       }
 
-      final static Any do287(Any ex) { // str
+      final static Any do292(Any ex) { // str
          Any x, y;
          if ((y = (x = ex.Cdr).Car.eval()) == Nil)
             return Nil;
@@ -6176,7 +6255,7 @@ public class PicoLisp {
          return mkStr(sw.toString());
       }
 
-      final static Any do288(Any ex) { // load
+      final static Any do293(Any ex) { // load
          Any x, y;
          x = ex.Cdr;
          do {
@@ -6188,7 +6267,7 @@ public class PicoLisp {
          return y;
       }
 
-      final static Any do289(Any ex) { // in
+      final static Any do294(Any ex) { // in
          Any x;
          Env.pushInFile((x = ex.Cdr).Car.eval().rdOpen(ex));
          x = x.Cdr.prog();
@@ -6196,7 +6275,7 @@ public class PicoLisp {
          return x;
       }
 
-      final static Any do290(Any ex) { // out
+      final static Any do295(Any ex) { // out
          Any x;
          Env.pushOutFile((x = ex.Cdr).Car.eval().wrOpen(ex));
          x = x.Cdr.prog();
@@ -6204,7 +6283,7 @@ public class PicoLisp {
          return x;
       }
 
-      final static Any do291(Any ex) { // open
+      final static Any do296(Any ex) { // open
          String str;
          str = evString(ex.Cdr);
          try {return new Number(new PicoLispReader(new FileReader(str), str, allocFd(), null, 0).Fd);}
@@ -6212,7 +6291,7 @@ public class PicoLisp {
          return Nil;
       }
 
-      final static Any do292(Any ex) { // close
+      final static Any do297(Any ex) { // close
          int i;
          Any x;
          if ((i = xInt(x = ex.Cdr.Car.eval())) >= 0 && i < InFiles.length) {
@@ -6230,7 +6309,7 @@ public class PicoLisp {
          return Nil;
       }
 
-      final static Any do293(Any ex) { // echo
+      final static Any do298(Any ex) { // echo
          int i, j, k;
          long n;
          Any x, y;
@@ -6312,20 +6391,20 @@ public class PicoLisp {
          return T;
       }
 
-      final static Any do294(Any ex) { // prin
+      final static Any do299(Any ex) { // prin
          Any x, y;
          for (y = Nil; (ex = ex.Cdr) instanceof Cell; OutFile.Wr.print((y = ex.Car.eval()).name()));
          return y;
       }
 
-      final static Any do295(Any ex) { // prinl
+      final static Any do300(Any ex) { // prinl
          Any x, y;
          for (y = Nil; (ex = ex.Cdr) instanceof Cell; OutFile.Wr.print((y = ex.Car.eval()).name()));
          OutFile.newline();
          return y;
       }
 
-      final static Any do296(Any ex) { // space
+      final static Any do301(Any ex) { // space
          int i;
          Any x;
          if ((x = ex.Cdr.Car.eval()) == Nil) {
@@ -6337,7 +6416,7 @@ public class PicoLisp {
          return x;
       }
 
-      final static Any do297(Any ex) { // print
+      final static Any do302(Any ex) { // print
          Any x, y;
          OutFile.print(y = (x = ex.Cdr).Car.eval());
          while ((x = x.Cdr) instanceof Cell) {
@@ -6347,7 +6426,7 @@ public class PicoLisp {
          return y;
       }
 
-      final static Any do298(Any ex) { // printsp
+      final static Any do303(Any ex) { // printsp
          Any x, y;
          x = ex.Cdr;
          do {
@@ -6357,7 +6436,7 @@ public class PicoLisp {
          return y;
       }
 
-      final static Any do299(Any ex) { // println
+      final static Any do304(Any ex) { // println
          Any x, y;
          OutFile.print(y = (x = ex.Cdr).Car.eval());
          while ((x = x.Cdr) instanceof Cell) {
@@ -6368,11 +6447,11 @@ public class PicoLisp {
          return y;
       }
 
-      final static Any do300(Any ex) { // flush
+      final static Any do305(Any ex) { // flush
          return OutFile.Wr.checkError()? Nil : T;
       }
 
-      final static Any do301(Any ex) { // port
+      final static Any do306(Any ex) { // port
          ex = ex.Cdr;  // ...
          try {
             ServerSocketChannel chan = ServerSocketChannel.open();;
@@ -6383,7 +6462,7 @@ public class PicoLisp {
          return Nil;
       }
 
-      final static Any do302(Any ex) { // accept
+      final static Any do307(Any ex) { // accept
          int i;
          Any x;
          if ((i = xInt(x = ex.Cdr.Car.eval())) < 0 || i >= InFiles.length || InFiles[i] == null || InFiles[i].Chan == null)
@@ -6393,7 +6472,7 @@ public class PicoLisp {
          return Nil;
       }
 
-      final static Any do303(Any ex) { // connect
+      final static Any do308(Any ex) { // connect
          int i;
          try {
             SocketChannel chan = SocketChannel.open();

@@ -1,9 +1,13 @@
-# 10nov10abu
+# 11nov10abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
 
 ############ main ############
+# (env ['lst] | ['sym 'val] ..) -> lst
+
+# (up [cnt] sym ['val]) -> any
+
 # (quit ['any ['any]])
 quit (str)
    str = evString(ex = ex.Cdr);
@@ -246,6 +250,24 @@ time (i j x z)
 usec ()
    return new Number(System.nanoTime()/1000 - USec);
 
+# (pwd) -> sym
+pwd T
+   return mkStr(System.getProperty("user.dir"));
+
+# (info 'any) -> (cnt|T dat . tim)
+info ()
+   File f = new File(path(evString(ex.Cdr)));
+   if (!f.exists())
+      return Nil;
+   Calendar c = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
+   c.setTimeInMillis(f.lastModified());
+   return
+      new Cell(
+         f.isDirectory()? T : new Number(f.length()),
+         new Cell(
+            date(c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1, c.get(Calendar.DATE)),
+            time(c) ) );
+
 # (file) -> (sym1 sym2 . num) | NIL
 file (i x)
    if (InFile.Name == null)
@@ -254,6 +276,43 @@ file (i x)
    if ((i = InFile.Name.lastIndexOf('/')) >= 0)
       return new Cell(mkStr(InFile.Name.substring(0, i+1)), new Cell(mkStr(InFile.Name.substring(i+1)), x));
    return new Cell(mkStr("./"), new Cell(mkStr(InFile.Name), x));
+
+# (dir ['any] ['flg]) -> lst
+dir (i x y str)
+   String[] lst = new File((str = evString(x = ex.Cdr)).length() == 0? "." : path(str)).list();
+   x = x.Cdr.Car.eval();
+   if (lst == null)
+      return Nil;
+   for (y = Nil, i = lst.length; --i >= 0;)
+      if (x != Nil || lst[i].charAt(0) != '.')
+         y = new Cell(mkStr(lst[i]), y);
+   return y;
+
+# (argv [var ..] [. sym]) -> lst|sym
+argv (i j x y)
+   i = Argv.length > 0 && Argv[0].equals("-")? 1 : 0;
+   if ((x = ex.Cdr) == Nil) {
+      if (i == Argv.length)
+         return Nil;
+      for (j = Argv.length; --j >= i;)
+         x = new Cell(mkStr(Argv[j]), x);
+      return x;
+   }
+   do {
+      if (!(x instanceof Cell)) {
+         if (i == Argv.length)
+            return x.Car = Nil;
+         for (y = Nil, j = Argv.length; --j >= i;)
+            y = new Cell(mkStr(Argv[j]), y);
+         return x.Car = y;
+      }
+      (y = x.Car).Car = i == Argv.length? Nil : mkStr(Argv[i++]);
+   } while ((x = x.Cdr) != Nil);
+   return y.Car;
+
+# (opt) -> sym
+opt (str)
+   return (str = opt()) == null? Nil : mkStr(str);
 
 # (version ['flg]) -> lst
 version (i x)

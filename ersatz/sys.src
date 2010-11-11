@@ -457,14 +457,21 @@ public class PicoLisp {
       return x;
    }
 
+   final static String opt() {
+      if (Argv.length == 0 || Argv[0].equals("-"))
+         return null;
+      String s = Argv[0];
+      String[] a = new String[Argv.length-1];
+      System.arraycopy(Argv, 1, a, 0, a.length);
+      Argv = a;
+      return s;
+   }
+
    final static Any loadAll(Any ex) {
+      String s;
       Any x = Nil;
-      while (Argv.length > 0  &&  !Argv[0].equals("-")) {
-         x = load(ex, '\0', mkStr(Argv[0]));
-         String[] a = new String[Argv.length-1];
-         System.arraycopy(Argv, 1, a, 0, a.length);
-         Argv = a;
-      }
+      while ((s = opt()) != null)
+         x = load(ex, '\0', mkStr(s));
       return x;
    }
 
