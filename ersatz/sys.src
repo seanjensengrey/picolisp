@@ -1,4 +1,4 @@
-// 11nov10abu
+// 12nov10abu
 // (c) Software Lab. Alexander Burger
 
 import java.util.*;
@@ -25,6 +25,7 @@ public class PicoLisp {
 
    final static NilSym Nil = new NilSym();
    final static Symbol T = mkSymbol(null, "T", Intern);
+   final static Symbol Pid = mkSymbol(new Number(System.getProperty("PID")), "*Pid", Intern);
    final static Symbol At = mkSymbol(Nil, "@", Intern);
    final static Symbol At2 = mkSymbol(Nil, "@@", Intern);
    final static Symbol At3 = mkSymbol(Nil, "@@@", Intern);
