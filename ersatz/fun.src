@@ -385,6 +385,12 @@ version (i x)
       x = new Cell(new Number(Version[i]), x);
    return x;
 
+############ gc ############
+# (gc) -> NIL
+gc T
+   System.gc();
+   return Nil;
+
 ############ apply ############
 # (apply 'fun 'lst ['any ..]) -> any
 apply (i w x y v)
