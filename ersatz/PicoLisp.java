@@ -17,7 +17,7 @@ public class PicoLisp {
    final static HashMap<String,Symbol> Intern = new HashMap<String,Symbol>();
    final static HashMap<String,Symbol> Transient = new HashMap<String,Symbol>();
    final static byte MonLen[] = new byte[] {31,31,28,31,30,31,30,31,31,30,31,30,31};
-   final static byte Version[] = new byte[] {3,0,4,5};
+   final static byte Version[] = new byte[] {3,0,4,6};
 
    final static Number Zero = new Number(0);
    final static Number One = new Number(1);
@@ -375,8 +375,9 @@ public class PicoLisp {
       mkSymbol(new Number("308"), "flush", Intern);
       mkSymbol(new Number("309"), "port", Intern);
       mkSymbol(new Number("310"), "accept", Intern);
-      mkSymbol(new Number("311"), "connect", Intern);
-      MaxFun = 311;
+      mkSymbol(new Number("311"), "listen", Intern);
+      mkSymbol(new Number("312"), "connect", Intern);
+      MaxFun = 312;
       init();
       for (boolean first = true; ; first = false) {
          try {
@@ -1579,7 +1580,7 @@ public class PicoLisp {
 
       final boolean ready(Selector sel) throws IOException {
          if (Key == null)
-            return Rd.ready() || Stream != null && Stream.available() > 0;
+            return Rd != null && Rd.ready() || Stream != null && Stream.available() > 0;
          boolean rdy = (Key.readyOps() & Ops) != 0;
          Key.cancel();
          Key = null;
@@ -2715,8 +2716,10 @@ public class PicoLisp {
                return do309(ex);
             case 310:  // accept
                return do310(ex);
-            case 311:  // connect
+            case 311:  // listen
                return do311(ex);
+            case 312:  // connect
+               return do312(ex);
             default:
                return undefined(this, ex);
             }
@@ -6537,13 +6540,12 @@ public class PicoLisp {
       }
 
       final static Any do309(Any ex) { // port
-         ex = ex.Cdr;  // ...
          try {
             ServerSocketChannel chan = ServerSocketChannel.open();;
-            chan.socket().bind(new InetSocketAddress(evInt(ex)));
+            chan.socket().bind(new InetSocketAddress(evInt(ex.Cdr)));
             return new Number(new PicoLispReader(null, allocFd(), chan, SelectionKey.OP_ACCEPT).Fd);
          }
-         catch (IOException e) {}
+         catch (IOException e) {err(ex, null, e.toString());}
          return Nil;
       }
 
@@ -6553,11 +6555,25 @@ public class PicoLisp {
          if ((i = xInt(x = ex.Cdr.Car.eval())) < 0 || i >= InFiles.length || InFiles[i] == null || InFiles[i].Chan == null)
             err(ex, x, "Bad socket");
          try {return mkSocket(((ServerSocketChannel)InFiles[i].Chan).accept());}
-         catch (IOException e) {}
+         catch (IOException e) {err(ex, null, e.toString());}
          return Nil;
       }
 
-      final static Any do311(Any ex) { // connect
+      final static Any do311(Any ex) { // listen
+         int i, j;
+         Any x, y;
+         if ((i = xInt(y = (x = ex.Cdr).Car.eval())) < 0 || i >= InFiles.length || InFiles[i] == null || InFiles[i].Chan == null)
+            err(ex, y, "Bad socket");
+         j = (y = x.Cdr.Car.eval()) == Nil? -1 : xInt(y);
+         for (;;) {
+            if (waitFd(ex, i, j) == 0)
+               return Nil;
+            try {return mkSocket(((ServerSocketChannel)InFiles[i].Chan).accept());}
+            catch (IOException e) {err(ex, null, e.toString());}
+         }
+      }
+
+      final static Any do312(Any ex) { // connect
          int i;
          try {
             SocketChannel chan = SocketChannel.open();

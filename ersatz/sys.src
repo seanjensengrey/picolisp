@@ -1269,7 +1269,7 @@ public class PicoLisp {
 
       final boolean ready(Selector sel) throws IOException {
          if (Key == null)
-            return Rd.ready() || Stream != null && Stream.available() > 0;
+            return Rd != null && Rd.ready() || Stream != null && Stream.available() > 0;
          boolean rdy = (Key.readyOps() & Ops) != 0;
          Key.cancel();
          Key = null;

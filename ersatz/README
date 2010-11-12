@@ -1,4 +1,4 @@
-11nov10abu
+12nov10abu
 (c) Software Lab. Alexander Burger
 
 
@@ -21,7 +21,7 @@ There is no support for
 
 - raw console inpt ('key') and line editing
 - child processes ('fork')
-- interprocess communication ('tell', 'hear', 'ipc' etc.)
+- interprocess communication ('tell', 'hear', 'ipc', 'udp' etc.)
 - databases (external symbols)
 - signal handling
 

@@ -3470,15 +3470,14 @@ flush ()
    return OutFile.Wr.checkError()? Nil : T;
 
 ############ net ############
-# (port ['T] 'cnt|(cnt . cnt) ['var]) -> cnt
+# (port 'cnt) -> cnt
 port ()
-   ex = ex.Cdr;  // ...
    try {
       ServerSocketChannel chan = ServerSocketChannel.open();;
-      chan.socket().bind(new InetSocketAddress(evInt(ex)));
+      chan.socket().bind(new InetSocketAddress(evInt(ex.Cdr)));
       return new Number(new PicoLispReader(null, allocFd(), chan, SelectionKey.OP_ACCEPT).Fd);
    }
-   catch (IOException e) {}
+   catch (IOException e) {err(ex, null, e.toString());}
    return Nil;
 
 # (accept 'cnt) -> cnt | NIL
@@ -3486,8 +3485,20 @@ accept (i x)
    if ((i = xInt(x = ex.Cdr.Car.eval())) < 0 || i >= InFiles.length || InFiles[i] == null || InFiles[i].Chan == null)
       err(ex, x, "Bad socket");
    try {return mkSocket(((ServerSocketChannel)InFiles[i].Chan).accept());}
-   catch (IOException e) {}
+   catch (IOException e) {err(ex, null, e.toString());}
    return Nil;
+
+# (listen 'cnt1 ['cnt2]) -> cnt | NIL
+listen (i j x y)
+   if ((i = xInt(y = (x = ex.Cdr).Car.eval())) < 0 || i >= InFiles.length || InFiles[i] == null || InFiles[i].Chan == null)
+      err(ex, y, "Bad socket");
+   j = (y = x.Cdr.Car.eval()) == Nil? -1 : xInt(y);
+   for (;;) {
+      if (waitFd(ex, i, j) == 0)
+         return Nil;
+      try {return mkSocket(((ServerSocketChannel)InFiles[i].Chan).accept());}
+      catch (IOException e) {err(ex, null, e.toString());}
+   }
 
 # (connect 'any 'cnt) -> cnt | NIL
 connect (i)
