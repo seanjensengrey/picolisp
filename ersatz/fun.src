@@ -2003,6 +2003,18 @@ getl (x)
       x = x.get(ex.Car.eval());
    return x.getl();
 
+# (wipe 'sym|lst) -> sym
+wipe (x y)
+   if ((x = ex.Cdr.Car.eval()) != Nil)
+      if (!(x instanceof Cell))
+         ((Symbol)x).wipe();
+      else {
+         y = x; do
+            ((Symbol)y.Car).wipe();
+         while ((y = y.Cdr) instanceof Cell);
+      }
+   return x;
+
 # (meta 'obj|typ 'sym ['sym2|cnt ..]) -> any
 meta (x y)
    if ((x = (ex = ex.Cdr).Car.eval()) instanceof Symbol)
@@ -3484,9 +3496,7 @@ port ()
 accept (i x)
    if ((i = xInt(x = ex.Cdr.Car.eval())) < 0 || i >= InFiles.length || InFiles[i] == null || InFiles[i].Chan == null)
       err(ex, x, "Bad socket");
-   try {return mkSocket(((ServerSocketChannel)InFiles[i].Chan).accept());}
-   catch (IOException e) {err(ex, null, e.toString());}
-   return Nil;
+   return (x = accept(ex, i)) == null? Nil : x;
 
 # (listen 'cnt1 ['cnt2]) -> cnt | NIL
 listen (i j x y)
@@ -3496,8 +3506,8 @@ listen (i j x y)
    for (;;) {
       if (waitFd(ex, i, j) == 0)
          return Nil;
-      try {return mkSocket(((ServerSocketChannel)InFiles[i].Chan).accept());}
-      catch (IOException e) {err(ex, null, e.toString());}
+      if ((y = accept(ex, i)) != null)
+         return y;
    }
 
 # (connect 'any 'cnt) -> cnt | NIL

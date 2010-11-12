@@ -38,6 +38,7 @@ public class PicoLisp {
    final static Symbol Err = mkSymbol(Nil, "*Err", Intern);
    final static Symbol Msg = mkSymbol(Nil, "*Msg", Intern);
    final static Symbol Uni = mkSymbol(Nil, "*Uni", Intern);
+   final static Symbol Adr = mkSymbol(Nil, "*Adr", Intern);
    final static Symbol Bye = mkSymbol(Nil, "*Bye", Intern);
 
    final static Symbol Quote = mkSymbol(Zero, "quote", Intern);
@@ -525,6 +526,16 @@ public class PicoLisp {
       new PicoLispReader(sock.getInputStream(), i, chan, SelectionKey.OP_READ);
       new PicoLispWriter(sock.getOutputStream(), i);
       return new Number(i);
+   }
+
+   final static Any accept(Any ex, int i) {
+      try {
+         SocketChannel chan = ((ServerSocketChannel)InFiles[i].Chan).accept();
+         Adr.Car = mkStr(chan.socket().getInetAddress().getHostAddress());
+         return mkSocket(chan);
+      }
+      catch (IOException e) {}
+      return null;
    }
 
    final static Any mkChar(char c) {return new Symbol(null, "" + c);}
@@ -2073,6 +2084,11 @@ public class PicoLisp {
       Symbol(Object obj) {
          Car = this;
          Obj = obj;
+      }
+
+      final void wipe() {
+         Car = Nil;
+         Prop = null;
       }
 
       final Any put(Any key, Any val) {
