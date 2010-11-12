@@ -1,12 +1,72 @@
-# 11nov10abu
+# 12nov10abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
 
 ############ main ############
 # (env ['lst] | ['sym 'val] ..) -> lst
+env (i x y)
+   y = Nil;
+   if (!((ex = ex.Cdr) instanceof Cell)) {
+      for (Bind p = Env.Bind;  p != null;  p = p.Link) {
+         if (p.Eswp == 0) {
+            for (i = p.Cnt; --i > 0; --i) {
+               for (x = y; ; x = x.Cdr) {
+                  if (!(x instanceof Cell)) {
+                     y = new Cell(new Cell(p.Data[i], p.Data[i].Car), y);
+                     break;
+                  }
+                  if (x.Car.Car == p.Data[i])
+                     break;
+               }
+            }
+         }
+      }
+   }
+   else {
+      do {
+         if ((x = ex.Car.eval()) instanceof Cell) {
+            do
+               y = new Cell(new Cell(x.Car, x.Car.Car), y);
+            while ((x = x.Cdr) instanceof Cell);
+         }
+         else if (x != Nil) {
+            ex = ex.Cdr;
+            y = new Cell(new Cell(x, ex.Car.eval()), y);
+         }
+      }
+      while ((ex = ex.Cdr) instanceof Cell);
+   }
+   return y;
 
 # (up [cnt] sym ['val]) -> any
+up (i j k x)
+   if (!((x = (ex = ex.Cdr).Car) instanceof Number))
+      k = 1;
+   else {
+      k = ((Number)x).Cnt;
+      ex = ex.Cdr;
+      x = ex.Car;
+   }
+   j = 0;
+   Bind q = null;
+   for (Bind p = Env.Bind;  p != null;  p = p.Link) {
+      for (i = 0;  i < p.Cnt; i += 2) {
+         if (p.Data[i+1] == x) {
+            if (--k == 0) {
+               if ((ex = ex.Cdr) instanceof Cell)
+                  return p.Data[i] = ex.Car.eval();
+               return p.Data[i];
+            }
+         }
+      }
+   }
+   if ((ex = ex.Cdr) instanceof Cell)
+      if (q == null)
+         x.Car = ex.Car.eval();
+      else
+         q.Data[j] = ex.Car.eval();
+   return q == null? x.Car : q.Data[j];
 
 # (quit ['any ['any]])
 quit (str)
