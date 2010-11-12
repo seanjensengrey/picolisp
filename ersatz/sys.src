@@ -1842,7 +1842,7 @@ public class PicoLisp {
          Number num = (Number)x;
          if (Big == null)
             return num.Big == null && Cnt == num.Cnt;
-         return Big == num.Big;
+         return Big.equals(num.Big);
       }
 
       final int compare(Any x) {
@@ -1853,8 +1853,13 @@ public class PicoLisp {
          if (!(x instanceof Number))
             return -1;
          Number num = (Number)x;
-         if (Big == null)
-            return num.Big == null? Cnt - num.Cnt : -1;
+         if (Big == null) {
+            if (num.Big == null)
+               return Cnt == num.Cnt? 0 : Cnt > num.Cnt? 1 : -1;
+            return -num.Big.signum();
+         }
+         if (num.Big == null)
+            return Big.signum();
          return Big.compareTo(num.Big);
       }
 
