@@ -1557,7 +1557,14 @@ call (i j x)
       cmd[i] = x.Car.eval().name();
       x = x.Cdr;
    }
-   try {i = Runtime.getRuntime().exec(cmd).waitFor();}
+   try {
+      Process p = Runtime.getRuntime().exec(cmd);
+      BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
+      String line;
+      while ((line = in.readLine()) != null)
+         System.out.println(line);
+      i = p.waitFor();
+   }
    catch (IOException e) {System.err.println(cmd[0] + ": Can't exec");}
    catch (InterruptedException e) {}  //#! sighandler()
    return i == 0? T : Nil;
@@ -1643,6 +1650,10 @@ box? (x)
 # (str? 'any) -> sym | NIL
 str? (x)
    return ((x = ex.Cdr.Car.eval()) instanceof Symbol) && Intern.get(x.name()) == null? x : Nil;
+
+# (ext? 'any) -> sym | NIL
+ext? T
+   return Nil;
 
 # (zap 'sym) -> sym
 zap (s)
