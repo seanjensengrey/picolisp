@@ -1,5 +1,5 @@
-#!../bin/picolisp ../lib.l
-# 04nov10abu
+#!./picolisp ../lib.l
+# 14nov10abu
 # (c) Software Lab. Alexander Burger
 
 (load "@ext.l" "@src64/version.l")
