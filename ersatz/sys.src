@@ -1,4 +1,4 @@
-// 12nov10abu
+// 14nov10abu
 // (c) Software Lab. Alexander Burger
 
 import java.util.*;
@@ -725,7 +725,7 @@ public class PicoLisp {
 
    final static Any funq(Any x) {
       Any y;
-      if (x instanceof Symbol)
+      if (x == Nil || x instanceof Symbol)
          return Nil;
       if (x instanceof Number)
          return ((Number)x).Big == null && ((Number)x).Cnt <= MaxFun? x : Nil;
