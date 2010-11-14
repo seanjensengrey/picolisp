@@ -1,4 +1,4 @@
-# 21may10abu
+# 14nov10abu
 # (c) Software Lab. Alexander Burger
 
 # *NoLint
@@ -7,6 +7,9 @@
    (if V
       (push1 '*NoLint (cons X V))
       (or (memq X *NoLint) (push '*NoLint X)) ) )
+
+(noLint 'later (loc "@Prg" later))
+
 
 (de global? (S)
    (or

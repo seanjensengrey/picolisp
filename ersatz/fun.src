@@ -1,4 +1,4 @@
-# 12nov10abu
+# 14nov10abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -1455,9 +1455,9 @@ for (i w x y z bnd)
             }
             else
                y = y.eval();
-            if (z.Cdr instanceof Cell)
-               bnd.Data[1].Car = z.Cdr.prog();
          } while ((x = x.Cdr) instanceof Cell);
+         if (z.Cdr instanceof Cell)
+            bnd.Data[1].Car = z.Cdr.prog();
       }
    }
    for (i = bnd.Cnt; (i -= 2) >= 0;)
@@ -1654,7 +1654,7 @@ box? (x)
 
 # (str? 'any) -> sym | NIL
 str? (x)
-   return ((x = ex.Cdr.Car.eval()) instanceof Symbol) && Intern.get(x.name()) == null? x : Nil;
+   return ((x = ex.Cdr.Car.eval()) instanceof Symbol) && Intern.get(x.name()) != x? x : Nil;
 
 # (ext? 'any) -> sym | NIL
 ext? T
