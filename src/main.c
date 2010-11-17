@@ -1,4 +1,4 @@
-/* 12oct10abu
+/* 16nov10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -380,36 +380,48 @@ bool equal(any x, any y) {
          if (!isSym(y)  || !isNum(x = name(x))  ||  !isNum(y = name(y)))
             return NO;
       }
+      else if (!isCell(y))
+         return NO;
       else {
-         any a, b;
+         any a = x, b = y;
+         bool res = NO;
 
-         if (!isCell(y))
-            return NO;
-         while (car(x) == Quote) {
-            if (car(y) != Quote)
-               return NO;
-            if (x == cdr(x))
-               return y == cdr(y);
-            if (y == cdr(y))
-               return NO;
-            if (!isCell(x = cdr(x)))
-               return equal(x, cdr(y));
-            if (!isCell(y = cdr(y)))
-               return NO;
-         }
-         a = x, b = y;
          for (;;) {
             if (!equal(car(x), car(y)))
-               return NO;
-            if (!isCell(x = cdr(x)))
-               return equal(x, cdr(y));
-            if (!isCell(y = cdr(y)))
-               return NO;
-            if (x == a)
-               return y == b;
-            if (y == b)
-               return NO;
+               break;
+            if (!isCell(cdr(x))) {
+               res = equal(cdr(x), cdr(y));
+               break;
+            }
+            if (!isCell(cdr(y)))
+               break;
+            *(word*)&car(x) |= 1,  x = cdr(x);
+            *(word*)&car(y) |= 1,  y = cdr(y);
+            if (num(car(x)) & 1 || num(car(y)) & 1) {
+               for (;;) {
+                  if (a == x) {
+                     res = b == y;
+                     break;
+                  }
+                  if (b == y) {
+                     res = NO;
+                     break;
+                  }
+                  *(word*)&car(a) &= ~1,  a = cdr(a);
+                  *(word*)&car(b) &= ~1,  b = cdr(b);
+               }
+               do {
+                  *(word*)&car(a) &= ~1,  a = cdr(a);
+                  *(word*)&car(b) &= ~1,  b = cdr(b);
+               } while (a != x);
+               return res;
+            }
          }
+         while (a != x) {
+            *(word*)&car(a) &= ~1,  a = cdr(a);
+            *(word*)&car(b) &= ~1,  b = cdr(b);
+         }
+         return res;
       }
    }
 }

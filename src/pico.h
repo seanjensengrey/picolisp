@@ -1,4 +1,4 @@
-/* 15oct10abu
+/* 16nov10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -461,6 +461,7 @@ any doChain(any);
 any doChar(any);
 any doChop(any);
 any doCirc(any);
+any doCircQ(any);
 any doClip(any);
 any doClose(any);
 any doCmd(any);

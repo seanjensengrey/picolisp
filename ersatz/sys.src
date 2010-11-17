@@ -1,4 +1,4 @@
-// 14nov10abu
+// 17nov10abu
 // (c) Software Lab. Alexander Burger
 
 import java.util.*;
@@ -683,15 +683,13 @@ public class PicoLisp {
    final static String evString(Any ex) {return ex.Car.eval().name();}
 
    final static Any circ(Any x) {
-      int m = 0;
-      Any[] mark = new Any[12];
+      HashSet<Any> mark = new HashSet<Any>();
       for (;;) {
-         mark = append(mark, m++, x);
+         mark.add(x);
          if (!((x = x.Cdr) instanceof Cell))
             return null;
-         for (int i = 0; i < m; ++i)
-            if (mark[i] == x)
-               return x;
+         if (mark.contains(x))
+            return x;
       }
    }
 
@@ -2570,36 +2568,26 @@ public class PicoLisp {
       final boolean equal(Any x) {
          if (!(x instanceof Cell))
             return false;
-         Any y = this;
-         while (x.Car == Quote) {
-            if (y.Car != Quote)
-               return false;
-            if (x == x.Cdr)
-               return y == y.Cdr;
-            if (y == y.Cdr)
-               return false;
-            if (!(x.Cdr instanceof Cell))
-               return x.Cdr.equal(y.Cdr);
-            x = x.Cdr;
-            if (!(y.Cdr instanceof Cell))
-               return false;
-            y = y;
-         }
-         Any a = x;
-         Any b = y;
+         HashSet<Any> mark = new HashSet<Any>();
+         Any y = this, a = x, b = y;
          for (;;) {
             if (!x.Car.equal(y.Car))
                return false;
             if (!(x.Cdr instanceof Cell))
                return x.Cdr.equal(y.Cdr);
-            x = x.Cdr;
             if (!(y.Cdr instanceof Cell))
                return false;
-            y = y.Cdr;
-            if (x == a)
-               return y == b;
-            if (y == b)
-               return false;
+            mark.add(x);  x = x.Cdr;
+            mark.add(y);  y = y.Cdr;
+            if (mark.contains(x) || mark.contains(y)) {
+               for (;;) {
+                  if (a == x)
+                     return b == y;
+                  if (b == y)
+                     return false;
+                  a = a.Cdr;  b = b.Cdr;
+               }
+            }
          }
       }
 
@@ -2627,43 +2615,29 @@ public class PicoLisp {
       }
 
       final long length() {
-         long n = 1;
-         Any x = this;
-         while (x.Car == Quote) {
-            if (x == x.Cdr)
-               return -1;
+         long n = 0;
+         HashSet<Any> mark = new HashSet<Any>();
+         for (Any x = this;;) {
+            ++n;
+            mark.add(x);
             if (!((x = x.Cdr) instanceof Cell))
                return n;
-            ++n;
-         }
-         Any y = x;
-         while ((x = x.Cdr) instanceof Cell) {
-            if (x == y)
+            if (mark.contains(x))
                return -1;
-            ++n;
          }
-         return n;
       }
 
-      final long size() {return size(this);}
-      final long size(Any x) {
-         long n;
-         Any y;
-
-         n = 1;
-         while (x.Car == Quote) {
-            if (x == x.Cdr  ||  !((x = x.Cdr) instanceof Cell))
-               return n;
+      final long size() {
+         long n = 0;
+         HashSet<Any> mark = new HashSet<Any>();
+         for (Any x = this;;) {
             ++n;
-         }
-         for (y = x;;) {
             if (x.Car instanceof Cell)
-               n += size(x.Car);
-            if (!((x = x.Cdr) instanceof Cell)  ||  x == y)
-               break;
-            ++n;
+               n += x.Car.size();
+            mark.add(x);
+            if (!((x = x.Cdr) instanceof Cell) || mark.contains(x))
+               return n;
          }
-         return n;
       }
 
       final InFrame rdOpen(Any ex) {

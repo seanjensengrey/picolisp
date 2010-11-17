@@ -1,4 +1,4 @@
-# 12oct10abu
+# 16nov10abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Globals 0)
@@ -433,6 +433,7 @@
    initSym NIL       "min"       doMin
    initSym NIL       "atom"      doAtom
    initSym NIL       "pair"      doPair
+   initSym NIL       "circ?"     doCircQ
    initSym NIL       "lst?"      doLstQ
    initSym NIL       "num?"      doNumQ
    initSym NIL       "sym?"      doSymQ

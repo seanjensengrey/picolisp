@@ -1,4 +1,4 @@
-/* 22oct10abu
+/* 16nov10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -1048,6 +1048,12 @@ any doPair(any x) {
    return isCell(x = EVAL(car(x)))? x : Nil;
 }
 
+// (circ? 'any) -> any
+any doCircQ(any x) {
+   x = cdr(x);
+   return isCell(x = EVAL(car(x))) && (x = circ(x))? x : Nil;
+}
+
 // (lst? 'any) -> flg
 any doLstQ(any x) {
    x = cdr(x);
@@ -1176,41 +1182,50 @@ any doLength(any x) {
       for (n = 0, c = symChar(name(x));  c;  ++n, c = symChar(NULL));
       return boxCnt(n);
    }
-   n = 1;
-   while (car(x) == Quote) {
-      if (x == cdr(x))
-         return T;
-      if (!isCell(x = cdr(x)))
+   for (n = 0, y = x;;) {
+      ++n;
+      *(word*)&car(y) |= 1;
+      if (!isCell(y = cdr(y))) {
+         do
+            *(word*)&car(x) &= ~1;
+         while (isCell(x = cdr(x)));
          return boxCnt(n);
-      ++n;
-   }
-   y = x;
-   while (isCell(x = cdr(x))) {
-      if (x == y)
+      }
+      if (num(car(y)) & 1) {
+         while (x != y)
+            *(word*)&car(x) &= ~1,  x = cdr(x);
+         do
+            *(word*)&car(x) &= ~1;
+         while (y != (x = cdr(x)));
          return T;
-      ++n;
+      }
    }
-   return boxCnt(n);
 }
 
 static int size(any x) {
    int n;
    any y;
 
-   n = 1;
-   while (car(x) == Quote) {
-      if (x == cdr(x)  ||  !isCell(x = cdr(x)))
+   for (n = 0, y = x;;) {
+      ++n;
+      if (isCell(car(y)))
+         n += size(car(y));
+      *(word*)&car(y) |= 1;
+      if (!isCell(y = cdr(y))) {
+         do
+            *(word*)&car(x) &= ~1;
+         while (isCell(x = cdr(x)));
          return n;
-      ++n;
+      }
+      if (num(car(y)) & 1) {
+         while (x != y)
+            *(word*)&car(x) &= ~1,  x = cdr(x);
+         do
+            *(word*)&car(x) &= ~1;
+         while (y != (x = cdr(x)));
+         return n;
+      }
    }
-   for (y = x;;) {
-      if (isCell(car(x)))
-         n += size(car(x));
-      if (!isCell(x = cdr(x))  ||  x == y)
-         break;
-      ++n;
-   }
-   return n;
 }
 
 // (size 'any) -> cnt

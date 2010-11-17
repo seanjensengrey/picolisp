@@ -310,11 +310,25 @@ is returned. A list argument is returned unchanged.
 <dd>Produces a circular list of all <code>any</code> arguments by <code><a
 href="refC.html#cons">cons</a></code>ing them to a list and then connecting the
 CDR of the last cell to the first cell. See also <code><a
+href="refC.html#circ?">circ?</a></code> and <code><a
 href="refL.html#list">list</a></code>.
 
 <pre><code>
 : (circ 'a 'b 'c)
 -> (a b c .)
+</code></pre>
+
+<dt><a name="circ?"><code>(circ? 'any) -> any</code></a> <dd>Returs the circular
+(sub)list if <code>any</code> is a circular list, else <code>NIL</code>. See
+also <code><a href="refC.html#circ">circ</a></code>.
+
+<pre><code>
+: (circ? 'a)
+-> NIL
+: (circ? (1 2 3))
+-> NIL
+: (circ? (1 . (2 3 .)))
+-> (2 3 .)
 </code></pre>
 
 <dt><a name="class"><code>(class sym . typ) -> obj</code></a>

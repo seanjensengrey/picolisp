@@ -1,4 +1,4 @@
-/* 30sep10abu
+/* 16nov10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -75,6 +75,7 @@ static symInit Symbols[] = {
    {doChain, "chain"},
    {doChop, "chop"},
    {doCirc, "circ"},
+   {doCircQ, "circ?"},
    {doClip, "clip"},
    {doClose, "close"},
    {doCmd, "cmd"},

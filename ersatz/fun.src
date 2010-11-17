@@ -1,4 +1,4 @@
-# 14nov10abu
+# 17nov10abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -1556,23 +1556,22 @@ sys ()
 
 # (call 'any ..) -> flg
 call (i j x)
-   j = (int)(x = ex.Cdr).length();
-   String[] cmd = new String[j];
-   for (i = 0; i < j; ++i) {
-      cmd[i] = x.Car.eval().name();
-      x = x.Cdr;
-   }
+   ArrayList<String> cmd = new ArrayList<String>();
+   for (x = ex.Cdr; x instanceof Cell; x = x.Cdr)
+      cmd.add(x.Car.eval().name());
    try {
-      Process p = Runtime.getRuntime().exec(cmd);
+      ProcessBuilder pb = new ProcessBuilder(cmd);
+      pb.redirectErrorStream(true);
+      Process p = pb.start();
       BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
       String line;
       while ((line = in.readLine()) != null)
          System.out.println(line);
-      i = p.waitFor();
+      return p.waitFor() == 0? T : Nil;
    }
-   catch (IOException e) {System.err.println(cmd[0] + ": Can't exec");}
+   catch (IOException e) {System.err.println(cmd.get(0) + ": Can't exec");}
    catch (InterruptedException e) {}  //#! sighandler()
-   return i == 0? T : Nil;
+   return Nil;
 
 # (ipid) -> pid | NIL
 ipid ()
@@ -2693,6 +2692,10 @@ atom ()
 pair (x)
    return (x = ex.Cdr.Car.eval()) instanceof Cell? x : Nil;
 
+# (circ? 'any) -> any
+circ? (x)
+   return (x = ex.Cdr.Car.eval()) instanceof Cell && (x = circ(x)) != null? x : Nil;
+
 # (lst? 'any) -> flg
 lst? (x)
    return (x = ex.Cdr.Car.eval()) instanceof Cell || x == Nil? T : Nil;
@@ -3186,8 +3189,7 @@ char (x)
 
 # (skip ['any]) -> sym
 skip (c)
-   c = firstChar(ex.Cdr.Car.eval());
-   return InFile.skip(c) < 0? Nil : mkChar(c);
+   return InFile.skip(firstChar(ex.Cdr.Car.eval())) < 0? Nil : mkChar((char)InFile.Chr);
 
 # (eol) -> flg
 eol ()

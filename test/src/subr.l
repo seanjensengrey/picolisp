@@ -1,4 +1,4 @@
-# 07nov09abu
+# 16nov10abu
 # (c) Software Lab. Alexander Burger
 
 ### c[ad]*r ###
@@ -228,6 +228,7 @@
 (test T (= "a" "a"))
 (test T (== "a" "a"))
 (test T (= (1 (2) 3) (1 (2) 3)))
+(test T (= (1 . (2 3 .)) (1 . (2 3 .))))
 
 
 ### <> ###
@@ -303,6 +304,12 @@
 (test NIL (pair NIL))
 (test (1 . 2) (pair (1 . 2)))
 (test (1 2 3) (pair (1 2 3)))
+
+
+### circ? ###
+(test NIL (circ? 'a))
+(test NIL (circ? (1 2 3)))
+(test (2 3 . @) (circ? (1 . (2 3 .))))
 
 
 ### lst? ###
@@ -383,6 +390,7 @@
 (test 3 (length 123))
 (test 3 (length (1 (2) 3)))
 (test T (length (1 2 3 .)))
+(test T (length (1 . (2 3 .))))
 
 
 ### size ###
@@ -394,6 +402,7 @@
 (test 3 (size (1 2 3 .)))
 (test 8 (size '((1 2 3) (4 5 6))))
 (test 6 (size '((1 2 .) (4 5 .))))
+(test 3 (size (1 . (2 3 .))))
 
 
 ### assoc ###

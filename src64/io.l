@@ -1,4 +1,4 @@
-# 07oct10abu
+# 16nov10abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -919,7 +919,8 @@
    push Y
    ld B BEG  # Begin list
    call (PutBinBZ)
-   call circE_XYF  # Circular list?
+   ld X E  # Keep list in X
+   call circE_YF  # Circular?
    if nz  # No
       do
          ld E (X)  # Next item
@@ -4787,7 +4788,8 @@
    push Y
    ld B (char "(")  # Open paren
    call (PutB)
-   call circE_XYF  # Circular list?
+   ld X E  # Keep list in X
+   call circE_YF  # Circular?
    if nz  # No
       do
          ld E (X)  # Print CAR
