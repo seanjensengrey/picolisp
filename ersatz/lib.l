@@ -1,6 +1,8 @@
 # 17nov10abu
 # (c) Software Lab. Alexander Burger
 
+(on *Dbg)
+
 ############ lib.l ############
 
 (de task (Key . Prg)

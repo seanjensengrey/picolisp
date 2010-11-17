@@ -2,4 +2,4 @@
 # 17nov10abu
 
 # Run Ersatz PicoLisp
-exec java -DPID=$$ -jar ${0%/*}/picolisp.jar -"on *Dbg" ${0%/*}/lib.l "$@"
+exec java -DPID=$$ -jar ${0%/*}/picolisp.jar ${0%/*}/lib.l "$@"
