@@ -1,4 +1,4 @@
-12nov10abu
+17nov10abu
 (c) Software Lab. Alexander Burger
 
 
@@ -91,7 +91,7 @@ or simply type an empy line (Return).
 If you just want to test the ready-to-run Ersatz PicoLisp (it needs a Java
 runtime system), use
 
-   $ ./erl
+   $ ersatz/picolisp
    :
 
 instead of 'dbg'.

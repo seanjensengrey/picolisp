@@ -1,5 +1,5 @@
 #!/bin/sh
-# 12nov10abu
+# 17nov10abu
 
 # Run Ersatz PicoLisp
-exec java -DPID=$$ -jar ${0%/*}/picolisp.jar "$@"
+exec java -DPID=$$ -jar ${0%/*}/picolisp.jar -"on *Dbg" ${0%/*}/lib.l "$@"

@@ -1,8 +1,8 @@
-#!./picolisp ../lib.l
-# 14nov10abu
+#!./picolisp
+# 17nov10abu
 # (c) Software Lab. Alexander Burger
 
-(load "@ext.l" "@src64/version.l")
+(load "../src64/version.l")
 
 # Build Ersatz PicoLisp
 

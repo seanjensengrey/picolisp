@@ -1,4 +1,4 @@
-12nov10abu
+17nov10abu
 (c) Software Lab. Alexander Burger
 
 
@@ -33,14 +33,8 @@ Ersatz PicoLisp can be started - analog to 'bin/picolisp' - as
 
    $ ersatz/picolisp
 
-or, analog to 'dbg' with initial libraries and debugging environment
-
-   $ ./erl
-
-If absolutely no "bin/picolisp" can be build, you might install symbolic links
-in the "bin/" directory to Ersatz PicoLisp:
-
-   $ (cd bin; ln -s ../ersatz/picolisp && ln -s ../ersatz/picolisp.jar)
+This already includes slighly simplfied versions of the standard libraries as
+loaded by 'dbg' (without database support, but with Pilog and XML support).
 
 
       Building the JAR file
