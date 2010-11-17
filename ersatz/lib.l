@@ -215,7 +215,7 @@
 (de *PP
    T NIL if ifn when unless while until do case state for
    with catch finally ! setq default push job use let let?
-   prog1 later recur redef =: in out ctl tab new )
+   prog1 recur redef =: in out tab new )
 (de *PP1 let let? for redef)
 (de *PP2 setq default)
 
@@ -691,7 +691,6 @@
 (de tmp @
    (unless *Tmp
       (push '*Bye '(call 'rm "-r" *Tmp))
-      (push '*Fork '(off *Tmp) '(del '(call 'rm "-r" *Tmp) '*Bye))
       (call 'mkdir "-p" (setq *Tmp (pack "tmp/" *Pid "/"))) )
    (pass pack *Tmp) )
 

@@ -1,7 +1,6 @@
-# 12nov10abu
+# 17nov10abu
 # (c) Software Lab. Alexander Burger
 
-(load "@lib/misc.l")
 (setq *Architecture (opt)  *System (opt)  *TargetOS (opt)  *Module (opt))
 
 (load "lib/asm.l" (pack "arch/" *Architecture ".l"))
