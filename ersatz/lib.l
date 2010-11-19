@@ -1,4 +1,4 @@
-# 17nov10abu
+# 19nov10abu
 # (c) Software Lab. Alexander Burger
 
 (on *Dbg)
@@ -1062,6 +1062,7 @@
 (repeat)
 
 ############ lib/debug.l ############
+
 # Browsing
 (de doc (Sym Browser)
    (let (L (chop Sym)  C (car L))
@@ -1802,5 +1803,25 @@
                         (xmlrpcKey (caddr (assoc 'name L)))
                         (xmlrpcValue (caddr (assoc 'value L))) ) ) )
                (cddr Lst) ) ) ) ) )
+
+############ lib/http.l ############
+
+### HTTP-Client ###
+(de client (Host Port How . Prg)
+   (let? Sock (connect Host Port)
+      (prog1
+         (out Sock
+            (if (atom How)
+               (prinl "GET /" How " HTTP/1.0^M")
+               (prinl "POST /" (car How) " HTTP/1.0^M")
+               (prinl "Content-Length: " (size (cdr How)) "^M") )
+            (prinl "User-Agent: PicoLisp^M")
+            (prinl "Host: " Host "^M")
+            (prinl "Accept-Charset: utf-8^M")
+            (prinl "^M")
+            (and (pair How) (prin (cdr @)))
+            (flush)
+            (in Sock (run Prg 1)) )
+         (close Sock) ) ) )
 
 # vi:et:ts=3:sw=3

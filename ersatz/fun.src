@@ -1,4 +1,4 @@
-# 18nov10abu
+# 19nov10abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -98,48 +98,48 @@ public (x y z s o)
 java (num i j k x y z s v o)
    y = (x = ex.Cdr).Car.eval();
    if ((z = (x = x.Cdr).Car.eval()) == Nil || z instanceof Number) {
+      if ((s = (Symbol)y).Obj instanceof Boolean)
+         return ((Boolean)s.Obj).booleanValue()? T : Nil;
+      if (s.Obj instanceof Byte)
+         return new Number(((Byte)s.Obj).byteValue());
+      if (s.Obj instanceof Character)
+         return new Number(((Character)s.Obj).charValue());
+      if (s.Obj instanceof Integer)
+         return new Number(((Integer)s.Obj).intValue());
+      if (s.Obj instanceof Long)
+         return new Number(((Long)s.Obj).longValue());
+      if (s.Obj instanceof Double)
+         return strToNum(Double.toString(((Double)s.Obj).doubleValue()),  xInt(z));
+      if (s.Obj instanceof BigInteger)
+         return new Number((BigInteger)s.Obj);
+      if (s.Obj instanceof String)
+         return mkStr((String)s.Obj);
       x = Nil;
-      if ((s = (Symbol)y).Obj != null) {
-         if (s.Obj instanceof Byte)
-            x = new Number(((Byte)s.Obj).byteValue());
-         else if (s.Obj instanceof Character)
-            x = new Number(((Character)s.Obj).charValue());
-         else if (s.Obj instanceof Integer)
-            x = new Number(((Integer)s.Obj).intValue());
-         else if (s.Obj instanceof Long)
-            x = new Number(((Long)s.Obj).longValue());
-         else if (s.Obj instanceof Double)
-            x = strToNum(Double.toString(((Double)s.Obj).doubleValue()),  evInt(ex.Cdr.Cdr));
-         else if (s.Obj instanceof BigInteger)
-            x = new Number((BigInteger)s.Obj);
-         else if (s.Obj instanceof String)
-            x = mkStr((String)s.Obj);
-         else if (s.Obj instanceof byte[]) {
-            byte[] a = (byte[])s.Obj;
-            for (i = a.length; --i >= 0;)
-               x = new Cell(new Number(a[i]), x);
-         }
-         else if (s.Obj instanceof char[]) {
-            char[] a = (char[])s.Obj;
-            for (i = a.length; --i >= 0;)
-               x = new Cell(new Number(a[i]), x);
-         }
-         else if (s.Obj instanceof int[]) {
-            int[] a = (int[])s.Obj;
-            for (i = a.length; --i >= 0;)
-               x = new Cell(new Number(a[i]), x);
-         }
-         else if (s.Obj instanceof long[]) {
-            long[] a = (long[])s.Obj;
-            for (i = a.length; --i >= 0;)
-               x = new Cell(new Number(a[i]), x);
-         }
-         else if (s.Obj instanceof double[]) {
-            double[] a = (double[])s.Obj;
-            j = evInt(ex.Cdr.Cdr);
-            for (i = a.length; --i >= 0;)
-               x = new Cell(strToNum(Double.toString(a[i]), i), x);
-         }
+      if (s.Obj instanceof byte[]) {
+         byte[] a = (byte[])s.Obj;
+         for (i = a.length; --i >= 0;)
+            x = new Cell(new Number(a[i]), x);
+      }
+      else if (s.Obj instanceof char[]) {
+         char[] a = (char[])s.Obj;
+         for (i = a.length; --i >= 0;)
+            x = new Cell(new Number(a[i]), x);
+      }
+      else if (s.Obj instanceof int[]) {
+         int[] a = (int[])s.Obj;
+         for (i = a.length; --i >= 0;)
+            x = new Cell(new Number(a[i]), x);
+      }
+      else if (s.Obj instanceof long[]) {
+         long[] a = (long[])s.Obj;
+         for (i = a.length; --i >= 0;)
+            x = new Cell(new Number(a[i]), x);
+      }
+      else if (s.Obj instanceof double[]) {
+         double[] a = (double[])s.Obj;
+         j = xInt(z);
+         for (i = a.length; --i >= 0;)
+            x = new Cell(strToNum(Double.toString(a[i]), i), x);
       }
       return x;
    }
