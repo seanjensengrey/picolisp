@@ -558,9 +558,9 @@ copied, while atoms are returned unchanged.
 -> T
 </code></pre>
 
-<dt><a name="co"><code>(co 'sym [. prg]) -> any</code></a>
+<dt><a name="co"><code>(co 'any [. prg]) -> any</code></a>
 <dd>(64-bit version only) Starts, resumes or stops a <a
-href="ref.html#coroutines">coroutine</a> with the tag given by <code>sym</code>.
+href="ref.html#coroutines">coroutine</a> with the tag given by <code>any</code>.
 If <code>prg</code> is not given, a coroutine with that tag will be stopped.
 Otherwise, if a coroutine running with that tag is found (pointer equality is
 used for comparison), its execution is resumed. Else a new coroutine with that
