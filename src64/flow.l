@@ -1,4 +1,4 @@
-# 22nov10abu
+# 12oct10abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -2540,12 +2540,11 @@
    pop X
    ret
 
-# (co 'any [. prg]) -> any
+# (co 'sym [. prg]) -> any
 (code 'doCo 2)
    push X
    ld X (E CDR)  # Get tag
-   ld E (X)
-   eval  # Evaluate 'any'
+   call evSymX_E  # Evaluate to a symbol
    atom (X CDR)  # 'prg'?
    if z  # Yes
       push Y
@@ -2696,7 +2695,7 @@
    pop X
    ret
 
-# (yield 'any ['any2]) -> any
+# (yield 'any ['sym]) -> any
 (code 'doYield 2)
    push X
    push Y
@@ -2713,7 +2712,7 @@
    link
    ld Y (Y CDR)  # Next arg
    ld E (Y)
-   eval  # Eval optional 'any2'
+   eval  # Eval optional 'sym'
    ld Y 0  # Preload "no target"
    cmp E Nil  # Any?
    if ne  # Yes
