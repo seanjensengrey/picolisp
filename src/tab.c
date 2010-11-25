@@ -1,4 +1,4 @@
-/* 16nov10abu
+/* 25nov10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -257,6 +257,7 @@ static symInit Symbols[] = {
    {doPrint, "print"},
    {doPrintln, "println"},
    {doPrintsp, "printsp"},
+   {doPrior, "prior"},
    {doProg, "prog"},
    {doProg1, "prog1"},
    {doProg2, "prog2"},

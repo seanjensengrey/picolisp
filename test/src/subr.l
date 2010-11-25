@@ -1,4 +1,4 @@
-# 16nov10abu
+# 25nov10abu
 # (c) Software Lab. Alexander Burger
 
 ### c[ad]*r ###
@@ -382,6 +382,12 @@
 ### offset ###
 (test 3 (offset '(c d e f) '(a b c d e f)))
 (test NIL (offset '(c d e) '(a b c d e f)))
+
+
+### prior ###
+(let (L (1 2 3 4 5 6)  X (cdddr L))
+   (test NIL (prior L L))
+   (test (3 4 5 6) (prior X L)) )
 
 
 ### length ###

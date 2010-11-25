@@ -575,6 +575,23 @@ href="refP.html#println">println</a></code>.
 (a b c) def -> def
 </code></pre>
 
+<dt><a name="prior"><code>(prior 'lst1 'lst2) -> lst | NIL</code></a>
+<dd>Returns the cell in <code>lst2</code> which immediately precedes the cell
+<code>lst1</code>, or <code>NIL</code> if <code>lst1</code> is not found in
+<code>lst2</code>. <code><a href="ref_.html#==">==</a></code> is used for
+comparison (pointer equality). See also <code><a
+href="refO.html#offset">offset</a></code> and <code><a
+href="refM.html#memq">memq</a></code>.
+
+<pre><code>
+: (setq L (1 2 3 4 5 6))
+-> (1 2 3 4 5 6)
+: (setq X (cdddr L))
+-> (4 5 6)
+: (prior X L)
+-> (3 4 5 6)
+</code></pre>
+
 <dt><a name="proc"><code>(proc 'sym ..) -> T</code></a>
 <dd>Shows a list of processes with command names given by the <code>sym</code>
 arguments, using the system <code>ps</code> utility. See also <code><a

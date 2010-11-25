@@ -1,4 +1,4 @@
-/* 16nov10abu
+/* 25nov10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -644,6 +644,7 @@ any doPrinl(any);
 any doPrint(any);
 any doPrintln(any);
 any doPrintsp(any);
+any doPrior(any);
 any doProg(any);
 any doProg1(any);
 any doProg2(any);

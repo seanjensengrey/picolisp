@@ -1,4 +1,4 @@
-# 16nov10abu
+# 25nov10abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Globals 0)
@@ -445,6 +445,7 @@
    initSym NIL       "diff"      doDiff
    initSym NIL       "index"     doIndex
    initSym NIL       "offset"    doOffset
+   initSym NIL       "prior"     doPrior
    initSym NIL       "length"    doLength
    initSym NIL       "size"      doSize
    initSym NIL       "assoc"     doAssoc

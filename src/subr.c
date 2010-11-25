@@ -1,4 +1,4 @@
-/* 16nov10abu
+/* 25nov10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -1168,6 +1168,22 @@ any doOffset(any x) {
    for (n = 1, x = Pop(c1);  isCell(y);  ++n, y = cdr(y))
       if (equal(x,y))
          return boxCnt(n);
+   return Nil;
+}
+
+// (prior 'lst1 'lst2) -> lst | NIL
+any doPrior(any x) {
+   any y;
+   cell c1;
+
+   x = cdr(x),  Push(c1, EVAL(car(x)));
+   x = cdr(x),  y = EVAL(car(x));
+   if ((x = Pop(c1)) != y)
+      while (isCell(y)) {
+         if (x == cdr(y))
+            return y;
+         y = cdr(y);
+      }
    return Nil;
 }
 

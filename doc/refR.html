@@ -298,7 +298,7 @@ symbol <code>recurse</code> is bound to the function definition
    (when (lt0 N)
       (quit "Bad fibonacci" N) )
    (recur (N)
-      (if (< N 2)
+      (if (> 2 N)
          1
          (+
             (recurse (dec N))

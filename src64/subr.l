@@ -1,4 +1,4 @@
-# 16nov10abu
+# 25nov10abu
 # (c) Software Lab. Alexander Burger
 
 # (car 'var) -> any
@@ -2667,9 +2667,9 @@
    ld E (X)  # Eval first
    eval
    link
-   push E  # <L I> 'any'
+   push E  # <L I> 'lst1'
    link
-   ld E ((X CDR))  # Eval second
+   ld E ((X CDR))  # Eval 'lst2'
    eval
    ld C 0  # Init result
    ld X (L I)  # Get 'lst1'
@@ -2694,6 +2694,34 @@
    ld E Nil
    drop
    pop X
+   ret
+
+# (prior 'lst1 'lst2) -> lst | NIL
+(code 'doPrior 2)
+   push X
+   ld X (E CDR)  # Args
+   ld E (X)  # Eval first
+   eval
+   link
+   push E  # <L I> 'lst1'
+   link
+   ld E ((X CDR))  # Eval 'lst2'
+   eval
+   ld C (L I)  # Get 'lst1'
+   drop
+   pop X
+   cmp C E  # First cell?
+   if ne  # No
+      do
+         atom E  # More?
+      while z  # Yes
+         ld A (E CDR)
+         cmp A C  # Found prior cell?
+         jeq ret  # Yes
+         ld E A
+      loop
+   end
+   ld E Nil
    ret
 
 # (length 'any) -> cnt | T
