@@ -211,7 +211,7 @@ java (num i j k x y z s v o)
       o = m.invoke(s.Obj, arg);
       if (m.getReturnType() == Void.TYPE)
          return Nil;
-      return new Symbol(o);
+      return o == null? Nil : new Symbol(o);
    }
    catch (Exception e) {return err(ex, null, e.toString());}
 
