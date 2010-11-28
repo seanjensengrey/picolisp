@@ -1,4 +1,4 @@
-// 17nov10abu
+// 28nov10abu
 // (c) Software Lab. Alexander Burger
 
 import java.util.*;
@@ -129,6 +129,36 @@ public class PicoLisp {
       }
       System.exit(n);
       return null;  /* Brain-dead Java */
+   }
+
+   final static Constructor javaConstructor(Any ex, Class cls, Class[] par)  throws NoSuchMethodException {
+   looking:
+      for (Constructor m : cls.getConstructors()) {
+         Class<?>[] types = m.getParameterTypes();
+         if (types.length == par.length) {
+            for (int i = 0; i < types.length; ++i)
+               if (!(types[i].isAssignableFrom(par[i])))
+                  continue looking;
+            return m;
+         }
+      }
+      throw new NoSuchMethodException();
+   }
+
+   final static Method javaMethod(Any ex, Class cls, String nm, Class[] par)  throws NoSuchMethodException {
+   looking:
+      for (Method m : cls.getMethods()) {
+         if (m.getName().equals(nm)) {
+            Class<?>[] types = m.getParameterTypes();
+            if (types.length == par.length) {
+               for (int i = 0; i < types.length; ++i)
+                  if (!(types[i].isAssignableFrom(par[i])))
+                     continue looking;
+               return m;
+            }
+         }
+      }
+      throw new NoSuchMethodException(nm);
    }
 
    final static int waitFd(Any ex, int fd, int ms) {

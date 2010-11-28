@@ -578,9 +578,9 @@ href="refP.html#println">println</a></code>.
 <dt><a name="prior"><code>(prior 'lst1 'lst2) -> lst | NIL</code></a>
 <dd>Returns the cell in <code>lst2</code> which immediately precedes the cell
 <code>lst1</code>, or <code>NIL</code> if <code>lst1</code> is not found in
-<code>lst2</code>. <code><a href="ref_.html#==">==</a></code> is used for
-comparison (pointer equality). See also <code><a
-href="refO.html#offset">offset</a></code> and <code><a
+<code>lst2</code> or is the very first cell. <code><a
+href="ref_.html#==">==</a></code> is used for comparison (pointer equality). See
+also <code><a href="refO.html#offset">offset</a></code> and <code><a
 href="refM.html#memq">memq</a></code>.
 
 <pre><code>
