@@ -1,4 +1,4 @@
-# 19nov10abu
+# 29nov10abu
 # (c) Software Lab. Alexander Burger
 
 (on *Dbg)
@@ -1823,5 +1823,22 @@
             (flush)
             (in Sock (run Prg 1)) )
          (close Sock) ) ) )
+
+############ Native Java ############
+
+(de javac (Cls Ext Impl . @)
+   (let (J (pack "tmp/" Cls ".java")  C (pack "tmp/" Cls ".class"))
+      (call 'mkdir "-p" "tmp/")
+      (out J
+         (while (args)
+            (prinl "import " (next) ";") )
+         (prinl "public class " Cls
+            (and Ext (pack " extends " @))
+            (and Impl (pack " implements " (glue ", " Impl)))
+            " {"  )
+         (here "/**/")
+         (prinl "}") )
+      (call "javac" "-O" "-g:none" J)
+      (push1 '*Bye (list 'call "rm" J C)) ) )
 
 # vi:et:ts=3:sw=3
