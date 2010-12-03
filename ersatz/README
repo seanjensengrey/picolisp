@@ -1,4 +1,4 @@
-18nov10abu
+03dec10abu
 (c) Software Lab. Alexander Burger
 
 
@@ -38,7 +38,11 @@ loaded by './dbg' (without database, but with Pilog and XML support).
 
 On non-Unix systems, you might start 'java' directly, e.g.:
 
-   java -DPID=42 -jar picolisp.jar lib.l
+   java -DPID=42 -cp .;tmp;picolisp.jar PicoLisp lib.l
+
+Instead of '42' some other number may be passed. It is used to simulate a
+"process ID", so it should be different for every running instance of Ersatz
+PicoLisp.
 
 
       Building the JAR file
