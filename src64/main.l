@@ -1,4 +1,4 @@
-# 16nov10abu
+# 07dec10abu
 # (c) Software Lab. Alexander Burger
 
 ### Global return labels ###
@@ -674,9 +674,13 @@
          atom E  # 'lst'?
          if z  # Yes
             do
-               call cons_A  # Cons symbol and its value
-               ld (A) (E)
-               ld (A CDR) ((E))
+               ld A (E)  # Already a pair?
+               atom A
+               if nz  # No
+                  call cons_A  # Cons symbol and its value
+                  ld (A) (E)
+                  ld (A CDR) ((E))
+               end
                call consA_C  # Cons to result
                ld (C) A
                ld (C CDR) (L I)

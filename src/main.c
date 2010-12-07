@@ -1,4 +1,4 @@
-/* 16nov10abu
+/* 07dec10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -300,7 +300,9 @@ any doEnv(any x) {
          Push(c2, EVAL(car(x)));
          if (isCell(data(c2))) {
             do
-               data(c1) = cons(cons(car(data(c2)), val(car(data(c2)))), data(c1));
+               data(c1) = cons(
+                  isCell(car(data(c2)))? car(data(c2)) : cons(car(data(c2)), val(car(data(c2)))),
+                  data(c1) );
             while (isCell(data(c2) = cdr(data(c2))));
          }
          else if (!isNil(data(c2))) {

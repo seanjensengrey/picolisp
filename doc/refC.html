@@ -641,11 +641,12 @@ serving the PicoLisp process with the process ID <code>pid</code>. See also
 </code></pre>
 
 <dt><a name="curry"><code>(curry lst . fun) -> fun</code></a>
-<dd>Builds a new function from the list of symbols <code>lst</code> and the
-functional expression <code>fun</code>. Each member in <code>lst</code> that is
-a <code><a href="refP.html#pat?">pat?</a></code> symbol is substituted inside
-<code>fun</code> by its value. All other symbols in <code>lst</code> are
-collected into a <code><a href="refJ.html#job">job</a></code> environment.
+<dd>Builds a new function from the list of symbols or symbol-value pairs
+<code>lst</code> and the functional expression <code>fun</code>. Each member in
+<code>lst</code> that is a <code><a href="refP.html#pat?">pat?</a></code> symbol
+is substituted inside <code>fun</code> by its value. All other symbols in
+<code>lst</code> are collected into a <code><a
+href="refJ.html#job">job</a></code> environment.
 
 <pre><code>
 : (de multiplier (@X)
@@ -656,14 +657,13 @@ collected into a <code><a href="refJ.html#job">job</a></code> environment.
 : ((multiplier 7) 3))
 -> 21
 
-: (let (N1 0  N2 1)
-   (def 'fiboCounter
-      (curry (N1 N2) (Cnt)
-         (do Cnt
-            (println
-               (prog1
-                  (+ N1 N2)
-                  (setq N1 N2  N2 @) ) ) ) ) ) )
+: (def 'fiboCounter
+   (curry ((N1 . 0) (N2 . 1)) (Cnt)
+      (do Cnt
+         (println
+            (prog1
+               (+ N1 N2)
+               (setq N1 N2  N2 @) ) ) ) ) )
 -> fiboCounter
 : (pp 'fiboCounter)
 (de fiboCounter (Cnt)
