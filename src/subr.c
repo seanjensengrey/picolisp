@@ -1,4 +1,4 @@
-/* 25nov10abu
+/* 13dec10abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -319,6 +319,7 @@ any doList(any x) {
 }
 
 // (need 'cnt ['lst ['any]]) -> lst
+// (need 'cnt ['num|sym]) -> lst
 any doNeed(any ex) {
    int n;
    any x;
@@ -326,7 +327,12 @@ any doNeed(any ex) {
 
    n = (int)evCnt(ex, x = cdr(ex));
    x = cdr(x),  Push(c1, EVAL(car(x)));
-   Push(c2, EVAL(cadr(x)));
+   if (isCell(data(c1)) || isNil(data(c1)))
+      Push(c2, EVAL(cadr(x)));
+   else {
+      Push(c2, data(c1));
+      data(c1) = Nil;
+   }
    x = data(c1);
    if (n > 0)
       for (n -= length(x); n > 0; --n)

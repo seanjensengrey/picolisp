@@ -1,4 +1,4 @@
-# 25nov10abu
+# 13dec10abu
 # (c) Software Lab. Alexander Burger
 
 ### c[ad]*r ###
@@ -69,6 +69,7 @@
 (test '(NIL NIL a b c) (need 5 '(a b c)))
 (test '(a b c NIL NIL) (need -5 '(a b c)))
 (test '(" " " " a b c) (need 5 '(a b c) " "))
+(test (0 0 0) (need 3 0))
 
 
 ### range ###

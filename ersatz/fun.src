@@ -1,4 +1,4 @@
-# 07dec10abu
+# 13dec10abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -2265,10 +2265,15 @@ list (x y)
    return y;
 
 # (need 'cnt ['lst ['any]]) -> lst
+# (need 'cnt ['num|sym]) -> lst
 need (n x y z)
    n = evLong(ex = ex.Cdr);
-   z = (ex = ex.Cdr).Car.eval();
-   y = ex.Cdr.Car.eval();
+   if ((z = (ex = ex.Cdr).Car.eval()) instanceof Cell || z == Nil)
+      y = ex.Cdr.Car.eval();
+   else {
+      y = z;
+      z = Nil;
+   }
    x = z;
    if (n > 0)
       for (n -= x.length(); n > 0; --n)

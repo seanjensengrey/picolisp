@@ -1,4 +1,4 @@
-# 25nov10abu
+# 13dec10abu
 # (c) Software Lab. Alexander Burger
 
 # (car 'var) -> any
@@ -915,6 +915,7 @@
    ret
 
 # (need 'cnt ['lst ['any]]) -> lst
+# (need 'cnt ['num|sym]) -> lst
 (code 'doNeed 2)
    push X
    push Y
@@ -926,11 +927,19 @@
    ld E (Y)  # Eval next
    eval
    link
-   push E  # <L II> 'lst'
-   ld Y (Y CDR)
-   ld E (Y)  # Eval 'any'
-   eval+
-   push E  # <L I> 'any'
+   atom E  # First form?
+   jz 10  # Yes
+   cmp E Nil
+   if eq  # Yes
+10    push E  # <L II> 'lst'
+      ld Y (Y CDR)
+      ld E (Y)  # Eval 'any'
+      eval+
+      push E  # <L I> 'any'
+   else
+      push Nil  # <L II> 'lst'
+      push E  # <L I> 'num|sym'
+   end
    link
    ld E (L II)  # Get 'lst'
    or X X  # 'cnt'?
