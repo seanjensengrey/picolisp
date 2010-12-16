@@ -1,4 +1,4 @@
-# 14dec10abu
+# 16dec10abu
 # (c) Software Lab. Alexander Burger
 
 # ./dbg misc/maze.l -"setq M (maze 16 12)" -"display M" -bye
@@ -28,11 +28,7 @@
                      (: south)
                      (or
                         (: north)
-                        (and (= X 1) (= Y DY)) ) ) ) )
-            (=: west)
-            (=: east)
-            (=: south)
-            (=: north) ) )
+                        (and (= X 1) (= Y DY)) ) ) ) ) ) )
       Maze ) )
 
 (de display (Maze)
