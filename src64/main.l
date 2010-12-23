@@ -1,4 +1,4 @@
-# 07dec10abu
+# 23dec10abu
 # (c) Software Lab. Alexander Burger
 
 ### Global return labels ###
@@ -1718,54 +1718,58 @@
                      else
                         atom E  # Atomic?
                         if z  # No: Arrary or structure
-                           null C  # Pointer?
-                           ldz C A  # Yes: Load into C
-                           push X
-                           push Y
-                           push Z
-                           ld X E  # Get specification in X
-                           ld E (X)
-                           call natRetACE_CE  # First item
-                           call cons_Y  # Make cell
-                           ld (Y) E
-                           ld (Y CDR) Nil
-                           link
-                           push Y  # <L I> Result
-                           link
-                           do
-                              ld Z (X CDR)
-                              cnt Z  # (sym . cnt)
-                              if nz
-                                 shr Z 4  # Normalize
-                                 do
-                                    dec Z  # Decrement count
-                                 while nz
-                                    ld E (X)  # Repeat last type
-                                    call natRetACE_CE  # Next item
-                                    call cons_A  # Cons into cell
-                                    ld (A) E
-                                    ld (A CDR) Nil
-                                    ld (Y CDR) A  # Append to result
-                                    ld Y A
-                                 loop
-                                 break T
-                              end
-                              atom Z  # End of specification?
-                           while z  # No
-                              ld X Z
-                              ld E (X)  # Next type
-                              call natRetACE_CE  # Next item
-                              call cons_A  # Cons into cell
-                              ld (A) E
-                              ld (A CDR) Nil
-                              ld (Y CDR) A  # Append to result
-                              ld Y A
-                           loop
-                           ld E (L I)  # Get result
-                           drop
-                           pop Z
-                           pop Y
-                           pop X
+                           null A  # Returned NULL?
+                           ldz E Nil  # Yes: Return NIL
+                           if nz
+                              null C  # Pointer?
+                              ldz C A  # Yes: Load into C
+                              push X
+                              push Y
+                              push Z
+                              ld X E  # Get specification in X
+                              ld E (X)
+                              call natRetACE_CE  # First item
+                              call cons_Y  # Make cell
+                              ld (Y) E
+                              ld (Y CDR) Nil
+                              link
+                              push Y  # <L I> Result
+                              link
+                              do
+                                 ld Z (X CDR)
+                                 cnt Z  # (sym . cnt)
+                                 if nz
+                                    shr Z 4  # Normalize
+                                    do
+                                       dec Z  # Decrement count
+                                    while nz
+                                       ld E (X)  # Repeat last type
+                                       call natRetACE_CE  # Next item
+                                       call cons_A  # Cons into cell
+                                       ld (A) E
+                                       ld (A CDR) Nil
+                                       ld (Y CDR) A  # Append to result
+                                       ld Y A
+                                    loop
+                                    break T
+                                 end
+                                 atom Z  # End of specification?
+                              while z  # No
+                                 ld X Z
+                                 ld E (X)  # Next type
+                                 call natRetACE_CE  # Next item
+                                 call cons_A  # Cons into cell
+                                 ld (A) E
+                                 ld (A CDR) Nil
+                                 ld (Y CDR) A  # Append to result
+                                 ld Y A
+                              loop
+                              ld E (L I)  # Get result
+                              drop
+                              pop Z
+                              pop Y
+                              pop X
+                           end
                         end
                      end
                   end
