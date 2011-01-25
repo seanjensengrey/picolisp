@@ -1,4 +1,4 @@
-# 23dec10abu
+# 25jan11abu
 # (c) Software Lab. Alexander Burger
 
 ### Global return labels ###
@@ -29,12 +29,23 @@
 ### Main entry point ###
 (code 'main)
    initCode
+   ld (AV0) X  # Save command
+   ld (AV) Y  # and argument vector
+   # Check debug mode
+   ld C (Z)  # Last argument
+   ld B (C)  # First byte
+   cmp B (char "+")  # Single plus?
+   if eq  # Yes
+      nul (C 1)
+      if z  # Yes
+         ld (Dbg) TSym  # Set '*Dbg'
+         ld (Z) 0  # Clear last argument
+      end
+   end
    # Locate home directory
-   ld X (AV)  # Command line vector
-   do
-      ld Y (X)  # Next command
-      null Y  # Any?
-   while nz  # Yes
+   ld Y (Y)  # First argument
+   null Y  # Any?
+   if nz  # Yes
       ld B (Y)  # First byte
       cmp B (char "-")  # Dash?
       if ne  # No
@@ -63,10 +74,8 @@
                set (Z) 0  # Clear it
             end
          end
-         break T
       end
-      add X I
-   loop
+   end
    # Initialize globals
    cc getpid()  # PID in A
    shl A 4  # Make short number
@@ -147,23 +156,7 @@
    ld E Nil  # REPL
    ld X 0  # Runtime expression
    call loadBEX_E
-   ld E 0
-# Exit
-(code 'byeE)
-   nul (InBye)  # Re-entered?
-   if z  # No
-      set (InBye) 1
-      push E  # Save exit code
-      ld C 0  # Top frame
-      call unwindC_Z  # Unwind
-      ld E (Bye)  # Run exit expression(s)
-      call execE
-      pop E  # Restore exit code
-   end
-   call flushAll  # Flush all output channels
-(code 'finishE)
-   call setCooked  # Set terminal to cooked mode
-   cc exit(E)
+   jmp restart
 
 # Load all remaining arguments
 (code 'loadAllX_E)
@@ -1241,7 +1234,7 @@
       cmp Y C  # End?
    until eq  # Yes
    prog Z  # Run body
-   null (EnvNext)  # VarArgs?
+   null (EnvArgs)  # VarArgs?
    if nz  # Yes
       drop  # Drop varArgs
    end
@@ -2325,12 +2318,12 @@
    ld Z A
 # Date function
 (code 'dateXYZ_E 0)
-   cmp Y 0  # Month <= 0?
-   jle retNil
+   null Y  # Month <= 0?
+   jsz retNil
    cmp Y 12  # Month > 12?
    jgt retNil
-   cmp X 0  # Day <= 0?
-   jle retNil
+   null X  # Day <= 0?
+   jsz retNil
    ld B (Y Month)  # Max monthly days
    cmp X B  # Day > max?
    if gt  # Yes

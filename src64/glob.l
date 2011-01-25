@@ -1,4 +1,4 @@
-# 25nov10abu
+# 23jan11abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Globals 0)
@@ -470,6 +470,7 @@
    initSym NIL       "%"         doRem
    initSym NIL       ">>"        doShift
    initSym NIL       "lt0"       doLt0
+   initSym NIL       "le0"       doLe0
    initSym NIL       "ge0"       doGe0
    initSym NIL       "gt0"       doGt0
    initSym NIL       "abs"       doAbs

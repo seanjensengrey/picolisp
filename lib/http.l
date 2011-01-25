@@ -1,4 +1,4 @@
-# 08dec10abu
+# 24jan11abu
 # (c) Software Lab. Alexander Burger
 
 # *Home *Gate *Host *Port *Port1 *Port% *Http1 *Chunked
@@ -118,6 +118,9 @@
             (and *Tmp (pre? *Tmp *Url))
             (find pre? (cdr *Allow) (circ *Url)) ) ) ) )
 
+(de notAllowed (X S)
+   (msg X S " [" *Adr "] not allowed") )
+
 # Application startup
 (de app ()
    (unless *SesId
@@ -207,11 +210,11 @@
                         (try 'html> (extern (ht:Pack @X))) )
                      ((= '@ (car @U))
                         (if (disallowed)
-                           (prog (msg *Url " not allowed") (http404))
+                           (prog (notAllowed *Url) (http404))
                            (and *SesId (timeout *Timeout))
                            (apply (val (intern (ht:Pack (cdr @U)))) L) ) )
                      ((disallowed)
-                        (msg *Url " not allowed")
+                        (notAllowed *Url)
                         (http404) )
                      ((tail '("." "l") @U)
                         (and *SesId (timeout *Timeout))
@@ -314,7 +317,7 @@
                (T (msg @Z " bad suffix") (throw "http")) ) ) )
       (cond
          ((and *Allow (not (idx *Allow "Var")))
-            (msg "Var" ': " not allowed")
+            (notAllowed "Var" ':)
             (throw "http") )
          ((not @N)
             (nond

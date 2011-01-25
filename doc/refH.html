@@ -44,17 +44,18 @@ represented with the characters <code>@</code> - <code>O</code> (from "alpha" to
 "omega"). This format is used internally for the names of <code><a
 href="ref.html#external-io">external symbols</a></code> in the 64-bit version.
 See also <code><a href="refF.html#fmt64">fmt64</a></code>, <code><a
-href="refH.html#hex">hex</a></code> and <code><a
+href="refH.html#hex">hex</a></code>, <code><a
+href="refB.html#bin">bin</a></code> and <code><a
 href="refO.html#oct">oct</a></code>.
 
 <pre><code>
 : (hax 7)
--> <u>G</u>
+-> "G"
 : (hax 16)
--> <u>A@</u>
+-> "A@"
 : (hax 255)
--> <u>OO</u>
-: (hax <u>A</u>)
+-> "OO"
+: (hax "A")
 -> 1
 </code></pre>
 
@@ -110,15 +111,15 @@ href="refT.html#tolr/3">tolr/3</a></code>.
 
 <pre><code>
 : (?
-   @Nm <u>Muller</u>
-   @Tel <u>37</u>
+   @Nm "Muller"
+   @Tel "37"
    (select (@CuSu)
       ((nm +CuSu @Nm) (tel +CuSu @Tel))
       (tolr @Nm @CuSu nm)
       (head @Tel @CuSu tel) )
    (val @Name @CuSu nm)
    (val @Phone @CuSu tel) )
- @Nm=<u>Muller</u> @Tel=<u>37</u> @CuSu={2-3} @Name=<u>Miller</u> @Phone=<u>37 4773 82534</u>
+ @Nm="Muller" @Tel="37" @CuSu={2-3} @Name="Miller" @Phone="37 4773 82534"
 -> NIL
 </code></pre>
 
@@ -145,9 +146,9 @@ background. As this mechanism is also used for inter-family communication (see
 only called explicitly by a top level parent process.
 
 <pre><code>
-: (call 'mkfifo <u>fifo/cmd</u>)
+: (call 'mkfifo "fifo/cmd")
 -> T
-: (hear (open <u>fifo/cmd</u>))
+: (hear (open "fifo/cmd"))
 -> 3
 </code></pre>
 
@@ -157,8 +158,8 @@ until end of file. See also <code><a href="refE.html#echo">echo</a></code>.
 
 <pre><code>
 $ cat hello.l
-(html 0 <u>Hello</u> <u>lib.css</u> NIL
-   (&lt;h2&gt; NIL <u>Hello</u>)
+(html 0 "Hello" "lib.css" NIL
+   (&lt;h2&gt; NIL "Hello")
    (here) )
 &lt;p&gt;Hello!&lt;/p&gt;
 &lt;p&gt;This is a test.&lt;/p&gt;
@@ -188,6 +189,7 @@ Content-Type: text/html; charset=utf-8
 <dt><code>(hex 'sym) -> num</code>
 <dd>Converts a number <code>num</code> to a hexadecimal string, or a hexadecimal
 string <code>sym</code> to a number. See also <code><a
+href="refB.html#bin">bin</a></code>, <code><a
 href="refO.html#oct">oct</a></code>, <code><a
 href="refF.html#fmt64">fmt64</a></code>, <code><a
 href="refH.html#hax">hax</a></code>
@@ -197,8 +199,8 @@ href="refF.html#format">format</a></code>.
 
 <pre><code>
 : (hex 273)
--> <u>111</u>
-: (hex <u>111</u>)
+-> "111"
+: (hex "111")
 -> 273
 </code></pre>
 
@@ -207,8 +209,8 @@ href="refF.html#format">format</a></code>.
 <code><a href="refA.html#*Adr">*Adr</a></code>.
 
 <pre><code>
-: (host <u>80.190.158.9</u>)
--> <u>www.leo.org</u>
+: (host "80.190.158.9")
+-> "www.leo.org"
 </code></pre>
 
 </dl>

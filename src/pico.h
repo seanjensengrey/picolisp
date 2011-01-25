@@ -1,4 +1,4 @@
-/* 25nov10abu
+/* 23jan11abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -557,6 +557,7 @@ any doKey(any);
 any doKill(any);
 any doLast(any);
 any doLe(any);
+any doLe0(any);
 any doLength(any);
 any doLet(any);
 any doLetQ(any);

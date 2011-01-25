@@ -1,4 +1,4 @@
-# 12oct10abu
+# 17jan11abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -880,17 +880,10 @@
 
 (asm initCode ()
    (prinst "xor" "%r12" "%r12")  # Init NULL register
-   (prinst "mov" "(%rsi)" "%r10")  # Get command
-   (ifn *FPic
-      (prinst "mov" "%r10" "AV0")
-      (prinst "mov" "AV0@GOTPCREL(%rip)" "%r11")
-      (prinst "mov" "%r10" "(%r11)") )
-   (prinst "lea" "8(%rsi)" "%r10")  # Get argument vector
-   (ifn *FPic
-      (prinst "mov" "%r10" "AV")
-      (prinst "mov" "AV@GOTPCREL(%rip)" "%r11")
-      (prinst "mov" "%r10" "(%r11)") ) )
-
+   (prinst "mov" "(%rsi)" "%r13")  # Get command in X
+   (prinst "lea" "8(%rsi)" "%r14")  # argument vector in Y
+   (prinst "dec" "%rdi")  # and pointer to last argument in Z
+   (prinst "lea" "0(%rsi,%rdi,8)" "%r15") )
 
 ### Optimizer ###
 # Replace the the next 'cnt' elements with 'lst'

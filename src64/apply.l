@@ -1,4 +1,4 @@
-# 12oct10abu
+# 25jan11abu
 # (c) Software Lab. Alexander Burger
 
 (code 'applyXYZ_E 0)
@@ -130,7 +130,7 @@
          end
          ld Z (C CDR)  # Body in Z
          prog Z  # Run body
-         null (EnvNext)  # VarArgs?
+         null (EnvArgs)  # VarArgs?
          if nz  # Yes
             drop  # Drop varArgs
          end
@@ -266,7 +266,7 @@
          end
          ld Z (C CDR)  # Body in Z
          prog Z  # Run body
-         null (EnvNext)  # VarArgs?
+         null (EnvArgs)  # VarArgs?
          if nz  # Yes
             drop  # Drop varArgs
          end
@@ -423,7 +423,7 @@
          end
          ld Z (C CDR)  # Body in Z
          prog Z  # Run body
-         null (EnvNext)  # VarArgs?
+         null (EnvArgs)  # VarArgs?
          if nz  # Yes
             drop  # Drop varArgs
          end
@@ -559,7 +559,7 @@
          end
          ld Z (C CDR)  # Body in Z
          prog Z  # Run body
-         null (EnvNext)  # VarArgs?
+         null (EnvArgs)  # VarArgs?
          if nz  # Yes
             drop  # Drop varArgs
          end

@@ -1,4 +1,4 @@
-# 12oct10abu
+# 25jan11abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -767,7 +767,7 @@
       cmp Y C  # End?
    until eq  # Yes
    prog Z  # Run body
-   null (EnvNext)  # VarArgs?
+   null (EnvArgs)  # VarArgs?
    if nz  # Yes
       drop  # Drop varArgs
    end
@@ -3430,6 +3430,21 @@
    else
       call xCntEX_FE
    end
-   jmp byeE
+# Exit
+(code 'byeE)
+   nul (InBye)  # Re-entered?
+   if z  # No
+      set (InBye) 1
+      push E  # Save exit code
+      ld C 0  # Top frame
+      call unwindC_Z  # Unwind
+      ld E (Bye)  # Run exit expression(s)
+      call execE
+      pop E  # Restore exit code
+   end
+   call flushAll  # Flush all output channels
+(code 'finishE)
+   call setCooked  # Set terminal to cooked mode
+   cc exit(E)
 
 # vi:et:ts=3:sw=3

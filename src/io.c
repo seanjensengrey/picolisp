@@ -1,4 +1,4 @@
-/* 14oct10abu
+/* 19jan11abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -122,8 +122,12 @@ int slow(inFile *p, bool nb) {
       n = read(p->fd, p->buf, BUFSIZ);
       if (nb)
          fcntl(p->fd, F_SETFL, f);
-      if (n >= 0)
+      if (n > 0)
          return p->cnt = n;
+      if (n == 0) {
+         p->ix = p->cnt = -1;
+         return 0;
+      }
       if (errno == EAGAIN)
          return -1;
       if (errno != EINTR)
@@ -242,13 +246,13 @@ void flushAll(void) {
 static int stdinByte(void) {
    inFile *p;
 
-   if (!(p = InFiles[STDIN_FILENO])  ||  p->ix == p->cnt  &&  !slow(p,NO))
-      return -1;
+   if (!(p = InFiles[STDIN_FILENO]) || p->ix == p->cnt && (p->ix < 0 || !slow(p,NO)))
+      bye(0);
    return p->buf[p->ix++];
 }
 
 static int getBinary(void) {
-   if (!InFile  ||  InFile->ix == InFile->cnt  &&  !slow(InFile,NO))
+   if (!InFile || InFile->ix == InFile->cnt && (InFile->ix < 0 || !slow(InFile,NO)))
       return -1;
    return InFile->buf[InFile->ix++];
 }
@@ -831,7 +835,7 @@ void getStdin(void) {
    if (!InFile)
       Chr = -1;
    else if (InFile != InFiles[STDIN_FILENO]) {
-      if (InFile->ix == InFile->cnt  &&  !slow(InFile,NO)) {
+      if (InFile->ix == InFile->cnt  && (InFile->ix < 0 || !slow(InFile,NO))) {
          Chr = -1;
          return;
       }
@@ -1139,10 +1143,13 @@ static any read0(bool top) {
    }
    if (Chr == ',') {
       Env.get();
-      Push(c1, x = read0(NO));
-      if (isCell(y = idx(Uni, data(c1), 1)))
-         x = car(y);
-      drop(c1);
+      x = read0(NO);
+      if (val(Uni) != T) {
+         Push(c1, x);
+         if (isCell(y = idx(Uni, data(c1), 1)))
+            x = car(y);
+         drop(c1);
+      }
       return x;
    }
    if (Chr == '`') {
@@ -1617,27 +1624,21 @@ any doPoll(any ex) {
 // (key ['cnt]) -> sym
 any doKey(any ex) {
    any x;
-   int c, d, e;
+   int c, d;
 
    flushAll();
    setRaw();
    x = cdr(ex);
    if (!waitFd(ex, STDIN_FILENO, isNil(x = EVAL(car(x)))? -1 : xCnt(ex,x)))
       return Nil;
-   if ((c = stdinByte()) < 0)
-      return Nil;
-   if (c == 0xFF)
+   if ((c = stdinByte()) == 0xFF)
       c = TOP;
    else if (c & 0x80) {
-      if ((d = stdinByte()) < 0)
-         return Nil;
+      d = stdinByte();
       if ((c & 0x20) == 0)
          c = (c & 0x1F) << 6 | d & 0x3F;
-      else {
-         if ((e = stdinByte()) < 0)
-            return Nil;
-         c = ((c & 0xF) << 6 | d & 0x3F) << 6 | e & 0x3F;
-      }
+      else
+         c = ((c & 0xF) << 6 | d & 0x3F) << 6 | stdinByte() & 0x3F;
    }
    return mkChar(c);
 }
@@ -2001,8 +2002,11 @@ any load(any ex, int pr, any x) {
          if (Chr == '\n')
             Chr = 0;
       }
-      if (isNil(data(c1)))
-         break;
+      if (isNil(data(c1))) {
+         popInFiles();
+         doHide(Nil);
+         return x;
+      }
       Save(c1);
       if (InFile != InFiles[STDIN_FILENO] || Chr || !pr)
          x = EVAL(data(c1));
@@ -2015,9 +2019,6 @@ any load(any ex, int pr, any x) {
       }
       drop(c1);
    }
-   popInFiles();
-   doHide(Nil);
-   return x;
 }
 
 // (load 'any ..) -> any

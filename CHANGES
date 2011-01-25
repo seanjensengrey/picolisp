@@ -1,4 +1,13 @@
-* XXdec10 picoLisp-3.0.5
+* XXmar11 picoLisp-3.0.6
+   'fill' handles '^'
+   'le0' function
+   Interpreter not exited upon <enter>
+   '*Tsm' by default off, moved to "lib/tsm.l"
+   Command line '+' debug flag
+   'round' defaults to 3
+
+* 31dec10 picoLisp-3.0.5
+   'bin' function
    'prior' function
    'circ?' function
    Ersatz PicoLisp (Java) version

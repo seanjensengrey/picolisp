@@ -1,4 +1,4 @@
-# 15nov10abu
+# 24jan11abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -184,7 +184,7 @@
                ((match '("-" @X "." "h" "t" "m" "l") Url)
                   (try 'html> (extern (ht:Pack @X))) )
                ((disallowed)
-                  (msg *Url " not allowed")
+                  (notAllowed *Url)
                   (http404) )
                ((= '@ (car Url))
                   ((intern (pack (cdr Url)))) )

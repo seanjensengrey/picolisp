@@ -1,4 +1,4 @@
-# 13dec10abu
+# 23jan11abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -3109,6 +3109,10 @@ dec (x y)
 # (lt0 'any) -> num | NIL
 lt0 (x)
    return (x = ex.Cdr.Car.eval()) instanceof Number && x.compare(Zero) < 0? x : Nil;
+
+# (le0 'any) -> num | NIL
+le0 (x)
+   return (x = ex.Cdr.Car.eval()) instanceof Number && x.compare(Zero) <= 0? x : Nil;
 
 # (ge0 'any) -> num | NIL
 ge0 (x)

@@ -1,4 +1,4 @@
-# 09aug10abu
+# 10jan11abu
 # (c) Software Lab. Alexander Burger
 
 ### locale ###
@@ -49,9 +49,18 @@
 (test "123456789" (pad 5 123456789))
 
 
+### bin ###
+(test "1001001" (bin (+ 64 8 1)))
+(test (+ 64 8 1) (bin "1001001"))
+(test "-110110" (bin -54))
+(test -54 (bin "-110110"))
+
+
 ### oct ###
 (test "111" (oct (+ 64 8 1)))
 (test (+ 64 8 1) (oct "111"))
+(test "-66" (oct -54))
+(test -54 (oct "-66"))
 
 
 ### hex ###
@@ -73,6 +82,7 @@
 (scl 4)
 (test "12.35" (round 123456 2))
 (test "12.3456" (round 123456 6))
+(test "12.346" (round 123456))
 
 
 ### balance ###

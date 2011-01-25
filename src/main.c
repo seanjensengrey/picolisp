@@ -1,4 +1,4 @@
-/* 07dec10abu
+/* 18jan11abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -1163,23 +1163,20 @@ any loadAll(any ex) {
 
 /*** Main ***/
 static void init(int ac, char *av[]) {
-   int i;
    char *p;
    sigset_t sigs;
 
-   for (i = 1; i < ac; ++i)
-      if (*av[i] != '-') {
-         if ((p = strrchr(av[i], '/')) && !(p == av[i]+1 && *av[i] == '.')) {
-            Home = malloc(p - av[i] + 2);
-            memcpy(Home, av[i], p - av[i] + 1);
-            Home[p - av[i] + 1] = '\0';
-         }
-         break;
-      }
    AV0 = *av++;
    AV = av;
    heapAlloc();
    initSymbols();
+   if (strcmp(av[ac-2], "+") == 0)
+      val(Dbg) = T,  av[ac-2] = NULL;
+   if (av[0] && *av[0] != '-' && (p = strrchr(av[0], '/')) && !(p == av[0]+1 && *av[0] == '.')) {
+      Home = malloc(p - av[0] + 2);
+      memcpy(Home, av[0], p - av[0] + 1);
+      Home[p - av[0] + 1] = '\0';
+   }
    Env.get = getStdin;
    InFile = initInFile(STDIN_FILENO, NULL);
    Env.put = putStdout;
@@ -1214,6 +1211,6 @@ int MAIN(int ac, char *av[]) {
       ++Repl;
       iSignal(SIGINT, sig);
    }
-   load(NULL, ':', Nil);
-   bye(0);
+   for (;;)
+      load(NULL, ':', Nil);
 }

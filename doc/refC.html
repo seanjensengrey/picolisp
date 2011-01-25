@@ -383,6 +383,7 @@ href="refT.html#trim">trim</a></code>.
 <dd>Closes a file descriptor <code>cnt</code>, and returns it when successful.
 Should not be called inside an <code><a href="refO.html#out">out</a></code> body
 for that descriptor. See also <code><a href="refO.html#open">open</a></code>,
+<code><a href="refP.html#poll">poll</a></code>,
 <code><a href="refL.html#listen">listen</a></code> and <code><a
 href="refC.html#connect">connect</a></code>.
 
@@ -396,8 +397,8 @@ href="refC.html#connect">connect</a></code>.
 picolisp interpreter is returned. Otherwise, the command name is set to
 <code>any</code>. Setting the name may not work on some operating systems. Note
 that the new name must not be longer than the original one. See also <code><a
-href="refA.html#argv">argv</a></code> and <code><a
-href="ref.html#invoc">Invocation</a></code>.
+href="refA.html#argv">argv</a></code> and <a
+href="ref.html#invoc">Invocation</a>.
 
 <pre><code>
 $ ./dbg

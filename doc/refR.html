@@ -30,7 +30,7 @@ timeout occurred. See also <code><a href="refT.html#task">task</a></code>.
 : 2sec                                    # Prints "2sec" every 2 seconds
 2sec
 2sec
-                                          # (Enter) Exit
+                                          # (Ctrl-D) Exit
 $
 </code></pre>
 
@@ -667,12 +667,15 @@ href="refF.html#flip">flip</a></code> .
 <dt><a name="round"><code>(round 'num1 'num2) -> sym</code></a>
 <dd>Formats a number <code>num1</code> with <code>num2</code> decimal places,
 according to the current scale <code><a href="refS.html#*Scl">*Scl</a></code>.
-See also <code><a href="refF.html#format">format</a></code> and <code><a
+<code>num2</code> defaults to 3. See also <code><a
+href="refF.html#format">format</a></code> and <code><a
 href="ref.html#num-io">Numbers</a></code>.
 
 <pre><code>
 : (scl 4)               # Set scale to 4
 -> 4
+: (round 123456)        # Format with three decimal places
+-> "12.346"
 : (round 123456 2)      # Format with two decimal places
 -> "12.35"
 : (format 123456 *Scl)  # Format with full precision

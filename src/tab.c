@@ -1,4 +1,4 @@
-/* 25nov10abu
+/* 23jan11abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -171,6 +171,7 @@ static symInit Symbols[] = {
    {doKill, "kill"},
    {doLast, "last"},
    {doLe, "<="},
+   {doLe0, "le0"},
    {doLength, "length"},
    {doLet, "let"},
    {doLetQ, "let?"},

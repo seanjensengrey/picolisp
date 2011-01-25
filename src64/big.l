@@ -1,4 +1,4 @@
-# 03jul10abu
+# 23jan11abu
 # (c) Software Lab. Alexander Burger
 
 ### Destructive primitives ###
@@ -2685,6 +2685,20 @@
    jz retNil
    test E SIGN  # Negative?
    jz retNil
+   ret  # Yes: Return num
+
+# (le0 'any) -> num | NIL
+(code 'doLe0 2)
+   ld E (E CDR)  # Get arg
+   ld E (E)
+   eval  # Eval it
+   num E  # Number?
+   jz retNil
+   zero E  # Zero?
+   if ne  # No
+      test E SIGN  # Negative?
+      jz retNil
+   end
    ret  # Yes: Return num
 
 # (ge0 'any) -> num | NIL

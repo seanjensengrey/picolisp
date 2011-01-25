@@ -1,4 +1,4 @@
-# 16nov10abu
+# 19jan11abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -217,9 +217,14 @@
       cc fcntl((C) F_SETFL A)  # Restore file status flags
       pop A  # Get 'read' return value
       null A  # OK?
-      if ns  # Yes
+      if nsz  # Yes
          ld (C II) A  # Set new 'cnt'
          ret  # Return 'ge'
+      end
+      if z  # Closed
+         dec (C I)  # 'ix' = 'cnt' = -1
+         dec (C II)
+         ret  # z
       end
       call errno_A
       cmp A EAGAIN  # No data available?
@@ -418,24 +423,27 @@
    ret
 
 ### Low level I/O ###
-(code 'stdinByte_FA)
+(code 'stdinByte_A)
    push Z
    ld Z ((InFiles))  # Get stdin
    null Z  # Open?
    if nz  # Yes
       call getBinaryZ_FB  # Get byte
-      zxt
-      pop Z
-      ret
+      if nc
+         zxt
+         pop Z
+         ret
+      end
    end
-   setc
-   pop Z
-   ret
+   ld E 0  # Exit OK
+   jmp byeE
 
 (code 'getBinaryZ_FB 0)
    ld A (Z I)  # Get 'ix'
    cmp A (Z II)  # Equals 'cnt'?
    if eq  # Yes
+      null A  # Closed?
+      js retc  # Yes
       call slowZ_F  # Read into buffer
       jz retc  # EOF (c)
       ld A 0  # 'ix'
@@ -1581,7 +1589,7 @@
                ld4 (S 4)  # Close write pipe
                call closeAX
                ld4 (S)  # Get read pipe
-               cmp A 0  # STDIN_FILENO?
+               null A  # STDIN_FILENO?
                if ne  # No
                   cc dup2(A 0)  # Dup to STDIN_FILENO
                   ld4 (S)  # Close read pipe
@@ -1673,6 +1681,8 @@
          ld A (Z I)  # Get 'ix'
          cmp A (Z II)  # Equals 'cnt'?
          if eq  # Yes
+            null A  # Closed?
+            js 90  # Return -1
             call slowZ_F  # Read into buffer
             jz 90  # Return -1
             ld A 0  # 'ix'
@@ -1695,10 +1705,7 @@
             ld E -1  # No timeout
             ld X 0  # Runtime expression
             call waitFdCEX_A  # Wait for events
-            call stdinByte_FA  # Get byte?
-            if c  # No
-               ld A -1  # Return -1
-            end
+            call stdinByte_A  # Get byte
          else
             ld C (LineC)
             null C  # First call?
@@ -2280,8 +2287,10 @@
       call (Get_A)  # Skip ','
       ld A 0
       call readA_E  # Read expression
-      ld (L I) E  # Save it
       ld X Uni  # Maintain '*Uni' index
+      cmp (X) TSym  # Disabled?
+      jeq 99  # Yes
+      ld (L I) E  # Else save expression
       ld Y E
       call idxPutXY_E
       atom E  # Pair?
@@ -3293,40 +3302,38 @@
    call waitFdCEX_A  # Wait for events
    null A  # Timeout?
    if nz  # No
-      call stdinByte_FA  # First byte?
-      if nc  # Yes
-         cmp B (hex "FF")  # Special "top" character?
-         if ne  # No
-            cmp B 128  # Single byte?
-            if ge  # No
-               test B (hex "20")  # Two bytes?
-               if z  # Yes
-                  and B (hex "1F")  # First byte 110xxxxx
-                  shl A 6  # xxxxx000000
-                  push A
-               else  # Three bytes
-                  and B (hex "F")  # First byte 1110xxxx
-                  shl A 6  # xxxx000000
-                  push A
-                  call stdinByte_FA  # Read second byte
-                  and B (hex "3F")  # 10xxxxxx
-                  or A (S)  # Combine
-                  shl A 6  # xxxxxxxxxx000000
-                  ld (S) A
-               end
-               call stdinByte_FA  # Read last byte
+      call stdinByte_A  # Read first byte
+      cmp B (hex "FF")  # Special "top" character?
+      if ne  # No
+         cmp B 128  # Single byte?
+         if ge  # No
+            test B (hex "20")  # Two bytes?
+            if z  # Yes
+               and B (hex "1F")  # First byte 110xxxxx
+               shl A 6  # xxxxx000000
+               push A
+            else  # Three bytes
+               and B (hex "F")  # First byte 1110xxxx
+               shl A 6  # xxxx000000
+               push A
+               call stdinByte_A  # Read second byte
                and B (hex "3F")  # 10xxxxxx
-               or (S) A  # Combine
-               pop A  # Get result
+               or A (S)  # Combine
+               shl A 6  # xxxxxxxxxx000000
+               ld (S) A
             end
-         else
-            ld A TOP
+            call stdinByte_A  # Read last byte
+            and B (hex "3F")  # 10xxxxxx
+            or (S) A  # Combine
+            pop A  # Get result
          end
-         call mkCharA_A  # Return char
-         ld E A
-         pop X
-         ret
+      else
+         ld A TOP
       end
+      call mkCharA_A  # Return char
+      ld E A
+      pop X
+      ret
    end
    ld E Nil
    pop X

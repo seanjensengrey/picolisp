@@ -1,4 +1,4 @@
-/* 03oct10abu
+/* 23jan11abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -959,6 +959,12 @@ any doShift(any ex) {
 any doLt0(any x) {
    x = cdr(x);
    return isNum(x = EVAL(car(x))) && isNeg(x)? x : Nil;
+}
+
+// (le0 'any) -> num | NIL
+any doLe0(any x) {
+   x = cdr(x);
+   return isNum(x = EVAL(car(x))) && (isNeg(x) || IsZero(x))? x : Nil;
 }
 
 // (ge0 'any) -> num | NIL

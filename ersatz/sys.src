@@ -1,4 +1,4 @@
-// 28nov10abu
+// 25jan11abu
 // (c) Software Lab. Alexander Burger
 
 import java.util.*;
@@ -73,8 +73,8 @@ public class PicoLisp {
          try {
             if (first)
                loadAll(null);
-            load(null, ':', Nil);
-            bye(0);
+            for (;;)
+               load(null, ':', Nil);
          }
          catch (Control e) {}
          catch (Throwable e) {error(null, null, e.toString());}
@@ -82,14 +82,17 @@ public class PicoLisp {
    }
 
    final static void init() {
+      int i;
       String s;
       Home = "";
-      for (int i = 0; i < Argv.length; ++i)
-         if ((s = Argv[i]).charAt(0) != '-') {
-            if ((i = s.lastIndexOf('/')) >= 0 && !(i == 1 && s.charAt(0) == '.'))
-               Home = s.substring(0, i+1);
-            break;
-         }
+      if (Argv.length > 0 && Argv[Argv.length-1].equals("+")) {
+         Dbg.Car = T;
+         String[] a = new String[Argv.length-1];
+         System.arraycopy(Argv, 0, a, 0, a.length);
+         Argv = a;
+      }
+      if (Argv.length > 0 && (s = Argv[0]).charAt(0) != '-' && ((i = s.lastIndexOf('/')) >= 0 && !(i == 1 && s.charAt(0) == '.')))
+         Home = s.substring(0, i+1);
       try {
          if (Term != null) {
             final Pipe p = Pipe.open();
@@ -99,12 +102,12 @@ public class PicoLisp {
                public void run() {
                   for (;;) {
                      String s = Term.readLine();
-                     if (s == null)
-                        Line.append('\0');
-                     else {
-                        Line.append(s);
-                        Line.append('\n');
+                     if (s == null) {
+                        StdOut.newline();
+                        bye(0);
                      }
+                     Line.append(s);
+                     Line.append('\n');
                      try {p.sink().write(ByteBuffer.allocate(1));}
                      catch (IOException e) {giveup(e);}
                   }
@@ -469,8 +472,11 @@ public class PicoLisp {
             if (InFile.Chr == '\n')
                InFile.Chr = 0;
          }
-         if (y == Nil)
-            break;
+         if (y == Nil) {
+            Env.popInFiles();
+            Transient.clear();
+            return x;
+         }
          if (InFile.Name != null || InFile.Chr != 0 || pr == '\0')
             x = y.eval();
          else {
@@ -484,9 +490,6 @@ public class PicoLisp {
             OutFile.newline();
          }
       }
-      Env.popInFiles();
-      Transient.clear();
-      return x;
    }
 
    final static String opt() {
@@ -728,7 +731,17 @@ public class PicoLisp {
       if (x instanceof Number || x == Nil)
          return null;
       if (x instanceof Symbol)
-         return (s==Nil? x!=At && firstChar(x)=='@' : memq(x,s)!=null)? x.Car : null;
+         return x != x.Car && (s==Nil? x!=At && firstChar(x)=='@' : memq(x,s)!=null)? x.Car : null;
+      if (x.Car == Up) {
+         x = x.Cdr;
+         if (!((y = x.Car.eval()) instanceof Cell))
+            return (z = fill(x.Cdr, s)) == null? x.Cdr : z;
+         Any w = y;
+         while (y.Cdr instanceof Cell)
+            y = y.Cdr;
+         y.Cdr = (z = fill(x.Cdr, s)) == null? x.Cdr : z;
+         return w;
+      }
       if ((y = fill(x.Car, s)) != null) {
          z = fill(x.Cdr, s);
          return new Cell(y, z == null? x.Cdr : z);
@@ -1339,8 +1352,7 @@ public class PicoLisp {
                   waitFd(null, 0, -1);
                   ((Pipe.SourceChannel)StdIn.Chan).read(ByteBuffer.allocate(1));
                }
-               if ((Chr = Line.charAt(0)) == '\0')
-                  Chr = -1;
+               Chr = Line.charAt(0);
                Line.deleteCharAt(0);
             }
             if (Chr < 0) {
@@ -1518,7 +1530,10 @@ public class PicoLisp {
          }
          if (Chr == ',') {
             get();
-            return (y = idx(Uni, x = read0(false), 1)) instanceof Cell? y.Car : x;
+            x = read0(false);
+            if (Uni.Car != T)
+               x = (y = idx(Uni, x, 1)) instanceof Cell? y.Car : x;
+            return x;
          }
          if (Chr == '`') {
             get();
