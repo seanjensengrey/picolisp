@@ -1,4 +1,4 @@
-12nov10abu
+26jan11abu
 (c) Software Lab. Alexander Burger
 
 
@@ -99,8 +99,8 @@ gives a nice feeling to be independent of a heavy-weight C compiler.
       Differences to the 32-bit Version
       ---------------------------------
 
-Except for the following six cases, the 64-bit version should behave identically
-to the 32-bit version.
+Except for the following six cases, the 64-bit version should be upward
+compatible to the 32-bit version.
 
 1. Internal format and printed representation of external symbols
    This is probably the most significant change. External (i.e. database)
