@@ -1,4 +1,4 @@
-# 25jan11abu
+# 27jan11abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -753,8 +753,8 @@
       link  # Close varArgs frame
    end
    ld (EnvBind) Y  # Close bind frame
-   xchg (EnvCls) ((L) III)  # 'cls'
-   xchg (EnvKey) ((L) II)  # 'key'
+   xchg (EnvCls) ((Y) III)  # 'cls'
+   xchg (EnvKey) ((Y) II)  # 'key'
    ld C (Y)  # End of bindings in C
    add Y I
    do
