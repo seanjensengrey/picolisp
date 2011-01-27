@@ -253,10 +253,16 @@ A                          # (typed 'A' and a space/return)
 -> "A"
 : (char 100)               # Convert unicode to symbol
 -> "d"
-: (char T)                 # Special case, catch all
--> # (not printable)
 : (char "d")               # Convert symbol to unicode
 -> 100
+
+: (char T)                 # Special case
+-> # (not printable)
+
+: (char 0)
+-> NIL
+: (char NIL)
+-> 0
 </code></pre>
 
 <dt><a name="chdir"><code>(chdir 'any . prg) -> any</code></a>
