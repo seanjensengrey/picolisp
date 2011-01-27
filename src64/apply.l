@@ -168,10 +168,10 @@
          ld Z 0  # No classes
          call methodEY_FCYZ  # Found?
          jne msgErrYX  # No
-         ld (S I) (EnvCls)  # 'cls'
-         ld (S) (EnvKey)  # 'key'
-         ld (EnvCls) Z  # Set new
-         ld (EnvKey) Y  # 'key'
+         xchg Z (S I)  # 'cls'
+         xchg (S I) (EnvCls)
+         xchg Y (S)  # 'key'
+         xchg (S) (EnvKey)  # 'key'
          ld X (C)  # Parameter list in X
          push (EnvBind)  # Build bind frame
          link
