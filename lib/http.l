@@ -1,9 +1,9 @@
-# 27jan11abu
+# 24jan11abu
 # (c) Software Lab. Alexander Burger
 
 # *Home *Gate *Host *Port *Port1 *Port% *Http1 *Chunked
 # *Sock *Agent *ContLen *MPartLim *MPartEnd "*HtSet"
-# *Post *Url *Timeout *SesId *SesAdr *ConId *ConAdr
+# *Post *Url *Timeout *SesId *ConId
 # *Referer *Cookies "*Cookies"
 
 (default
@@ -127,7 +127,6 @@
       (setq
          *Port% (not *Gate)
          *SesId (pack (in "/dev/urandom" (rd 7)) "~")
-         *SesAdr *Adr
          *Sock (port *HPorts '*Port) )
       (timeout *Timeout) ) )
 
@@ -184,7 +183,7 @@
                   (task (close S))
                   (off S)
                   (throw "http") ) )
-            (if (or (<> *ConId *SesId) (<> *ConAdr *SesAdr))
+            (if (<> *ConId *SesId)
                (if *ConId
                   (out S (http404))
                   (task (close S))
@@ -240,11 +239,8 @@
    (use (L @X @Y Pil)
       (setq *Http1 (format (car @H))  *Chunked (gt0 *Http1)  Pil)
       (if (index "~" @U)
-         (setq
-            *ConId (pack (head @ @U))
-            @U (cdr (nth @U @))
-            *ConAdr *Adr )
-         (off *ConId *ConAdr) )
+         (setq *ConId (pack (head @ @U))  @U (cdr (nth @U @)))
+         (off *ConId) )
       (while (setq L (line))
          (cond
             ((match '(~(chop "Host: ") . @X) L)
