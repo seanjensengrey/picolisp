@@ -1,4 +1,4 @@
-# 19jan11abu
+# 02feb11abu
 # (c) Software Lab. Alexander Burger
 
 ############ lib.l ############
@@ -471,7 +471,7 @@
       (format N 2 *Sep0 *Sep3) ) )
 
 (de round (N D)
-   (if (>= *Scl (default D 3))
+   (if (> *Scl (default D 3))
       (format (*/ N (** 10 (- *Scl D))) D *Sep0 *Sep3)
       (format N *Scl *Sep0 *Sep3) ) )
 
