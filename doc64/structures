@@ -178,7 +178,7 @@
          +---> LINK ----+
          |     ...
          |     valN <-+       (gc)
-         |     zero   |    
+         |     zero   |
          |     NIL    |       (gc)
          |     carN --+ <-+
          |     ...        |
