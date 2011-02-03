@@ -1,4 +1,4 @@
-# 12oct10abu
+# 03feb11abu
 # (c) Software Lab. Alexander Burger
 
 
@@ -172,7 +172,7 @@
          +---- LINK <-- L
 
 
-      Apply frame:
+      Apply frame (SUBR):
                         ^
                Apply    |
          +---> LINK ----+
@@ -188,6 +188,23 @@
          |     zero   |   |
          |     NIL    |   |   (gc)
          |     carN --+ <-+
+         +---- LINK  <-- L <-- Apply
+
+
+      Apply frame (FEXPR):
+                        ^
+               Apply    |
+         +---> LINK ----+
+         |     ...
+         |     valN <-+       (gc)
+         |     zero   |    
+         |     NIL    |       (gc)
+         |     carN --+ <-+
+         |     ...        |
+         |     val1 <-+   |   (gc)
+         |     zero   |   |
+         |     cdr1 --|---+   (gc)
+         |     car1 --+    <-- args
          +---- LINK  <-- L <-- Apply
 
 

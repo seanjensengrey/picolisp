@@ -1,4 +1,4 @@
-// 25jan11abu
+// 03feb11abu
 // (c) Software Lab. Alexander Burger
 
 import java.util.*;
@@ -2268,6 +2268,8 @@ public class PicoLisp {
                      bnd.add(x.Car);  // Save value
                      bnd.add(x);  // and symbol
                      x.Car = Nil;  // Set to NIL
+                     while (--n >= i)
+                        x.Car = new Cell(mkSymbol(cf? v[n].Car : v[n]), x.Car);
                   }
                   bnd.add(This.Car);
                   bnd.add(This);
@@ -2582,6 +2584,8 @@ public class PicoLisp {
                bnd.add(x.Car);  // Save old value
                bnd.add(x);  // and symbol
                x.Car = Nil;  // Set to NIL
+               while (--n >= i)
+                  x.Car = new Cell(mkSymbol(cf? v[n].Car : v[n]), x.Car);
             }
             Env.Bind = bnd;
             x = Cdr.prog();
