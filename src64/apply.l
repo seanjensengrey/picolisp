@@ -109,6 +109,8 @@
                   push E  # Dummy cell's CDR
                   lea A (S II)  # Value address
                   push A  # CAR
+                  cmp S (StkLimit)  # Stack check
+                  jlt stkErrX
                   ld E S  # Set 'args' list
                   add Z I
                   cmp Z Y  # More args?
@@ -271,6 +273,8 @@
                   push E  # Dummy cell's CDR
                   lea A (S II)  # Value address
                   push A  # CAR
+                  cmp S (StkLimit)  # Stack check
+                  jlt stkErrX
                   ld E S  # Set 'args' list
                   add Z I
                   cmp Z Y  # More args?
@@ -458,6 +462,8 @@
                   push E  # Dummy cell's CDR
                   lea A (S II)  # Value address
                   push A  # CAR
+                  cmp S (StkLimit)  # Stack check
+                  jlt stkErrX
                   ld E S  # Set 'args' list
                   add Z I
                   cmp Z Y  # More args?
@@ -620,6 +626,8 @@
                   push E  # Dummy cell's CDR
                   lea A (S II)  # Value address
                   push A  # CAR
+                  cmp S (StkLimit)  # Stack check
+                  jlt stkErrX
                   ld E S  # Set 'args' list
                   add Z I
                   cmp Z Y  # More args?
