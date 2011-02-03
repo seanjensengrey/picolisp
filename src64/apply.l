@@ -12,22 +12,23 @@
          if nz
             push ZERO
          end
-         push Nil  # Init CDR
-         push C  # 'fun'
-         ld E S  # 'exe in E
+         ld E Nil  # Init 'args' list
          do
-            cmp Y Z  # Any args?
+            cmp Z Y  # Any args?
          while ne  # Yes
-            sub Y I
-            push (Y)  # Next arg
+            push (Z)  # Next arg
+            ld A S  # Value address
             push ZERO  # Dummy symbol's tail
-            push Nil  # Init CDR
-            lea A (S II)  # Value address
+            push E  # Dummy cell's CDR
             push A  # CAR
-            ld (S V) S  # Store CDR of previous cell
             cmp S (StkLimit)  # Stack check
             jlt stkErrX
+            ld E S  # Set 'args' list
+            add Z I
          loop
+         push E  # 'args' list
+         push C  # 'fun'
+         ld E S  # Set 'exe'
          link
          ld (EnvApply) L  # Close apply frame
          call (C)  # Eval SUBR
@@ -365,22 +366,23 @@
          if nz
             push ZERO
          end
-         push Nil  # Init CDR
-         push C  # 'fun'
-         ld E S  # 'exe in E
+         ld E Nil  # Init 'args' list
          do
-            cmp Y Z  # Any args?
+            cmp Z Y  # Any args?
          while ne  # Yes
-            sub Y I
-            push ((Y))  # CAR of next arg
+            push ((Z))  # Next arg
+            ld A S  # Value address
             push ZERO  # Dummy symbol's tail
-            push Nil  # Init CDR
-            lea A (S II)  # Value address
+            push E  # Dummy cell's CDR
             push A  # CAR
-            ld (S V) S  # Store CDR of previous cell
             cmp S (StkLimit)  # Stack check
             jlt stkErrX
+            ld E S  # Set 'args' list
+            add Z I
          loop
+         push E  # 'args' list
+         push C  # 'fun'
+         ld E S  # Set 'exe'
          link
          ld (EnvApply) L  # Close apply frame
          call (C)  # Eval SUBR
