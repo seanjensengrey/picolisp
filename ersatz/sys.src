@@ -368,6 +368,9 @@ public class PicoLisp {
                }
          }
       }
+      InFile.Chr = 0;
+      Break = false;
+      Line.delete(0, Line.length());
       Env.pushOutFile(new OutFrame(OutFiles[2], 0));
       if (InFile.Name != null)
          StdErr.Wr.print('[' + InFile.Name + ':' + InFile.Src  + "] ");
