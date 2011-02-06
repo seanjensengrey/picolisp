@@ -1,4 +1,4 @@
-// 03feb11abu
+// 06feb11abu
 // (c) Software Lab. Alexander Burger
 
 import java.util.*;
@@ -1342,6 +1342,7 @@ public class PicoLisp {
       }
 
       final void eofErr() {err(null, null, "EOF Overrun");}
+      final void badInput() {err(null, null, "Bad input '" + (char)Chr + "'");}
 
       final int get() {
          try {
@@ -1422,6 +1423,8 @@ public class PicoLisp {
                return false;
             if (Chr == '^') {
                get();
+               if (Chr == '@')
+                  badInput();
                if (Chr == '?')
                   Chr = 127;
                else
@@ -1558,7 +1561,7 @@ public class PicoLisp {
             return mkSymbol(null, sb.toString(), Transient);
          }
          if (Chr == ')' || Chr == ']' || Chr == '~')
-            err(null, null, "Bad input '" + (char)Chr + "' (" + Chr + ')');
+            badInput();
          if (Chr == '\\')
             get();
          int i = Chr;

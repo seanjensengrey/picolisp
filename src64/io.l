@@ -1,4 +1,4 @@
-# 19jan11abu
+# 05feb11abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -1995,6 +1995,8 @@
       cmp B (char "\^")  # Caret?
       if eq  # Yes
          call (Get_A)  # Skip '^'
+         cmp B (char "@")  # At-mark?
+         jeq badInputErrB  # Yes
          cmp B (char "?")  # Question-mark?
          if eq  # Yes
             ld B 127  # DEL

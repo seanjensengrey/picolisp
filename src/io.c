@@ -1,4 +1,4 @@
-/* 19jan11abu
+/* 05feb11abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -27,6 +27,7 @@ static byte TBuf[] = {INTERN+4, 'T'};
 static void openErr(any ex, char *s) {err(ex, NULL, "%s open: %s", s, strerror(errno));}
 static void closeErr(void) {err(NULL, NULL, "Close error: %s", strerror(errno));}
 static void eofErr(void) {err(NULL, NULL, "EOF Overrun");}
+static void badInput(void) {err(NULL, NULL, "Bad input '%c'", Chr);}
 static void badFd(any ex, any x) {err(ex, x, "Bad FD");}
 static void lockErr(void) {err(NULL, NULL, "File lock: %s", strerror(errno));}
 static void writeErr(char *s) {err(NULL, NULL, "%s write: %s", s, strerror(errno));}
@@ -987,6 +988,8 @@ static bool testEsc(void) {
          return NO;
       if (Chr == '^') {
          Env.get();
+         if (Chr == '@')
+            badInput();
          if (Chr == '?')
             Chr = 127;
          else
@@ -1201,7 +1204,7 @@ static any read0(bool top) {
       return x;
    }
    if (Chr == ')' || Chr == ']' || Chr == '~')
-      err(NULL, NULL, "Bad input '%c' (%d)", isprint(Chr)? Chr:'?', Chr);
+      badInput();
    if (Chr == '\\')
       Env.get();
    i = Chr;
