@@ -2638,6 +2638,8 @@
          lea A ((Stack0) 4096)  # Set stack limit
          sub A (StkSize)
          ld (StkLimit) A
+         cmp S A  # Check it
+         jlt stkErr
       end
       do
          sub Y (StkSize)  # Next segment
