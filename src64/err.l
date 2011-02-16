@@ -1,4 +1,4 @@
-# 12oct10abu
+# 16feb11abu
 # (c) Software Lab. Alexander Burger
 
 # Debug print routine
@@ -159,9 +159,7 @@
    ld (EnvTrace) 0
    ld L 0  # Init link register
    ld S (Stack0)  # stack pointer
-   lea A (S 4096)  # and stack limit
-   sub A (StkSize)
-   ld (StkLimit) A
+   ld (StkLimit) 0  # Clear stack limit
    ld (Stacks) 0  # Free all stack segments
    jmp restart  # Restart interpreter
 : ErrTok asciz "!? "
@@ -261,8 +259,10 @@
          while ne  # No
             add A A
          loop
-         not A  # Clear in segment bitmask
-         and (Stacks) A
+         xor (Stacks) A  # Clear in segment bitmask
+         if z  # Last coroutine?
+            ld (StkLimit) 0  # Yes: Clear stack limit
+         end
          ld Z (Z)  # Next coroutine
       loop
       load (Env) (EnvEnd) (X III)  # Restore environment
@@ -390,7 +390,7 @@
    ld E 0
 (code 'stkErrEX)
    ld Y StkErr
-   ld (StkLimit) 0  # Temporarily without stack limit
+   ld (StkLimit) 0  # Reset stack limit
    jmp errEXYZ
 : StkErr asciz "Stack overflow"
 

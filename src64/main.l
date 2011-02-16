@@ -1,4 +1,4 @@
-# 25jan11abu
+# 16feb11abu
 # (c) Software Lab. Alexander Burger
 
 ### Global return labels ###
@@ -82,7 +82,7 @@
    or A CNT
    ld (Pid) A
    ld (Stack0) S  # Save top level stack pointer
-   lea (StkLimit) (S (- 4096 STACK))  # Set stack limit
+   ld (StkLimit) 0  # Initially without stack limit
    ld L 0  # Init link register
    call heapAlloc  # Allocate initial heap
    ld E Nil  # Init internal symbols
@@ -573,9 +573,6 @@
          call evCntEX_FE
          shl E 20  # [MB]
          ld (StkSize) E  # Set new stack size
-         lea A ((Stack0) 4096)  # and stack limit
-         sub A E
-         ld (StkLimit) A
          shr E 16  # Make short number [MB]
          or E CNT
          pop X

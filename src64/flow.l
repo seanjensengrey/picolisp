@@ -1,4 +1,4 @@
-# 27jan11abu
+# 16feb11abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -2633,6 +2633,12 @@
       ld Y (Stack0)  # Find unused stack segment
       ld Z 1  # New mask
       ld C (Stacks)  # Segment bitmask
+      null C  # Starting first coroutine?
+      if z  # Yes
+         lea A ((Stack0) 4096)  # Set stack limit
+         sub A (StkSize)
+         ld (StkLimit) A
+      end
       do
          sub Y (StkSize)  # Next segment
          test C Z  # Free?
@@ -2662,6 +2668,10 @@
       load (EnvCo) (EnvMid) (S III)  # Restore environment
       pop (EnvCo7)  # Restore coroutine link
       pop (StkLimit)  # 'lim'
+      null (Stacks)  # Stopped last coroutine?
+      if z  # Yes
+         ld (StkLimit) 0  # Yes: Clear stack limit
+      end
       add S (pack I "+(EnvMid-EnvCo)")  # Clean up
       pop L
       pop Z
@@ -2682,6 +2692,9 @@
             ldz E Nil
             if nz  # No
                xor (Stacks) A  # Clear in segment bitmask
+               if z  # Stopped last coroutine?
+                  ld (StkLimit) 0  # Yes: Clear stack limit
+               end
                ld E TSym  # Return T
             end
             pop X
