@@ -1,4 +1,4 @@
-# 16feb11abu
+# 17feb11abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -2637,9 +2637,9 @@
       if z  # Yes
          lea A ((Stack0) 4096)  # Set stack limit
          sub A (StkSize)
-         ld (StkLimit) A
          cmp S A  # Check it
          jlt stkErr
+         ld (StkLimit) A
       end
       do
          sub Y (StkSize)  # Next segment
@@ -2665,13 +2665,12 @@
       sub S "EnvMid-EnvCo"  # Space for 'env'
       ld X (X CDR)  # Run 'prg'
       prog X
-      xor (Stacks) Z  # Not yielded: Mark segment as unused
-      ld S (EnvCo7)  # Restore stack pointer
+      ld S (EnvCo7)  # Not yielded: Restore stack pointer
       load (EnvCo) (EnvMid) (S III)  # Restore environment
       pop (EnvCo7)  # Restore coroutine link
       pop (StkLimit)  # 'lim'
-      null (Stacks)  # Stopped last coroutine?
-      if z  # Yes
+      xor (Stacks) Z  # Mark segment as unused
+      if z  # Last coroutine?
          ld (StkLimit) 0  # Yes: Clear stack limit
       end
       add S (pack I "+(EnvMid-EnvCo)")  # Clean up
