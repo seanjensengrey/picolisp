@@ -1,4 +1,4 @@
-# 24jan11abu
+# 18feb11abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -1862,6 +1862,25 @@
       (and
          (eval (: erObj))
          (mis> @ (: erVar) (val> This)) ) ) )
+
+
+(class +SubE/R +E/R)
+# sub
+
+(dm T (Lst . @)
+   (pass super
+      (cons
+         (pop 'Lst)
+         (append '(: home obj) (cons (car Lst))) ) )
+   (=: sub Lst)
+   (=: able (bool (: able))) )
+
+(dm set> (Val Dn)
+   (and
+      Val
+      (not (eval (: erObj)))
+      (put!> (: home obj) (: sub 1) (new! (: sub -1))) )
+   (super Val Dn) )
 
 
 (class +BlobField +/R +TextField)
