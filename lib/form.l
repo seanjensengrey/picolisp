@@ -1876,10 +1876,12 @@
    (=: able (bool (: able))) )
 
 (dm set> (Val Dn)
-   (and
-      Val
-      (not (eval (: erObj)))
-      (put!> (: home obj) (: sub 1) (new! (: sub -1))) )
+   (when (and Val (not (eval (: erObj))))
+      (dbSync)
+      (put> (: home obj)
+         (: sub 1)
+         (new (or (meta (: sub -1) 'Dbf 1) 1) (: sub -1)) )
+      (commit 'upd) )
    (super Val Dn) )
 
 
