@@ -23,7 +23,7 @@ ifeq ($(shell uname), SunOS)
    CC = gcc -m64
    AS = gas --64
 	LINK-FLAGS = -lc -lm -ldl -lsocket -lnsl
-	DYNAMIC-LIB-FLAGS = -shared -export-dynamic
+	DYNAMIC-LIB-FLAGS = -shared
 	STRIP = strip
 else
 ifeq ($(shell uname), Darwin)
