@@ -656,7 +656,7 @@
                Arg
                M )
             # Don't use SSE registers in varargs for static calls
-            (when (member Adr '("printf" "fprintf" "sprintf" "fcntl"))
+            (when (member Adr '("printf" "fprintf" "sprintf" "open" "fcntl"))
                (prinst "xor" "%al" "%al") ) )
          (prinst "lea" "5f(%rip)" "%r11")
          (mapc
