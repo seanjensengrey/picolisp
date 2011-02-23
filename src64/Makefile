@@ -1,4 +1,4 @@
-# 22feb11abu
+# 23feb11abu
 # (c) Software Lab. Alexander Burger
 
 .SILENT:
@@ -23,17 +23,6 @@ ifeq ($(shell uname), SunOS)
 	LD-MAIN = gcc -m64 -lc -lm -ldl -lsocket -lnsl
 	LD-SHARED = gcc -m64 -shared
 	STRIP = strip
-else
-ifeq ($(shell uname), Darwin)
-	OS = Darwin
-	SYS = darwin
-	ARCH = x86-64
-	AS = as
-	LD-MAIN = gcc -lc -lm -ldl
-	LD-SHARED = gcc -dynamiclib -undefined dynamic_lookup -export-dynamic
-	export MACOSX_DEPLOYMENT_TARGET=10.4
-	STRIP = :
-endif
 endif
 endif
 
