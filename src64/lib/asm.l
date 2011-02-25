@@ -1,4 +1,4 @@
-# 05aug10abu
+# 25feb11abu
 # (c) Software Lab. Alexander Burger
 
 # *LittleEndian *Registers optimize
@@ -70,9 +70,8 @@
             (setq *Section '@Sym) )
          (prinl)
          (when Align
-            (prinl "   .balign  16")
-            (do Align
-               ((get 'nop 'asm)) ) )
+            ((get 'align 'asm) 16)
+            ((get 'skip 'asm) Align) )
          (when (reg Lbl)
             (quit "Register" Lbl) )
          (when Lbl
@@ -106,7 +105,13 @@
                (prinl (cdr *Statement) ':)
                (apply (get (car *Statement) 'asm) (cdr *Statement)) ) ) ) ) )
 
+# (data 'lbl)
+# (data 'lbl 0)
 (section 'data 'data)
+
+# (code 'lbl)
+# (code 'lbl 0)
+# (code 'lbl 2)
 (section 'code 'text)
 
 (de cleanUp ()
@@ -489,9 +494,6 @@
 (asm :: (Lbl)
    (label Lbl) )
 
-(asm align (N)
-   (prinst ".balign" N) )
-
 (asm word (N)
    (prinst ".quad" N) )
 
@@ -509,9 +511,6 @@
 
 (asm asciz (Str)
    (prinst ".asciz " (pack "\"" Str "\"")) )
-
-(asm skip (N)
-   (prinst ".space" N) )
 
 (asm initSym (Lbl Name Val)
    (idx '*Tags (def Name Val) T)

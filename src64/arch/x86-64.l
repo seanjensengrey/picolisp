@@ -1,4 +1,4 @@
-# 21feb11abu
+# 25feb11abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -198,6 +198,14 @@
 ### Instruction set ###
 (asm nop ()
    (prinst "nop") )
+
+(asm align (N)
+   (prinst ".balign" N) )
+
+(asm skip (N)
+   (if (== 'data *Section)
+      (or (=0 N) (prinst ".space" N))
+      (do N (prinst "nop")) ) )
 
 # Move data
 (asm ld (Dst D Src S)
