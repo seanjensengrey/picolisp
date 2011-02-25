@@ -16,6 +16,9 @@
 # Block operations: %rcx %rsi %rdi
 # C arguments: %rdi %rsi %rdx %rcx %r8 %r9
 
+# Machine specific
+(de boxfun (Adr) Adr)
+
 # Addressing modes
 (de byteReg (Reg)
    (cdr
@@ -194,7 +197,6 @@
       (prinst "mov" (byteVal Src) "%cl")
       (prinst (pack Cmd (unless (pre? "%" Dst) "q")) "%cl" Dst) ) )
 
-
 ### Instruction set ###
 (asm nop ()
    (prinst "nop") )
@@ -319,7 +321,6 @@
    (prinst "cld")
    (prinst "rep movsq") )
 
-
 # Arithmetics
 (asm add (Dst D Src S)
    (setq Dst (dst Dst D)  Src (src Src S))
@@ -429,7 +430,6 @@
 (asm clrc ()
    (prinst "clc") )
 
-
 # Comparisons
 (asm cmp (Dst D Src S)
    (dstSrc "cmp" (dst Dst D) (src Src S)) )
@@ -476,7 +476,6 @@
 (asm nul4 ()
    (prinst "cmp" "%r12d" "%eax") )
 
-
 # Byte addressing
 (asm set (Dst D Src S)
    (setq Dst (dst Dst D)  Src (src Src S))
@@ -491,7 +490,6 @@
 
 (asm nul (Src S)
    (prinst "cmp" "%r12b" (src Src S)) )
-
 
 # Types
 (asm cnt (Src S)
@@ -508,7 +506,6 @@
 
 (asm atom (Src S)
    (prinst "testb" "$0x0E" (lowByte (src Src S))) )
-
 
 # Flow Control
 (asm call (Adr A)
@@ -783,7 +780,6 @@
    (prinst "pop" "%r12")
    (prinst "pop" "%rbx") )
 
-
 # Stack Manipulations
 (asm push (Src S)
    (setq Src (src Src S))
@@ -881,7 +877,6 @@
       "$0x0E"
       (byteReg Reg) )
    (prinst "jz" "1b") )                # until nz
-
 
 # System
 (asm initData ())

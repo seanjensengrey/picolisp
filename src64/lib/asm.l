@@ -54,7 +54,7 @@
                (prinl Sym " (" (cdr @) " . \"@src64/" (car @) "\")") ) ) ) ) )
 
 (de asm Args
-   (put (car Args) 'asm (cdr Args)) )
+   (def (car Args) 'asm (cdr Args)) )
 
 (de fpic ()
    (on *FPic) )
@@ -63,7 +63,7 @@
 (de section (Fun @Sym)
    (def Fun
       (curry (@Sym) (Lbl Align)
-         (put Lbl 'src (cdr (file)))
+         (def Lbl 'src (cdr (file)))
          (unless (== *Section '@Sym)
             (prinl)
             (prinl "   ." '@Sym)
@@ -223,8 +223,9 @@
    (| 2 (>> -4 N)) )
 
 (de equ Args
-   (def (car Args)
-      (put (car Args) 'equ (run (cdr Args) 1)) ) )
+   (let Val (run (cdr Args) 1)
+      (def (car Args) 'equ Val)
+      (def (car Args) Val) ) )
 
 
 # Source/Destination addressing mode:
@@ -412,6 +413,7 @@
       (inc (destination) "*Mode")
       (initCode)
       (initData)
+      (initFun (read) (read) (operand (read)))
       (initSym (read) (read) (operand (read)))
       (jc (address) "*Mode")
       (jcz (address) "*Mode")
@@ -512,8 +514,14 @@
 (asm asciz (Str)
    (prinst ".asciz " (pack "\"" Str "\"")) )
 
+(asm initFun (Lbl Name Val)
+   (initSym Lbl Name Val (boxfun Val)) )
+
 (asm initSym (Lbl Name Val)
-   (idx '*Tags (def Name Val) T)
+   (initSym Lbl Name Val Val) )
+
+(de initSym (Lbl Name Sym Val)
+   (idx '*Tags (def Name Sym) T)
    (setq Name
       (let (N 2  Lst (chop Name)  C)
          (make
