@@ -489,7 +489,7 @@
                (at A (push 'L " "))
                (push 'L (& 1 X)) )
             (pack S L) ) )
-      ((setq X (chop X))
+      ((setq X (filter '((C) (not (sp? C))) (chop X)))
          (let (S (and (= '- (car X)) (pop 'X))  N 0)
             (for C X
                (setq N (| (format C) (>> -1 N))) )
@@ -504,7 +504,7 @@
                (at A (push 'L " "))
                (push 'L (& 7 X)) )
             (pack S L) ) )
-      ((setq X (chop X))
+      ((setq X (filter '((C) (not (sp? C))) (chop X)))
          (let (S (and (= '- (car X)) (pop 'X))  N 0)
             (for C X
                (setq N (| (format C) (>> -3 N))) )
@@ -519,7 +519,7 @@
                (at A (push 'L " "))
                (push 'L (hex1 X)) )
             (pack S L) ) )
-      ((setq X (chop X))
+      ((setq X (filter '((C) (not (sp? C))) (chop X)))
          (let (S (and (= '- (car X)) (pop 'X))  N 0)
             (for C X
                (setq C (- (char C) `(char "0")))
