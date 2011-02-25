@@ -481,11 +481,12 @@
       (format N *Scl *Sep0 *Sep3) ) )
 
 # Binary notation
-(de bin (X)
+(de bin (X I)
    (cond
       ((num? X)
-         (let (S (and (lt0 X) '-)  L (& 1 X))
+         (let (S (and (lt0 X) '-)  L (& 1 X)  A (cons 0 I))
             (until (=0 (setq X (>> 1 X)))
+               (at A (push 'L " "))
                (push 'L (& 1 X)) )
             (pack S L) ) )
       ((setq X (chop X))
@@ -495,11 +496,12 @@
             (if S (- N) N) ) ) ) )
 
 # Octal notation
-(de oct (X)
+(de oct (X I)
    (cond
       ((num? X)
-         (let (S (and (lt0 X) '-)  L (& 7 X))
+         (let (S (and (lt0 X) '-)  L (& 7 X)  A (cons 0 I))
             (until (=0 (setq X (>> 3 X)))
+               (at A (push 'L " "))
                (push 'L (& 7 X)) )
             (pack S L) ) )
       ((setq X (chop X))
@@ -509,11 +511,12 @@
             (if S (- N) N) ) ) ) )
 
 # Hexadecimal notation
-(de hex (X)
+(de hex (X I)
    (cond
       ((num? X)
-         (let (S (and (lt0 X) '-)  L (hex1 X))
+         (let (S (and (lt0 X) '-)  L (hex1 X)  A (cons 0 I))
             (until (=0 (setq X (>> 4 X)))
+               (at A (push 'L " "))
                (push 'L (hex1 X)) )
             (pack S L) ) )
       ((setq X (chop X))
