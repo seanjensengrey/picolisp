@@ -1,4 +1,4 @@
-# 18jan11abu
+# 25feb11abu
 # (c) Software Lab. Alexander Burger
 
 (de task (Key . Prg)
@@ -300,6 +300,7 @@
    prog1 later recur redef =: in out ctl tab new )
 (de *PP1 let let? for redef)
 (de *PP2 setq default)
+(de *PP3 if2)
 
 (de pretty (X N . @)
    (setq N (abs (space (or N 0))))
@@ -312,27 +313,31 @@
          (pop 'X) )
       (let Z X
          (prin "(")
-         (when (memq (print (pop 'X)) *PP)
-            (cond
-               ((memq (car Z) *PP1)
-                  (if (and (pair (car X)) (pair (cdar X)))
-                     (when (>= 12 (size (car X)))
+         (cond
+            ((memq (print (pop 'X)) *PP)
+               (cond
+                  ((memq (car Z) *PP1)
+                     (if (and (pair (car X)) (pair (cdar X)))
+                        (when (>= 12 (size (car X)))
+                           (space)
+                           (print (pop 'X)) )
                         (space)
-                        (print (pop 'X)) )
+                        (print (pop 'X))
+                        (when (or (atom (car X)) (>= 12 (size (car X))))
+                           (space)
+                           (print (pop 'X)) ) ) )
+                  ((memq (car Z) *PP2)
+                     (inc 'N 3)
+                     (loop
+                        (prinl)
+                        (pretty (cadr X) N (car X))
+                        (NIL (setq X (cddr X)) (space)) ) )
+                  ((or (atom (car X)) (>= 12 (size (car X))))
                      (space)
-                     (print (pop 'X))
-                     (when (or (atom (car X)) (>= 12 (size (car X))))
-                        (space)
-                        (print (pop 'X)) ) ) )
-               ((memq (car Z) *PP2)
-                  (inc 'N 3)
-                  (loop
-                     (prinl)
-                     (pretty (cadr X) N (car X))
-                     (NIL (setq X (cddr X)) (space)) ) )
-               ((or (atom (car X)) (>= 12 (size (car X))))
-                  (space)
-                  (print (pop 'X)) ) ) )
+                     (print (pop 'X)) ) ) )
+            ((and (memq (car Z) *PP3) (>= 12 (size (head 2 X))))
+               (space)
+               (print (pop 'X) (pop 'X)) ) )
          (when X
             (loop
                (T (== Z X) (prin " ."))
