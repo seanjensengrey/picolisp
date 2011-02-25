@@ -185,16 +185,15 @@ Content-Type: text/html; charset=utf-8
 &lt;/html&gt;
 </code></pre>
 
-<dt><a name="hex"><code>(hex 'num) -> sym</code></a>
+<dt><a name="hex"><code>(hex 'num ['num]) -> sym</code></a>
 <dt><code>(hex 'sym) -> num</code>
 <dd>Converts a number <code>num</code> to a hexadecimal string, or a hexadecimal
-string <code>sym</code> to a number. See also <code><a
-href="refB.html#bin">bin</a></code>, <code><a
+string <code>sym</code> to a number. In the first case, if the second argument
+is given, the result is separated by spaces into groups of such many digits. See
+also <code><a href="refB.html#bin">bin</a></code>, <code><a
 href="refO.html#oct">oct</a></code>, <code><a
 href="refF.html#fmt64">fmt64</a></code>, <code><a
-href="refH.html#hax">hax</a></code>
-
- and <code><a
+href="refH.html#hax">hax</a></code> and <code><a
 href="refF.html#format">format</a></code>.
 
 <pre><code>
@@ -202,6 +201,8 @@ href="refF.html#format">format</a></code>.
 -> "111"
 : (hex "111")
 -> 273
+: (hex 1234567 4)
+-> "12 D687"
 </code></pre>
 
 <dt><a name="host"><code>(host 'any) -> sym</code></a>

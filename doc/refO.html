@@ -62,11 +62,12 @@ Obj (+A +B +C)
 -> Obj
 </code></pre>
 
-<dt><a name="oct"><code>(oct 'num) -> sym</code></a>
+<dt><a name="oct"><code>(oct 'num ['num]) -> sym</code></a>
 <dt><code>(oct 'sym) -> num</code>
 <dd>Converts a number <code>num</code> to an octal string, or an octal string
-<code>sym</code> to a number. See also <code><a
-href="refB.html#bin">bin</a></code>, <code><a
+<code>sym</code> to a number. In the first case, if the second argument is
+given, the result is separated by spaces into groups of such many digits. See
+also <code><a href="refB.html#bin">bin</a></code>, <code><a
 href="refH.html#hex">hex</a></code>, <code><a
 href="refF.html#fmt64">fmt64</a></code>, <code><a
 href="refH.html#hax">hax</a></code> and <code><a
@@ -77,6 +78,8 @@ href="refF.html#format">format</a></code>.
 -> "111"
 : (oct "111")
 -> 73
+: (oct 1234567 3)
+-> "4 553 207"
 </code></pre>
 
 <dt><a name="off"><code>(off var ..) -> NIL</code></a>
