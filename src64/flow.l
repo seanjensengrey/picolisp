@@ -1,4 +1,4 @@
-# 17feb11abu
+# 25feb11abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -2102,7 +2102,7 @@
    pop X
    ret
 
-# (at '(cnt1 . cnt2) . prg) -> any
+# (at '(cnt1 . cnt2|NIL) . prg) -> any
 (code 'doAt 2)
    push X
    push Y
@@ -2112,6 +2112,8 @@
    eval
    atom E  # Need cell
    jnz cellErrEX
+   cmp (E CDR) Nil  # CDR?
+   jeq 10  # No
    ld A (E)  # Get 'cnt1'
    cnt A  # Need short
    jz cntErrAX
@@ -2122,7 +2124,7 @@
    cmp A C  # Reached count?
    if lt  # No
       ld (E) A
-      ld E Nil
+10    ld E Nil
    else
       ld (E) ZERO
       ld Y (Y CDR)  # Run body

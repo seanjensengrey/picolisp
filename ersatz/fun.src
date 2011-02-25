@@ -1,4 +1,4 @@
-# 27jan11abu
+# 25feb11abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -1376,9 +1376,11 @@ do (n w x y)
 loop T
    return loop(ex.Cdr);
 
-# (at '(cnt1 . cnt2) . prg) -> any
+# (at '(cnt1 . cnt2|NIL) . prg) -> any
 at (num x)
    x = (ex = ex.Cdr).Car.eval();
+   if (x.Cdr == Nil)
+      return Nil;
    if ((num = ((Number)x.Car).add(One)).compare((Number)x.Cdr) < 0) {
       x.Car = num;
       return Nil;
