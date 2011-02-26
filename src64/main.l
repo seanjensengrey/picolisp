@@ -1,4 +1,4 @@
-# 21feb11abu
+# 26feb11abu
 # (c) Software Lab. Alexander Burger
 
 ### Global return labels ###
@@ -784,7 +784,7 @@
 ### Comparisons ###
 (code 'equalAE_F 0)
    cmp A E  # Pointer-equal?
-   jz ret  # Yes: 'eq'
+   jeq ret  # Yes: 'eq'
    cnt A  # A short?
    jnz ret  # Yes: 'ne'
    big A  # A big?
@@ -911,7 +911,7 @@
 
 (code 'compareAE_F 0)  # C
    cmp A E  # Pointer-equal?
-   jz ret  # Yes
+   jeq ret  # Yes
    cmp A Nil
    if eq  # [NIL E]
 10    or B B  # nz
@@ -929,7 +929,7 @@
       num E  # Both?
       jnz cmpNumAE_F  # [<num> <num>]
       cmp E Nil
-      jz 30  # [<num> NIL]
+      jeq 30  # [<num> NIL]
       setc  # lt
       ret
    end
@@ -938,11 +938,11 @@
       num E
       jnz 40  # [<sym> <num>]
       cmp E Nil
-      jz 30  # [<sym> NIL]
+      jeq 30  # [<sym> NIL]
       atom E
       jz 10  # [<sym> <cell>]
       cmp E TSym
-      jz 10  # [<sym> T]
+      jeq 10  # [<sym> T]
       push X  # [<sym> <sym>]
       ld X (A TAIL)
       call nameX_X  # Get A's name in X
@@ -989,7 +989,7 @@
          end
          do
             cmp B C  # Bytes equal?
-            jnz 70  # No: lt or gt
+            jne 70  # No: lt or gt
             shr A 8  # Next byte in A?
             if z  # No
                shr C 8  # Next byte in C?
@@ -1327,7 +1327,7 @@
       inc Y  # Increment buffer pointer
    loop
    cmp Y Z  # At start of buffer?
-   jz 90  # Yes
+   jeq 90  # Yes
    nul (Y 1)  # At end of buffer?
    jz 90  # Yes
    set (Y) 0  # Replace colon with null byte

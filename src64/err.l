@@ -1,4 +1,4 @@
-# 16feb11abu
+# 26feb11abu
 # (c) Software Lab. Alexander Burger
 
 # Debug print routine
@@ -319,9 +319,9 @@
    sym A
    jz symErrAX
    cmp A Nil  # A < NIL ?
-   jc ret  # Yes
+   jlt ret  # Yes
    cmp A TSym  # A > T ?
-   jncz Ret  # Yes
+   jgt Ret  # Yes
    ld E A
    jmp protErrEX
 
@@ -331,18 +331,18 @@
    sym E
    jz symErrEX
    cmp E Nil  # E < NIL ?
-   jc ret  # Yes
+   jlt ret  # Yes
    cmp E TSym  # E > T ?
-   jncz Ret  # Yes
+   jgt Ret  # Yes
    jmp protErrEX
 
 (code 'needVarAX 0)
    num A  # Need variable
    jnz varErrAX
    cmp A Nil  # A < NIL ?
-   jc ret  # Yes
+   jlt ret  # Yes
    cmp A TSym  # A > T ?
-   jncz Ret  # Yes
+   jgt Ret  # Yes
    ld E A
    jmp protErrEX
 
@@ -350,32 +350,32 @@
    num E  # Need variable
    jnz varErrEX
    cmp E Nil  # E < NIL ?
-   jc ret  # Yes
+   jlt ret  # Yes
    cmp E TSym  # E > T ?
-   jncz Ret  # Yes
+   jgt Ret  # Yes
    jmp protErrEX
 
 (code 'checkVarAX 0)
    cmp A Nil  # A < NIL ?
-   jc ret  # Yes
+   jlt ret  # Yes
    cmp A TSym  # A > T ?
-   jncz Ret  # Yes
+   jgt Ret  # Yes
    ld E A
    jmp protErrEX
 
 (code 'checkVarYX 0)
    cmp Y Nil  # Y < NIL ?
-   jc ret  # Yes
+   jlt ret  # Yes
    cmp Y TSym  # Y > T ?
-   jncz Ret  # Yes
+   jgt Ret  # Yes
    ld E Y
    jmp protErrEX
 
 (code 'checkVarEX 0)
    cmp E Nil  # E < NIL ?
-   jc ret  # Yes
+   jlt ret  # Yes
    cmp E TSym  # E > T ?
-   jncz Ret  # Yes
+   jgt Ret  # Yes
 (code 'protErrEX)
    ld Y ProtErr
    jmp errEXYZ

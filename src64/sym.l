@@ -1,4 +1,4 @@
-# 03sep10abu
+# 26feb11abu
 # (c) Software Lab. Alexander Burger
 
 ### Compare long names ###
@@ -691,7 +691,7 @@
    sym E
    jz retnz  # No
    cmp E Nil  # NIL?
-   jz ret  # Yes
+   jeq ret  # Yes
    sym (E TAIL)  # External symbol?
    jnz ret  # Yes
    push X
@@ -1275,7 +1275,7 @@
    ld X (E CDR)  # Args
    call evSymX_E  # Eval first
    cmp E Nil  # NIL?
-   if nz
+   if ne  # No
       ld E (E TAIL)
       call nameE_E  # Get name
       link

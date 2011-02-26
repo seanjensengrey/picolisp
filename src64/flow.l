@@ -1,4 +1,4 @@
-# 25feb11abu
+# 26feb11abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -1971,7 +1971,7 @@
    while z  # Yes
       ld C ((X))  # Item(s) in C
       cmp C TSym  # Catch-all?
-      jz 10  # Yes
+      jeq 10  # Yes
       ld A (At)  # Equal to argument item?
       ld E C
       call equalAE_F
@@ -2021,10 +2021,10 @@
       ld X (Y)  # Get clause in X
       ld E (X)  # Get sym|lst in E
       cmp E TSym  # T?
-      jz 10  # Yes
+      jeq 10  # Yes
       ld A ((L I))  # 'var's value
       cmp A E  #  Same?
-      jz 10  # Yes
+      jeq 10  # Yes
       do  # 'memq'
          atom E  # List?
       while z  # Yes
@@ -2501,9 +2501,9 @@
       null C  # Any?
       jz throwErrZX  # No
       cmp (C I) TSym  # Catch-all?
-   while nz  # No
+   while ne  # No
       cmp Z (C I)  # Found tag?
-   while nz  # No
+   while ne  # No
       ld C (C)  # Next frame
    loop
    push E  # Save thrown value

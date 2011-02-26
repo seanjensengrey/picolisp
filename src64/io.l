@@ -1,4 +1,4 @@
-# 05feb11abu
+# 26feb11abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -1511,7 +1511,7 @@
          ld (Y I) A  # Store 'fd'
          shl A 3  # Vector index
          cmp A (OutFDs)  # 'fd' >= 'OutFDs'?
-         jnc badFdErrEX  # Yes
+         jge badFdErrEX  # Yes
          add A (OutFiles)  # Get vector
          ld A (A)  # Slot?
          null A  # Any?

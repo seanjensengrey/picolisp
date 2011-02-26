@@ -1,4 +1,4 @@
-# 23jan11abu
+# 26feb11abu
 # (c) Software Lab. Alexander Burger
 
 ### Destructive primitives ###
@@ -1704,7 +1704,7 @@
    end
    sub A (char "0")  # First digit
    cmp A 10  # Too big?
-   jnc 99  # Return NO
+   jge 99  # Return NO
    shl A 4  # Make short number
    or A CNT
    ld (L I) A  # Save
@@ -1717,7 +1717,7 @@
          if z  # No
             sub A (char "0")  # Next digit
             cmp A 10  # Too big?
-            jnc 99  # Return NO
+            jge 99  # Return NO
             cmp A 5  # Round?
             if ge  # Yes
                ld A ONE  # Increment
@@ -1732,7 +1732,7 @@
             while nz  # Yes
                sub A (char "0")  # Next digit
                cmp A 10  # Too big?
-               jnc 99  # Return NO
+               jge 99  # Return NO
             loop
             break T
          end
@@ -1747,7 +1747,7 @@
          if ne  # No
             sub A (char "0")  # Next digit
             cmp A 10  # Too big?
-            jnc 99  # Return NO
+            jge 99  # Return NO
             push C  # Save symByte args
             push X
             push A  # Save digit
@@ -1861,7 +1861,7 @@
                add A C  # Add BCD-Carry
                ld C 0  # Clear BCD-Carry
                cmp A 1000000000000000000  # BCD overflow?
-               if nc  # Yes
+               if ge  # Yes
                   sub A 1000000000000000000
                   ld C 1  # Set BCD-Carry
                end
@@ -1885,7 +1885,7 @@
             add A C  # Add BCD-Carry
             ld C 0  # Clear BCD-Carry
             cmp A 1000000000000000000  # BCD overflow?
-            if nc  # Yes
+            if ge  # Yes
                sub A 1000000000000000000
                ld C 1  # Set BCD-Carry
             end
@@ -2776,7 +2776,7 @@
          ld A (E DIG)  # Get digit
          and A (C DIG)  # Match?
          cmp A (C DIG)
-         jnz 10  # No: Return NIL
+         jne 10  # No: Return NIL
          ld C (C BIG)
          ld E (E BIG)
       loop
@@ -2825,7 +2825,7 @@
          ld E (Y)
          eval  # Eval next arg
          cmp E Nil
-         jz 10  # Abort if NIL
+         jeq 10  # Abort if NIL
          num E  # Number?
          jz numErrEX  # No
          off E SIGN  # Clear sign
@@ -2865,7 +2865,7 @@
          ld E (Y)
          eval  # Eval next arg
          cmp E Nil
-         jz 10  # Abort if NIL
+         jeq 10  # Abort if NIL
          num E  # Number?
          jz numErrEX  # No
          off E SIGN  # Clear sign
@@ -2905,7 +2905,7 @@
          ld E (Y)
          eval  # Eval next arg
          cmp E Nil
-         jz 10  # Abort if NIL
+         jeq 10  # Abort if NIL
          num E  # Number?
          jz numErrEX  # No
          off E SIGN  # Clear sign
