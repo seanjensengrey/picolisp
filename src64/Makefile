@@ -1,4 +1,4 @@
-# 23feb11abu
+# 28feb11abu
 # (c) Software Lab. Alexander Burger
 
 .SILENT:
@@ -49,14 +49,26 @@ $(lib)/ht: $(ARCH).$(SYS).ht.o
 .s.o:
 	$(AS) -o $*.o $*.s
 
-$(ARCH).$(SYS).base.s: $(baseFiles)
-	./mkAsm $(ARCH) $(SYS) $(OS) base $(lib)/tags $(baseFiles)
 
-$(ARCH).$(SYS).ext.s: ext.l
-	./mkAsm $(ARCH) $(SYS) $(OS) ext "" -fpic ext.l
+# Explicit builds for cross-assembly
+x86-64.linux.base.s: $(baseFiles)
+	./mkAsm x86-64 linux Linux base $(lib)/tags $(baseFiles)
 
-$(ARCH).$(SYS).ht.s: ht.l
-	./mkAsm $(ARCH) $(SYS) $(OS) ht "" -fpic ht.l
+x86-64.linux.ext.s: ext.l
+	./mkAsm x86-64 linux Linux ext "" -fpic ext.l
+
+x86-64.linux.ht.s: ht.l
+	./mkAsm x86-64 linux Linux ht "" -fpic ht.l
+
+
+x86-64.sunOs.base.s: $(baseFiles)
+	./mkAsm x86-64 sunOs SunOS base $(lib)/tags $(baseFiles)
+
+x86-64.sunOs.ext.s: ext.l
+	./mkAsm x86-64 sunOs SunOS ext "" -fpic ext.l
+
+x86-64.sunOs.ht.s: ht.l
+	./mkAsm x86-64 sunOs SunOS ht "" -fpic ht.l
 
 
 # Clean up
