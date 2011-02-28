@@ -1,4 +1,4 @@
-21jan11abu
+28feb11abu
 (c) Software Lab. Alexander Burger
 
 
@@ -41,8 +41,10 @@ Please follow these steps:
    - If a Java runtime system (version 1.6 or higher) is installed, it will
      build right out of the box.
 
-   - Otherwise, download the pre-generated "*.s" files in
-     "http://software-lab.de/x86-64.linux.tgz".
+   - Otherwise, download one of the pre-generated "*.s" files
+
+     - http://software-lab.de/x86-64.linux.tgz
+     - http://software-lab.de/x86-64.sunOs.tgz
 
    - Else, build a 32-bit version first, and use the resulting bin/picolisp to
      generate the "*.s" files:
