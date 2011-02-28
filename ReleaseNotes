@@ -1,4 +1,4 @@
-25jan11abu
+28feb11abu
 (c) Software Lab. Alexander Burger
 
 
@@ -36,3 +36,7 @@
    (destructively) spliced into the result. As before, if 'fill' is passed a
    second argument (a symbol or a list of symbols), then only those symbols are
    replaced in the pattern without any further treatment.
+
+5. The name of the GUI function 'err' in "lib/form.l" was changed to 'error'
+   (and also that of the corresponding default CSS type in "lib.css"). This was
+   done to reserve the name "err" for future standard error redirection.

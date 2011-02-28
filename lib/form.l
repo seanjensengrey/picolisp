@@ -1,4 +1,4 @@
-# 18feb11abu
+# 28feb11abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -52,7 +52,7 @@
                      (with (get "*App" 'gui (inc '"*Ix"))
                         (for E "*Err"
                            (when (== This (car E))
-                              (<div> 'err
+                              (<div> 'error
                                  (if (atom (cdr E))
                                     (ht:Prin (eval (cdr E) 1))
                                     (eval (cdr E) 1) ) ) ) )
@@ -216,13 +216,13 @@
             (for This (: gui)
                (cond
                   ((not (: id)) (setq "*Chart" This))
-                  ((chk> This) (err @))
+                  ((chk> This) (error @))
                   ((or (: rid) (: home able))
                      (set> This (val> This) T) ) ) )
             (for This (: gui)
                (cond
                   ((: id))
-                  ((chk> (setq "*Chart" This)) (err @))
+                  ((chk> (setq "*Chart" This)) (error @))
                   ((or (: rid) (: home able))
                      (set> This (val> This)) ) ) )
             (if (pair "*Err")
@@ -245,7 +245,7 @@
                   (or (: id) (setq "*Chart" This))
                   (upd> This) ) ) ) ) ) )
 
-(de err (Exe)
+(de error (Exe)
    (cond
       ((=T Exe) (on "*Err"))
       ((nT "*Err") (queue '"*Err" (cons This Exe))) ) )
@@ -1764,7 +1764,7 @@
 
 (de tryLock (Obj)
    (if (lock Obj)
-      (err (text ,"Currently edited by '@2' (@1)" @  (cdr (lup *Users @))))
+      (error (text ,"Currently edited by '@2' (@1)" @  (cdr (lup *Users @))))
       (sync)
       (tell)
       (setq *Lock Obj) ) )
