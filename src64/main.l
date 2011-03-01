@@ -840,6 +840,7 @@
       jlt stkErr
       ld A (A)  # Recurse on CARs
       ld E (E)
+      off E 1  # Clear possible mark
       call equalAE_F  # Equal?
       pop E  # Retrieve lists
       pop A

@@ -392,7 +392,7 @@ bool equal(any x, any y) {
       a = x, b = y;
       res = NO;
       for (;;) {
-         if (!equal(car(x), car(y)))
+         if (!equal(car(x), (any)(num(car(y)) & ~1)))
             break;
          if (!isCell(cdr(x))) {
             res = equal(cdr(x), cdr(y));
