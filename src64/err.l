@@ -1,4 +1,4 @@
-# 26feb11abu
+# 01mar11abu
 # (c) Software Lab. Alexander Burger
 
 # Debug print routine
@@ -7,7 +7,6 @@
    xchg E (S I)  # Get argument, save return
    push C  # Save all registers
    push A
-   push F  # And flags
    push (OutFile)  # Save output channel
    ld (OutFile) ((OutFiles) II)  # Set to OutFiles[2] (stderr)
    push (PutB)  # Save 'put'
@@ -16,7 +15,6 @@
    call newline  # and a newline
    pop (PutB)  # Restore 'put'
    pop (OutFile)  # and output channel
-   pop F
    pop A
    pop C
    pop E
