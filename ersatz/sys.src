@@ -1,4 +1,4 @@
-// 06feb11abu
+// 01mar11abu
 // (c) Software Lab. Alexander Burger
 
 import java.util.*;
@@ -2623,18 +2623,17 @@ public class PicoLisp {
       final boolean equal(Any x) {
          if (!(x instanceof Cell))
             return false;
+         if (!x.Car.equal(Car))
+            return false;
          HashSet<Any> mark = new HashSet<Any>();
          Any y = this, a = x, b = y;
          for (;;) {
-            if (!x.Car.equal(y.Car))
-               return false;
             if (!(x.Cdr instanceof Cell))
                return x.Cdr.equal(y.Cdr);
             if (!(y.Cdr instanceof Cell))
                return false;
-            mark.add(x);  x = x.Cdr;
-            mark.add(y);  y = y.Cdr;
-            if (mark.contains(x) || mark.contains(y)) {
+            mark.add(x);  x = x.Cdr;  y = y.Cdr;
+            if (mark.contains(x)) {
                for (;;) {
                   if (a == x)
                      return b == y;
@@ -2643,6 +2642,8 @@ public class PicoLisp {
                   a = a.Cdr;  b = b.Cdr;
                }
             }
+            if (!x.Car.equal(y.Car))
+               return false;
          }
       }
 

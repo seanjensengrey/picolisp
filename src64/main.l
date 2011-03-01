@@ -1,4 +1,4 @@
-# 26feb11abu
+# 01mar11abu
 # (c) Software Lab. Alexander Burger
 
 ### Global return labels ###
@@ -859,13 +859,10 @@
       break nz  # Yes: 'ne'
       or (A) 1  # Mark
       ld A (A CDR)
-      or (E) 1
       ld E (E CDR)
       test (A) 1  # Detected circularity?
-      jnz 10  # Yes
-      test (E) 1
       if nz
-10       do
+         do
             cmp X A  # Skip non-circular parts
             if eq  # Done?
                cmp Y E  # Set result
@@ -878,14 +875,12 @@
             end
             off (X) 1  # Unmark
             ld X (X CDR)
-            off (Y) 1
             ld Y (Y CDR)
          loop
          push F  # Save result
          do
             off (X) 1  # Unmark circular part
             ld X (X CDR)
-            off (Y) 1
             ld Y (Y CDR)
             cmp X A
          until eq
@@ -901,7 +896,6 @@
    while ne
       off (X) 1  # Unmark
       ld X (X CDR)
-      off (Y) 1
       ld Y (Y CDR)
    loop
    pop F  # Get result
