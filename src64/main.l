@@ -882,7 +882,6 @@
          do
             off (X) 1  # Unmark circular part
             ld X (X CDR)
-            ld Y (Y CDR)
             cmp X A
          until eq
          pop F  # Get result
@@ -897,7 +896,6 @@
    while ne
       off (X) 1  # Unmark
       ld X (X CDR)
-      ld Y (Y CDR)
    loop
    pop F  # Get result
    pop Y

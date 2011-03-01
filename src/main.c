@@ -414,13 +414,13 @@ bool equal(any x, any y) {
                *(word*)&car(a) &= ~1,  a = cdr(a),  b = cdr(b);
             }
             do
-               *(word*)&car(a) &= ~1,  a = cdr(a),  b = cdr(b);
+               *(word*)&car(a) &= ~1,  a = cdr(a);
             while (a != x);
             return res;
          }
       }
       while (a != x)
-         *(word*)&car(a) &= ~1,  a = cdr(a),  b = cdr(b);
+         *(word*)&car(a) &= ~1,  a = cdr(a);
       return res;
    }
 }
