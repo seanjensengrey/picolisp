@@ -1,4 +1,4 @@
-# 28feb11abu
+# 01mar11abu
 # (c) Software Lab. Alexander Burger
 
 .SILENT:
@@ -11,8 +11,8 @@ ifeq ($(shell uname), Linux)
 	SYS = linux
 	ARCH = x86-64
 	AS = as
-	LD-MAIN = gcc -rdynamic -lc -lm -ldl
-	LD-SHARED = gcc -shared -export-dynamic
+	LD-MAIN = gcc -m64 -rdynamic -lc -lm -ldl
+	LD-SHARED = gcc -m64 -shared -export-dynamic
 	STRIP = strip
 else
 ifeq ($(shell uname), SunOS)
