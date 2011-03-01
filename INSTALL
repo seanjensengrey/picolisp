@@ -1,4 +1,4 @@
-28feb11abu
+01mar11abu
 (c) Software Lab. Alexander Burger
 
 
@@ -41,7 +41,7 @@ Please follow these steps:
    - If a Java runtime system (version 1.6 or higher) is installed, it will
      build right out of the box.
 
-   - Otherwise, download one of the pre-generated "*.s" files
+   - Otherwise, download one of the pre-generated "*.s" file packages
 
      - http://software-lab.de/x86-64.linux.tgz
      - http://software-lab.de/x86-64.sunOs.tgz
