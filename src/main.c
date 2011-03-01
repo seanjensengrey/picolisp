@@ -404,7 +404,19 @@ bool equal(any x, any y) {
          if (num(car(x)) & 1) {
             for (;;) {
                if (a == x) {
-                  res = b == y;
+                  if (b == y) {
+                     for (;;) {
+                        a = cdr(a);
+                        if ((b = cdr(b)) == y) {
+                           res = a == x;
+                           break;
+                        }
+                        if (a == x) {
+                           res = YES;
+                           break;
+                        }
+                     }
+                  }
                   break;
                }
                if (b == y) {

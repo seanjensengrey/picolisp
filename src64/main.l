@@ -865,8 +865,21 @@
       if nz
          do
             cmp X A  # Skip non-circular parts
-            if eq  # Done?
-               cmp Y E  # Set result
+            if eq  # Done
+               cmp Y E  # Circular parts same length?
+               if eq  # Perhaps
+                  do
+                     ld X (X CDR)  # Compare
+                     ld Y (Y CDR)
+                     cmp Y E  # End of second?
+                     if eq  # Yes
+                        cmp X A  # Also end of first?
+                        break T
+                     end
+                     cmp X A  # End of first?
+                     break eq  # Yes
+                  loop
+               end
                break T
             end
             cmp Y E

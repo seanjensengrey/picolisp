@@ -2635,8 +2635,17 @@ public class PicoLisp {
             mark.add(x);  x = x.Cdr;  y = y.Cdr;
             if (mark.contains(x)) {
                for (;;) {
-                  if (a == x)
-                     return b == y;
+                  if (a == x) {
+                     if (b != y)
+                        return false;
+                     for (;;) {
+                        a = a.Cdr;
+                        if ((b = b.Cdr) == y)
+                           return a == x;
+                        if (a == x)
+                           return true;
+                     }
+                  }
                   if (b == y)
                      return false;
                   a = a.Cdr;  b = b.Cdr;
