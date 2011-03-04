@@ -1,4 +1,4 @@
-28feb11abu
+04mar11abu
 (c) Software Lab. Alexander Burger
 
 
@@ -40,3 +40,11 @@
 5. The name of the GUI function 'err' in "lib/form.l" was changed to 'error'
    (and also that of the corresponding default CSS type in "lib.css"). This was
    done to reserve the name "err" for future standard error redirection.
+
+6. The "opt/" directory (until now containing only a single "pilog.l" file) was
+   removed from the base distribution. It is now tracked separately, to install
+   them you can download the addons tarball from
+
+      http://code.google.com/p/picolisp/source/browse/?repo=addons
+
+   and untar it over the install directory.
