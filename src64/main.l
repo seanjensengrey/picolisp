@@ -1,4 +1,4 @@
-# 01mar11abu
+# 03mar11abu
 # (c) Software Lab. Alexander Burger
 
 ### Global return labels ###
@@ -819,11 +819,11 @@
       jz Retnz  # No: 'ne'
       ld A (A TAIL)
       call nameA_A  # Get name of A
-      zero A  # Any?
+      cmp A ZERO  # Any?
       jeq retnz  # No: 'ne'
       ld E (E TAIL)
       call nameE_E  # Get name of E
-      zero E  # Any?
+      cmp E ZERO  # Any?
       jeq retnz  # No: 'ne'
       jmp equalAE_F
    end
@@ -952,11 +952,11 @@
       push X  # [<sym> <sym>]
       ld X (A TAIL)
       call nameX_X  # Get A's name in X
-      zero X  # Any?
+      cmp X ZERO  # Any?
       if eq  # No
          ld E (E TAIL)
          call nameE_E  # Second name in E
-         zero E  # Any?
+         cmp E ZERO  # Any?
          if eq  # No
             rol B 4  # Random bit from A (...x1000) into carry (non-zero)
          else
@@ -967,7 +967,7 @@
       end
       ld E (E TAIL)
       call nameE_E  # Get E's name in E
-      zero E  # Any?
+      cmp E ZERO  # Any?
       if eq  # No
 50       or B B  # nz
 60       clrc  # gt

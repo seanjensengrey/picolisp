@@ -1,4 +1,4 @@
-# 25feb11abu
+# 03mar11abu
 # (c) Software Lab. Alexander Burger
 
 # *LittleEndian *Registers optimize
@@ -484,7 +484,6 @@
       (word (operand (read)))
       (xchg (destination) "*Mode" (destination) "*Mode")
       (xor (destination) "*Mode" (source) "*Mode")
-      (zero (source) "*Mode")
       (zxt) ) )
 
 

@@ -1,4 +1,4 @@
-# 26feb11abu
+# 03mar11abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -838,7 +838,7 @@
       push Y
       ld X (E TAIL)
       call nameX_X  # Get name
-      zero X  # Any?
+      cmp X ZERO  # Any?
       if eq  # No
          ld B NIX  # Output NIX
          call (PutBinBZ)
@@ -1082,7 +1082,7 @@
 (code 'symByteCX_FACX 0)
    null C  # New round?
    if z  # Yes
-      zero X  # Done?
+      cmp X ZERO  # Done?
       jeq ret  # Yes: Return 'z'
       cnt X  # Short?
       if nz  # Yes
@@ -4671,7 +4671,7 @@
    if nz  # Yes
       ld X (E TAIL)
       call nameX_X  # Get name
-      zero X  # Any?
+      cmp X ZERO  # Any?
       if eq  # No
          ld B (char "$")  # $xxxxxx
          call (PutB)
@@ -4890,7 +4890,7 @@
       if nz  # Yes
          ld X (E TAIL)
          call nameX_X  # Get name
-         zero X  # Any?
+         cmp X ZERO  # Any?
          if ne  # Yes
             sym (E TAIL)  # External symbol?
             if z  # No

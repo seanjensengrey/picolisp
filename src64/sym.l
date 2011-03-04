@@ -1,4 +1,4 @@
-# 26feb11abu
+# 03mar11abu
 # (c) Software Lab. Alexander Burger
 
 ### Compare long names ###
@@ -883,7 +883,7 @@
    jz symErrEX
    ld X (E TAIL)
    call nameX_X  # Get name
-   zero X  # Any?
+   cmp X ZERO  # Any?
    if ne  # Yes
       push Y
       ld Y Intern  # Insert internal
@@ -909,7 +909,7 @@
    jz symErrEX
    ld X (E TAIL)
    call nameX_X  # Get name
-   zero X  # Any?
+   cmp X ZERO  # Any?
    if ne  # Yes
       ld C 0  # Character index
       call symCharCX_FACX  # First char
@@ -1361,11 +1361,11 @@
    jeq ret  # Yes
    ld A (A TAIL)  # First symbol
    call nameA_A  # Get name
-   zero A  # None?
+   cmp A ZERO  # None?
    jeq ret  # Yes
    ld E (E TAIL)  # Second symbol
    call nameE_E  # Get name
-   zero E  # Any?
+   cmp E ZERO  # Any?
    jeq retnz  # No
    push X
    push Y
@@ -1383,7 +1383,7 @@
       ld A (S)
       shr A 8  # New round in second index?
       if z  # Yes
-         zero Z  # Second done?
+         cmp Z ZERO  # Second done?
          if eq  # Yes
             clrz  # 'nz'
             break T
@@ -2368,7 +2368,7 @@
    ret
 
 (code 'putACE 0)
-   zero C  # Key is zero?
+   cmp C ZERO  # Key is zero?
    jeq setAE  # Yes
    push X
    ld X (A TAIL)  # Properties
@@ -2554,7 +2554,7 @@
       call dbFetchEX  # Fetch it
    end
 (code 'getEC_E 0)
-   zero C  # Key is zero?
+   cmp C ZERO  # Key is zero?
    jeq retE_E  # Get value
    ld A (E TAIL)  # Get tail
    num A  # No properties?

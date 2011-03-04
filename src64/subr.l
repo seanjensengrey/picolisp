@@ -1,4 +1,4 @@
-# 25jan11abu
+# 03mar11abu
 # (c) Software Lab. Alexander Burger
 
 # (car 'var) -> any
@@ -1018,7 +1018,7 @@
    if ne  # No
       num E  # Number?
       jz numErrEX  # No
-      zero E  # Zero?
+      cmp E ZERO  # Zero?
       jeq argErrEX  # Yes
       test E SIGN  # Negative?
       jnz argErrEX  # Yes
@@ -2881,7 +2881,7 @@
             else
                ld E (E TAIL)
                call nameE_E  # Get name
-               zero E  # Any?
+               cmp E ZERO  # Any?
                if eq  # No
                   ld C ZERO  # Return zero
                else
