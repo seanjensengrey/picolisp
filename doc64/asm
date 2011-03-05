@@ -1,4 +1,4 @@
-# 04mar11abu
+# 05mar11abu
 # (c) Software Lab. Alexander Burger
 
 
@@ -103,8 +103,8 @@
       sub dst src       # Subtract 'src' from 'dst'
       subc dst src      # Subtract 'src' from 'dst' with Carry
 
-      inc dst           # Increment 'dst' [z..]
-      dec dst           # Increment 'dst' [z..]
+      inc dst           # Increment 'dst' [zs.]
+      dec dst           # Increment 'dst' [zs.]
       not dst           # One's complement negation of 'dst'
       neg dst           # Two's complement negation of 'dst'
 
