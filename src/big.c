@@ -1,4 +1,4 @@
-/* 23jan11abu
+/* 07mar11abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -499,7 +499,8 @@ any numToSym(any x, int scl, int sep, int ign) {
          break;
       n = 1;
    }
-   n = (ta - acc) * 9 + sprintf(b = buf, "%ld", *ta--);
+   n = (ta - acc) * 9;
+   n += sprintf(b = buf, "%ld", *ta--);
    if (sep < 0)
       return boxCnt(n + sign);
    i = -8,  Push(c1, x = box(0));
