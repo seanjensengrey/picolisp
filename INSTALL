@@ -1,4 +1,4 @@
-01mar11abu
+08mar11abu
 (c) Software Lab. Alexander Burger
 
 
@@ -28,7 +28,7 @@ Please follow these steps:
 
       $ (cd src; make picolisp)
 
-   or, if you have an x86-64 Linux system, build the 64-bit version
+   or, if you have an x86-64 Linux or SunOS system, build the 64-bit version
 
       $ (cd src64; make picolisp)
 
