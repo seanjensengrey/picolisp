@@ -1,4 +1,4 @@
-# 25feb11abu
+# 07mar11abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -410,8 +410,8 @@ opt (str)
 version (i x)
    if (ex.Cdr.Car.eval() == Nil) {
       for (i = 0; i < 4; ++i)
-         OutFile.Wr.print(Version[i] + (i == 3? "-" : "."));
-      OutFile.Wr.println('J');
+         OutFile.Wr.print(Version[i] + (i == 3? " " : "."));
+      OutFile.Wr.println("JVM");
       OutFile.Wr.flush();
    }
    for (x = Nil, i = 4; --i >= 0;)

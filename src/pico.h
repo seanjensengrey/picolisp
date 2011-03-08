@@ -1,4 +1,4 @@
-/* 23jan11abu
+/* 07mar11abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -729,6 +729,7 @@ any doUppc(any);
 any doUse(any);
 any doUsec(any);
 any doVal(any);
+any doVersion(any);
 any doWait(any);
 any doWhen(any);
 any doWhile(any);

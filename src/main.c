@@ -1,8 +1,9 @@
-/* 01mar11abu
+/* 07mar11abu
  * (c) Software Lab. Alexander Burger
  */
 
 #include "pico.h"
+#include "vers.h"
 
 #ifdef __CYGWIN__
 #define O_ASYNC FASYNC
@@ -1160,6 +1161,28 @@ any doArgv(any ex) {
 // (opt) -> sym
 any doOpt(any ex __attribute__((unused))) {
    return *AV && strcmp(*AV,"-")? mkStr(*AV++) : Nil;
+}
+
+// (version ['flg]) -> lst
+any doVersion(any x) {
+   int i;
+   cell c1;
+
+   x = cdr(x);
+   if (isNil(EVAL(car(x)))) {
+      for (i = 0; i < 4; ++i) {
+         outWord((word)Version[i]);
+         Env.put(i == 3? ' ' : '.');
+      }
+      Env.put('C');
+      newline();
+   }
+   Push(c1, Nil);
+   i = 4;
+   do
+      data(c1) = cons(box(Version[--i] * 2), data(c1));
+   while (i);
+   return Pop(c1);
 }
 
 any loadAll(any ex) {

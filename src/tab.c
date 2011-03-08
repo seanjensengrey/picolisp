@@ -1,4 +1,4 @@
-/* 23jan11abu
+/* 07mar11abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -341,6 +341,7 @@ static symInit Symbols[] = {
    {doUse, "use"},
    {doUsec, "usec"},
    {doVal, "val"},
+   {doVersion, "version"},
    {doWait, "wait"},
    {doWhen, "when"},
    {doWhile, "while"},
