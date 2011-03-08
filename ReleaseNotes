@@ -1,4 +1,4 @@
-04mar11abu
+08mar11abu
 (c) Software Lab. Alexander Burger
 
 
@@ -42,9 +42,9 @@
    done to reserve the name "err" for future standard error redirection.
 
 6. The "opt/" directory (until now containing only a single "pilog.l" file) was
-   removed from the base distribution. It is now tracked separately, to install
-   them you can download the addons tarball from
+   removed from the base distribution. It is now tracked separately. To install
+   the addons, you can download them as a tarball from
 
       http://code.google.com/p/picolisp/source/browse/?repo=addons
 
-   and untar it over the install directory.
+   and untar them over the install directory.
