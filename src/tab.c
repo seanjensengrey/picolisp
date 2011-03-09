@@ -1,4 +1,4 @@
-/* 07mar11abu
+/* 09mar11abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -286,7 +286,6 @@ static symInit Symbols[] = {
    {doRewind, "rewind"},
    {doRollback, "rollback"},
    {doRot, "rot"},
-   {doRpc, "rpc"},
    {doRun, "run"},
    {doSect, "sect"},
    {doSeed, "seed"},

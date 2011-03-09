@@ -1,4 +1,4 @@
-/* 05feb11abu
+/* 09mar11abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -2577,21 +2577,6 @@ any doWr(any x) {
       putStdout(unDig(y = EVAL(car(x))) / 2);
    while (isCell(x = cdr(x)));
    return y;
-}
-
-static void putChar(int c) {putchar_unlocked(c);}
-
-// (rpc 'sym ['any ..]) -> flg
-any doRpc(any x) {
-   any y;
-
-   x = cdr(x);
-   putChar(BEG);
-   do
-      y = EVAL(car(x)),  putBin = putChar,  binPrint(ExtN, y);
-   while (isCell(x = cdr(x)));
-   putChar(END);
-   return fflush(stdout)? Nil : T;
 }
 
 /*** DB-I/O ***/

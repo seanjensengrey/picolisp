@@ -238,8 +238,7 @@ little endian) is read as a single number. Upon end of file, if the
 <code>sym</code> argument is given, it is returned, otherwise <code>NIL</code>.
 See also <code><a href="refP.html#pr">pr</a></code>, <code><a
 href="refT.html#tell">tell</a></code>, <code><a
-href="refH.html#hear">hear</a></code>, <code><a
-href="refR.html#rpc">rpc</a></code> and <code><a
+href="refH.html#hear">hear</a></code> and <code><a
 href="refW.html#wr">wr</a></code>.
 
 <pre><code>
@@ -680,22 +679,6 @@ href="ref.html#num-io">Numbers</a></code>.
 -> "12.35"
 : (format 123456 *Scl)  # Format with full precision
 -> "12.3456"
-</code></pre>
-
-<dt><a name="rpc"><code>(rpc 'sym ['any ..]) -> flg</code></a>
-<dd><i>Rapid</i> (or <i>remote</i>) procedure call: Send an executable list
-<code>(sym any ..)</code> via standard output in encoded binary format. See also
-<code><a href="refP.html#pr">pr</a></code>, <code><a
-href="refP.html#pipe">pipe</a></code>, <code><a
-href="refT.html#tell">tell</a></code> and <code><a
-href="refH.html#hear">hear</a></code>.
-
-<pre><code>
-: (hear (pipe (do 3 (wait 2000) (rpc 'println ''OK))))
--> 3
-: OK  # every two seconds
-OK
-OK
 </code></pre>
 
 <dt><a name="rules"><code>(rules 'sym ..) -> sym</code></a>

@@ -1,4 +1,4 @@
-/* 07mar11abu
+/* 09mar11abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -674,7 +674,6 @@ any doReverse(any);
 any doRewind(any);
 any doRollback(any);
 any doRot(any);
-any doRpc(any);
 any doRun(any);
 any doSect(any);
 any doSeed(any);

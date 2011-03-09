@@ -1,4 +1,4 @@
-08mar11abu
+09mar11abu
 (c) Software Lab. Alexander Burger
 
 
@@ -48,3 +48,6 @@
       http://code.google.com/p/picolisp/source/browse/?repo=addons
 
    and untar them over the install directory.
+
+7. The 'rpc' function was removed from the release. It is seldom used, and also
+   redundant: (rpc 'foo ''arg) is equivalent to (pr '(foo 'arg))

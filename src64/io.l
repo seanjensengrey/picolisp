@@ -1,4 +1,4 @@
-# 03mar11abu
+# 09mar11abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -5138,35 +5138,6 @@
       atom X  # Done?
    until nz  # Yes
    pop X
-   ret
-
-# (rpc 'sym ['any ..]) -> flg
-(code 'doRpc 2)
-   push X
-   ld X (E CDR)  # Args
-   ld A BEG  # Begin list
-   call putCharB
-   do
-      ld E (X)  # Eval next arg
-      eval
-      ld (PutBinBZ) putCharB  # Set binary print function
-      ld (Extn) (ExtN)  # Set external symbol offset
-      call binPrintEZ
-      ld X (X CDR)  # X on rest
-      atom X  # Any
-   until nz  # No
-   ld A END  # End list
-   call putCharB
-   cc fflush((stdout))  # Flush
-   nul4  # OK?
-   ld E Nil
-   ldz E TSym  # Yes
-   pop X
-   ret
-
-(code 'putCharB 0)
-   zxt  # Extend into A
-   cc putchar_unlocked(A)
    ret
 
 # vi:et:ts=3:sw=3

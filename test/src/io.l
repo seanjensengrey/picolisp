@@ -1,4 +1,4 @@
-# 07aug10abu
+# 09mar11abu
 # (c) Software Lab. Alexander Burger
 
 ### path ###
@@ -218,10 +218,5 @@
 (test (hex "010203")
    (in (tmp "wr")
       (rd 3) ) )
-
-
-### rpc ###
-(test *Pid
-   (pipe (rpc '*Pid) (run (rd))) )
 
 # vi:et:ts=3:sw=3

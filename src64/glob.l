@@ -1,4 +1,4 @@
-# 25feb11abu
+# 09mar11abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Globals 0)
@@ -522,7 +522,6 @@
    initFun NIL       "rd"        doRd
    initFun NIL       "pr"        doPr
    initFun NIL       "wr"        doWr
-   initFun NIL       "rpc"       doRpc
 
    # Database
    initFun NIL       "pool"      doPool
