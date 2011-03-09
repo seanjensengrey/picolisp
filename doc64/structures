@@ -1,4 +1,4 @@
-# 03feb11abu
+# 09mar11abu
 # (c) Software Lab. Alexander Burger
 
 
@@ -208,7 +208,7 @@
          <III> put/get  |
          <II>  pid      |
          <I>   fd       |
-               LINK ----+  <-- inFrames, outFrames, ctlFrames
+               LINK ----+  <-- inFrames, outFrames, errFrames, ctlFrames
 
 
       Coroutine frame:

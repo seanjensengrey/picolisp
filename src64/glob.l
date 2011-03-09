@@ -505,8 +505,9 @@
    initFun NIL       "load"      doLoad
    initFun NIL       "in"        doIn
    initFun NIL       "out"       doOut
-   initFun NIL       "pipe"      doPipe
+   initFun NIL       "err"       doErr
    initFun NIL       "ctl"       doCtl
+   initFun NIL       "pipe"      doPipe
    initFun NIL       "open"      doOpen
    initFun NIL       "close"     doClose
    initFun NIL       "echo"      doEcho
@@ -581,7 +582,8 @@
 : EnvBind      word  0        # <III> Bind frames (first item in Env)
 : EnvInFrames  word  0        # <IV> Input frames
 : EnvOutFrames word  0        # <V> Output frames
-: EnvCtlFrames word  0        # <VI> Control frames
+: EnvErrFrames word  0        # <VI> Error frames
+: EnvCtlFrames word  0        # <VII> Control frames
 : EnvArgs      word  0        # Varargs frame
 : EnvNext      word  0        # Next vararg
 : EnvCls       word  0        # Method class

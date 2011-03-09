@@ -1,4 +1,4 @@
-/* 07mar11abu
+/* 09mar11abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -616,6 +616,8 @@ void unwind(catchFrame *catch) {
          popInFiles();
       while (Env.outFrames != q->env.outFrames)
          popOutFiles();
+      while (Env.errFrames != q->env.errFrames)
+         popErrFiles();
       while (Env.ctlFrames != q->env.ctlFrames)
          popCtlFiles();
       Env = q->env;
@@ -634,6 +636,8 @@ void unwind(catchFrame *catch) {
       popInFiles();
    while (Env.outFrames)
       popOutFiles();
+   while (Env.errFrames)
+      popErrFiles();
    while (Env.ctlFrames)
       popCtlFiles();
 }

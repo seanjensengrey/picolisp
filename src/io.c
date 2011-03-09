@@ -795,6 +795,38 @@ void wrOpen(any ex, any x, outFrame *f) {
    }
 }
 
+void erOpen(any ex, any x, errFrame *f) {
+   int fd;
+
+   NeedSym(ex,x);
+   f->fd = dup(STDERR_FILENO);
+   if (isNil(x))
+      fd = dup(OutFile->fd);
+   else {
+      char nm[pathSize(x)];
+
+      pathString(x,nm);
+      if (nm[0] == '+') {
+         while ((fd = open(nm+1, O_APPEND|O_CREAT|O_WRONLY, 0666)) < 0) {
+            if (errno != EINTR)
+               openErr(ex, nm);
+            if (*Signal)
+               sighandler(ex);
+         }
+      }
+      else {
+         while ((fd = open(nm, O_CREAT|O_TRUNC|O_WRONLY, 0666)) < 0) {
+            if (errno != EINTR)
+               openErr(ex, nm);
+            if (*Signal)
+               sighandler(ex);
+         }
+      }
+      closeOnExec(ex, fd);
+   }
+   dup2(fd, STDERR_FILENO),  close(fd);
+}
+
 void ctOpen(any ex, any x, ctlFrame *f) {
    NeedSym(ex,x);
    if (isNil(x)) {
@@ -882,6 +914,10 @@ void pushOutFiles(outFrame *f) {
    f->link = Env.outFrames,  Env.outFrames = f;
 }
 
+void pushErrFiles(errFrame *f) {
+   f->link = Env.errFrames,  Env.errFrames = f;
+}
+
 void pushCtlFiles(ctlFrame *f) {
    f->link = Env.ctlFrames,  Env.ctlFrames = f;
 }
@@ -919,6 +955,12 @@ void popOutFiles(void) {
    }
    Env.put = Env.outFrames->put;
    OutFile = OutFiles[(Env.outFrames = Env.outFrames->link)? Env.outFrames->fd : STDOUT_FILENO];
+}
+
+void popErrFiles(void) {
+   dup2(Env.errFrames->fd, STDERR_FILENO);
+   close(Env.errFrames->fd);
+   Env.errFrames = Env.errFrames->link;
 }
 
 void popCtlFiles(void) {
@@ -2064,6 +2106,32 @@ any doOut(any ex) {
    return x;
 }
 
+// (err 'sym . prg) -> any
+any doErr(any ex) {
+   any x;
+   errFrame f;
+
+   x = cdr(ex),  x = EVAL(car(x));
+   erOpen(ex,x,&f);
+   pushErrFiles(&f);
+   x = prog(cddr(ex));
+   popErrFiles();
+   return x;
+}
+
+// (ctl 'sym . prg) -> any
+any doCtl(any ex) {
+   any x;
+   ctlFrame f;
+
+   x = cdr(ex),  x = EVAL(car(x));
+   ctOpen(ex,x,&f);
+   pushCtlFiles(&f);
+   x = prog(cddr(ex));
+   popCtlFiles();
+   return x;
+}
+
 // (pipe exe) -> cnt
 // (pipe exe . prg) -> any
 any doPipe(any ex) {
@@ -2098,19 +2166,6 @@ any doPipe(any ex) {
    pushInFiles(&f.in);
    x = prog(cddr(ex));
    popInFiles();
-   return x;
-}
-
-// (ctl 'sym . prg) -> any
-any doCtl(any ex) {
-   any x;
-   ctlFrame f;
-
-   x = cdr(ex),  x = EVAL(car(x));
-   ctOpen(ex,x,&f);
-   pushCtlFiles(&f);
-   x = prog(cddr(ex));
-   popCtlFiles();
    return x;
 }
 

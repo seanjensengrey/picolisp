@@ -1,4 +1,4 @@
-# 01mar11abu
+# 09mar11abu
 # (c) Software Lab. Alexander Burger
 
 # Debug print routine
@@ -241,7 +241,12 @@
          call popOutFiles  # Clean up
       loop
       do
-         cmp (EnvCtlFrames) (X VI)  # Open control frames?
+         cmp (EnvErrFrames) (X VI)  # Open error frames?
+      while ne  # Yes
+         call popErrFiles  # Clean up
+      loop
+      do
+         cmp (EnvCtlFrames) (X VII)  # Open control frames?
       while ne  # Yes
          call popCtlFiles  # Clean up
       loop
@@ -302,6 +307,11 @@
       null (EnvOutFrames)  # Open output frames?
    while nz  # Yes
       call popOutFiles  # Clean up
+   loop
+   do
+      null (EnvErrFrames)  # Open error frames?
+   while nz  # Yes
+      call popErrFiles  # Clean up
    loop
    do
       null (EnvCtlFrames)  # Open control frames?

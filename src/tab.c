@@ -114,6 +114,7 @@ static symInit Symbols[] = {
    {doEq0, "=0"},
    {doEqT, "=T"},
    {doEqual, "="},
+   {doErr, "err"},
    {doEval, "eval"},
    {doExt, "ext"},
    {doExtern, "extern"},

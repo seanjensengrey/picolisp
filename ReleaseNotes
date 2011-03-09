@@ -39,7 +39,7 @@
 
 5. The name of the GUI function 'err' in "lib/form.l" was changed to 'error'
    (and also that of the corresponding default CSS type in "lib.css"). This was
-   done to reserve the name "err" for future standard error redirection.
+   done to reserve the name "err" for standard error redirection (point 8).
 
 6. The "opt/" directory (until now containing only a single "pilog.l" file) was
    removed from the base distribution. It is now tracked separately. To install
@@ -51,3 +51,6 @@
 
 7. The 'rpc' function was removed from the release. It is seldom used, and also
    redundant: (rpc 'foo ''arg) is equivalent to (pr '(foo 'arg))
+
+8. A new function 'err' for standard error redirection is now available. It is
+   analog to 'out', but accepts only a symbolic argument (like 'ctl').

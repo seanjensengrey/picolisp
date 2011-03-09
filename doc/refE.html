@@ -267,6 +267,22 @@ href="refM.html#member/2">member/2</a></code>.
 -> NIL
 </code></pre>
 
+<dt><a name="err"><code>(err 'sym . prg) -> any</code></a>
+<dd>Redirects the standard error stream to <code>sym</code> during the execution
+of <code>prg</code>. The current standard error stream will be saved and
+restored appropriately. If the argument is <code>NIL</code>, the current output
+stream will be used. Otherwise, <code>sym</code> is taken as a file name (opened
+in "append" mode if the first character is "+"), where standard error is to be
+written to. See also <code><a href="refI.html#in">in</a></code>, <code><a
+href="refO.html#out">out</a></code> and <code><a
+href="refC.html#ctl">ctl</a></code>.
+
+<pre><code>
+: (err "/dev/null"             # Suppress error messages
+   (call 'ls 'noSuchFile) )
+-> NIL
+</code></pre>
+
 <dt><a name="errno"><code>(errno) -> cnt</code></a>
 <dd>(64-bit version only) Returns the value of the standard I/O 'errno'
 variable.

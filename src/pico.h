@@ -102,6 +102,11 @@ typedef struct outFrame {
    int fd;
 } outFrame;
 
+typedef struct errFrame {
+   struct errFrame *link;
+   int fd;
+} errFrame;
+
 typedef struct ctlFrame {
    struct ctlFrame *link;
    int fd;
@@ -119,6 +124,7 @@ typedef struct stkEnv {
    any cls, key, task, *make, *yoke;
    inFrame *inFrames;
    outFrame *outFrames;
+   errFrame *errFrames;
    ctlFrame *ctlFrames;
    parseFrame *parser;
    void (*get)(void);
@@ -298,6 +304,7 @@ unsigned long ehash(any);
 any endString(void);
 bool eol(void);
 bool equal(any,any);
+void erOpen(any,any,errFrame*);
 void err(any,any,char*,...) __attribute__ ((noreturn));
 any evExpr(any,any);
 long evCnt(any,any);
@@ -354,6 +361,7 @@ void pathString(any,char*);
 void pipeError(any,char*);
 void popCtlFiles(void);
 void popInFiles(void);
+void popErrFiles(void);
 void popOutFiles(void);
 void pr(int,any);
 void prin(any);
@@ -362,9 +370,10 @@ void print(any);
 void print1(any);
 void prn(long);
 void protError(any,any) __attribute__ ((noreturn));
-void pushInFiles(inFrame*);
-void pushOutFiles(outFrame*);
 void pushCtlFiles(ctlFrame*);
+void pushInFiles(inFrame*);
+void pushErrFiles(errFrame*);
+void pushOutFiles(outFrame*);
 void put(any,any,any);
 void putStdout(int);
 void rdOpen(any,any,inFrame*);
@@ -500,6 +509,7 @@ any doEq(any);
 any doEq0(any);
 any doEqT(any);
 any doEqual(any);
+any doErr(any);
 any doEval(any);
 any doExt(any);
 any doExtern(any);

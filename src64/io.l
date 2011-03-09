@@ -1617,6 +1617,48 @@
    end
    ret
 
+(code 'erOpenEXY)
+   num E  # Need symbol
+   jnz symErrEX
+   sym E
+   jz symErrEX
+   cc dup(2)  # Duplicate current stderr
+   ld (Y I) A  # Save it
+   cmp E Nil  # Use current output channel?
+   if eq  # Yes
+      cc dup(((OutFile)))  # Duplicate 'fd'
+      ld C A  # Keep in C
+   else
+      push Z
+      call pathStringE_SZ  # File name
+      do
+         ld B (S)  # First char
+         cmp B (char "+")  # Plus?
+         if eq  # Yes
+            cc open(&(S 1) (| O_APPEND O_CREAT O_WRONLY) (oct "0666"))
+         else
+            cc open(S (| O_CREAT O_TRUNC O_WRONLY) (oct "0666"))
+         end
+         nul4  # OK?
+      while s  # No
+         call errno_A
+         cmp A EINTR  # Interrupted?
+         jne openErrEX  # No
+         null (Signal)  # Signal?
+         if nz  # Yes
+            call sighandlerX
+         end
+      loop
+      ld S Z  # Drop buffer
+      pop Z
+      ld C A  # Keep 'fd' in C
+      call closeOnExecAX
+   end
+   cc dup2(C 2)  # Dup 'fd' to STDERR_FILENO
+   ld A C
+   call closeAX
+   ret
+
 (code 'ctOpenEXY)
    num E  # Need symbol
    jnz symErrEX
@@ -1800,6 +1842,11 @@
    ld (EnvOutFrames) Y  # Link frame
    ret
 
+(code 'pushErrFilesY)
+   ld (Y) (EnvErrFrames)  # Set link
+   ld (EnvErrFrames) Y  # Link frame
+   ret
+
 (code 'pushCtlFilesY)
    ld (Y) (EnvCtlFrames)  # Set link
    ld (EnvCtlFrames) Y  # Link frame
@@ -1894,6 +1941,13 @@
       ld A (A)  # Get previous OutFile
    end
    ld (OutFile) A  # Set OutFile
+   ret
+
+(code 'popErrFiles)  # C
+   ld C (EnvErrFrames)  # Get ErrFrames
+   cc dup2((C I) 2)  # Restore stderr
+   cc close((C I))  # Close 'fd'
+   ld (EnvErrFrames) ((EnvErrFrames))  # Restore ErrFrames
    ret
 
 (code 'popCtlFiles)  # C
@@ -4139,6 +4193,46 @@
    pop X
    ret
 
+# (err 'sym . prg) -> any
+(code 'doErr 2)
+   push X
+   push Y
+   ld X E  # Expression in X
+   ld E (E CDR)
+   ld E (E)  # Eval 'any'
+   eval
+   sub S II  # ErrFrame
+   ld Y S
+   call erOpenEXY
+   call pushErrFilesY
+   ld X ((X CDR) CDR)  # Get 'prg'
+   prog X
+   call popErrFiles
+   add S II  # Drop ErrFrame
+   pop Y
+   pop X
+   ret
+
+# (ctl 'sym . prg) -> any
+(code 'doCtl 2)
+   push X
+   push Y
+   ld X E  # Expression in X
+   ld E (E CDR)
+   ld E (E)  # Eval 'any'
+   eval
+   sub S II  # CtlFrame
+   ld Y S
+   call ctOpenEXY
+   call pushCtlFilesY
+   ld X ((X CDR) CDR)  # Get 'prg'
+   prog X
+   call popCtlFiles
+   add S II  # Drop CtlFrame
+   pop Y
+   pop X
+   ret
+
 # (pipe exe) -> cnt
 # (pipe exe . prg) -> any
 (code 'doPipe 2)
@@ -4199,28 +4293,6 @@
       call popInFiles
    end
    add S (+ 8 IV)  # Drop 'pipe' structure and In/OutFrame
-   pop Y
-   pop X
-   ret
-
-# (ctl 'sym . prg) -> any
-(code 'doCtl 2)
-   push X
-   push Y
-   ld X E  # Expression in X
-   ld E (E CDR)
-   ld E (E)  # Eval 'any'
-   eval
-   push A  # CtlFrame
-   push A
-   ld Y S
-   call ctOpenEXY
-   call pushCtlFilesY
-   ld X ((X CDR) CDR)  # Get 'prg'
-   prog X
-   call popCtlFiles
-   pop A  # Drop CtlFrame
-   pop A
    pop Y
    pop X
    ret
