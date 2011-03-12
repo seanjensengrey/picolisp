@@ -1,4 +1,4 @@
-09mar11abu
+12mar11abu
 (c) Software Lab. Alexander Burger
 
 
@@ -41,9 +41,9 @@
    (and also that of the corresponding default CSS type in "lib.css"). This was
    done to reserve the name "err" for standard error redirection (point 8).
 
-6. The "opt/" directory (until now containing only a single "pilog.l" file) was
-   removed from the base distribution. It is now tracked separately. To install
-   the addons, you can download them as a tarball from
+6. The "opt/" directory (until now containing only a single "pilog.l" file), and
+   "misc/pilog.l" were removed from the base distribution. They are now tracked
+   separately. To install the addons, you can download them as a tarball from
 
       http://code.google.com/p/picolisp/source/browse/?repo=addons
 
