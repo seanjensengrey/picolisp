@@ -1,4 +1,4 @@
-# 09mar11abu
+# 16mar11abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -3318,7 +3318,7 @@
          ld Y (C)  # fd + 1
          inc Y
          do
-            cc select(Y S 0 &(S FD_SET))  # Check
+            cc select(Y S 0 0 &(S FD_SET))  # Check
             nul4  # OK?
          while s  # No
             call errno_A
