@@ -1,4 +1,4 @@
-# 03mar11abu
+# 21mar11abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -508,7 +508,8 @@
 (asm call (Adr A)
    (nond
       (A (prinst "call" (target Adr)))
-      ((=T A) (prinst "call" (pack "*" Adr)))
+      ((=T A)  # Ignore SUBR
+         (prinst "call" (pack "*" Adr)) )
       (NIL
          (prinst "mov" (target Adr T) "%r10")
          (prinst "call" "*%r10") ) ) )
@@ -516,7 +517,8 @@
 (asm jmp (Adr A)
    (nond
       (A (prinst "jmp" (target Adr)))
-      ((=T A) (prinst "jmp" (pack "*" Adr)))
+      ((=T A)  # Ignore SUBR
+         (prinst "jmp" (pack "*" Adr)) )
       (NIL
          (prinst "mov" (target Adr T) "%r10")
          (prinst "jmp" "*%r10") ) ) )
@@ -525,7 +527,7 @@
    (ifn A
       (prinst Opc (target Adr))
       (prinst Opc2 "1f")
-      (ifn (=T A)
+      (ifn (=T A)  # Ignore SUBR
          (prinst "jmp" (pack "*" Adr))
          (prinst "mov" (target Adr T) "%r10")
          (prinst "jmp" "*%r10") )

@@ -1,4 +1,4 @@
-# 03feb11abu
+# 21mar11abu
 # (c) Software Lab. Alexander Burger
 
 (code 'applyXYZ_E 0)
@@ -31,7 +31,7 @@
          ld E S  # Set 'exe'
          link
          ld (EnvApply) L  # Close apply frame
-         call (C)  # Eval SUBR
+         call (C T)  # Eval SUBR
          drop
          pop (EnvApply)
          ret
@@ -385,7 +385,7 @@
          ld E S  # Set 'exe'
          link
          ld (EnvApply) L  # Close apply frame
-         call (C)  # Eval SUBR
+         call (C T)  # Eval SUBR
          drop
          pop (EnvApply)
          ret

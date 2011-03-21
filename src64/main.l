@@ -1,4 +1,4 @@
-# 03mar11abu
+# 21mar11abu
 # (c) Software Lab. Alexander Burger
 
 ### Global return labels ###
@@ -1273,7 +1273,7 @@
          end
          ld A (C)  # Get VAL
          cnt A  # Short number?
-         jnz (A)  # Yes: Eval SUBR
+         jnz (A T)  # Yes: Eval SUBR
          big A  # Undefined if bignum
          jnz undefinedCE
          cmp A (A)  # Auto-symbol?
@@ -1283,7 +1283,7 @@
             jz evExprCE_E  # No: Apply EXPR
          else
             call sharedLibC_FA  # Try dynamic load
-            jnz (A)  # Eval SUBR
+            jnz (A T)  # Eval SUBR
             jmp undefinedCE
          end
       loop
@@ -1296,7 +1296,7 @@
    ld C E
    pop E
    cnt C  # Short number?
-   jnz (C)  # Yes: Eval SUBR
+   jnz (C T)  # Yes: Eval SUBR
    big C  # Undefined if bignum
    jnz undefinedCE
    link

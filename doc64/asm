@@ -1,4 +1,4 @@
-# 05mar11abu
+# 21mar11abu
 # (c) Software Lab. Alexander Burger
 
 
@@ -72,6 +72,7 @@
       jmp 1234             # Absolute
       jmp Label
       jmp (R)              # Indexed
+      jmp (R T)            # Indexed SUBR
       jmp (Global)         # Indirect
 
 ========================================================================

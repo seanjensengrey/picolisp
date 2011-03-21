@@ -1,4 +1,4 @@
-# 03mar11abu
+# 21mar11abu
 # (c) Software Lab. Alexander Burger
 
 # *LittleEndian *Registers optimize
@@ -232,6 +232,7 @@
 #  0    -> Immediate
 #  NIL  -> Register
 #  T    -> Direct
+# (..)  -> Combined
 (de "source" (X F)
    (setq X (operand X))
    (cond
@@ -298,9 +299,10 @@
 
 
 # Target addressing mode:
-#  NIL -> Absolute
-#  0   -> Indexed
-#  T   -> Indirect
+#  NIL  -> Absolute
+#  0    -> Indexed
+# (0)   -> SUBR
+#  T    -> Indirect
 (de address ()
    (let X (read)
       (off "*Mode")
@@ -308,6 +310,9 @@
          ((num? X) (pack *Label "_" X))            # Label
          ((reg X) (quit "Bad address" X))          # Register
          ((atom X) X)                              # Absolute
+         ((and (=T (cadr X)) (reg (car X)))        # SUBR
+            (setq "*Mode" (0))
+            @ )
          ((cdr X) (quit "Bad address" X))
          ((reg (car X)) (zero "*Mode") @)          # Register indirect
          (T (on "*Mode") (car X)) ) ) )            # Indirect
