@@ -1,4 +1,4 @@
-# 28feb11abu
+# 22mar11abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -1442,14 +1442,16 @@
    (and
       (<> Val (: org))
       (eval (: file))
-      (out @ (prin (=: org Val))) )
+      (out @ (ctl T (prin (=: org Val)))) )
    (super Val Dn) )
 
 (dm upd> ()
    (set> This
       (=: org
          (let? F (eval (: file))
-            (and (info F) (in F (till NIL T))) ) ) ) )
+            (and
+               (info F)
+               (in F (ctl NIL (till NIL T))) ) ) ) ) )
 
 
 (class +Url)
