@@ -711,6 +711,9 @@
 # Case conversions
 (class +Uppc)
 
+(dm set> (Val Dn)
+   (extra (uppc Val) Dn) )
+
 (dm val> ()
    (uppc (extra)) )
 
