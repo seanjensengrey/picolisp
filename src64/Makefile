@@ -1,4 +1,4 @@
-# 01mar11abu
+# 25mar11abu
 # (c) Software Lab. Alexander Burger
 
 .SILENT:
@@ -26,7 +26,7 @@ ifeq ($(shell uname), SunOS)
 endif
 endif
 
-baseFiles = version.l glob.l main.l sys/$(SYS).code.l \
+baseFiles = version.l glob.l main.l sys/$(ARCH).$(SYS).code.l \
 	gc.l apply.l flow.l sym.l subr.l big.l io.l db.l net.l err.l
 
 picolisp: $(bin)/picolisp $(lib)/ext $(lib)/ht
