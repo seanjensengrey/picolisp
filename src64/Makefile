@@ -1,4 +1,4 @@
-# 25mar11abu
+# 27mar11abu
 # (c) Software Lab. Alexander Burger
 
 .SILENT:
@@ -26,7 +26,7 @@ ifeq ($(shell uname), SunOS)
 endif
 endif
 
-baseFiles = version.l glob.l main.l sys/$(ARCH).$(SYS).code.l \
+baseFiles = version.l glob.l main.l \
 	gc.l apply.l flow.l sym.l subr.l big.l io.l db.l net.l err.l
 
 picolisp: $(bin)/picolisp $(lib)/ext $(lib)/ht
@@ -51,8 +51,8 @@ $(lib)/ht: $(ARCH).$(SYS).ht.o
 
 
 # Explicit builds for cross-assembly
-x86-64.linux.base.s: $(baseFiles)
-	./mkAsm x86-64 linux Linux base $(lib)/tags $(baseFiles)
+x86-64.linux.base.s: $(baseFiles) sys/x86-64.linux.code.l
+	./mkAsm x86-64 linux Linux base $(lib)/tags $(baseFiles) sys/x86-64.linux.code.l
 
 x86-64.linux.ext.s: ext.l
 	./mkAsm x86-64 linux Linux ext "" -fpic ext.l
@@ -61,8 +61,8 @@ x86-64.linux.ht.s: ht.l
 	./mkAsm x86-64 linux Linux ht "" -fpic ht.l
 
 
-x86-64.sunOs.base.s: $(baseFiles)
-	./mkAsm x86-64 sunOs SunOS base $(lib)/tags $(baseFiles)
+x86-64.sunOs.base.s: $(baseFiles) sys/x86-64.sunOs.code.l
+	./mkAsm x86-64 sunOs SunOS base $(lib)/tags $(baseFiles) sys/x86-64.sunOs.code.l
 
 x86-64.sunOs.ext.s: ext.l
 	./mkAsm x86-64 sunOs SunOS ext "" -fpic ext.l
