@@ -1,4 +1,4 @@
-# 03mar11abu
+# 28mar11abu
 # (c) Software Lab. Alexander Burger
 
 ### Compare long names ###
@@ -95,7 +95,6 @@
          cmp A X  # Equal?
          if eq  # Yes
             ld E (C)  # Found symbol
-            clrc
             ret
          end
          if lt  # Symbol is smaller
@@ -186,7 +185,6 @@
       call cmpLongAX_F  # Equal?
       if eq  # Yes
          ld E (C)  # Found symbol
-         clrc
          ret
       end
       if lt  # Symbol is smaller
