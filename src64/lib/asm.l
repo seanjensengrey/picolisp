@@ -1,4 +1,4 @@
-# 21mar11abu
+# 29mar11abu
 # (c) Software Lab. Alexander Burger
 
 # *LittleEndian *Registers optimize
@@ -238,7 +238,7 @@
    (cond
       ((num? X)                                 # Immediate
          (zero "*Mode")
-         (pack '$ (and F "~") X) )
+         (pack (and F "~") X) )
       ((reg X) (off "*Mode") @)                 # Register
       ((atom X) (on "*Mode") X)                 # Direct
       ((or (num? (cdr X)) (get (cdr X) 'equ))

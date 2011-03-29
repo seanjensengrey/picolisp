@@ -1,4 +1,4 @@
-# 21mar11abu
+# 29mar11abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -79,9 +79,9 @@
 
 (de src (Src S)
    (cond
-      ((=0 S) (if (= "$0" Src) "%r12" Src))     # Immediate
-      ((not S) Src)                             # Register
-      ((=T S)                                   # Direct
+      ((=0 S) (if (= "0" Src) "%r12" (pack "$" Src)))  # Immediate
+      ((not S) Src)                                    # Register
+      ((=T S)                                          # Direct
          (if (and *FPic (not (pre? "(" Src)))
             (pack Src "@GOTPCREL(%rip)")
             (pack "$" Src) ) )
@@ -636,7 +636,7 @@
                '((Src S)
                   (if (== '& Src)
                      (on Lea)
-                     (unless (= "$0" Src)  # Keep for 'xor' later
+                     (unless (and (=0 S) (= "0" Src))  # Keep for 'xor' later
                         (setq Src
                            (src
                               (recur (Src)
@@ -651,7 +651,7 @@
                               (prinst "pushq" Src)
                               (prinst "lea" Src "%rax")
                               (prinst "pushq" "%rax") ) )
-                        ((= "$0" Src)
+                        ((and (=0 S) (= "0" Src))
                            (prinst "xor" (car Reg) (pop 'Reg)) )
                         ((= "$pop" Src)
                            (prinst "pop" (pop 'Reg)) )
