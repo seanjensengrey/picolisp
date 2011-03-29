@@ -1,4 +1,6 @@
-* XXmar11 picoLisp-3.0.6
+* XXjun11 picoLisp-3.0.7
+
+* 29mar11 picoLisp-3.0.6
    Bug in 'poll' (64-bit)
    Bug in 'accept' (64-bit)
    'err' function
