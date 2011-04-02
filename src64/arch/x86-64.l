@@ -1,4 +1,4 @@
-# 29mar11abu
+# 02apr11abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -884,8 +884,7 @@
    (prinst "xor" "%r12" "%r12")  # Init NULL register
    (prinst "mov" "(%rsi)" "%r13")  # Get command in X
    (prinst "lea" "8(%rsi)" "%r14")  # argument vector in Y
-   (prinst "dec" "%rdi")  # and pointer to last argument in Z
-   (prinst "lea" "0(%rsi,%rdi,8)" "%r15") )
+   (prinst "lea" "-8(%rsi,%rdi,8)" "%r15") )  # pointer to last argument in Z
 
 ### Optimizer ###
 # Replace the the next 'cnt' elements with 'lst'
