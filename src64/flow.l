@@ -1,4 +1,4 @@
-# 26feb11abu
+# 04apr11abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -133,7 +133,7 @@
       end
    end
    ld (E) C  # Set definition
-   ld C 0  # No class
+   ld C 0  # No key
    call putSrcEC_E  # Put source information
    ret
 
@@ -490,7 +490,7 @@
       end
       ld E (L II)  # Get symbol
       ld (E) (L I)  # Set new value
-      ld C 0  # No class
+      ld C 0  # No key
       call putSrcEC_E  # Put source information
    else
       ld E (Y)
@@ -612,10 +612,7 @@
          end
          pop E
          ld ((X) CDR) (Y CDR)  # Set new body
-         call putSrcEC_E  # Put source information
-         pop Y
-         pop X
-         ret
+         jmp 90
       end
       ld X (X CDR)
    loop
@@ -634,7 +631,9 @@
       ld (A CDR) (C)
    end
    ld (C) A
+90 xchg C E  # 'msg' <-> 'cls'
    call putSrcEC_E  # Put source information
+   ld E C  # Return 'msg'
    pop Y
    pop X
    ret
