@@ -1,4 +1,4 @@
-# 21mar11abu
+# 05apr11abu
 # (c) Software Lab. Alexander Burger
 
 ### Global return labels ###
@@ -26,9 +26,11 @@
    ld E (E)  # Get value or CAR
    ret
 
+initCode
+
 ### Main entry point ###
 (code 'main)
-   initCode
+   initMain
    ld (AV0) X  # Save command
    ld (AV) Y  # and argument vector
    # Check debug mode

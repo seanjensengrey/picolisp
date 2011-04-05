@@ -1,4 +1,4 @@
-# 09mar11abu
+# 05apr11abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Globals 0)
@@ -601,8 +601,6 @@
 : EnvTrace     word  0        # Trace level
 : EnvEnd  # Must be aligned
 
-initData
-
 : OrgTermio skip TERMIOS         # Original termio structure
 : Flock     skip FLOCK           # File lock structure
 : Tms       skip TMS             # 'times' structure
@@ -1144,5 +1142,7 @@ initData
    hx2 ("0" "0" "0" "0" "0" "0" "0" "0" "1A" "0" "0" "0" "0" "0" "0" "0")
    hx2 ("0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0")
    hx2 ("0" "0" "0" "0" "0" "0" "0")
+
+initData
 
 # vi:et:ts=3:sw=3

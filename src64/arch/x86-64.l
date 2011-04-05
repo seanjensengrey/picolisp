@@ -1,4 +1,4 @@
-# 02apr11abu
+# 05apr11abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -880,7 +880,9 @@
 # System
 (asm initData ())
 
-(asm initCode ()
+(asm initCode ())
+
+(asm initMain ()
    (prinst "xor" "%r12" "%r12")  # Init NULL register
    (prinst "mov" "(%rsi)" "%r13")  # Get command in X
    (prinst "lea" "8(%rsi)" "%r14")  # argument vector in Y

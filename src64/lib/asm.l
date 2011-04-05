@@ -1,4 +1,4 @@
-# 29mar11abu
+# 05apr11abu
 # (c) Software Lab. Alexander Burger
 
 # *LittleEndian *Registers optimize
@@ -418,6 +418,7 @@
       (inc (destination) "*Mode")
       (initCode)
       (initData)
+      (initMain)
       (initFun (read) (read) (operand (read)))
       (initSym (read) (read) (operand (read)))
       (jc (address) "*Mode")
