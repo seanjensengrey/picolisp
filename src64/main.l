@@ -1,6 +1,9 @@
 # 05apr11abu
 # (c) Software Lab. Alexander Burger
 
+(code 'Code 0)
+   initCode
+
 ### Global return labels ###
 (code 'Ret 0)
    ret
@@ -25,8 +28,6 @@
 (code 'RetE_E 0)
    ld E (E)  # Get value or CAR
    ret
-
-initCode
 
 ### Main entry point ###
 (code 'main)
