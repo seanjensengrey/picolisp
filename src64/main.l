@@ -1,4 +1,4 @@
-# 05apr11abu
+# 06apr11abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code 0)
@@ -961,7 +961,7 @@
          call nameE_E  # Second name in E
          cmp E ZERO  # Any?
          if eq  # No
-            rol B 4  # Random bit from A (...x1000) into carry (non-zero)
+            shr A 5  # Random bit from A (...x1000) into carry (non-zero)
          else
             setc  # lt
          end
