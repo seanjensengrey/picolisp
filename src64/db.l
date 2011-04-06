@@ -1,4 +1,4 @@
-# 03mar11abu
+# 06apr11abu
 # (c) Software Lab. Alexander Burger
 
 # 6 bytes in little endian format
@@ -917,12 +917,10 @@
    pop X
    ld E TSym  # Return T
    ret
-: RolbLog asciz "Last transaction not completed: Rollback\n"
 
 (code 'ignLog)
    cc fprintf((stderr) IgnLog)
    ret
-: IgnLog asciz "Discarding incomplete transaction.\n"
 
 (code 'rewindLog)
    cc fseek((DbLog) 0 SEEK_SET)  # Rewind transaction log
@@ -2255,8 +2253,5 @@
    pop Y
    pop X
    ret
-: CircFree asciz "Circular free list"
-: BadChain asciz "Bad chain"
-: BadCount asciz "Bad count"
 
 # vi:et:ts=3:sw=3

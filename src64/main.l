@@ -186,13 +186,11 @@
    cc fprintf((stderr) Giveup A X)
    ld E 1
    jmp finishE
-: Giveup asciz "%d %s\\n"
 
 (code 'execErrS)
    cc fprintf((stderr) ExecErr (S))
    ld E 127
    jmp finishE
-: ExecErr asciz "%s: Can't exec\\n"
 
 # Install interrupting signal
 (code 'iSignalCE)
@@ -215,9 +213,8 @@
    null A  # OK?
    jnz Ret  # Return
 : NoMemory
-   ld X Alloc  # No memory
+   ld X AllocErr  # No memory
    jmp giveupX
-: Alloc asciz "No memory"
 
 
 # Allocate cell heap
@@ -392,7 +389,6 @@
    call errnoC
    return 0
    ret
-: PidSigMsg asciz "%d SIG-%d\\n"
 
 (code 'tcSetC)
    null (Termio)  # In raw mode?
@@ -1113,7 +1109,6 @@
    ld Y QuitMsg  # Format string
    ld Z S  # Buffer pointer
    jmp errEXYZ  # Jump to error handler
-: QuitMsg asciz "%s"
 
 ### Evaluation ###
 # Apply EXPR in C to CDR of E
@@ -1990,7 +1985,6 @@
    until eq
    ld Y CbErr
    jmp errEXYZ
-: CbErr asciz "Too many callbacks"
 
 (code 'lisp 0)
    begin 6  # Function name in A, arguments in C, E, X, Y and Z

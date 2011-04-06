@@ -1,4 +1,4 @@
-# 16mar11abu
+# 06apr11abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -46,7 +46,6 @@
    jns Ret  # Yes
    ld Y SetFD
    jmp errnoEXY
-: SetFD asciz "SETFD %s"
 
 # Set file descriptor to non-blocking / blocking
 (code 'nonblockingA_A)
@@ -4128,7 +4127,6 @@
    drop
    pop Y
    ret
-: Arrow asciz "-> "
 
 # (load 'any ..) -> any
 (code 'doLoad 2)

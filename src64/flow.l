@@ -1,4 +1,4 @@
-# 04apr11abu
+# 06apr11abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -21,8 +21,6 @@
    pop (PutB)  # Restore 'put'
    pop (OutFile)  # and output channel
    ret
-: HashBlank asciz "# "
-: Redefined asciz " redefined\\n"
 
 (code 'putSrcEC_E)
    cmp (Dbg) Nil  # Debug?
@@ -1256,7 +1254,6 @@
    pop X  # Expression
    ld Y SuperErr
    jmp errEXYZ
-: SuperErr asciz "Bad super"
 
 # (extra ['any ..]) -> any
 (code 'doExtra 2)
@@ -1285,7 +1282,6 @@
    pop X  # Expression
    ld Y ExtraErr
    jmp errEXYZ
-: ExtraErr asciz "Bad extra"
 
 (code 'extraXY_FCYZ 0)
    ld X (X)  # Get class definition
@@ -2515,7 +2511,6 @@
    ld E Z
    ld Y ThrowErr
    jmp errEXYZ
-: ThrowErr asciz "Tag not found"
 
 # (finally exe . prg) -> any
 (code 'doFinally 2)
@@ -2975,7 +2970,7 @@
       inc (EnvTrace)  # Increment trace level
       ld C (EnvTrace)  # Get it
       call traceCY  # Print trace information
-      ld C trc1  # Print " :"
+      ld C Trc1  # Print " :"
       call outStringC
       ld X (X)  # Get 'lst'
       do
@@ -3015,7 +3010,7 @@
       ld C (EnvTrace)  # Get trace level
       dec (EnvTrace)  # Decrement it
       call traceCY  # Print trace information
-      ld C trc2  # Print " = "
+      ld C Trc2  # Print " = "
       call outStringC
       call printE_E  # Print result
       call newline
@@ -3026,8 +3021,6 @@
    end
    pop X
    ret
-: trc1 asciz " :"
-: trc2 asciz " = "
 
 (code 'traceCY)
    cmp C 64  # Limit to 64
