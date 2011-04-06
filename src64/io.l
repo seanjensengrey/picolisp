@@ -2137,8 +2137,6 @@
       end
    end
    ret
-: Delim ascii " \\t\\n\\r\\\"'(),[]`~{}"
-: DelimEnd
 
 (code 'rdList_E)
    cmp S (StkLimit)  # Stack check

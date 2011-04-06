@@ -1163,6 +1163,8 @@
 : Trc2 asciz " = "
 # io.l
 : SetFD asciz "SETFD %s"
+: Delim ascii " \\t\\n\\r\\\"'(),[]`~{}"
+: DelimEnd
 : Arrow asciz "-> "
 # db.l
 : RolbLog asciz "Last transaction not completed: Rollback\n"
