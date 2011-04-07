@@ -1136,6 +1136,7 @@
 : Jam       byte 0            # Error jam
 : InBye     byte 0            # Exit status
 : Sync      byte 0            # Family IPC synchronization
+: Month bytes (31 31 28 31 30 31 30 31 31 30 31 30 31)
 
 # Strings
 :: _r_ asciz "r"

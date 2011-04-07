@@ -1,4 +1,4 @@
-# 06apr11abu
+# 07apr11abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code 0)
@@ -2373,7 +2373,6 @@
    shl E 4  # Make short number
    or E CNT
    ret
-: Month bytes (31 31 28 31 30 31 30 31 31 30 31 30 31)
 
 # (date ['T]) -> dat
 # (date 'dat) -> (y m d)
