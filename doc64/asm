@@ -1,4 +1,4 @@
-# 06apr11abu
+# 07apr11abu
 # (c) Software Lab. Alexander Burger
 
 
@@ -112,7 +112,7 @@
       and dst src       # Bitwise AND 'dst' with 'src'
       or dst src        # Bitwise OR 'dst' with 'src'
       xor dst src       # Bitwise XOR 'dst' with 'src'
-      off dst src       # Clear 'src' bits in 'src'
+      off dst src       # Clear 'src' bits in 'dst'
       test dst src      # Bit-test 'dst' with 'src'
 
       shl dst src       # Shift 'dst' left into Carry by 'src' bits
