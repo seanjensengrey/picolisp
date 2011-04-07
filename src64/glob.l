@@ -1,10 +1,9 @@
-# 06apr11abu
+# 07apr11abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Data 0)
    initData
 
-(data 'Globals 0)
 :: AV          word  0           # Command line argument vector
 :: AV0         word  0           # Command name
 :: Home        word  0           # Home directory
