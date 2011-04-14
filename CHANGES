@@ -1,4 +1,5 @@
 * XXjun11 picoLisp-3.0.7
+   64-bit version for PowerPC (ppc64)
    Changed "@.picoHistory" to ".pilHistory"
 
 * 29mar11 picoLisp-3.0.6

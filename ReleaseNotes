@@ -1,7 +1,9 @@
-29mar11abu
+14apr11abu
 (c) Software Lab. Alexander Burger
 
 
          Release Notes for picoLisp-3.0.7
          ================================
 
+1. A preliminary implementation of the 64-bit version for PowerPC (ppc64).
+   Doesn't run yet, but will hopefully improve until this release is due.

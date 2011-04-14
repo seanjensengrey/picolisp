@@ -1,4 +1,4 @@
-08mar11abu
+14apr11abu
 (c) Software Lab. Alexander Burger
 
 
@@ -28,7 +28,8 @@ Please follow these steps:
 
       $ (cd src; make picolisp)
 
-   or, if you have an x86-64 Linux or SunOS system, build the 64-bit version
+   or - if you have an x86-64/Linux, x86-64/SunOS or ppc64/Linux system - build
+   the 64-bit version
 
       $ (cd src64; make picolisp)
 
@@ -45,6 +46,7 @@ Please follow these steps:
 
      - http://software-lab.de/x86-64.linux.tgz
      - http://software-lab.de/x86-64.sunOs.tgz
+     - http://software-lab.de/ppc64.linux.tgz
 
    - Else, build a 32-bit version first, and use the resulting bin/picolisp to
      generate the "*.s" files:
