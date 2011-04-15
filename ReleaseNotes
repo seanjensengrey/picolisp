@@ -1,9 +1,20 @@
-14apr11abu
+15apr11abu
 (c) Software Lab. Alexander Burger
 
 
          Release Notes for picoLisp-3.0.7
          ================================
 
-1. A preliminary implementation of the 64-bit version for PowerPC (ppc64).
+1. Runtime files, like the line editor history and temporary directories, were
+   moved to a ".pil/" directory in the user's home directory. The reason is that
+   for a global installation of PicoLisp, neither the installation directory nor
+   the current working directory can be assumed to be writable.
+
+   The line editor history used to reside in the installation directory, in the
+   file "@.picoHistory". It is now in "~/.pil/history".
+
+   Temporary directories (with the PID as name) were created in a "tmp/"
+   directory in the current working directory. They are now in "~/.pil/tmp/".
+
+2. A preliminary implementation of the 64-bit version for PowerPC (ppc64).
    Doesn't run yet, but will hopefully improve until this release is due.

@@ -1,6 +1,7 @@
 * XXjun11 picoLisp-3.0.7
    64-bit version for PowerPC (ppc64)
-   Changed "@.picoHistory" to ".pilHistory"
+   Moved temporary directories to ~/.pil/tmp/
+   Moved line editor history to ~/.pil/history
 
 * 29mar11 picoLisp-3.0.6
    Bug in 'poll' (64-bit)

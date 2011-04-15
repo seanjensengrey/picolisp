@@ -20,9 +20,9 @@ href="refB.html#*Bye">*Bye</a></code>.
 : *Bye
 -> ((saveHistory) (and *Tmp (call 'rm "-r" *Tmp)))
 : (tmp "foo" 123)
--> "tmp/27140/foo123"
+-> "/home/app/.pil/tmp/27140/foo123"
 : *Tmp
--> "tmp/27140/"
+-> "/home/app/.pil/tmp/27140/"
 </code></pre>
 
 <p><dt><a name="*Tsm"><code>*Tsm</code></a>
@@ -383,8 +383,8 @@ href="ref_.html#$tim">$tim</a></code>.
 <dt><a name="tmp"><code>(tmp ['any ..]) -> sym</code></a>
 <dd>Returns the path name to the <code><a
 href="refP.html#pack">pack</a></code>ed <code>any</code> arguments in a
-process-local temporary directory. The directory name consists of "tmp/"
-followed by the current process ID <code><a
+process-local temporary directory. The directory name consists of the path to
+"tmp/" in the user's home directory, followed by the current process ID <code><a
 href="refP.html#*Pid">*Pid</a></code>. This directory is automatically created
 if necessary, and removed upon termination of the process (<code><a
 href="refB.html#bye">bye</a></code>). See also <code><a
@@ -392,14 +392,10 @@ href="refT.html#*Tmp">*Tmp</a></code> and <code><a
 href="refB.html#*Bye">*Bye</a></code> .
 
 <pre><code>
-: *Bye
--> ((saveHistory) (and *Tmp (call 'rm "-r" *Tmp)))
 : *Pid
 -> 27140
 : (tmp "foo" 123)
--> "tmp/27140/foo123"
-: (dir "tmp/")
--> ("27140")
+-> "/home/app/.pil/tmp/27140/foo123"
 : (out (tmp "foo" 123) (println 'OK))
 -> OK
 : (dir (tmp))
