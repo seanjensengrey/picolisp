@@ -1,4 +1,4 @@
-# 05apr11abu
+# 15apr11abu
 # (c) Software Lab. Alexander Burger
 
 # *LittleEndian *Registers optimize
@@ -63,7 +63,6 @@
 (de section (Fun @Sym)
    (def Fun
       (curry (@Sym) (Lbl Align)
-         (def Lbl 'src (cdr (file)))
          (unless (== *Section '@Sym)
             (prinl)
             (prinl "   ." '@Sym)
@@ -75,14 +74,19 @@
          (when (reg Lbl)
             (quit "Register" Lbl) )
          (when Lbl
+            (def Lbl 'src (cdr (file)))
             (label (setq *Label Lbl)) )
          (setq *Program
             (make
                (while (and (skip "#") (<> "(" (peek)))
                   (let Atom (read)
                      (cond
-                        ((== ': Atom)
+                        ((== ': Atom)  # Label
                            (link (cons ': (read))) )
+                        ((== '? Atom)  # Conditional
+                           (unless (eval (read))
+                              (while (and (skip "#") (n== '= (read)))) ) )
+                        ((== '= Atom))  # Conditional end
                         ((num? Atom)
                            (link (cons ': (pack *Label "_" Atom))) )
                         ((lup *FlowControl Atom)
