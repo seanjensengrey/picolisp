@@ -1,4 +1,4 @@
-# 15apr11abu
+# 17apr11abu
 # (c) Software Lab. Alexander Burger
 
 # *LittleEndian *Registers optimize
@@ -518,10 +518,10 @@
    (prinst ".short" (glue ", " (mapcar hex Lst))) )
 
 (asm ascii (Str)
-   (prinst ".ascii " (pack "\"" Str "\"")) )
+   (prinst ".ascii" (pack "\"" Str "\"")) )
 
 (asm asciz (Str)
-   (prinst ".asciz " (pack "\"" Str "\"")) )
+   (prinst ".asciz" (pack "\"" Str "\"")) )
 
 (asm initFun (Lbl Name Val)
    (initSym Lbl Name Val (boxfun Val)) )
@@ -551,13 +551,13 @@
                (chain L) ) ) ) )
    (if (nth Name 9)
       (prinst ".quad" ".+20")
-      (prinl "   .byte    " (glue ", " Name))
+      (prinst ".byte" (glue ", " Name))
       (off Name) )
    (when Lbl
       (label Lbl) )
    (prinst ".quad" Val)
    (while Name
-      (prinl "   .byte    " (glue ", " (cut 8 'Name))) ) )
+      (prinst ".byte" (glue ", " (cut 8 'Name))) ) )
 
 (de warn (Msg)
    (out 2
