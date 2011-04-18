@@ -1,4 +1,4 @@
-# 09apr11abu
+# 18apr11abu
 # (c) Software Lab. Alexander Burger
 
 .SILENT:
@@ -69,13 +69,13 @@ x86-64.linux.ht.s: lib/asm.l arch/x86-64.l ht.l
 
 
 ppc64.linux.base.s: lib/asm.l arch/ppc64.l $(baseFiles) sys/ppc64.linux.code.l
-	./mkAsm ppc64 linux Linux base $(lib)/tags $(baseFiles) sys/ppc64.linux.code.l
+	./mkAsm ppc64 linux Linux base $(lib)/tags $(baseFiles) sys/ppc64.linux.code.l -'prSym "ppc64.symtab"'
 
-ppc64.linux.ext.s: lib/asm.l arch/ppc64.l ext.l
-	./mkAsm ppc64 linux Linux ext "" -fpic ext.l
+ppc64.linux.ext.s: lib/asm.l arch/ppc64.l ext.l ppc64.linux.base.s
+	./mkAsm ppc64 linux Linux ext "" -fpic -'rdSym "ppc64.symtab"' ext.l
 
-ppc64.linux.ht.s: lib/asm.l arch/ppc64.l ht.l
-	./mkAsm ppc64 linux Linux ht "" -fpic ht.l
+ppc64.linux.ht.s: lib/asm.l arch/ppc64.l ht.l ppc64.linux.base.s
+	./mkAsm ppc64 linux Linux ht "" -fpic -'rdSym "ppc64.symtab"' ht.l
 
 
 x86-64.sunOs.base.s: lib/asm.l arch/x86-64.l $(baseFiles) sys/x86-64.sunOs.code.l

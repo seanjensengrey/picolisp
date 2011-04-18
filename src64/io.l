@@ -1,4 +1,4 @@
-# 06apr11abu
+# 15apr11abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -2677,6 +2677,9 @@
    ld B 1  # Bit mask
    shl B C  # Shift it
    shr X 3  # Offset
+? (not *LittleEndian)
+   xor X 7  # Invert byte offset
+=
    add X L  # Point to byte
    ret
 
