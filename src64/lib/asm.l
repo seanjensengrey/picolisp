@@ -1,4 +1,4 @@
-# 17apr11abu
+# 18apr11abu
 # (c) Software Lab. Alexander Burger
 
 # *LittleEndian *Registers optimize
@@ -75,7 +75,7 @@
             (quit "Register" Lbl) )
          (when Lbl
             (def Lbl 'src (cdr (file)))
-            (label (setq *Label Lbl)) )
+            (label (setq *Label Lbl) T) )
          (setq *Program
             (make
                (while (and (skip "#") (<> "(" (peek)))
@@ -106,7 +106,7 @@
                      (chain (cdr @)) ) ) ) )
          (for *Statement *Program
             (if (== ': (car *Statement))
-               (prinl (cdr *Statement) ':)
+               (label (cdr *Statement))
                (apply (get (car *Statement) 'asm) (cdr *Statement)) ) ) ) ) )
 
 # (data 'lbl)
@@ -498,12 +498,12 @@
 
 
 # Directives
-(de label (Lbl)
-   (prinl "   .globl  " Lbl)
+(de label (Lbl Flg)
+   (and Flg (prinl "   .globl  " Lbl))
    (prinl Lbl ':) )
 
 (asm :: (Lbl)
-   (label Lbl) )
+   (label Lbl T) )
 
 (asm word (N)
    (prinst ".quad" N) )
@@ -554,7 +554,7 @@
       (prinst ".byte" (glue ", " Name))
       (off Name) )
    (when Lbl
-      (label Lbl) )
+      (label Lbl T) )
    (prinst ".quad" Val)
    (while Name
       (prinst ".byte" (glue ", " (cut 8 'Name))) ) )
