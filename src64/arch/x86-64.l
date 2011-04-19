@@ -1,4 +1,4 @@
-# 05apr11abu
+# 19apr11abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -235,7 +235,7 @@
    (prinst "movzwq" (src Src S) "%rax") )
 
 (asm ld4 (Src S)
-   (prinst "movl" (src Src S) "%eax") )  # Clears upper word of %rax
+   (prinst "mov" (src Src S) "%eax") )  # Clears upper word of %rax
 
 (de _cmov (Cmd Jmp)
    (setq Dst (dst Dst D)  Src (src Src S))
