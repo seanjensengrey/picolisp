@@ -244,11 +244,11 @@
                   ((sub? "-" (cdr Mem))  # Label difference
                      (opReg Op Reg (cdr Mem) (car Mem)) )
                   ((or *FPic (low? (cdr Mem)))  # -fpic or code label
-                     (let R (if (lt0 Reg) (tmpReg) Reg)
+                     (let R (tmpReg)
                         (dataGot R (cdr Mem))
                         (opxReg Op Reg R (car Mem)) ) )
                   (T
-                     (let R (if (lt0 Reg) (tmpReg) Reg)
+                     (let R (tmpReg)
                         (prinst "la" R (pack (dataOffset (cdr Mem)) "(22)"))
                         (opxReg Op Reg R (car Mem)) ) ) ) ) ) )
       ((=T (car M))  # Indirect
@@ -956,29 +956,24 @@
    (prinst "blr") )
 
 (asm begin (N)
-   (when (>= N 6)                                  # Z
-      (prinst "stdu" 18 "-8(1)")
-      (prinst "mr" 18 8) )
-   (when (>= N 5)                                  # Y
-      (prinst "stdu" 17 "-8(1)")
-      (prinst "mr" 17 7) )
-   (when (>= N 4)                                  # X
-      (prinst "stdu" 16 "-8(1)")
-      (prinst "mr" 16 6) )
-   (when (>= N 3)                                  # E
-      (prinst "stdu" 15 "-8(1)")
-      (prinst "mr" 15 5) )
-   (when (>= N 2)                                  # C
-      (prinst "stdu" 14 "-8(1)")
-      (prinst "mr" 14 4) ) )
+   (prinst ".quad" ".+24" ".TOC.@tocbase" 0)
+   (prinst "mflr" 0)
+   (prinst "bl" "saveRegs")
+   (prinst "stdu" 1 "-256(1)")
+   (prinst "li" 20 0)                   # Init NULL register
+   (prinst "li" 21 1)                   # Init ONE register
+   (prinst "ld" 22 "Data@got(2)")       # Globals bases
+   (prinst "ld" 23 "Code@got(2)")
+   (and (>= N 6) (prinst "mr" 18 8))    # Z
+   (and (>= N 5) (prinst "mr" 17 7))    # Y
+   (and (>= N 4) (prinst "mr" 16 6))    # X
+   (and (>= N 3) (prinst "mr" 15 5))    # E
+   (and (>= N 2) (prinst "mr" 14 4)) )  # C
 
 (asm return (N)
-   (and (>= N 2) (prinst "ld" 14 "0(1)"))          # C
-   (and (>= N 3) (prinst "ld" 15 "8(1)"))          # E
-   (and (>= N 4) (prinst "ld" 16 "16(1)"))         # X
-   (and (>= N 5) (prinst "ld" 17 "32(1)"))         # Y
-   (and (>= N 6) (prinst "ld" 18 "48(1)"))         # Z
-   (prinst "addi" 1 1 (* 8 (min 6 (dec N)))) )
+   (prinst "addi" 1 1 256)
+   (prinst "bl" "loadRegs")
+   (prinst "mtlr" 0) )
 
 # Stack Manipulations
 (asm push (Src S)
@@ -1205,11 +1200,56 @@
    (prinst "mulld" 14 5 4)     # Remainder
    (prinst "subf" 14 14 3)
    (prinst "mr" 3 5)           # Quotient
+   (prinst "blr")
+   (prinl)
+   (prinl "# Save registers")
+   (label "saveRegs")
+   (prinst "std" 14 "-144(1)")
+   (prinst "std" 15 "-136(1)")
+   (prinst "std" 16 "-128(1)")
+   (prinst "std" 17 "-120(1)")
+   (prinst "std" 18 "-112(1)")
+   (prinst "std" 19 "-104(1)")
+   (prinst "std" 20 "-96(1)")
+   (prinst "std" 21 "-88(1)")
+   (prinst "std" 22 "-80(1)")
+   (prinst "std" 23 "-72(1)")
+   (prinst "std" 24 "-64(1)")
+   (prinst "std" 25 "-56(1)")
+   (prinst "std" 26 "-48(1)")
+   (prinst "std" 27 "-40(1)")
+   (prinst "std" 28 "-32(1)")
+   (prinst "std" 29 "-24(1)")
+   (prinst "std" 30 "-16(1)")
+   (prinst "std" 31 "-8(1)")
+   (prinst "std" 0 "16(1)")
+   (prinst "blr")
+   (prinl)
+   (prinl "# Load registers")
+   (label "loadRegs")
+   (prinst "ld" 14 "-144(1)")
+   (prinst "ld" 15 "-136(1)")
+   (prinst "ld" 16 "-128(1)")
+   (prinst "ld" 17 "-120(1)")
+   (prinst "ld" 18 "-112(1)")
+   (prinst "ld" 19 "-104(1)")
+   (prinst "ld" 20 "-96(1)")
+   (prinst "ld" 21 "-88(1)")
+   (prinst "ld" 22 "-80(1)")
+   (prinst "ld" 23 "-72(1)")
+   (prinst "ld" 24 "-64(1)")
+   (prinst "ld" 25 "-56(1)")
+   (prinst "ld" 26 "-48(1)")
+   (prinst "ld" 27 "-40(1)")
+   (prinst "ld" 28 "-32(1)")
+   (prinst "ld" 29 "-24(1)")
+   (prinst "ld" 30 "-16(1)")
+   (prinst "ld" 31 "-8(1)")
+   (prinst "ld" 0 "16(1)")
    (prinst "blr") )
 
 (asm initMain ()
-   (prinst ".quad" "main1" ".TOC.@tocbase" 0)
-   (prinl "main1:")
+   (prinst ".quad" ".+24" ".TOC.@tocbase" 0)
    (prinst "li" 20 0)                 # Init NULL register
    (prinst "li" 21 1)                 # Init ONE register
    (prinst "ld" 22 "Data@got(2)")     # Globals bases
