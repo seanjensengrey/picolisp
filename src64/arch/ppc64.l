@@ -958,12 +958,7 @@
 (asm begin (N)
    (prinst ".quad" ".+24" ".TOC.@tocbase" 0)
    (prinst "mflr" 0)
-   (prinst "bl" "saveRegs")
-   (prinst "stdu" 1 "-256(1)")
-   (prinst "li" 20 0)                   # Init NULL register
-   (prinst "li" 21 1)                   # Init ONE register
-   (prinst "ld" 22 "Data@got(2)")       # Globals bases
-   (prinst "ld" 23 "Code@got(2)")
+   (prinst "bl" "begin")
    (and (>= N 6) (prinst "mr" 18 8))    # Z
    (and (>= N 5) (prinst "mr" 17 7))    # Y
    (and (>= N 4) (prinst "mr" 16 6))    # X
@@ -971,8 +966,7 @@
    (and (>= N 2) (prinst "mr" 14 4)) )  # C
 
 (asm return (N)
-   (prinst "addi" 1 1 256)
-   (prinst "bl" "loadRegs")
+   (prinst "bl" "return")
    (prinst "mtlr" 0) )
 
 # Stack Manipulations
@@ -1040,7 +1034,7 @@
 
 (asm eval/ret ()
    (prinst "andi." 0 15 "0x06")   # Number?
-   (prinst "bnelr")               # Yes: Return
+   (prinst "bnelr-")              # Yes: Return
    (prinst "andi." 0 15 "0x08")   # Symbol?
    (prinst "beq-" "1f")           # No: Evaluate list
    (prinst "ld" 15 "0(15)")       # Get value
@@ -1141,20 +1135,21 @@
    (prinl "1:")
    (prinst "ldu" 26 "8(4)")    # Next word from 'src'
    (prinst "cmpd" 4 5)         # Done?
-   (prinst "beqlr")            # Yes: Return
+   (prinst "beqlr-")           # Yes: Return
    (prinst "stdu" 26 "8(6)")   # Write to 'dst'
    (prinst "b" "1b")
    (prinl)
    (prinl "# load dst end src")
    (label "load")
    (prinst "subi" 4 4 8)       # Adjust 'dst'
+   (prinst "subi" 5 5 8)       # 'end'
    (prinst "subi" 6 6 8)       # and 'src'
    (prinl "1:")
    (prinst "ldu" 26 "8(6)")    # Next word from 'src'
-   (prinst "cmpd" 6 5)         # Done?
-   (prinst "beqlr")            # Yes: Return
    (prinst "stdu" 26 "8(4)")   # Write to 'dst'
-   (prinst "b" "1b")
+   (prinst "cmpd" 4 5)         # Done?
+   (prinst "bnelr+")           # No
+   (prinst "blr")
    (prinl)
    (prinl "# cmpn dst src cnt")
    (label "cmpn")
@@ -1162,9 +1157,9 @@
    (prinst "lbz" 27 "0(5)")    # First byte from 'src'
    (prinl "1:")
    (prinst "subc." 0 26 27)    # Same bytes?
-   (prinst "bnelr")            # No: Return 'ne'
+   (prinst "bnelr-")           # No: Return 'ne'
    (prinst "subic." 6 6 1)     # Decrement 'cnt'
-   (prinst "beqlr")            # Return 'eq' if done
+   (prinst "beqlr-")           # Return 'eq' if done
    (prinst "lbzu" 26 "1(4)")   # Next bytes
    (prinst "lbzu" 27 "1(5)")
    (prinst "b" "1b")
@@ -1175,7 +1170,7 @@
    (prinst "lbz" 26 "0(5)")    # First byte from 'src'
    (prinl "1:")
    (prinst "cmpdi" 26 0)       # Done?
-   (prinst "beqlr")            # Yes: Return
+   (prinst "beqlr-")           # Yes: Return
    (prinst "addi" 4 4 1)       # Increment 'cnt'
    (prinst "lbzu" 26 "1(5)")   # Next byte
    (prinst "b" "1b")
@@ -1186,7 +1181,7 @@
    (prinst "extrdi" 26 3 8 56)  # and B
    (prinl "1:")
    (prinst "subic." 5 5 1)      # Decrement 'cnt'
-   (prinst "bltlr")             # Return 'ne' if done
+   (prinst "bltlr-")            # Return 'ne' if done
    (prinst "lbz" 27 "0(6)")     # Next byte from 'src'
    (prinst "addi" 6 6 1)        # Increment 'src'
    (prinst "cmpd" 27 26)        # Found?
@@ -1202,8 +1197,8 @@
    (prinst "mr" 3 5)           # Quotient
    (prinst "blr")
    (prinl)
-   (prinl "# Save registers")
-   (label "saveRegs")
+   (prinl "# Begin entry")
+   (label "begin")
    (prinst "std" 14 "-144(1)")
    (prinst "std" 15 "-136(1)")
    (prinst "std" 16 "-128(1)")
@@ -1223,10 +1218,16 @@
    (prinst "std" 30 "-16(1)")
    (prinst "std" 31 "-8(1)")
    (prinst "std" 0 "16(1)")
+   (prinst "stdu" 1 "-256(1)")
+   (prinst "li" 20 0)                   # Init NULL register
+   (prinst "li" 21 1)                   # Init ONE register
+   (prinst "ld" 22 "Data@got(2)")       # Globals bases
+   (prinst "ld" 23 "Code@got(2)")
    (prinst "blr")
    (prinl)
-   (prinl "# Load registers")
-   (label "loadRegs")
+   (prinl "# Return entry")
+   (label "return")
+   (prinst "addi" 1 1 256)
    (prinst "ld" 14 "-144(1)")
    (prinst "ld" 15 "-136(1)")
    (prinst "ld" 16 "-128(1)")
