@@ -1,4 +1,4 @@
-# 18apr11abu
+# 19apr11abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -21,6 +21,8 @@
 # NULL: 20
 # ONE: 21
 # Data: 22
+# Code: 23
+# DllToc: 24
 # Carry flag: 31
 
 # Temporary register
@@ -31,18 +33,23 @@
          R ) ) )
 
 # Machine specific
-(zero *DataPos *TextPos)
-(off *DataLabels *TextLabels *DataIndex *TextIndex)
+(zero *DataPos *CodePos)
+(off *DataLabels *CodeLabels *DataIndex *CodeIndex)
 
 (redef label (Lbl Flg)
    (label Lbl Flg)
-   (unless *FPic
+   (ifn *FPic
       (cond
          ((== *Section 'data)
             (push '*DataLabels (cons Lbl *DataPos)) )
          ((== *Section 'text)
             (unless (pre? "." Lbl)
-               (push '*TextLabels (cons Lbl *TextPos)) ) ) ) ) )
+               (push '*CodeLabels (cons Lbl *CodePos)) ) ) )
+      (when (and (== *Section 'text) Flg (upp? Lbl))
+         (prinst "mfctr" 11)
+         (prinst "ld" 24 "12(11)")
+         (prinst "b" ".+12")
+         (prinst ".quad" ".TOC.@tocbase") ) ) )
 
 (de asciiLen (Str)
    (- (size (pack (replace (chop Str) "\\"))) 2) )  # Don't count double quotes
@@ -72,19 +79,19 @@
                (T (quit "Unknown data directive")) ) ) )
       ((== *Section 'text)
          (if (= Name ".quad")
-            (inc '*TextPos 24)  # In 'main'
+            (inc '*CodePos 24)  # In 'main'
             (unless (= Name ".balign")
-               (inc '*TextPos 4) ) ) ) ) )
+               (inc '*CodePos 4) ) ) ) ) )
 
 (de prSym (File)
    (out File
       (println (sort *DataLabels))
-      (println (sort *TextLabels)) ) )
+      (println (sort *CodeLabels)) ) )
 
 (de rdSym (File)
    (in File
       (balance '*DataIndex (read))
-      (balance '*TextIndex (read)) ) )
+      (balance '*CodeIndex (read)) ) )
 
 (de dataOffset (Sym)
    (if (lup *DataIndex Sym)
@@ -92,9 +99,26 @@
       (pack Sym "-Data") ) )
 
 (de dataGot (Reg Sym)
-   (if (lup *DataIndex Sym)
-      (prinst "la" Reg (pack (cdr @) "(22)"))
-      (prinst "ld" Reg (pack Sym "@got(2)")) ) )
+   (cond
+      ((lup *DataIndex Sym)
+         (prinst "la" Reg (pack (cdr @) "(22)")) )
+      (*FPic (prinst "ld" Reg (pack Sym "@got(24)")))
+      (T (prinst "ld" Reg (pack Sym "@got(2)"))) ) )
+
+(de codeCall (Sym)
+   (cond
+      ((lup *CodeIndex Sym)
+         (prinst "mtctr" 23)
+         (prinst "bctrl")
+         (prinst ".int" (cdr @)) )
+      (*FPic
+         (prinst "addi" 11 23 (cdr (lup *CodeIndex "call")))
+         (prinst "mtctr" 11)
+         (prinst "bctrl")
+         (prinst ".int" (pack Sym "-.")) )
+      (T
+         (prinst "bl" "call")
+         (prinst ".int" (pack Sym "-.")) ) ) )
 
 (de boxfun (Adr)
    (pack Adr "+2") )
@@ -420,35 +444,30 @@
    (memory Dst D 4)
    (memory Src S 5)
    (memory Cnt C 6 0)
-   (prinst "bl" "call")
-   (prinst ".int" "movn-.") )
+   (codeCall "movn") )
 
 (asm mset (Dst D Cnt C)
    (memory Dst D 4)
    (memory Cnt C 5 0)
-   (prinst "bl" "call")
-   (prinst ".int" "mset-.") )
+   (codeCall "mset") )
 
 (asm movm (Dst D Src S End E)
    (memory Dst D 6)
    (memory Src S 4)
    (memory End E 5)
-   (prinst "bl" "call")
-   (prinst ".int" "save-.") )
+   (codeCall "save") )
 
 (asm save (Src S End E Dst D)
    (memory Src S 4)
    (memory End E 5)
    (memory Dst D 6)
-   (prinst "bl" "call")
-   (prinst ".int" "save-.") )
+   (codeCall "save") )
 
 (asm load (Dst D End E Src S)
    (memory Dst D 4)
    (memory End E 5)
    (memory Src S 6)
-   (prinst "bl" "call")
-   (prinst ".int" "load-.") )
+   (codeCall "load") )
 
 # Arithmetics
 (asm add (Dst D Src S)
@@ -624,8 +643,7 @@
 
 (asm div (Src S)
    (srcReg Src S 4)
-   (prinst "bl" "call")
-   (prinst ".int" "div-.") )
+   (codeCall "div") )
 
 (asm zxt ()  # 8 bit -> 64 bit
    (prinst "andi." 3 3 255) )
@@ -661,20 +679,17 @@
    (memory Dst D 4)
    (memory Src S 5)
    (memory Cnt C 6 0)
-   (prinst "bl" "call")
-   (prinst ".int" "cmpn-.") )
+   (codeCall "cmpn") )
 
 (asm slen (Dst D Src S)
    (memory Src S 5)
-   (prinst "bl" "call")
-   (prinst ".int" "slen-.")
+   (codeCall "slen")
    (memory Dst D 4 T) )
 
 (asm memb (Src S Cnt C)
    (memory Src S 4)
    (memory Cnt C 5 0)
-   (prinst "bl" "call")
-   (prinst ".int" "memb-.")
+   (codeCall "memb")
    (unless S (prinst "mr" Src 4))
    (unless C (prinst "mr" Cnt 5)) )
 
@@ -712,8 +727,7 @@
 (asm call (Adr A)
    (nond
       (A  # Absolute
-         (prinst "bl" "call")
-         (prinst ".int" (pack Adr "-.")) )
+         (codeCall Adr) )
       ((=T A)  # Indexed: Ignore SUBR
          (prinst "mtctr" Adr)
          (prinst "bl" "callCtr") )
@@ -755,17 +769,27 @@
          (prinst "mtctr" Adr)
          (for E (fill (caddr Args))
             (apply prinst (cons (pack (pop 'E) (pop 'E)) E)) ) )
-      (NIL
+      (NIL  # Indirect
          (prinst "ld" 11 (pack (dataOffset Adr) "(22)"))
          (prinst "mtctr" 11)
          (for E (fill (caddr Args))
             (apply prinst (cons (pack (pop 'E) (pop 'E)) E)) ) ) ) )
 
 (asm jmp (Adr A)
-   (_jmp
-      (("b" NIL @Lbl))
-      NIL
-      (("bctr" NIL)) ) )
+   (if (lup *CodeIndex Adr)
+      (let Ofs (cdr @)  # Jump from DLL only unconditionally
+         (if (>= 32767 Ofs)
+            (prinst "addi" 11 23 Ofs)
+            (prinst "lis" 11 (>> 16 Ofs))
+            (unless (=0 (setq Ofs (& 65535 Ofs)))
+               (prinst "ori" 11 11 Ofs) )
+            (prinst "add" 11 11 23) )
+         (prinst "mtctr" 11)
+         (prinst "bctr") )
+      (_jmp
+         (("b" NIL @Lbl))
+         NIL
+         (("bctr" NIL)) ) ) )
 
 (asm jz (Adr A)
    (_jmp
@@ -1001,8 +1025,7 @@
    (prinst "ld" 15 "0(15)")
    (prinst "b" "2f")              # and skip
    (prinl "1:")
-   (prinst "bl" "call")           # Else evaluate list
-   (prinst ".int" "evListE_E-.")
+   (codeCall "evListE_E")         # Else evaluate list
    (prinl "2:") )
 
 (asm eval+ ()
@@ -1015,8 +1038,7 @@
    (prinl "1:")
    (prinst "stdu" 19 "-8(1)")     # Else 'link'
    (prinst "mr" 19 1)
-   (prinst "bl" "call")           # Evaluate list
-   (prinst ".int" "evListE_E-.")
+   (codeCall "evListE_E")         # Evaluate list
    (prinst "ld" 19 "0(1)")        # Pop L
    (prinst "addi" 1 1 8)
    (prinl "2:") )
@@ -1036,8 +1058,7 @@
    (prinst "ld" 15 (pack "0(" Reg ")"))    # ld E (R)
    (prinst "andi." 0 15 "0x0E")            # atom E
    (prinst "bne+" "2f")
-   (prinst "bl" "call")                    # Evaluate list
-   (prinst ".int" "evListE_E-.")
+   (codeCall "evListE_E")                  # Evaluate list
    (prinl "2:")
    (prinst "ld" Reg  (pack "8(" Reg ")"))  # ld R (R CDR)
    (prinst "andi." 0 Reg "0x0E")           # atom R
@@ -1052,8 +1073,7 @@
    (prinst "beq-" ".+12")
    (prinst "ld" 15 "0(15)")
    (prinst "b" "2f")
-   (prinst "bl" "call")                   # Evaluate list
-   (prinst ".int" "evListE_E-.")
+   (codeCall "evListE_E")                 # Evaluate list
    (prinl "2:")
    (prinst "ld" Reg (pack "8(" Reg ")"))  # ld R (R CDR)
    (prinst "andi." 0 Reg "0x0E")          # atom R
@@ -1064,11 +1084,23 @@
 (asm initData ())
 
 (asm initCode ()
-   (prinl "# Subroutine-call emulation")
+   (prinl "# Subroutine-call emulations")
+   (prinst "mflr" 11)          # Get return address
+   (prinst "lwa" 0 "0(11)")    # Target offset
+   (prinst "add" 0 0 23)       # Code-relative
+   (prinst "mtlr" 0)           # Set target address
+   (prinst "addi" 0 11 4)      # Update return address
+   (prinst "stdu" 0 "-8(1)")   # Save it
+   (prinst "blrl")             # Call target
+   (prinst "ld" 0 "0(1)")      # Pop return address
+   (prinst "addi" 1 1 8)
+   (prinst "mtctr" 0)          # Return
+   (prinst "bctr")
+   (prinl)
    (label "call")
    (prinst "mflr" 11)          # Get return address
    (prinst "lwa" 0 "0(11)")    # Target offset
-   (prinst "add" 0 0 11)
+   (prinst "add" 0 0 11)       # PC-relative
    (prinst "mtlr" 0)           # Set target address
    (prinst "addi" 0 11 4)      # Update return address
    (prinst "stdu" 0 "-8(1)")   # Save it
@@ -1178,7 +1210,8 @@
    (prinl "main1:")
    (prinst "li" 20 0)                 # Init NULL register
    (prinst "li" 21 1)                 # Init ONE register
-   (prinst "ld" 22 "Data@got(2)")     # Globals base
+   (prinst "ld" 22 "Data@got(2)")     # Globals bases
+   (prinst "ld" 23 "Code@got(2)")
    (prinst "ld" 16 "0(4)")            # Get command in X
    (prinst "la" 17 "8(4)")            # argument vector in Y
    (prinst "subi" 3 3 1)              # and pointer to last argument in Z
