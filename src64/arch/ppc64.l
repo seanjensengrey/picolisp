@@ -1187,15 +1187,17 @@
    (prinl)
    (prinl "# memb src cnt")
    (label "memb")
-   (prinst "lbz" 26 "0(4)")    # First byte from 'src'
-   (prinst "extrdi" 6 3 8 56)  # Get B
+   (prinst "mr" 6 4)            # Get 'src'
+   (prinst "extrdi" 26 3 8 56)  # and B
    (prinl "1:")
-   (prinst "subic." 5 5 1)     # Decrement 'cnt'
-   (prinst "bltlr")            # Return 'ne' if done
-   (prinst "cmpd" 26 6)        # Found?
-   (prinst "beqlr")            # Yes: Return 'eq'
-   (prinst "lbzu" 26 "1(4)")   # Next byte
-   (prinst "b" "1b")
+   (prinst "subic." 5 5 1)      # Decrement 'cnt'
+   (prinst "bltlr")             # Return 'ne' if done
+   (prinst "lbz" 27 "0(6)")     # Next byte from 'src'
+   (prinst "addi" 6 6 1)        # Increment 'src'
+   (prinst "cmpd" 27 26)        # Found?
+   (prinst "bne+" "1b")         # No
+   (prinst "mr" 4 6)            # Else return 'eq'
+   (prinst "blr")
    (prinl)
    (prinl "# div src")
    (label "div")
