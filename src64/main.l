@@ -1,4 +1,4 @@
-# 07apr11abu
+# 19apr11abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code 0)
@@ -136,10 +136,7 @@
    ld E sigTerm  # Install terminating signal handler for SIGINT
    ld C SIGINT
    call iSignalCE
-   ld E sigChld  # Install child signal handler for SIGCHLD
-   ld C SIGCHLD
-   call iSignalCE
-   cc signal(SIGCHLD sigChld)
+   cc signal(SIGCHLD sigChld)  # Install child signal handler for SIGCHLD
    cc signal(SIGPIPE SIG_IGN)  # Ignore signals
    cc signal(SIGTTIN SIG_IGN)
    cc signal(SIGTTOU SIG_IGN)
