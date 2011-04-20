@@ -264,9 +264,9 @@
                         (opxReg Op Reg R (car Mem)) ) ) ) ) ) )
       ((=T (car M))  # Indirect
          (if (or *FPic (low? (car Mem)))  # -fpic or code label
-            (let R (if (lt0 Reg) (tmpReg) Reg)
+            (let R (tmpReg)
                (dataGot R (car Mem))
-               (opReg 0 Reg 0 R) )
+               (opReg Op Reg 0 R) )
             (opReg Op Reg
                (pack
                   (and (cdr M) (pack (cdr Mem) "+"))
