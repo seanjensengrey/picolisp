@@ -1,4 +1,4 @@
-# 06apr11abu
+# 20apr11abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -566,7 +566,7 @@
    cmp E TSym  # 'msg' is T?
    if ne  # No
       push C  # Save class
-      ld C doMeth  # Get 'meth' code pointer
+      ld C (Meth)  # Get 'meth' code pointer
       call redefineCEX  # Redefine
       pop C
    end
