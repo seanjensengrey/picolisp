@@ -38,7 +38,6 @@
 (off *DataLabels *CodeLabels *DataIndex *CodeIndex)
 
 (redef label (Lbl Flg)
-   (label Lbl Flg)
    (ifn *FPic
       (cond
          ((== *Section 'data)
@@ -47,10 +46,12 @@
             (unless (pre? "." Lbl)
                (push '*CodeLabels (cons Lbl *CodePos)) ) ) )
       (when (and (== *Section 'text) Flg (upp? Lbl))
-         (prinst "mfctr" 11)
-         (prinst "ld" 24 "12(11)")
-         (prinst "b" ".+12")
-         (prinst ".quad" ".TOC.@tocbase") ) ) )
+         (prinst ".quad" ".TOC.@tocbase") ) )
+   (label Lbl Flg)
+   (when (and *FPic (== *Section 'text) Flg (upp? Lbl))
+      (prinst "mfctr" 11)
+      (prinst "subi" 11 11 2)
+      (prinst "ld" 24 "-8(11)") ) )
 
 (de asciiLen (Str)
    (- (size (pack (replace (chop Str) "\\"))) 2) )  # Don't count double quotes
@@ -368,7 +369,8 @@
    (prinst "nop") )
 
 (asm align (N)
-   (prinst ".balign" N) )
+   (prinst ".balign"
+      (if (and (== *Section 'text) (= N 16)) 8 N) ) )
 
 (asm skip (N)
    (when (== 'data *Section)
