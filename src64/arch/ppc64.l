@@ -1,4 +1,4 @@
-# 19apr11abu
+# 20apr11abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -78,10 +78,14 @@
                (".asciz" (inc (asciiLen (next))))
                (T (quit "Unknown data directive")) ) ) )
       ((== *Section 'text)
-         (if (= Name ".quad")
-            (inc '*CodePos 24)  # In 'main'
-            (unless (= Name ".balign")
-               (inc '*CodePos 4) ) ) ) ) )
+         (inc '*CodePos
+            (case Name
+               (".quad" 24)  # Function headers
+               (".balign"
+                  (if (gt0 (% *CodePos (next)))
+                     (- (arg) @)
+                     0 ) )
+               (T 4) ) ) ) ) )
 
 (de prSym (File)
    (out File
@@ -202,13 +206,21 @@
                   (unless (=0 (setq Mem (& 65535 Mem)))
                      (prinst "ori" Reg Reg Mem) ) )
                (T
-                  (prinst "lis" Reg (>> 48 Mem))
-                  (unless (=0 (& 65535 (>> 32 Mem)))
-                     (prinst "ori" Reg Reg (& 65535 (>> 32 Mem))) )
-                  (prinst "sldi" Reg Reg 32)
-                  (prinst "lis" Reg (& 65535 (>> 16 Mem)))
-                  (unless (=0 (setq Mem (& 65535 Mem)))
-                     (prinst "ori" Reg Reg Mem) ) ) ) )
+                  (let
+                     (A (>> 48 Mem)
+                        B (& 65535 (>> 32 Mem))
+                        C (& 65535 (>> 16 Mem))
+                        D (& 65535 Mem) )
+                     (prinst "lis" Reg A)
+                     (unless (=0 B)
+                        (prinst "ori" Reg Reg B) )
+                     (if (=0 C)
+                        (prinst "sldi" Reg Reg 32)
+                        (prinst "sldi" Reg Reg 16)
+                        (prinst "ori" Reg Reg C)
+                        (prinst "sldi" Reg Reg 16) )
+                     (unless (=0 D)
+                        (prinst "ori" Reg Reg D) ) ) ) ) )
          NIL )
       ((not M)  # Register
          (cond
@@ -358,8 +370,7 @@
    (prinst "nop") )
 
 (asm align (N)
-   (unless (== *Section 'text)
-      (prinst ".balign" N) ) )
+   (prinst ".balign" N) )
 
 (asm skip (N)
    (when (== 'data *Section)
@@ -1130,25 +1141,25 @@
    (prinl)
    (prinl "# save src end dst")
    (label "save")
-   (prinst "subi" 4 4 8)       # Adjust 'src'
-   (prinst "subi" 6 6 8)       # and 'dst'
+   (prinst "ld" 26 "0(4)")    # First word from 'src'
+   (prinst "std" 26 "0(6)")   # Write to 'dst'
    (prinl "1:")
-   (prinst "ldu" 26 "8(4)")    # Next word from 'src'
-   (prinst "cmpd" 4 5)         # Done?
-   (prinst "beqlr-")           # Yes: Return
-   (prinst "stdu" 26 "8(6)")   # Write to 'dst'
+   (prinst "ldu" 26 "8(4)")   # Next word from 'src'
+   (prinst "cmpd" 4 5)        # Done?
+   (prinst "beqlr-")          # Yes: Return
+   (prinst "stdu" 26 "8(6)")  # Write to 'dst'
    (prinst "b" "1b")
    (prinl)
    (prinl "# load dst end src")
    (label "load")
-   (prinst "subi" 4 4 8)       # Adjust 'dst'
-   (prinst "subi" 5 5 8)       # 'end'
-   (prinst "subi" 6 6 8)       # and 'src'
+   (prinst "ld" 26 "0(6)")    # First word from 'src'
+   (prinst "std" 26 "0(4)")   # Write to 'dst'
+   (prinst "subi" 5 5 8)      # Adjust 'end'
    (prinl "1:")
-   (prinst "ldu" 26 "8(6)")    # Next word from 'src'
-   (prinst "stdu" 26 "8(4)")   # Write to 'dst'
-   (prinst "cmpd" 4 5)         # Done?
-   (prinst "bnelr+")           # No
+   (prinst "ldu" 26 "8(6)")   # Next word from 'src'
+   (prinst "stdu" 26 "8(4)")  # Write to 'dst'
+   (prinst "cmpd" 4 5)        # Done?
+   (prinst "bne+" "1b")       # No
    (prinst "blr")
    (prinl)
    (prinl "# cmpn dst src cnt")
