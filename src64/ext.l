@@ -1,5 +1,8 @@
-# 19may10abu
+# 20apr11abu
 # (c) Software Lab. Alexander Burger
+
+(data 'ExtData)
+   initData
 
 ### Soundex Algorithm ###
 (data 'SnxTab)
@@ -32,6 +35,9 @@ bytes (
 
 (equ SNXBASE 48)
 (equ SNXSIZE (+ (* 24 8) 2))
+
+(code 'ExtCode)
+   initCode
 
 # (ext:Snx 'any ['cnt]) -> sym
 (code 'Snx 2)

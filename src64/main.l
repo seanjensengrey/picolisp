@@ -1,7 +1,7 @@
 # 20apr11abu
 # (c) Software Lab. Alexander Burger
 
-(code 'Code 0)
+(code 'Code)
    initCode
 
 ### Global return labels ###

@@ -1,7 +1,7 @@
-# 07apr11abu
+# 20apr11abu
 # (c) Software Lab. Alexander Burger
 
-(data 'Data 0)
+(data 'Data)
    initData
 
 :: AV          word  0           # Command line argument vector

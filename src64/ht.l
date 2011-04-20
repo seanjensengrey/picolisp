@@ -1,5 +1,8 @@
-# 11jun10abu
+# 20apr11abu
 # (c) Software Lab. Alexander Burger
+
+(data 'HtData)
+   initData
 
 ### Hypertext I/O functions ###
 (data 'HtOK)
@@ -27,6 +30,9 @@ align 8  asciz "<hr>"
 
 : HtEsc ascii " \\\"#%&:;<=>?_"
 (equ HTESC 12)
+
+(code 'HtCode)
+   initCode
 
 (code 'findHtOkY_FE 0)
    push X
