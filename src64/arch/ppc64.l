@@ -751,31 +751,44 @@
    (nond
       (A
          (let @Lbl Adr
-            (ifn (cadr Args)
-               (for E (fill (car Args))  # b
-                  (apply prinst (cons (pack (pop 'E) (pop 'E)) E)) )
-               (let Back
-                  (for (P *Program (n== *Statement (car P)) (cdr P))
-                     (T (and (== ': (caar P)) (= Adr (cdar P))) T) )
-                  (for E
-                     (fill
-                        ((if
-                              (or
-                                 (= `(char ".") (char Adr))  # Local label
-                                 (and
-                                    (cdr (split (chop Adr) "_"))
-                                    (format (last @)) ) )
-                              car
-                              cadr )
-                           Args ) )
-                     (apply prinst
-                        (cons
-                           (pack
-                              (pop 'E)
-                              (case (pop 'E)
-                                 ("+" (if Back "-" "+"))
-                                 ("-" (if Back "+" "-")) ) )
-                           E ) ) ) ) ) ) )
+            (cond
+               ((lup *CodeIndex Adr)
+                  (let Ofs (cdr @)
+                     (if (>= 32767 Ofs)
+                        (prinst "addi" 11 23 Ofs)
+                        (prinst "lis" 11 (>> 16 Ofs))
+                        (unless (=0 (setq Ofs (& 65535 Ofs)))
+                           (prinst "ori" 11 11 Ofs) )
+                        (prinst "add" 11 11 23) )
+                     (prinst "mtctr" 11)
+                     (for E (caddr Args)
+                        (apply prinst (cons (pack (pop 'E) (pop 'E)) E)) ) ) )
+               ((not (cadr Args))
+                  (for E (fill (car Args))  # b
+                     (apply prinst (cons (pack (pop 'E) (pop 'E)) E)) ) )
+               (T
+                  (let Back
+                     (for (P *Program (n== *Statement (car P)) (cdr P))
+                        (T (and (== ': (caar P)) (= Adr (cdar P))) T) )
+                     (for E
+                        (fill
+                           ((if
+                                 (or
+                                    (= `(char ".") (char Adr))  # Local label
+                                    (and
+                                       (cdr (split (chop Adr) "_"))
+                                       (format (last @)) ) )
+                                 car
+                                 cadr )
+                              Args ) )
+                        (apply prinst
+                           (cons
+                              (pack
+                                 (pop 'E)
+                                 (case (pop 'E)
+                                    ("+" (if Back "-" "+"))
+                                    ("-" (if Back "+" "-")) ) )
+                              E ) ) ) ) ) ) ) )
       ((=T A)  # Ignore SUBR
          (prinst "mtctr" Adr)
          (for E (fill (caddr Args))
@@ -783,24 +796,14 @@
       (NIL  # Indirect
          (prinst "ld" 11 (pack (dataOffset Adr) "(22)"))
          (prinst "mtctr" 11)
-         (for E (fill (caddr Args))
+         (for E (caddr Args)
             (apply prinst (cons (pack (pop 'E) (pop 'E)) E)) ) ) ) )
 
 (asm jmp (Adr A)
-   (if (lup *CodeIndex Adr)
-      (let Ofs (cdr @)  # Jump from DLL only unconditionally
-         (if (>= 32767 Ofs)
-            (prinst "addi" 11 23 Ofs)
-            (prinst "lis" 11 (>> 16 Ofs))
-            (unless (=0 (setq Ofs (& 65535 Ofs)))
-               (prinst "ori" 11 11 Ofs) )
-            (prinst "add" 11 11 23) )
-         (prinst "mtctr" 11)
-         (prinst "bctr") )
-      (_jmp
-         (("b" NIL @Lbl))
-         NIL
-         (("bctr" NIL)) ) ) )
+   (_jmp
+      (("b" NIL @Lbl))
+      NIL
+      (("bctr" NIL)) ) )
 
 (asm jz (Adr A)
    (_jmp
