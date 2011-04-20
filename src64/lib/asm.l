@@ -1,7 +1,7 @@
-# 18apr11abu
+# 20apr11abu
 # (c) Software Lab. Alexander Burger
 
-# *LittleEndian *Registers optimize
+# *LittleEndian *AlignedCode *Registers optimize
 
 # *FPic *Section *Label *Tags *Program *Statement
 # *Instructions *IfStack *DoStack
@@ -524,7 +524,7 @@
    (prinst ".asciz" (pack "\"" Str "\"")) )
 
 (asm initFun (Lbl Name Val)
-   (initSym Lbl Name Val (boxfun Val)) )
+   (initSym Lbl Name Val (pack Val (and *AlignedCode "+2"))) )
 
 (asm initSym (Lbl Name Val)
    (initSym Lbl Name Val Val) )

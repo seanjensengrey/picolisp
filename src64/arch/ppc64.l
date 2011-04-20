@@ -3,6 +3,7 @@
 
 # Byte order
 (off *LittleEndian)
+(on *AlignedCode)
 
 # Register assignments
 (de *Registers
@@ -123,9 +124,6 @@
       (T
          (prinst "bl" "call")
          (prinst ".int" (pack Sym "-.")) ) ) )
-
-(de boxfun (Adr)
-   (pack Adr "+2") )
 
 # Addressing modes
 (de checkOp (Fun)

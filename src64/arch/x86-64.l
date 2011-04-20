@@ -1,8 +1,9 @@
-# 19apr11abu
+# 20apr11abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
 (on *LittleEndian)
+(off *AlignedCode)
 
 # Register assignments
 (de *Registers
@@ -15,9 +16,6 @@
 # Temporary: %r10 %r11
 # Block operations: %rcx %rsi %rdi
 # C arguments: %rdi %rsi %rdx %rcx %r8 %r9
-
-# Machine specific
-(de boxfun (Adr) Adr)
 
 # Addressing modes
 (de byteReg (Reg)
