@@ -45,10 +45,10 @@
          ((== *Section 'text)
             (unless (pre? "." Lbl)
                (push '*CodeLabels (cons Lbl *CodePos)) ) ) )
-      (when (and (== *Section 'text) Flg (upp? Lbl))
+      (when (and Flg (== *Section 'text) (n0 *CodePos) (upp? Lbl))
          (prinst ".quad" ".TOC.@tocbase") ) )
    (label Lbl Flg)
-   (when (and *FPic (== *Section 'text) Flg (upp? Lbl))
+   (when (and *FPic Flg (== *Section 'text) (n0 *CodePos) (upp? Lbl))
       (prinst "mfctr" 11)
       (prinst "subi" 11 11 2)
       (prinst "ld" 24 "-8(11)") ) )
@@ -112,19 +112,13 @@
       (T (prinst "ld" Reg (pack Sym "@got(2)"))) ) )
 
 (de codeCall (Sym)
-   (cond
-      ((lup *CodeIndex Sym)
+   (if (lup *CodeIndex Sym)
+      (prog
          (prinst "mtctr" 23)
          (prinst "bctrl")
          (prinst ".int" (cdr @)) )
-      (*FPic
-         (prinst "addi" 11 23 (cdr (lup *CodeIndex "call")))
-         (prinst "mtctr" 11)
-         (prinst "bctrl")
-         (prinst ".int" (pack Sym "-.")) )
-      (T
-         (prinst "bl" "call")
-         (prinst ".int" (pack Sym "-.")) ) ) )
+      (prinst "bl" "call")
+      (prinst ".int" (pack Sym "-.")) ) )
 
 # Addressing modes
 (de checkOp (Fun)
@@ -1087,19 +1081,19 @@
 (asm initData ())
 
 (asm initCode ()
-   (prinl "# Subroutine-call emulations")
-   (prinst "mflr" 11)          # Get return address
-   (prinst "lwa" 0 "0(11)")    # Target offset
-   (prinst "add" 0 0 23)       # Code-relative
-   (prinst "mtlr" 0)           # Set target address
-   (prinst "addi" 0 11 4)      # Update return address
-   (prinst "stdu" 0 "-8(1)")   # Save it
-   (prinst "blrl")             # Call target
-   (prinst "ld" 0 "0(1)")      # Pop return address
-   (prinst "addi" 1 1 8)
-   (prinst "mtctr" 0)          # Return
-   (prinst "bctr")
-   (prinl)
+   (unless *FPic
+      (prinst "mflr" 11)          # Get return address
+      (prinst "lwa" 0 "0(11)")    # Target offset
+      (prinst "add" 0 0 23)       # Code-relative
+      (prinst "mtlr" 0)           # Set target address
+      (prinst "addi" 0 11 4)      # Update return address
+      (prinst "stdu" 0 "-8(1)")   # Save it
+      (prinst "blrl")             # Call target
+      (prinst "ld" 0 "0(1)")      # Pop return address
+      (prinst "addi" 1 1 8)
+      (prinst "mtctr" 0)          # Return
+      (prinst "bctr")
+      (prinl) )
    (label "call")
    (prinst "mflr" 11)          # Get return address
    (prinst "lwa" 0 "0(11)")    # Target offset
@@ -1122,146 +1116,147 @@
    (prinst "mtctr" 0)          # Return
    (prinst "bctr")
    (prinl)
-   (prinl "# movn dst src cnt")
-   (label "movn")
-   (prinst "subi" 4 4 1)       # Adjust 'dst'
-   (prinst "subi" 5 5 1)       # and 'src'
-   (prinl "1:")
-   (prinst "subic." 6 6 1)     # Decrement 'cnt'
-   (prinst "bltlr")            # Return if done
-   (prinst "lbzu" 26 "1(5)")   # Next byte from 'src'
-   (prinst "stbu" 26 "1(4)")   # Write to 'dst'
-   (prinst "b" "1b")
-   (prinl)
-   (prinl "# mset dst src cnt")
-   (label "mset")
-   (prinst "subi" 4 4 1)       # Adjust 'dst'
-   (prinl "1:")
-   (prinst "subic." 5 5 1)     # Decrement 'cnt'
-   (prinst "bltlr")            # Return if done
-   (prinst "stbu" 3 "1(4)")    # Write B to 'dst'
-   (prinst "b" "1b")
-   (prinl)
-   (prinl "# save src end dst")
-   (label "save")
-   (prinst "ld" 26 "0(4)")    # First word from 'src'
-   (prinst "std" 26 "0(6)")   # Write to 'dst'
-   (prinl "1:")
-   (prinst "ldu" 26 "8(4)")   # Next word from 'src'
-   (prinst "cmpd" 4 5)        # Done?
-   (prinst "beqlr-")          # Yes: Return
-   (prinst "stdu" 26 "8(6)")  # Write to 'dst'
-   (prinst "b" "1b")
-   (prinl)
-   (prinl "# load dst end src")
-   (label "load")
-   (prinst "ld" 26 "0(6)")    # First word from 'src'
-   (prinst "std" 26 "0(4)")   # Write to 'dst'
-   (prinst "subi" 5 5 8)      # Adjust 'end'
-   (prinl "1:")
-   (prinst "ldu" 26 "8(6)")   # Next word from 'src'
-   (prinst "stdu" 26 "8(4)")  # Write to 'dst'
-   (prinst "cmpd" 4 5)        # Done?
-   (prinst "bne+" "1b")       # No
-   (prinst "blr")
-   (prinl)
-   (prinl "# cmpn dst src cnt")
-   (label "cmpn")
-   (prinst "lbz" 26 "0(4)")    # First byte from 'dst'
-   (prinst "lbz" 27 "0(5)")    # First byte from 'src'
-   (prinl "1:")
-   (prinst "subc." 0 26 27)    # Same bytes?
-   (prinst "bnelr-")           # No: Return 'ne'
-   (prinst "subic." 6 6 1)     # Decrement 'cnt'
-   (prinst "beqlr-")           # Return 'eq' if done
-   (prinst "lbzu" 26 "1(4)")   # Next bytes
-   (prinst "lbzu" 27 "1(5)")
-   (prinst "b" "1b")
-   (prinl)
-   (prinl "# slen dst src")
-   (label "slen")
-   (prinst "li" 4 0)           # Init 'dst' counter
-   (prinst "lbz" 26 "0(5)")    # First byte from 'src'
-   (prinl "1:")
-   (prinst "cmpdi" 26 0)       # Done?
-   (prinst "beqlr-")           # Yes: Return
-   (prinst "addi" 4 4 1)       # Increment 'cnt'
-   (prinst "lbzu" 26 "1(5)")   # Next byte
-   (prinst "b" "1b")
-   (prinl)
-   (prinl "# memb src cnt")
-   (label "memb")
-   (prinst "mr" 6 4)            # Get 'src'
-   (prinst "extrdi" 26 3 8 56)  # and B
-   (prinl "1:")
-   (prinst "subic." 5 5 1)      # Decrement 'cnt'
-   (prinst "bltlr-")            # Return 'ne' if done
-   (prinst "lbz" 27 "0(6)")     # Next byte from 'src'
-   (prinst "addi" 6 6 1)        # Increment 'src'
-   (prinst "cmpd" 27 26)        # Found?
-   (prinst "bne+" "1b")         # No
-   (prinst "mr" 4 6)            # Else return 'eq'
-   (prinst "blr")
-   (prinl)
-   (prinl "# div src")
-   (label "div")
-   (prinst "divdu" 5 3 4)      # Only 64-bit division for now
-   (prinst "mulld" 14 5 4)     # Remainder
-   (prinst "subf" 14 14 3)
-   (prinst "mr" 3 5)           # Quotient
-   (prinst "blr")
-   (prinl)
-   (prinl "# Begin entry")
-   (label "begin")
-   (prinst "std" 14 "-144(1)")
-   (prinst "std" 15 "-136(1)")
-   (prinst "std" 16 "-128(1)")
-   (prinst "std" 17 "-120(1)")
-   (prinst "std" 18 "-112(1)")
-   (prinst "std" 19 "-104(1)")
-   (prinst "std" 20 "-96(1)")
-   (prinst "std" 21 "-88(1)")
-   (prinst "std" 22 "-80(1)")
-   (prinst "std" 23 "-72(1)")
-   (prinst "std" 24 "-64(1)")
-   (prinst "std" 25 "-56(1)")
-   (prinst "std" 26 "-48(1)")
-   (prinst "std" 27 "-40(1)")
-   (prinst "std" 28 "-32(1)")
-   (prinst "std" 29 "-24(1)")
-   (prinst "std" 30 "-16(1)")
-   (prinst "std" 31 "-8(1)")
-   (prinst "std" 0 "16(1)")
-   (prinst "stdu" 1 "-256(1)")
-   (prinst "li" 20 0)                   # Init NULL register
-   (prinst "li" 21 1)                   # Init ONE register
-   (prinst "ld" 22 "Data@got(2)")       # Globals bases
-   (prinst "ld" 23 "Code@got(2)")
-   (prinst "blr")
-   (prinl)
-   (prinl "# Return entry")
-   (label "return")
-   (prinst "addi" 1 1 256)
-   (prinst "ld" 14 "-144(1)")
-   (prinst "ld" 15 "-136(1)")
-   (prinst "ld" 16 "-128(1)")
-   (prinst "ld" 17 "-120(1)")
-   (prinst "ld" 18 "-112(1)")
-   (prinst "ld" 19 "-104(1)")
-   (prinst "ld" 20 "-96(1)")
-   (prinst "ld" 21 "-88(1)")
-   (prinst "ld" 22 "-80(1)")
-   (prinst "ld" 23 "-72(1)")
-   (prinst "ld" 24 "-64(1)")
-   (prinst "ld" 25 "-56(1)")
-   (prinst "ld" 26 "-48(1)")
-   (prinst "ld" 27 "-40(1)")
-   (prinst "ld" 28 "-32(1)")
-   (prinst "ld" 29 "-24(1)")
-   (prinst "ld" 30 "-16(1)")
-   (prinst "ld" 31 "-8(1)")
-   (prinst "ld" 0 "16(1)")
-   (prinst "blr") )
+   (unless *FPic
+      (prinl "# movn dst src cnt")
+      (label "movn")
+      (prinst "subi" 4 4 1)       # Adjust 'dst'
+      (prinst "subi" 5 5 1)       # and 'src'
+      (prinl "1:")
+      (prinst "subic." 6 6 1)     # Decrement 'cnt'
+      (prinst "bltlr")            # Return if done
+      (prinst "lbzu" 26 "1(5)")   # Next byte from 'src'
+      (prinst "stbu" 26 "1(4)")   # Write to 'dst'
+      (prinst "b" "1b")
+      (prinl)
+      (prinl "# mset dst src cnt")
+      (label "mset")
+      (prinst "subi" 4 4 1)       # Adjust 'dst'
+      (prinl "1:")
+      (prinst "subic." 5 5 1)     # Decrement 'cnt'
+      (prinst "bltlr")            # Return if done
+      (prinst "stbu" 3 "1(4)")    # Write B to 'dst'
+      (prinst "b" "1b")
+      (prinl)
+      (prinl "# save src end dst")
+      (label "save")
+      (prinst "ld" 26 "0(4)")    # First word from 'src'
+      (prinst "std" 26 "0(6)")   # Write to 'dst'
+      (prinl "1:")
+      (prinst "ldu" 26 "8(4)")   # Next word from 'src'
+      (prinst "cmpd" 4 5)        # Done?
+      (prinst "beqlr-")          # Yes: Return
+      (prinst "stdu" 26 "8(6)")  # Write to 'dst'
+      (prinst "b" "1b")
+      (prinl)
+      (prinl "# load dst end src")
+      (label "load")
+      (prinst "ld" 26 "0(6)")    # First word from 'src'
+      (prinst "std" 26 "0(4)")   # Write to 'dst'
+      (prinst "subi" 5 5 8)      # Adjust 'end'
+      (prinl "1:")
+      (prinst "ldu" 26 "8(6)")   # Next word from 'src'
+      (prinst "stdu" 26 "8(4)")  # Write to 'dst'
+      (prinst "cmpd" 4 5)        # Done?
+      (prinst "bne+" "1b")       # No
+      (prinst "blr")
+      (prinl)
+      (prinl "# cmpn dst src cnt")
+      (label "cmpn")
+      (prinst "lbz" 26 "0(4)")    # First byte from 'dst'
+      (prinst "lbz" 27 "0(5)")    # First byte from 'src'
+      (prinl "1:")
+      (prinst "subc." 0 26 27)    # Same bytes?
+      (prinst "bnelr-")           # No: Return 'ne'
+      (prinst "subic." 6 6 1)     # Decrement 'cnt'
+      (prinst "beqlr-")           # Return 'eq' if done
+      (prinst "lbzu" 26 "1(4)")   # Next bytes
+      (prinst "lbzu" 27 "1(5)")
+      (prinst "b" "1b")
+      (prinl)
+      (prinl "# slen dst src")
+      (label "slen")
+      (prinst "li" 4 0)           # Init 'dst' counter
+      (prinst "lbz" 26 "0(5)")    # First byte from 'src'
+      (prinl "1:")
+      (prinst "cmpdi" 26 0)       # Done?
+      (prinst "beqlr-")           # Yes: Return
+      (prinst "addi" 4 4 1)       # Increment 'cnt'
+      (prinst "lbzu" 26 "1(5)")   # Next byte
+      (prinst "b" "1b")
+      (prinl)
+      (prinl "# memb src cnt")
+      (label "memb")
+      (prinst "mr" 6 4)            # Get 'src'
+      (prinst "extrdi" 26 3 8 56)  # and B
+      (prinl "1:")
+      (prinst "subic." 5 5 1)      # Decrement 'cnt'
+      (prinst "bltlr-")            # Return 'ne' if done
+      (prinst "lbz" 27 "0(6)")     # Next byte from 'src'
+      (prinst "addi" 6 6 1)        # Increment 'src'
+      (prinst "cmpd" 27 26)        # Found?
+      (prinst "bne+" "1b")         # No
+      (prinst "mr" 4 6)            # Else return 'eq'
+      (prinst "blr")
+      (prinl)
+      (prinl "# div src")
+      (label "div")
+      (prinst "divdu" 5 3 4)      # Only 64-bit division for now
+      (prinst "mulld" 14 5 4)     # Remainder
+      (prinst "subf" 14 14 3)
+      (prinst "mr" 3 5)           # Quotient
+      (prinst "blr")
+      (prinl)
+      (prinl "# Begin entry")
+      (label "begin")
+      (prinst "std" 14 "-144(1)")
+      (prinst "std" 15 "-136(1)")
+      (prinst "std" 16 "-128(1)")
+      (prinst "std" 17 "-120(1)")
+      (prinst "std" 18 "-112(1)")
+      (prinst "std" 19 "-104(1)")
+      (prinst "std" 20 "-96(1)")
+      (prinst "std" 21 "-88(1)")
+      (prinst "std" 22 "-80(1)")
+      (prinst "std" 23 "-72(1)")
+      (prinst "std" 24 "-64(1)")
+      (prinst "std" 25 "-56(1)")
+      (prinst "std" 26 "-48(1)")
+      (prinst "std" 27 "-40(1)")
+      (prinst "std" 28 "-32(1)")
+      (prinst "std" 29 "-24(1)")
+      (prinst "std" 30 "-16(1)")
+      (prinst "std" 31 "-8(1)")
+      (prinst "std" 0 "16(1)")
+      (prinst "stdu" 1 "-256(1)")
+      (prinst "li" 20 0)                   # Init NULL register
+      (prinst "li" 21 1)                   # Init ONE register
+      (prinst "ld" 22 "Data@got(2)")       # Globals bases
+      (prinst "ld" 23 "Code@got(2)")
+      (prinst "blr")
+      (prinl)
+      (prinl "# Return entry")
+      (label "return")
+      (prinst "addi" 1 1 256)
+      (prinst "ld" 14 "-144(1)")
+      (prinst "ld" 15 "-136(1)")
+      (prinst "ld" 16 "-128(1)")
+      (prinst "ld" 17 "-120(1)")
+      (prinst "ld" 18 "-112(1)")
+      (prinst "ld" 19 "-104(1)")
+      (prinst "ld" 20 "-96(1)")
+      (prinst "ld" 21 "-88(1)")
+      (prinst "ld" 22 "-80(1)")
+      (prinst "ld" 23 "-72(1)")
+      (prinst "ld" 24 "-64(1)")
+      (prinst "ld" 25 "-56(1)")
+      (prinst "ld" 26 "-48(1)")
+      (prinst "ld" 27 "-40(1)")
+      (prinst "ld" 28 "-32(1)")
+      (prinst "ld" 29 "-24(1)")
+      (prinst "ld" 30 "-16(1)")
+      (prinst "ld" 31 "-8(1)")
+      (prinst "ld" 0 "16(1)")
+      (prinst "blr") ) )
 
 (asm initMain ()
    (prinst ".quad" ".+24" ".TOC.@tocbase" 0)
