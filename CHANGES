@@ -1,5 +1,6 @@
 * XXjun11 picoLisp-3.0.7
    64-bit version for PowerPC (ppc64)
+   Bug in 'replace' (64-bit)
    Moved temporary directories to ~/.pil/tmp/
    Moved line editor history to ~/.pil/history
 
