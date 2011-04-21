@@ -1,4 +1,4 @@
-# 20apr11abu
+# 21apr11abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -722,13 +722,13 @@
                (prinst "pop" R) )
             Reg
             '("%xmm0" "%xmm1" "%xmm2" "%xmm3" "%xmm4" "%xmm5") )
-         (prinst "mov" "%rax" "%r11")
+         (prinst "mov" Arg "%r11")
          (prinl "1:")
-         (prinst "cmp" "%rsp" "%rax")
+         (prinst "cmp" "%rsp" Arg)
          (prinst "jz" "1f")
-         (prinst "sub" "$16" "%rax")
+         (prinst "sub" "$16" Arg)
          (prinst "sub" "$8" "%r11")
-         (prinst "mov" "8(%rax)" "%r10")
+         (prinst "mov" (pack "8(" Arg ")") "%r10")
          (prinst "or" "%r10" "(%r11)")
          (prinst "jmp 1b")
          (prinl "1:")
