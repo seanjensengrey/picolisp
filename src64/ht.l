@@ -1,4 +1,4 @@
-# 20apr11abu
+# 21apr11abu
 # (c) Software Lab. Alexander Burger
 
 (data 'HtData)
@@ -534,7 +534,7 @@ skip CHUNK  # <Y III> Chunk buffer
 : Newlines asciz "0\\r\\n\\r\\n"
 
 (code 'chrHex_AF 0)
-   ld B (Chr)
+   ld A (Chr)
    cmp B (char "0")  # Decimal digit?
    if ge
       cmp B (char "9")
