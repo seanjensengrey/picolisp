@@ -1,4 +1,4 @@
-# 20apr11abu
+# 21apr11abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -117,7 +117,7 @@
          (prinst "mtctr" 23)
          (prinst "bctrl")
          (prinst ".int" (cdr @)) )
-      (prinst "bl" "call")
+      (prinst "bl" "callRel")
       (prinst ".int" (pack Sym "-.")) ) )
 
 # Addressing modes
@@ -943,18 +943,54 @@
                      (off Lea) ) )
                Arg
                M ) )
-         #{MADA}# ) )
+         (let Lim (tmpReg)
+            (prinst "mr" Lim Arg)
+            (mapc
+               '((R X)
+                  (prinl "1:")
+                  (prinst "cmpd" Lim 1)
+                  (prinst "beq-" "9f")
+                  (prinst "ld" R "0(1)")
+                  (prinst "addi" 1 1 8)
+                  (prinst "cmpdi" R 0)
+                  (prinst "beq+" "7f")
+                  (prinst "nop")  #{MADA}# Floating point arguments
+                  (prinl "7:")
+                  (prinst "ld" R "0(1)")
+                  (prinst "addi" 1 1 8) )
+               Reg
+               #{MADA}# )
+            #{  MADA
+            (prinl "1:")
+            (prinst "cmpd" Lim 1)
+            (prinst "beq+" "9f")
+            }#
+            (prinl "9:") ) ) )
    (nond
       (A  # Absolute
-         (prinst "mflr" 26)
-         (prinst "stdu" 1 "-112(1)")
-         (prinst "bl" Adr)
-         (prinst "nop")
-         (prinst "addi" 1 1 112)
-         (prinst "mtlr" 26) )
+         (use R
+            (unless (= Adr "exit")
+               (prinst "mflr" (setq R (tmpReg)))
+               (prinst "stdu" 1 "-112(1)") )
+            (prinst "bl" Adr)
+            (prinst "nop")
+            (unless (= Adr "exit")
+               (prinst "addi" 1 1 112)
+               (prinst "mtlr" R) ) ) )
       ((=T A)  # Indexed
-         (prinst "mtctr" Adr)
-         (prinst "bctrl") ) )
+         (prinst "mflr" 0)
+         (prinst "stdu" 1 "-120(1)")
+         (prinst "std" 0 "112(1)")
+         (prinst "std" 2 "40(1)")
+         (prinst "ld" 0 (pack "0(" Adr ")"))
+         (prinst "ld" 11 (pack "16(" Adr ")"))
+         (prinst "ld" 2 (pack "8(" Adr ")"))
+         (prinst "mtctr" 0)
+         (prinst "bctrl")
+         (prinst "ld" 2 "40(1)")
+         (prinst "ld" 0 "112(1)")
+         (prinst "addi" 1 1 120)
+         (prinst "mtlr" 0) ) )
    (and
       (lst? Arg)
       (gt0 (- (length Arg) 8))
@@ -1094,7 +1130,7 @@
       (prinst "mtctr" 0)          # Return
       (prinst "bctr")
       (prinl) )
-   (label "call")
+   (label "callRel")
    (prinst "mflr" 11)          # Get return address
    (prinst "lwa" 0 "0(11)")    # Target offset
    (prinst "add" 0 0 11)       # PC-relative
