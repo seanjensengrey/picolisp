@@ -1,4 +1,4 @@
-# 21apr11abu
+# 22apr11abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -18,7 +18,6 @@
 
 # TOC: 2
 # C arguments: 3 - 10
-# Operands: 4, 5, 6
 # NULL: 20
 # ONE: 21
 # Data: 22
@@ -375,13 +374,13 @@
       ((not D)
          (ifn (= (3 . 14) Dst)
             (memory Src S Dst 0)
-            (let A (memory Src S 14 0)  # D
-               (prinst "ld" 3 (pack "8+" (car A))) ) ) )
+            (let A (memory Src S 3 0)  # D
+               (prinst "ld" 14 (pack "8+" (car A))) ) ) )
       ((not S)
          (ifn (= (3 . 14) Src)
             (memory Dst D Src T)
-            (let A (memory Dst D 14 T)  # D
-               (prinst "std" 3 (pack "8+" (car A))) ) ) )
+            (let A (memory Dst D 3 T)  # D
+               (prinst "std" 14 (pack "8+" (car A))) ) ) )
       ((= "0" Src) (memory Dst D 20 T))
       ((= "1" Src) (memory Dst D 21 T))
       (T
@@ -1118,16 +1117,16 @@
 
 (asm initCode ()
    (unless *FPic
-      (prinst "mflr" 11)          # Get return address
-      (prinst "lwa" 0 "0(11)")    # Target offset
-      (prinst "add" 0 0 23)       # Code-relative
-      (prinst "mtlr" 0)           # Set target address
-      (prinst "addi" 0 11 4)      # Update return address
-      (prinst "stdu" 0 "-8(1)")   # Save it
-      (prinst "blrl")             # Call target
-      (prinst "ld" 0 "0(1)")      # Pop return address
+      (prinst "mflr" 11)         # Get return address
+      (prinst "lwa" 0 "0(11)")   # Target offset
+      (prinst "add" 0 0 23)      # Code-relative
+      (prinst "mtlr" 0)          # Set target address
+      (prinst "addi" 0 11 4)     # Update return address
+      (prinst "stdu" 0 "-8(1)")  # Save it
+      (prinst "blrl")            # Call target
+      (prinst "ld" 0 "0(1)")     # Pop return address
       (prinst "addi" 1 1 8)
-      (prinst "mtctr" 0)          # Return
+      (prinst "mtctr" 0)         # Return
       (prinst "bctr")
       (prinl) )
    (label "callRel")
@@ -1155,92 +1154,158 @@
    (unless *FPic
       (prinl "# movn dst src cnt")
       (label "movn")
-      (prinst "subi" 4 4 1)       # Adjust 'dst'
-      (prinst "subi" 5 5 1)       # and 'src'
+      (prinst "subi" 4 4 1)     # Adjust 'dst'
+      (prinst "subi" 5 5 1)     # and 'src'
       (prinl "1:")
-      (prinst "subic." 6 6 1)     # Decrement 'cnt'
-      (prinst "bltlr")            # Return if done
-      (prinst "lbzu" 26 "1(5)")   # Next byte from 'src'
-      (prinst "stbu" 26 "1(4)")   # Write to 'dst'
+      (prinst "subic." 6 6 1)   # Decrement 'cnt'
+      (prinst "bltlr")          # Return if done
+      (prinst "lbzu" 7 "1(5)")  # Next byte from 'src'
+      (prinst "stbu" 7 "1(4)")  # Write to 'dst'
       (prinst "b" "1b")
       (prinl)
       (prinl "# mset dst src cnt")
       (label "mset")
-      (prinst "subi" 4 4 1)       # Adjust 'dst'
+      (prinst "subi" 4 4 1)     # Adjust 'dst'
       (prinl "1:")
-      (prinst "subic." 5 5 1)     # Decrement 'cnt'
-      (prinst "bltlr")            # Return if done
-      (prinst "stbu" 3 "1(4)")    # Write B to 'dst'
+      (prinst "subic." 5 5 1)   # Decrement 'cnt'
+      (prinst "bltlr")          # Return if done
+      (prinst "stbu" 3 "1(4)")  # Write B to 'dst'
       (prinst "b" "1b")
       (prinl)
       (prinl "# save src end dst")
       (label "save")
-      (prinst "ld" 26 "0(4)")    # First word from 'src'
-      (prinst "std" 26 "0(6)")   # Write to 'dst'
+      (prinst "ld" 7 "0(4)")    # First word from 'src'
+      (prinst "std" 7 "0(6)")   # Write to 'dst'
       (prinl "1:")
-      (prinst "ldu" 26 "8(4)")   # Next word from 'src'
-      (prinst "cmpd" 4 5)        # Done?
-      (prinst "beqlr-")          # Yes: Return
-      (prinst "stdu" 26 "8(6)")  # Write to 'dst'
+      (prinst "ldu" 7 "8(4)")   # Next word from 'src'
+      (prinst "cmpd" 4 5)       # Done?
+      (prinst "beqlr-")         # Yes: Return
+      (prinst "stdu" 7 "8(6)")  # Write to 'dst'
       (prinst "b" "1b")
       (prinl)
       (prinl "# load dst end src")
       (label "load")
-      (prinst "ld" 26 "0(6)")    # First word from 'src'
-      (prinst "std" 26 "0(4)")   # Write to 'dst'
-      (prinst "subi" 5 5 8)      # Adjust 'end'
+      (prinst "ld" 7 "0(6)")    # First word from 'src'
+      (prinst "std" 7 "0(4)")   # Write to 'dst'
+      (prinst "subi" 5 5 8)     # Adjust 'end'
       (prinl "1:")
-      (prinst "ldu" 26 "8(6)")   # Next word from 'src'
-      (prinst "stdu" 26 "8(4)")  # Write to 'dst'
-      (prinst "cmpd" 4 5)        # Done?
-      (prinst "bne+" "1b")       # No
+      (prinst "ldu" 7 "8(6)")   # Next word from 'src'
+      (prinst "stdu" 7 "8(4)")  # Write to 'dst'
+      (prinst "cmpd" 4 5)       # Done?
+      (prinst "bne+" "1b")      # No
       (prinst "blr")
       (prinl)
       (prinl "# cmpn dst src cnt")
       (label "cmpn")
-      (prinst "lbz" 26 "0(4)")    # First byte from 'dst'
-      (prinst "lbz" 27 "0(5)")    # First byte from 'src'
+      (prinst "lbz" 7 "0(4)")   # First byte from 'dst'
+      (prinst "lbz" 8 "0(5)")   # First byte from 'src'
       (prinl "1:")
-      (prinst "subc." 0 26 27)    # Same bytes?
-      (prinst "bnelr-")           # No: Return 'ne'
-      (prinst "subic." 6 6 1)     # Decrement 'cnt'
-      (prinst "beqlr-")           # Return 'eq' if done
-      (prinst "lbzu" 26 "1(4)")   # Next bytes
-      (prinst "lbzu" 27 "1(5)")
+      (prinst "subc." 0 7 8)    # Same bytes?
+      (prinst "bnelr-")         # No: Return 'ne'
+      (prinst "subic." 6 6 1)   # Decrement 'cnt'
+      (prinst "beqlr-")         # Return 'eq' if done
+      (prinst "lbzu" 7 "1(4)")  # Next bytes
+      (prinst "lbzu" 8 "1(5)")
       (prinst "b" "1b")
       (prinl)
       (prinl "# slen dst src")
       (label "slen")
-      (prinst "li" 4 0)           # Init 'dst' counter
-      (prinst "lbz" 26 "0(5)")    # First byte from 'src'
+      (prinst "li" 4 0)         # Init 'dst' counter
+      (prinst "lbz" 7 "0(5)")   # First byte from 'src'
       (prinl "1:")
-      (prinst "cmpdi" 26 0)       # Done?
-      (prinst "beqlr-")           # Yes: Return
-      (prinst "addi" 4 4 1)       # Increment 'cnt'
-      (prinst "lbzu" 26 "1(5)")   # Next byte
+      (prinst "cmpdi" 7 0)      # Done?
+      (prinst "beqlr-")         # Yes: Return
+      (prinst "addi" 4 4 1)     # Increment 'cnt'
+      (prinst "lbzu" 7 "1(5)")  # Next byte
       (prinst "b" "1b")
       (prinl)
       (prinl "# memb src cnt")
       (label "memb")
-      (prinst "mr" 6 4)            # Get 'src'
-      (prinst "extrdi" 26 3 8 56)  # and B
+      (prinst "mr" 6 4)           # Get 'src'
+      (prinst "extrdi" 7 3 8 56)  # and B
       (prinl "1:")
-      (prinst "subic." 5 5 1)      # Decrement 'cnt'
-      (prinst "bltlr-")            # Return 'ne' if done
-      (prinst "lbz" 27 "0(6)")     # Next byte from 'src'
-      (prinst "addi" 6 6 1)        # Increment 'src'
-      (prinst "cmpd" 27 26)        # Found?
-      (prinst "bne+" "1b")         # No
-      (prinst "mr" 4 6)            # Else return 'eq'
+      (prinst "subic." 5 5 1)     # Decrement 'cnt'
+      (prinst "bltlr-")           # Return 'ne' if done
+      (prinst "lbz" 8 "0(6)")     # Next byte from 'src'
+      (prinst "addi" 6 6 1)       # Increment 'src'
+      (prinst "cmpd" 8 7)         # Found?
+      (prinst "bne+" "1b")        # No
+      (prinst "mr" 4 6)           # Else return 'eq'
       (prinst "blr")
       (prinl)
-      (prinl "# div src")
-      (label "div")
-      (prinst "divdu" 5 3 4)      # Only 64-bit division for now
-      (prinst "mulld" 14 5 4)     # Remainder
-      (prinst "subf" 14 14 3)
-      (prinst "mr" 3 5)           # Quotient
-      (prinst "blr")
+      (prinl "# div src")  # From: http://hackers-delight.org.ua
+      (label "div")        # 14:3 / 4
+      (let
+         (@u1 14  @u0 3  @v 4  @s 5            # un21 = un32 = u1
+            @un1 6  @un0 7  @vn1 8  @vn0 9
+            @q1 26  @q0 27  @rhat 28  @tmp 29 )
+         (macro
+            (prinst "cmpld" @u1 @v)            # u1 >= v?
+            (prinst "bge-" "divOvfl")          # Yes: Overflow
+            (prinst "li" @s 0)                 # Init 's'
+            (prinst "cmpldi" @v 0)             # Normalize
+            (prinst "blt" "div2")
+            (prinl "div1:")
+            (prinst "addi" @s @s 1)            # Increment 's'
+            (prinst "addc" @u0 @u0 @u0)        # Shift dividend left
+            (prinst "adde" @u1 @u1 @u1)
+            (prinst "add." @v @v @v)           # and divisor
+            (prinst "bge" "div1")
+            (prinl "div2:")
+            (prinst "extrdi" @vn1 @v 32 0)     # Split divisor into high 32 bits
+            (prinst "extrdi" @vn0 @v 32 32)    # and low 32 bits
+            (prinst "extrdi" @un1 @u0 32 0)    # Split 'u0' into high 32 bits
+            (prinst "extrdi" @un0 @u0 32 32)   # and low 32 bits
+            (prinst "divdu" @q1 @u1 @vn1)      # First quotient digit
+            (prinst "mulld" 0 @q1 @vn1)
+            (prinst "sub" @rhat @u1 0)
+            (prinl "div3:")
+            (prinst "extrdi." 0 @q1 32 0)      # q1 >= b?
+            (prinst "bne-" "div4")             # Yes
+            (prinst "sldi" @tmp @rhat 32)      # b*rhat + un1
+            (prinst "add" @tmp @tmp @un1)
+            (prinst "mulld" 0 @q1 @vn0)
+            (prinst "cmpld" 0 @tmp)            # q1 * vn0 > b*rhat + un1?
+            (prinst "ble+" "div5")             # No
+            (prinl "div4:")
+            (prinst "subi" @q1 @q1 1)          # Else decrement 'q1'
+            (prinst "add" @rhat @rhat @vn1)    # Increment 'rhat'
+            (prinst "extrdi." 0 @rhat 32 0)    # Less than 'b'?
+            (prinst "beq-" "div3")             # Yes
+            (prinl "div5:")
+            (prinst "sldi" @u1 @u1 32)         # (un32*b)
+            (prinst "add" @u1 @u1 @un1)        # (un1 + un32*b)
+            (prinst "mulld" 0 @q1 @v)
+            (prinst "sub" @u1 @u1 0)           # un21 = un1 + un32*b - q1*v
+            (prinst "divdu" @q0 @u1 @vn1)      # Second quotient digit
+            (prinst "mulld" 0 @q0 @vn1)
+            (prinst "sub" @rhat @u1 0)
+            (prinl "div6:")
+            (prinst "extrdi." 0 @q0 32 0)      # q0 >= b?
+            (prinst "bne-" "div7")             # Yes
+            (prinst "sldi" @tmp @rhat 32)      # b*rhat + un0
+            (prinst "add" @tmp @tmp @un0)
+            (prinst "mulld" 0 @q0 @vn0)
+            (prinst "cmpld" 0 @tmp)            # q0 * vn0 > b*rhat + un1?
+            (prinst "ble+" "div8")             # No
+            (prinl "div7:")
+            (prinst "subi" @q0 @q0 1)          # Else decrement 'q0'
+            (prinst "add" @rhat @rhat @vn1)    # Increment 'rhat'
+            (prinst "extrdi." 0 @rhat 32 0)    # Less than 'b'?
+            (prinst "beq-" "div6")             # Yes
+            (prinl "div8:")
+            (prinst "sldi" @u0 @q1 32)         # Quotient
+            (prinst "add" @u0 @u0 @q0)
+            (prinst "sldi" @u1 @u1 32)         # Remainder: u1 = (un0 + un21*b - q0*v) >> s
+            (prinst "add" @u1 @u1 @un0)        
+            (prinst "mulld" 0 @q0 @v)
+            (prinst "sub" @u1 @u1 0)
+            (prinst "srd" @u1 @u1 @s)
+            (prinst "blr")
+            (prinl "divOvfl:")
+            (prinst "li" @u0 -1)               # Overflow
+            (prinst "li" @u1 -1)
+            (prinst "blr") ) )
       (prinl)
       (prinl "# Begin entry")
       (label "begin")
