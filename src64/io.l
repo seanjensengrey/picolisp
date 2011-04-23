@@ -1,4 +1,4 @@
-# 20apr11abu
+# 23apr11abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -4628,11 +4628,7 @@
 
 (code 'space)
    ld B 32
-(code 'envPutB)  # DLL hook
    jmp (PutB)
-
-(code 'envGet_A)  # DLL hook
-   jmp (Get_A)
 
 # Output decimal number
 (code 'outNumE)
