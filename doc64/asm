@@ -1,4 +1,4 @@
-# 07apr11abu
+# 24apr11abu
 # (c) Software Lab. Alexander Burger
 
 
@@ -169,8 +169,8 @@
       fix               # Convert double with scale 'E' to fixnum in 'E'
 
       ret               # Return
-      begin src         # Called from C-function with 'src' arguments
-      return src        # Prepare to return to C-function
+      begin             # Called from foreign function
+      return            # Return to foreign function
 
    Stack Manipulations:
       push src          # Push 'src' [---]

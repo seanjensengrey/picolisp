@@ -1,4 +1,4 @@
-# 21apr11abu
+# 23apr11abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -753,29 +753,11 @@
       (prinst "rep") )
    (prinst "ret") )
 
-(asm begin (N)
-   (prinst "push" "%rbx")
-   (prinst "push" "%r12")
-   (prinst "xor" "%r12" "%r12")  # NULL register
-   (when (>= N 6)                                  # Z
-      (prinst "push" "%r15")
-      (prinst "mov" "%r9" "%r15") )
-   (when (>= N 5)                                  # Y
-      (prinst "push" "%r14")
-      (prinst "mov" "%r8" "%r14") )
-   (when (>= N 4)                                  # X
-      (prinst "push" "%r13")
-      (prinst "mov" "%rcx" "%r13") )
-   (and (>= N 3) (prinst "mov" "%rdx" "%rbx"))     # E
-   (and (>= N 2) (prinst "mov" "%rsi" "%rdx"))     # C
-   (and (>= N 1) (prinst "mov" "%rdi" "%rax")) )   # A
+(asm begin ()
+   (prinst "call" "begin") )
 
-(asm return (N)
-   (and (>= N 4) (prinst "pop" "%r13"))
-   (and (>= N 5) (prinst "pop" "%r14"))
-   (and (>= N 6) (prinst "pop" "%r15"))
-   (prinst "pop" "%r12")
-   (prinst "pop" "%rbx") )
+(asm return ()
+   (prinst "jmp" "return") )
 
 # Stack Manipulations
 (asm push (Src S)
@@ -878,7 +860,31 @@
 # System
 (asm initData ())
 
-(asm initCode ())
+(asm initCode ()
+   (unless *FPic
+      (label "begin")
+      (prinst "pop" "%r10")         # Get return address
+      (prinst "push" "%r15")        # Z
+      (prinst "mov" "%r9" "%r15")
+      (prinst "push" "%r14")        # Y
+      (prinst "mov" "%r8" "%r14")
+      (prinst "push" "%r13")        # X
+      (prinst "mov" "%rcx" "%r13")
+      (prinst "push" "%r12")
+      (prinst "xor" "%r12" "%r12")  # NULL register
+      (prinst "push" "%rbx")
+      (prinst "mov" "%rdx" "%rbx")  # E
+      (prinst "mov" "%rsi" "%rdx")  # C
+      (prinst "mov" "%rdi" "%rax")  # A
+      (prinst "jmp" "*%r10")        # Return
+      (prinl)
+      (label "return")
+      (prinst "pop" "%rbx")
+      (prinst "pop" "%r12")
+      (prinst "pop" "%r13")
+      (prinst "pop" "%r14")
+      (prinst "pop" "%r15")
+      (prinst "ret") ) )
 
 (asm initMain ()
    (prinst "xor" "%r12" "%r12")  # Init NULL register

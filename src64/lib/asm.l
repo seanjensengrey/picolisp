@@ -1,4 +1,4 @@
-# 20apr11abu
+# 23apr11abu
 # (c) Software Lab. Alexander Burger
 
 # *LittleEndian *AlignedCode *Registers optimize
@@ -395,7 +395,7 @@
       (ascii (operand (read)))
       (asciz (operand (read)))
       (atom (source) "*Mode")
-      (begin (operand (read)))
+      (begin)
       (big (source) "*Mode")
       (byte (operand (read)))
       (bytes (mapcar operand (read)))
@@ -473,7 +473,7 @@
       (rcl (destination) "*Mode" (source) "*Mode")
       (rcr (destination) "*Mode" (source) "*Mode")
       (ret)
-      (return (operand (read)))
+      (return)
       (rol (destination) "*Mode" (source) "*Mode")
       (ror (destination) "*Mode" (source) "*Mode")
       (save (source) "*Mode" (source) "*Mode" (destination) "*Mode")

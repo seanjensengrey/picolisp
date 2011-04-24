@@ -1,4 +1,4 @@
-# 20apr11abu
+# 23apr11abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -341,7 +341,7 @@
    ret
 
 (code 'sig)
-   begin 1  # Signal number in A
+   begin  # Signal number in A
    null (TtyPid)  # Kill terminal process?
    if nz  # Yes
       cc kill((TtyPid) A)
@@ -350,11 +350,10 @@
       inc (A Signal)
       inc (Signal)
    end
-   return 1
-   ret
+   return
 
 (code 'sigTerm)
-   begin 0  # Ignore signal number
+   begin  # Ignore signal number
    null (TtyPid)  # Kill terminal process?
    if nz  # Yes
       cc kill((TtyPid) SIGTERM)
@@ -362,11 +361,10 @@
       inc (Signal (* I SIGTERM))
       inc (Signal)
    end
-   return 0
-   ret
+   return
 
 (code 'sigChld)
-   begin 0  # Ignore signal number
+   begin  # Ignore signal number
    call errno_A  # Save 'errno'
    push A
    sub S I  # 'stat'
@@ -384,8 +382,7 @@
    add S I  # Drop 'stat'
    pop C  # Restore 'errno'
    call errnoC
-   return 0
-   ret
+   return
 
 (code 'tcSetC)
    null (Termio)  # In raw mode?
@@ -401,7 +398,7 @@
    ret
 
 (code 'sigTermStop)
-   begin 0  # Ignore signal number
+   begin  # Ignore signal number
    ld C OrgTermio  # Set original terminal I/O
    call tcSetC
    sub S SIGSET_T  # Create mask structure
@@ -414,8 +411,7 @@
    cc signal(SIGTSTP sigTermStop)
    ld C (Termio)
    call tcSetC
-   return 0
-   ret
+   return
 
 (code 'setRaw 0)
    nul (Tio)  # Terminal I/O?
@@ -1810,7 +1806,6 @@
    ret
 
 : cbl
-   begin 5  # Arguments in A, C, E, X and Y
    push L  # Save C frame pointer
    ld L (Link)  # Restore link register
    link  # Apply args
@@ -1841,104 +1836,102 @@
    end
    drop
    pop L  # Restore C frame pointer
-   return 5
-   pop Z
-   ret
+   return
 
 (code 'cbl1 0)
-   push Z
+   begin  # Arguments in A, C, E, X and Y
    lea Z (Lisp)  # Address of callback function
    jmp cbl
 : cbl2
-   push Z
+   begin
    lea Z (Lisp II)
    jmp cbl
 : cbl3
-   push Z
+   begin
    lea Z (Lisp (* 2 II))
    jmp cbl
 : cbl4
-   push Z
+   begin
    lea Z (Lisp (* 3 II))
    jmp cbl
 : cbl5
-   push Z
+   begin
    lea Z (Lisp (* 4 II))
    jmp cbl
 : cbl6
-   push Z
+   begin
    lea Z (Lisp (* 5 II))
    jmp cbl
 : cbl7
-   push Z
+   begin
    lea Z (Lisp (* 6 II))
    jmp cbl
 : cbl8
-   push Z
+   begin
    lea Z (Lisp (* 7 II))
    jmp cbl
 : cbl9
-   push Z
+   begin
    lea Z (Lisp (* 8 II))
    jmp cbl
 : cbl10
-   push Z
+   begin
    lea Z (Lisp (* 9 II))
    jmp cbl
 : cbl11
-   push Z
+   begin
    lea Z (Lisp (* 10 II))
    jmp cbl
 : cbl12
-   push Z
+   begin
    lea Z (Lisp (* 11 II))
    jmp cbl
 : cbl13
-   push Z
+   begin
    lea Z (Lisp (* 12 II))
    jmp cbl
 : cbl14
-   push Z
+   begin
    lea Z (Lisp (* 13 II))
    jmp cbl
 : cbl15
-   push Z
+   begin
    lea Z (Lisp (* 14 II))
    jmp cbl
 : cbl16
-   push Z
+   begin
    lea Z (Lisp (* 15 II))
    jmp cbl
 : cbl17
-   push Z
+   begin
    lea Z (Lisp (* 16 II))
    jmp cbl
 : cbl18
-   push Z
+   begin
    lea Z (Lisp (* 17 II))
    jmp cbl
 : cbl19
-   push Z
+   begin
    lea Z (Lisp (* 18 II))
    jmp cbl
 : cbl20
-   push Z
+   begin
    lea Z (Lisp (* 19 II))
    jmp cbl
 : cbl21
-   push Z
+   begin
    lea Z (Lisp (* 20 II))
    jmp cbl
 : cbl22
-   push Z
+   begin
    lea Z (Lisp (* 21 II))
    jmp cbl
 : cbl23
-   push Z
+   begin
    lea Z (Lisp (* 22 II))
    jmp cbl
 : cbl24
-   push Z
+   begin
    lea Z (Lisp (* 23 II))
    jmp cbl
 
@@ -1987,7 +1980,7 @@
    jmp errEXYZ
 
 (code 'lisp 0)
-   begin 6  # Function name in A, arguments in C, E, X, Y and Z
+   begin  # Function name in A, arguments in C, E, X, Y and Z
    push L  # Save C frame pointer
    ld L (Link)  # Restore link register
    link  # Apply args
@@ -2030,8 +2023,7 @@
    end
    drop
    pop L  # Restore C frame pointer
-   return 6
-   ret
+   return
 
 (code 'execE 0)
    push X

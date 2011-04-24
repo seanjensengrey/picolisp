@@ -1,4 +1,4 @@
-# 22apr11abu
+# 23apr11abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -998,19 +998,13 @@
 (asm ret ()
    (prinst "blr") )
 
-(asm begin (N)
+(asm begin ()
    (prinst ".quad" ".+24" ".TOC.@tocbase" 0)
    (prinst "mflr" 0)
-   (prinst "bl" "begin")
-   (and (>= N 6) (prinst "mr" 18 8))    # Z
-   (and (>= N 5) (prinst "mr" 17 7))    # Y
-   (and (>= N 4) (prinst "mr" 16 6))    # X
-   (and (>= N 3) (prinst "mr" 15 5))    # E
-   (and (>= N 2) (prinst "mr" 14 4)) )  # C
+   (prinst "bl" "begin") )
 
-(asm return (N)
-   (prinst "bl" "return")
-   (prinst "mtlr" 0) )
+(asm return ()
+   (prinst "b" "return") )
 
 # Stack Manipulations
 (asm push (Src S)
@@ -1307,7 +1301,6 @@
             (prinst "li" @u1 -1)
             (prinst "blr") ) )
       (prinl)
-      (prinl "# Begin entry")
       (label "begin")
       (prinst "std" 14 "-144(1)")
       (prinst "std" 15 "-136(1)")
@@ -1333,9 +1326,13 @@
       (prinst "li" 21 1)                   # Init ONE register
       (prinst "ld" 22 "Data@got(2)")       # Globals bases
       (prinst "ld" 23 "Code@got(2)")
+      (prinst "mr" 18 8)                   # Z
+      (prinst "mr" 17 7)                   # Y
+      (prinst "mr" 16 6)                   # X
+      (prinst "mr" 15 5)                   # E
+      (prinst "mr" 14 4)                   # C
       (prinst "blr")
       (prinl)
-      (prinl "# Return entry")
       (label "return")
       (prinst "addi" 1 1 256)
       (prinst "ld" 14 "-144(1)")
@@ -1357,6 +1354,7 @@
       (prinst "ld" 30 "-16(1)")
       (prinst "ld" 31 "-8(1)")
       (prinst "ld" 0 "16(1)")
+      (prinst "mtlr" 0)
       (prinst "blr") ) )
 
 (asm initMain ()
