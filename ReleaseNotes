@@ -1,4 +1,4 @@
-15apr11abu
+24apr11abu
 (c) Software Lab. Alexander Burger
 
 
@@ -17,4 +17,5 @@
    directory in the current working directory. They are now in "~/.pil/tmp/".
 
 2. A preliminary implementation of the 64-bit version for PowerPC (ppc64).
-   Doesn't run yet, but will hopefully improve until this release is due.
+   Floating point support for 'native' is still missing. And code generation
+   must be optimized.
