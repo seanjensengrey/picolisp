@@ -1,8 +1,8 @@
-# 18jan11abu
+# 25apr11abu
 # (c) Software Lab. Alexander Burger
 
 ### Unit Tests ###
-# $(/bin/pwd)/p lib/test.l -bye +
+# bin/picolisp $(/bin/pwd)/lib.l ext.l lib/test.l -bye +
 
 (test T (pool (tmp "db")))
 
