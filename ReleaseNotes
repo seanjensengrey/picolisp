@@ -1,4 +1,4 @@
-24apr11abu
+25apr11abu
 (c) Software Lab. Alexander Burger
 
 
@@ -16,6 +16,10 @@
    Temporary directories (with the PID as name) were created in a "tmp/"
    directory in the current working directory. They are now in "~/.pil/tmp/".
 
-2. A preliminary implementation of the 64-bit version for PowerPC (ppc64).
+2. A local startup script 'pil' was introduced, analog to the global
+   "/usr/bin/pil" script. In the long term, './p' will be replaced with './pil',
+   and './dbg' will be replaced with './pil +'.
+
+3. A preliminary implementation of the 64-bit version for PowerPC (ppc64).
    Floating point support for 'native' is still missing. And code generation
    must be optimized.

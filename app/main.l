@@ -1,10 +1,10 @@
-# 15nov10abu
+# 25apr11abu
 # (c) Software Lab. Alexander Burger
 
-(allowed ("app/" "img/")
+(allowed ("app/" "@img/")
    "@start" "@stop" "favicon.ico" "lib.css" "@psh" )
 
-(load "lib/http.l" "lib/xhtml.l" "lib/form.l" "lib/ps.l" "lib/adm.l")
+(load "@lib/http.l" "@lib/xhtml.l" "@lib/form.l" "@lib/ps.l" "@lib/adm.l")
 
 (setq
    *Scl 2

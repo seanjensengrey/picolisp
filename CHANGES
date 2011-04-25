@@ -1,4 +1,5 @@
 * XXjun11 picoLisp-3.0.7
+   Local 'pil' startup script
    64-bit version for PowerPC (ppc64)
    Bug in 'replace' (64-bit)
    Moved temporary directories to ~/.pil/tmp/
