@@ -1,4 +1,4 @@
-# 23apr11abu
+# 25apr11abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -894,6 +894,6 @@
 
 ### Optimizer ###
 # Replace the the next 'cnt' elements with 'lst'
-(de optimize (L))  #> (cnt . lst)
+(de optimize (Lst))  #> (cnt . lst)
 
 # vi:et:ts=3:sw=3

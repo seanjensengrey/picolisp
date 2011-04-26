@@ -1,4 +1,4 @@
-# 23apr11abu
+# 26apr11abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -118,6 +118,20 @@
          (prinst ".int" (cdr @)) )
       (prinst "bl" "callRel")
       (prinst ".int" (pack Sym "-.")) ) )
+
+# Optimize
+(de asmNoCC Args
+   (let Sym (intern (pack (car Args) "-"))
+      (put (car Args) 'noCC Sym)
+      (def Sym 'asm (cdr Args)) ) )
+
+(de useCC Lst
+   (for Sym Lst
+      (put Sym 'useCC T) ) )
+
+(de chgCC Lst
+   (for Sym Lst
+      (put Sym 'chgCC T) ) )
 
 # Addressing modes
 (de checkOp (Fun)
@@ -489,6 +503,20 @@
       (prinst "addze" 14 14) )
    (prinst "subfze" 31 21) )  # Set carry
 
+(asmNoCC add (Dst D Src S)
+   (ifn (= (3 . 14) Dst)
+      (if (and (=0 S) (>= 32767 (format Src) -32768))
+         (let A (dstReg Dst D)
+            (prinst "addi" (cadr A) (cadr A) Src)
+            (regDst A) )
+         (let A (dstSrcReg Dst D Src S)
+            (prinst "add" (caddr A) (caddr A) (car A))
+            (regDst (cdr A)) ) )
+      (if (and (=0 S) (>= 32767 (format Src) -32768))
+         (prinst "addic" 3 3 Src)
+         (prinst "addc" 3 3 (srcReg Src S)) )
+      (prinst "addze" 14 14) ) )
+
 (asm addc (Dst D Src S)
    (prinst "sradi" 0 31 1)  # Get carry
    (ifn (= (3 . 14) Dst)
@@ -498,6 +526,15 @@
       (prinst "adde" 3 3 (srcReg Src S))
       (prinst "adde" 14 14 20) )
    (prinst "subfze" 31 21) )  # Set carry
+
+(asmNoCC addc (Dst D Src S)
+   (prinst "sradi" 0 31 1)  # Get carry
+   (ifn (= (3 . 14) Dst)
+      (let A (dstSrcReg Dst D Src S)
+         (prinst "adde" (caddr A) (caddr A) (car A))
+         (regDst (cdr A)) )
+      (prinst "adde" 3 3 (srcReg Src S))
+      (prinst "adde" 14 14 20) ) )
 
 (asm sub (Dst D Src S)
    (ifn (= (3 . 14) Dst)
@@ -514,6 +551,20 @@
       (prinst "subfze" 14 14) )
    (prinst "subfme" 31 21) )  # Set inverted carry
 
+(asmNoCC sub (Dst D Src S)
+   (ifn (= (3 . 14) Dst)
+      (if (and (=0 S) (>= 32767 (format Src) -32768))
+         (let A (dstReg Dst D)
+            (prinst "subi" (cadr A) (cadr A) Src)
+            (regDst A) )
+         (let A (dstSrcReg Dst D Src S)
+            (prinst "sub" (caddr A) (caddr A) (car A))
+            (regDst (cdr A)) ) )
+      (if (and (=0 S) (>= 32767 (format Src) -32768))
+         (prinst "subic" 3 3 Src)
+         (prinst "subc" 3 3 (srcReg Src S)) )
+      (prinst "subfze" 14 14) ) )
+
 (asm subc (Dst D Src S)
    (prinst "xori" 0 31 1)  # Get inverted carry
    (prinst "sradi" 0 0 1)
@@ -525,9 +576,24 @@
       (prinst "sube" 14 14 20) )
    (prinst "subfme" 31 21) )  # Set inverted carry
 
+(asmNoCC subc (Dst D Src S)
+   (prinst "xori" 0 31 1)  # Get inverted carry
+   (prinst "sradi" 0 0 1)
+   (ifn (= (3 . 14) Dst)
+      (let A (dstSrcReg Dst D Src S)
+         (prinst "subfe" (caddr A) (car A) (caddr A))
+         (regDst (cdr A)) )
+      (prinst "sube" 3 3 (srcReg Src S))
+      (prinst "sube" 14 14 20) ) )
+
 (asm inc (Dst D)
    (let A (dstReg Dst D)
       (prinst "addic." (cadr A) (cadr A) 1)
+      (regDst A) ) )
+
+(asmNoCC inc (Dst D)
+   (let A (dstReg Dst D)
+      (prinst "addi" (cadr A) (cadr A) 1)
       (regDst A) ) )
 
 (asm dec (Dst D)
@@ -535,14 +601,29 @@
       (prinst "subic." (cadr A) (cadr A) 1)
       (regDst A) ) )
 
+(asmNoCC dec (Dst D)
+   (let A (dstReg Dst D)
+      (prinst "subi" (cadr A) (cadr A) 1)
+      (regDst A) ) )
+
 (asm not (Dst D)
    (let A (dstReg Dst D)
       (prinst "not." (cadr A) (cadr A))
       (regDst A) ) )
 
+(asmNoCC not (Dst D)
+   (let A (dstReg Dst D)
+      (prinst "not" (cadr A) (cadr A))
+      (regDst A) ) )
+
 (asm neg (Dst D)
    (let A (dstReg Dst D)
       (prinst "neg." (cadr A) (cadr A))
+      (regDst A) ) )
+
+(asmNoCC neg (Dst D)
+   (let A (dstReg Dst D)
+      (prinst "neg" (cadr A) (cadr A))
       (regDst A) ) )
 
 (asm and (Dst D Src S)
@@ -554,20 +635,47 @@
          (prinst "and." (caddr A) (caddr A) (car A))
          (regDst (cdr A)) ) ) )
 
+(asmNoCC and (Dst D Src S)
+   (if (and (=0 S) (>= 65535 (format Src) 0))
+      (let A (dstReg Dst D)
+         (prinst "andi." (cadr A) (cadr A) (format Src))  # 'and' doesn't exist
+         (regDst A) )
+      (let A (dstSrcReg Dst D Src S)
+         (prinst "and" (caddr A) (caddr A) (car A))
+         (regDst (cdr A)) ) ) )
+
 (asm or (Dst D Src S)
    (let A (dstSrcReg Dst D Src S)
       (prinst "or." (caddr A) (caddr A) (car A))  # 'ori.' doesn't exist
       (regDst (cdr A)) ) )
+
+(asmNoCC or (Dst D Src S)
+   (if (and (=0 S) (>= 65535 (format Src) 0))
+      (let A (dstReg Dst D)
+         (prinst "ori" (cadr A) (cadr A) (format Src))
+         (regDst A) )
+      (let A (dstSrcReg Dst D Src S)
+         (prinst "or" (caddr A) (caddr A) (car A))
+         (regDst (cdr A)) ) ) )
 
 (asm xor (Dst D Src S)
    (let A (dstSrcReg Dst D Src S)
       (prinst "xor." (caddr A) (caddr A) (car A))  # 'xori.' doesn't exist
       (regDst (cdr A)) ) )
 
+(asmNoCC xor (Dst D Src S)
+   (if (and (=0 S) (>= 65535 (format Src) 0))
+      (let A (dstReg Dst D)
+         (prinst "xori" (cadr A) (cadr A) (format Src))
+         (regDst A) )
+      (let A (dstSrcReg Dst D Src S)
+         (prinst "xor" (caddr A) (caddr A) (car A))
+         (regDst (cdr A)) ) ) )
+
 (asm off (Dst D Src S)
    (let (A (dstReg Dst D)  R (tmpReg))
       (prinst "li" R Src)
-      (prinst "and" (cadr A) (cadr A) R)
+      (prinst "and." (cadr A) (cadr A) R)
       (regDst A) ) )
 
 (asm test (Dst D Src S)
@@ -578,67 +686,93 @@
          (prinst "and." 0 (caddr A) (car A)) ) ) )
 
 (asm shl (Dst D Src S)
-   (ifn (=0 S)
-      (let A (dstSrcReg Dst D Src S)
-         (prinst "sld." (caddr A) (caddr A) (car A))  # Ignore carry
-         (regDst (cdr A)) )
+   (if (=0 S)
       (let A (dstReg Dst D)
          (when (gt0 (dec (format Src)))
             (prinst "sldi" (cadr A) (cadr A) @) )
          (prinst "addc." (cadr A) (cadr A) (cadr A))
          (regDst A)
-         (prinst "subfze" 31 21) ) ) )  # Set carry from MSB
+         (prinst "subfze" 31 21) )  # Set carry from MSB
+      (let A (dstSrcReg Dst D Src S)
+         (prinst "sld." (caddr A) (caddr A) (car A))  # Ignore carry
+         (regDst (cdr A)) ) ) )
+
+(asmNoCC shl (Dst D Src S)
+   (if (=0 S)
+      (let A (dstReg Dst D)
+         (prinst "sldi" (cadr A) (cadr A) (format Src))
+         (regDst A) )
+      (let A (dstSrcReg Dst D Src S)
+         (prinst "sld" (caddr A) (caddr A) (car A))
+         (regDst (cdr A)) ) ) )
 
 (asm shr (Dst D Src S)
-   (ifn (=0 S)
-      (let A (dstSrcReg Dst D Src S)
-         (prinst "srd." (caddr A) (caddr A) (car A))  # Ignore carry
-         (regDst (cdr A)) )
+   (if (=0 S)
       (let A (dstReg Dst D)
          (when (gt0 (dec (format Src)))
             (prinst "srdi" (cadr A) (cadr A) @) )
          (prinst "li" 31 -2)  # Set carry from LSB
          (prinst "insrdi" 31 (cadr A) 1 63)
          (prinst "srdi." (cadr A) (cadr A) 1)
-         (regDst A) ) ) )
+         (regDst A) )
+      (let A (dstSrcReg Dst D Src S)
+         (prinst "srd." (caddr A) (caddr A) (car A))  # Ignore carry
+         (regDst (cdr A)) ) ) )
+
+(asmNoCC shr (Dst D Src S)
+   (if (=0 S)
+      (let A (dstReg Dst D)
+         (prinst "srdi" (cadr A) (cadr A) (format Src))
+         (regDst A) )
+      (let A (dstSrcReg Dst D Src S)
+         (prinst "srd" (caddr A) (caddr A) (car A))
+         (regDst (cdr A)) ) ) )
 
 (asm rol (Dst D Src S)
-   (ifn (=0 S)
-      (let A (dstSrcReg Dst D Src S)
-         (prinst "rotld" (caddr A) (caddr A) (car A))
-         (regDst (cdr A)) )
+   (if (=0 S)
       (let A (dstReg Dst D)
          (prinst "rotldi" (cadr A) (cadr A) (format Src))
-         (regDst A) ) ) )
+         (regDst A) )
+      (let A (dstSrcReg Dst D Src S)
+         (prinst "rotld" (caddr A) (caddr A) (car A))
+         (regDst (cdr A)) ) ) )
 
 (asm ror (Dst D Src S)
-   (ifn (=0 S)
-      (quit "Non-immediate 'ror' not available")
+   (if (=0 S)
       (let A (dstReg Dst D)
          (prinst "rotrdi" (cadr A) (cadr A) (format Src))
-         (regDst A) ) ) )
+         (regDst A) )
+      (quit "Non-immediate 'ror' not available") ) )
 
 (asm rcl (Dst D Src S)
-   (ifn (=0 S)
-      (quit "Non-immediate 'rcl' not available")
+   (if (=0 S)
       (let A (dstReg Dst D)
          (prinst "sradi" 0 31 1)  # Get carry
-         (do (setq Src (format Src))
+         (do (format Src)
             (prinst "adde." (cadr A) (cadr A) (cadr A)) )
          (regDst A)
-         (prinst "subfze" 31 21) ) ) )  # Set carry
+         (prinst "subfze" 31 21) )  # Set carry
+      (quit "Non-immediate 'rcl' not available") ) )
+
+(asmNoCC rcl (Dst D Src S)
+   (if (=0 S)
+      (let A (dstReg Dst D)
+         (prinst "sradi" 0 31 1)  # Get carry
+         (do (format Src)
+            (prinst "adde" (cadr A) (cadr A) (cadr A)) )
+         (regDst A) )
+      (quit "Non-immediate 'rcl' not available") ) )
 
 (asm rcr (Dst D Src S)
-   (ifn (=0 S)
-      (quit "Non-immediate 'rcr' not available")
+   (if (=0 S)
       (let A (dstReg Dst D)
-         (let (R1 (tmpReg)  R2 (tmpReg))
-            (do (setq Src (format Src))
-               (prinst "mr" 0 (cadr A))
-               (prinst "rotrdi" (cadr A) (cadr A) 1)
-               (prinst "insrdi" (cadr A) 31 1 0)
-               (prinst "insrdi" 31 0 1 63) ) ) )
-      (regDst A) ) )
+         (do (setq Src (format Src))
+            (prinst "mr" 0 (cadr A))
+            (prinst "rotrdi" (cadr A) (cadr A) 1)
+            (prinst "insrdi" (cadr A) 31 1 0)
+            (prinst "insrdi" 31 0 1 63) )
+         (regDst A) )
+      (quit "Non-immediate 'rcr' not available") ) )
 
 (asm mul (Src S)
    (let R (srcReg Src S)
@@ -650,7 +784,7 @@
    (codeCall "div") )
 
 (asm zxt ()  # 8 bit -> 64 bit
-   (prinst "andi." 3 3 255) )
+   (prinst "andi." 3 3 255) )  # 'and' doesn't exist
 
 (asm setz ()
    (prinst "addic." 0 20 0) )  # Add zero to null
@@ -698,9 +832,11 @@
    (unless C (prinst "mr" Cnt 5)) )
 
 (asm null (Src S)
+   (prinst "li" 31 -2)  # Clear carry
    (prinst "cmpdi" (srcReg Src S) 0) )
 
 (asm nul4 ()
+   (prinst "li" 31 -2)  # Clear carry
    (prinst "sldi" 3 3 32)
    (prinst "sradi." 3 3 32) )
 
@@ -709,6 +845,7 @@
    (memory Dst D (srcByteReg Src S) "stb") )
 
 (asm nul (Src S)
+   (prinst "li" 31 -2)  # Clear carry
    (prinst "cmpdi" (srcByteReg Src S) 0) )
 
 # Types
@@ -1291,7 +1428,7 @@
             (prinst "sldi" @u0 @q1 32)         # Quotient
             (prinst "add" @u0 @u0 @q0)
             (prinst "sldi" @u1 @u1 32)         # Remainder: u1 = (un0 + un21*b - q0*v) >> s
-            (prinst "add" @u1 @u1 @un0)        
+            (prinst "add" @u1 @u1 @un0)
             (prinst "mulld" 0 @q0 @v)
             (prinst "sub" @u1 @u1 0)
             (prinst "srd" @u1 @u1 @s)
@@ -1370,7 +1507,42 @@
    (prinst "add" 18 4 3) )
 
 ### Optimizer ###
+(useCC
+   ldc ldnc ldz ldnz
+   addc subc rcl rcr
+   jz jeq jnz jne js jns jsz jnsz jc jlt jnc jge jcz jle jncz jgt )
+
+(chgCC
+   movn mset movm save load
+   add sub inc dec not neg and or xor off test shl shr rol ror
+   mul div zxt setz clrz
+   cmp cmp4 cmpn slen memb null nul4 nul cnt big num sym atom
+   call cc return
+   eval eval+ eval/ret exec prog )
+
+
 # Replace the the next 'cnt' elements with 'lst'
-(de optimize (L))  #> (cnt . lst)
+(de optimize (Lst)  #> (cnt . lst)
+   (when (noCC L)
+      (cons 1 (cons (cons @ (cdar L)))) ) )
+
+(de noCC (Lst)
+   (with (caar Lst)
+      (and
+         (: noCC)
+         (loop
+            (NIL (setq Lst (cdr Lst)))
+            (T (get Lst 1 1 'useCC))
+            (T (get Lst 1 1 'chgCC) T)
+            (T (= '(push T NIL) (car Lst)))
+            (T (= '(pop T NIL) (car Lst)) T)
+            (T (== 'ret (caar Lst))
+               (use (@A @B @Z)
+                  (not (match '(@A "_" @B "F" @Z) (chop *Label))) ) )
+            (T
+               (and
+                  (== 'jmp (caar Lst))
+                  (not (setq Lst (member (cons ': (cadar Lst)) *Program))) ) ) )
+         (: noCC) ) ) )
 
 # vi:et:ts=3:sw=3
