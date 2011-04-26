@@ -1,4 +1,4 @@
-# 24apr11abu
+# 25apr11abu
 # (c) Software Lab. Alexander Burger
 
 
@@ -137,7 +137,7 @@
       cmp4 src          # Compare four bytes in 'A' with 'src'
       cmpn dst src cnt  # Compare 'cnt' bytes 'dst' with 'src'
       slen dst src      # Set 'dst' to the string length of 'src'
-      memb src cnt      # Find B in 'cnt' bytes of memory
+      memb src cnt      # Find B in 'cnt' bytes of memory [z..]
       null src          # Compare 'src' with 0 [zs_]
       nul4              # Compare four bytes in 'A' with 0 [zs_]
 
