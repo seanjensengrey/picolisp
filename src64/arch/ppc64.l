@@ -500,7 +500,7 @@
       (if (and (=0 S) (>= 32767 (format Src) -32768))
          (prinst "addic" 3 3 Src)
          (prinst "addc" 3 3 (srcReg Src S)) )
-      (prinst "addze" 14 14) )
+      (prinst "addze." 14 14) )
    (prinst "subfze" 31 21) )  # Set carry
 
 (asmNoCC add (Dst D Src S)
@@ -524,7 +524,7 @@
          (prinst "adde." (caddr A) (caddr A) (car A))
          (regDst (cdr A)) )
       (prinst "adde" 3 3 (srcReg Src S))
-      (prinst "adde" 14 14 20) )
+      (prinst "addze." 14 14) )
    (prinst "subfze" 31 21) )  # Set carry
 
 (asmNoCC addc (Dst D Src S)
@@ -548,7 +548,7 @@
       (if (and (=0 S) (>= 32767 (format Src) -32768))
          (prinst "subic" 3 3 Src)
          (prinst "subc" 3 3 (srcReg Src S)) )
-      (prinst "subfze" 14 14) )
+      (prinst "subfze." 14 14) )
    (prinst "subfme" 31 21) )  # Set inverted carry
 
 (asmNoCC sub (Dst D Src S)
@@ -573,7 +573,7 @@
          (prinst "subfe." (caddr A) (car A) (caddr A))
          (regDst (cdr A)) )
       (prinst "sube" 3 3 (srcReg Src S))
-      (prinst "sube" 14 14 20) )
+      (prinst "subfze." 14 14) )
    (prinst "subfme" 31 21) )  # Set inverted carry
 
 (asmNoCC subc (Dst D Src S)
