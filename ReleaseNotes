@@ -1,4 +1,4 @@
-25apr11abu
+26apr11abu
 (c) Software Lab. Alexander Burger
 
 
@@ -20,6 +20,5 @@
    "/usr/bin/pil" script. In the long term, './p' will be replaced with './pil',
    and './dbg' will be replaced with './pil +'.
 
-3. A preliminary implementation of the 64-bit version for PowerPC (ppc64).
-   Floating point support for 'native' is still missing. And code generation
-   must be optimized.
+3. A preliminary implementation of the 64-bit version for PowerPC (ppc64). The
+   code generation should probably be optimized.

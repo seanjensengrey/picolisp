@@ -1040,93 +1040,110 @@
       (("bne" + "cr1" ".+8") ("bnectr" NIL)) ) )
 
 (asm dval ()
-   # MADA
-   )
+   (prinst "lfd" 1 "0(14)") )
 
 (asm fval ()
-   # MADA
-   )
+   (prinst "lfs" 1 "0(14)") )
 
 (asm fix ()
-   # MADA
-   )
+   (prinst "srdi" 0 15 4)  # Normalize cale (ignore sign for now)
+   (prinst "std" 0 "-8(1)")
+   (prinst "lfd" 0 "-8(1)")  # Get scale in f13
+   (prinst "fcfid" 13 0)
+   (prinst "fmul" 1 1 13)  # Multiply with value
+   (prinst "fctid" 0 1)  # Convert to integer
+   (prinst "stfd" 0 "-8(1)")
+   (prinst "ld" 15 "-8(1)")  # In E
+   (prinst "or." 15 15 15)  # Sign?
+   (prinst "blt-" "1f")  # Yes
+   (prinst "extrdi." 0 15 4 0)  # Overflow?
+   (prinst "beq+" "3f")  # No
+   (prinst "la" 15 "TSym-Data(22)")
+   (prinst "b" "4f")
+   (prinl "1:")
+   (prinst "extrdi" 0 15 4 0)  # Underflow?
+   (prinst "neg" 15 15)  # Negate
+   (prinst "cmpdi" 0 0 15)
+   (prinst "beq+" "2f")  # No
+   (prinst "la" 15 "Nil-Data(22)")
+   (prinst "b" "4f")
+   (prinl "2:")
+   (prinst "sldi" 15 15 4)  # Make negative short number
+   (prinst "ori" 15 15 10)
+   (prinst "b" "4f")
+   (prinl "3:")
+   (prinst "sldi" 15 15 4)  # Make short number
+   (prinst "ori" 15 15 2)
+   (prinl "4:") )
 
 (asm cc (Adr A Arg M)
-   (let Reg (3 4 5 6 7 8 9 10)  # Support only max. 8 parameters
-      (if (lst? Arg)
-         (let (Lea NIL  Tmp NIL)
-            (when (fish '((X) (= 3 X)) (cdr Arg))
-               (prinst "mr" (setq Tmp (tmpReg)) 3) )
-            (mapc
-               '((Src S)
-                  (if (== '& Src)
-                     (on Lea)
-                     (setq Src
-                        (recur (Src)
-                           (cond
-                              ((= 3 Src) (or Tmp 3))
-                              ((atom Src) Src)
-                              (T (cons (recurse (car Src)) (recurse (cdr Src)))) ) ) )
-                     (cond
-                        ((not Reg)  # 'Src' not stack-relative here!
-                           #{MADA}# )
-                        ((and (=T S) (== 'pop Src))
-                           (prinst "ld" (pop 'Reg) "0(1)")
-                           (prinst "addi" 1 1 8) )
-                        (Lea (memory Src S (pop 'Reg)))
-                        ((= 3 Src) (pop 'Reg))
-                        (T (srcReg Src S (pop 'Reg))) )
-                     (off Lea) ) )
-               Arg
-               M ) )
-         (let Lim (tmpReg)
-            (prinst "mr" Lim Arg)
-            (mapc
-               '((R X)
-                  (prinl "1:")
+   (let LR (tmpReg)
+      (unless (= Adr "exit")
+         (prinst "mflr" LR) )
+      (let Reg (3 4 5 6 7 8 9 10)  # Support only max. 8 parameters
+         (if (lst? Arg)
+            (let (Lea NIL  Tmp NIL)
+               (when (fish '((X) (= 3 X)) (cdr Arg))
+                  (prinst "mr" (setq Tmp (tmpReg)) 3) )
+               (mapc
+                  '((Src S)
+                     (if (== '& Src)
+                        (on Lea)
+                        (setq Src
+                           (recur (Src)
+                              (cond
+                                 ((= 3 Src) (or Tmp 3))
+                                 ((atom Src) Src)
+                                 (T (cons (recurse (car Src)) (recurse (cdr Src)))) ) ) )
+                        (cond
+                           ((not Reg)  # 'Src' not stack-relative here!
+                              #{MADA}# )
+                           ((and (=T S) (== 'pop Src))
+                              (prinst "ld" (pop 'Reg) "0(1)")
+                              (prinst "addi" 1 1 8) )
+                           (Lea (memory Src S (pop 'Reg)))
+                           ((= 3 Src) (pop 'Reg))
+                           (T (srcReg Src S (pop 'Reg))) )
+                        (off Lea) ) )
+                  Arg
+                  M ) )
+            (let Lim (tmpReg)
+               (prinst "mr" Lim Arg)
+               (prinst "ld" 11 "flt1@got(2)")
+               (for R Reg
                   (prinst "cmpd" Lim 1)
-                  (prinst "beq-" "9f")
-                  (prinst "ld" R "0(1)")
-                  (prinst "addi" 1 1 8)
-                  (prinst "cmpdi" R 0)
-                  (prinst "beq+" "7f")
-                  (prinst "nop")  #{MADA}# Floating point arguments
-                  (prinl "7:")
-                  (prinst "ld" R "0(1)")
-                  (prinst "addi" 1 1 8) )
-               Reg
-               #{MADA}# )
-            #{  MADA
-            (prinl "1:")
-            (prinst "cmpd" Lim 1)
-            (prinst "beq+" "9f")
-            }#
-            (prinl "9:") ) ) )
-   (nond
-      (A  # Absolute
-         (use R
+                  (prinst "beq-" "2f")
+                  (prinst "ld" 0 "0(1)")
+                  (prinst "cmpdi" 0 0)  # Float?
+                  (prinst "beq-" "1f")  # No
+                  (prinst "mtctr" 11)  # Else call float conversion
+                  (prinst "bctrl")
+                  (prinl "1:")
+                  (prinst "ld" R "8(1)")  # Get value
+                  (prinst "addi" 1 1 16) )
+               (prinl "2:") ) ) )
+      (nond
+         (A  # Absolute
             (unless (= Adr "exit")
-               (prinst "mflr" (setq R (tmpReg)))
                (prinst "stdu" 1 "-112(1)") )
             (prinst "bl" Adr)
             (prinst "nop")
             (unless (= Adr "exit")
-               (prinst "addi" 1 1 112)
-               (prinst "mtlr" R) ) ) )
-      ((=T A)  # Indexed
-         (prinst "mflr" 0)
-         (prinst "stdu" 1 "-120(1)")
-         (prinst "std" 0 "112(1)")
-         (prinst "std" 2 "40(1)")
-         (prinst "ld" 0 (pack "0(" Adr ")"))
-         (prinst "ld" 11 (pack "16(" Adr ")"))
-         (prinst "ld" 2 (pack "8(" Adr ")"))
-         (prinst "mtctr" 0)
-         (prinst "bctrl")
-         (prinst "ld" 2 "40(1)")
-         (prinst "ld" 0 "112(1)")
-         (prinst "addi" 1 1 120)
-         (prinst "mtlr" 0) ) )
+               (prinst "addi" 1 1 112) ) )
+         ((=T A)  # Indexed
+            (prinst "stdu" 1 "-120(1)")
+            (prinst "std" LR "112(1)")
+            (prinst "std" 2 "40(1)")
+            (prinst "ld" 0 (pack "0(" Adr ")"))
+            (prinst "ld" 11 (pack "16(" Adr ")"))
+            (prinst "ld" 2 (pack "8(" Adr ")"))
+            (prinst "mtctr" 0)
+            (prinst "bctrl")
+            (prinst "ld" 2 "40(1)")
+            (prinst "ld" LR "112(1)")
+            (prinst "addi" 1 1 120) ) )
+      (unless (= Adr "exit")
+         (prinst "mtlr" LR) ) )
    (and
       (lst? Arg)
       (gt0 (- (length Arg) 8))
@@ -1436,6 +1453,40 @@
             (prinl "divOvfl:")
             (prinst "li" @u0 -1)               # Overflow
             (prinst "li" @u1 -1)
+            (prinst "blr") ) )
+      (prinl)
+      (let R (tmpReg)
+         (for F 8
+            (label (pack "flt" F))
+            (unless (= 8 F)
+               (prinst "addi" 11 11 (pack "flt" (inc F) "-flt" F)) )
+            (prinst "srdi" 0 0 4)  # Scale (ignore sign for now)
+            (prinst "std" 0 "0(1)")
+            (prinst "ld" R "8(1)")  # Value
+            (prinst "andi." 0 R "0x02")  # Short?
+            (prinst "beq-" "2f")  # No
+            (prinst "lfd" 0 "0(1)")  # Get scale in f13
+            (prinst "fcfid" 13 0)
+            (prinst "andi." 0 R "0x08")  # Value negative?
+            (prinst "srdi" R R 4)  # Scale value
+            (prinst "beq-" "1f")
+            (prinst "neg" R R)  # Negate
+            (prinl "1:")
+            (prinst "std" R "8(1)")  # Get value
+            (prinst "lfd" 0 "8(1)")
+            (prinst "fcfid" F 0)
+            (prinst "fdiv" F F 13)  # Divide by scale
+            (prinst "stfd" F "8(1)")
+            (prinst "blr")
+            (prinl "2:")  # T or NIL
+            (prinst "la" 0 "Nil-Data(22)")
+            (prinst "cmpd" 0 R)
+            (prinst "li" R (hex "7FF"))  # inf
+            (prinst "bne-" ".+8")
+            (prinst "li" R (hex "FFF"))  # -inf
+            (prinst "rotrdi" R R 12)
+            (prinst "std" R "8(1)")  # Get value
+            (prinst "lfd" 0 "8(1)")
             (prinst "blr") ) )
       (prinl)
       (label "begin")
