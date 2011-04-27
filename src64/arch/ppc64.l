@@ -1,4 +1,4 @@
-# 26apr11abu
+# 27apr11abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -1046,7 +1046,7 @@
    (prinst "lfs" 1 "0(14)") )
 
 (asm fix ()
-   (prinst "srdi" 0 15 4)  # Normalize cale (ignore sign for now)
+   (prinst "srdi" 0 15 4)  # Normalize scale (ignore sign)
    (prinst "std" 0 "-8(1)")
    (prinst "lfd" 0 "-8(1)")  # Get scale in f13
    (prinst "fcfid" 13 0)
@@ -1460,7 +1460,7 @@
             (label (pack "flt" F))
             (unless (= 8 F)
                (prinst "addi" 11 11 (pack "flt" (inc F) "-flt" F)) )
-            (prinst "srdi" 0 0 4)  # Scale (ignore sign for now)
+            (prinst "srdi" 0 0 4)  # Scale (ignore sign)
             (prinst "std" 0 "0(1)")
             (prinst "ld" R "8(1)")  # Value
             (prinst "andi." 0 R "0x02")  # Short?

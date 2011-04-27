@@ -1,4 +1,4 @@
-# 25apr11abu
+# 27apr11abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -586,22 +586,18 @@
    (prinst "movss" "(%rdx)" "%xmm0") )
 
 (asm fix ()
-   (prinst "sub" "$8" "%rsp")                # Space for buffer
    (prinst "shr" "$4" "%rbx")                # Normalize scale
    (prinst "jc" "1f")                        # Jump if negative
    (prinst "cvtsi2sd" "%rbx" "%xmm7")        # Mulitply double with scale
    (prinst "mulsd" "%xmm7" "%xmm0")
-   (prinst "movsd" "%xmm0" "(%rsp)")         # Keep result
-   (prinst "call" "lround")
+   (prinst "cvtsd2si" "%xmm0" "%rbx")        # Convert to integer
    (prinst "jmp" "2f")
    (prinl "1:")
    (prinst "cvtsi2ss" "%rbx" "%xmm7")        # Mulitply float with scale
    (prinst "mulss" "%xmm7" "%xmm0")
-   (prinst "movss" "%xmm0" "4(%rsp)")        # Keep result
-   (prinst "call" "lroundf")
+   (prinst "cvtss2si" "%xmm0" "%rbx")        # Convert to integer
    (prinl "2:")
-   (prinst "mov" "%rax" "%rbx")              # Get into E
-   (prinst "or" "%rax" "%rax")               # Negative?
+   (prinst "or" "%rbx" "%rbx")               # Negative?
    (prinst "js" "3f")                        # Yes: Skip
    (prinst "shl" "$4" "%rbx")                # Make positive short
    (prinst "orb" "$2" "%bl")
@@ -614,11 +610,11 @@
    (prinst "jmp" "5f")
    (prinl "4:")                              # Infinite/NaN
    (prinst "mov" "$Nil" "%rbx")              # Preload NIL
-   (prinst "testb" "$0x80" "7(%rsp)")        # Float value negative?
-   (prinst "jnz" "5f")                       # Yes: Skip
+   (prinst "xorpd" "%xmm7" "%xmm7")          # Float value negative?
+   (prinst "ucomisd" "%xmm7" "%xmm0")
+   (prinst "jc" "5f")                        # Yes: Skip
    (prinst "mov" "$TSym" "%rbx")             # Load T
-   (prinl "5:")
-   (prinst "add" "$8" "%rsp") )              # Drop buffer
+   (prinl "5:") )
 
 (asm cc (Adr A Arg M)
    (unless (== 'cc (caar (seek '((L) (== (cadr L) *Statement)) *Program)))
