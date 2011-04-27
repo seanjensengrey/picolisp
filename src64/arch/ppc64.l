@@ -1391,7 +1391,7 @@
             (prinst "cmpld" @u1 @v)            # u1 >= v?
             (prinst "bge-" "divOvfl")          # Yes: Overflow
             (prinst "li" @s 0)                 # Init 's'
-            (prinst "cmpdi" @v 0)             # Normalize
+            (prinst "cmpdi" @v 0)              # Normalize
             (prinst "blt" "div2")
             (prinl "div1:")
             (prinst "addi" @s @s 1)            # Increment 's'
