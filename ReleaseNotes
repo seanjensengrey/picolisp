@@ -1,4 +1,4 @@
-26apr11abu
+27apr11abu
 (c) Software Lab. Alexander Burger
 
 
@@ -20,5 +20,6 @@
    "/usr/bin/pil" script. In the long term, './p' will be replaced with './pil',
    and './dbg' will be replaced with './pil +'.
 
-3. A preliminary implementation of the 64-bit version for PowerPC (ppc64). The
-   code generation should probably be optimized.
+3. An implementation of the 64-bit version for PowerPC (ppc64). Code generation
+   could probably be further optimized, and there may be bugs. But self-assembly
+   works, and the unit tests pass.
