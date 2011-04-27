@@ -537,13 +537,13 @@ files, which are in turn loaded by "ext.l". Thus, a typical call would be:
 $ bin/picolisp lib.l ext.l
 </code></pre>
 
-<p>The recommended way, however, is to call the "p" shell script, which includes
-"lib.l" and "ext.l". Given that your current project is loaded by some file
-"myProject.l" and your startup function is <code>main</code>, your invocation
-would look like:
+<p>The recommended way, however, is to call the "pil" shell script, which
+includes "lib.l" and "ext.l". Given that your current project is loaded by some
+file "myProject.l" and your startup function is <code>main</code>, your
+invocation would look like:
 
 <pre><code>
-$ ./p myProject.l -main
+$ ./pil myProject.l -main
 </code></pre>
 
 <p>For interactive development it is recommended to enable debugging mode, to
@@ -551,7 +551,7 @@ get the vi-style command line editor, single-stepping, tracing and other
 debugging utilities.
 
 <pre><code>
-$ ./p myProject.l -main +
+$ ./pil myProject.l -main +
 </code></pre>
 
 <p>This is equivalent to
