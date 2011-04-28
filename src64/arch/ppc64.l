@@ -1,4 +1,4 @@
-# 27apr11abu
+# 28apr11abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -14,7 +14,7 @@
    (F . T) )
 
 (de *TempRegs
-   26 27 28 29 30 )
+   27 28 29 30 )
 
 # TOC: 2
 # C arguments: 3 - 10
@@ -23,6 +23,8 @@
 # Data: 22
 # Code: 23
 # DllToc: 24
+# Nil: 25
+# Reserved: 26
 # Carry flag: 31
 
 # Temporary register
@@ -243,6 +245,7 @@
                (checkOp =0)
                (prinst "li" Reg Mem)
                NIL )
+            ((== 'Nil Mem) (prinst "mr" Reg 25))
             ((or *FPic (low? Mem))  # -fpic or code label
                (dataGot Reg Mem) )
             (T (opReg NIL Reg (dataOffset Mem) 22)) ) )
@@ -308,6 +311,11 @@
          (ifn Tmp
             21
             (prinst "li" Tmp 1)
+            Tmp ) )
+      ((== 'Nil Src)
+         (ifn Tmp
+            25
+            (prinst "mr" Tmp 25)
             Tmp ) )
       (T
          (prog1 (or Tmp (tmpReg))
@@ -397,6 +405,7 @@
                (prinst "std" 14 (pack "8+" (car A))) ) ) )
       ((= "0" Src) (memory Dst D 20 T))
       ((= "1" Src) (memory Dst D 21 T))
+      ((== 'Nil Src) (memory Dst D 25 T))
       (T
          (let R (tmpReg)
             (memory Src S R 0)
@@ -1065,7 +1074,7 @@
    (prinst "neg" 15 15)  # Negate
    (prinst "cmpdi" 0 0 15)
    (prinst "beq+" "2f")  # No
-   (prinst "la" 15 "Nil-Data(22)")
+   (prinst "mr" 15 25)  # Nil
    (prinst "b" "4f")
    (prinl "2:")
    (prinst "sldi" 15 15 4)  # Make negative short number
@@ -1077,73 +1086,72 @@
    (prinl "4:") )
 
 (asm cc (Adr A Arg M)
-   (let LR (tmpReg)
-      (unless (= Adr "exit")
-         (prinst "mflr" LR) )
-      (let Reg (3 4 5 6 7 8 9 10)  # Support only max. 8 parameters
-         (if (lst? Arg)
-            (let (Lea NIL  Tmp NIL)
-               (when (fish '((X) (= 3 X)) (cdr Arg))
-                  (prinst "mr" (setq Tmp (tmpReg)) 3) )
-               (mapc
-                  '((Src S)
-                     (if (== '& Src)
-                        (on Lea)
-                        (setq Src
-                           (recur (Src)
-                              (cond
-                                 ((= 3 Src) (or Tmp 3))
-                                 ((atom Src) Src)
-                                 (T (cons (recurse (car Src)) (recurse (cdr Src)))) ) ) )
-                        (cond
-                           ((not Reg)  # 'Src' not stack-relative here!
-                              #{MADA}# )
-                           ((and (=T S) (== 'pop Src))
-                              (prinst "ld" (pop 'Reg) "0(1)")
-                              (prinst "addi" 1 1 8) )
-                           (Lea (memory Src S (pop 'Reg)))
-                           ((= 3 Src) (pop 'Reg))
-                           (T (srcReg Src S (pop 'Reg))) )
-                        (off Lea) ) )
-                  Arg
-                  M ) )
-            (let Lim (tmpReg)
-               (prinst "mr" Lim Arg)
-               (prinst "ld" 11 "flt1@got(2)")
-               (for R Reg
-                  (prinst "cmpd" Lim 1)
-                  (prinst "beq-" "2f")
-                  (prinst "ld" 0 "0(1)")
-                  (prinst "cmpdi" 0 0)  # Float?
-                  (prinst "beq-" "1f")  # No
-                  (prinst "mtctr" 11)  # Else call float conversion
-                  (prinst "bctrl")
-                  (prinl "1:")
-                  (prinst "ld" R "8(1)")  # Get value
-                  (prinst "addi" 1 1 16) )
-               (prinl "2:") ) ) )
-      (nond
-         (A  # Absolute
-            (unless (= Adr "exit")
-               (prinst "stdu" 1 "-112(1)") )
-            (prinst "bl" Adr)
-            (prinst "nop")
-            (unless (= Adr "exit")
-               (prinst "addi" 1 1 112) ) )
-         ((=T A)  # Indexed
-            (prinst "stdu" 1 "-120(1)")
-            (prinst "std" LR "112(1)")
-            (prinst "std" 2 "40(1)")
-            (prinst "ld" 0 (pack "0(" Adr ")"))
-            (prinst "ld" 11 (pack "16(" Adr ")"))
-            (prinst "ld" 2 (pack "8(" Adr ")"))
-            (prinst "mtctr" 0)
-            (prinst "bctrl")
-            (prinst "ld" 2 "40(1)")
-            (prinst "ld" LR "112(1)")
-            (prinst "addi" 1 1 120) ) )
-      (unless (= Adr "exit")
-         (prinst "mtlr" LR) ) )
+   (let Reg (3 4 5 6 7 8 9 10)  # Support only max. 8 parameters
+      (if (lst? Arg)
+         (let (Lea NIL  Tmp NIL)
+            (when (fish '((X) (= 3 X)) (cdr Arg))
+               (prinst "mr" (setq Tmp 11) 3) )
+            (mapc
+               '((Src S)
+                  (if (== '& Src)
+                     (on Lea)
+                     (setq Src
+                        (recur (Src)
+                           (cond
+                              ((= 3 Src) (or Tmp 3))
+                              ((atom Src) Src)
+                              (T (cons (recurse (car Src)) (recurse (cdr Src)))) ) ) )
+                     (cond
+                        ((not Reg)  # 'Src' not stack-relative here!
+                           #{MADA}# )
+                        ((and (=T S) (== 'pop Src))
+                           (prinst "ld" (pop 'Reg) "0(1)")
+                           (prinst "addi" 1 1 8) )
+                        (Lea (memory Src S (pop 'Reg)))
+                        ((= 3 Src) (pop 'Reg))
+                        (T (srcReg Src S (pop 'Reg))) )
+                     (off Lea) ) )
+               Arg
+               M ) )
+         (let Lim 27
+            (prinst "mr" Lim Arg)
+            (prinst "ld" 11 "flt1@got(2)")
+            (for R Reg
+               (prinst "cmpd" Lim 1)
+               (prinst "beq-" "2f")
+               (prinst "ld" 0 "0(1)")
+               (prinst "cmpdi" 0 0)  # Float?
+               (prinst "beq-" "1f")  # No
+               (prinst "mtctr" 11)  # Else call float conversion
+               (prinst "bctrl")
+               (prinl "1:")
+               (prinst "ld" R "8(1)")  # Get value
+               (prinst "addi" 1 1 16) )
+            (prinl "2:") ) ) )
+   (nond
+      (A  # Absolute
+         (unless (= Adr "exit")
+            (prinst "mflr" 27)
+            (prinst "stdu" 1 "-112(1)") )
+         (prinst "bl" Adr)
+         (prinst "nop")
+         (unless (= Adr "exit")
+            (prinst "addi" 1 1 112)
+            (prinst "mtlr" 27) ) )
+      ((=T A)  # Indexed
+         (prinst "mflr" 0)
+         (prinst "stdu" 1 "-120(1)")
+         (prinst "std" 0 "112(1)")
+         (prinst "std" 2 "40(1)")
+         (prinst "ld" 0 (pack "0(" Adr ")"))
+         (prinst "ld" 11 (pack "16(" Adr ")"))
+         (prinst "ld" 2 (pack "8(" Adr ")"))
+         (prinst "mtctr" 0)
+         (prinst "bctrl")
+         (prinst "ld" 2 "40(1)")
+         (prinst "ld" 0 "112(1)")
+         (prinst "addi" 1 1 120)
+         (prinst "mtlr" 0) ) )
    (and
       (lst? Arg)
       (gt0 (- (length Arg) 8))
@@ -1386,7 +1394,7 @@
       (let
          (@u1 14  @u0 3  @v 4  @s 5            # un21 = un32 = u1
             @un1 6  @un0 7  @vn1 8  @vn0 9
-            @q1 26  @q0 27  @rhat 28  @tmp 29 )
+            @q1 27  @q0 28  @rhat 29  @tmp 30 )
          (macro
             (prinst "cmpld" @u1 @v)            # u1 >= v?
             (prinst "bge-" "divOvfl")          # Yes: Overflow
@@ -1455,7 +1463,7 @@
             (prinst "li" @u1 -1)
             (prinst "blr") ) )
       (prinl)
-      (let R (tmpReg)
+      (let R 28  # 'cc' uses 27 for 'Lim'
          (for F 8
             (label (pack "flt" F))
             (unless (= 8 F)
@@ -1479,8 +1487,7 @@
             (prinst "stfd" F "8(1)")
             (prinst "blr")
             (prinl "2:")  # T or NIL
-            (prinst "la" 0 "Nil-Data(22)")
-            (prinst "cmpd" 0 R)
+            (prinst "cmpd" 25 R)  # Nil?
             (prinst "li" R (hex "7FF"))  # inf
             (prinst "bne-" ".+8")
             (prinst "li" R (hex "FFF"))  # -inf
@@ -1514,6 +1521,7 @@
       (prinst "li" 21 1)                   # Init ONE register
       (prinst "ld" 22 "Data@got(2)")       # Globals bases
       (prinst "ld" 23 "Code@got(2)")
+      (prinst "la" 25 "Nil-Data(22)")      # Nil
       (prinst "mr" 18 8)                   # Z
       (prinst "mr" 17 7)                   # Y
       (prinst "mr" 16 6)                   # X
@@ -1551,6 +1559,7 @@
    (prinst "li" 21 1)                 # Init ONE register
    (prinst "ld" 22 "Data@got(2)")     # Globals bases
    (prinst "ld" 23 "Code@got(2)")
+   (prinst "la" 25 "Nil-Data(22)")    # Nil
    (prinst "ld" 16 "0(4)")            # Get command in X
    (prinst "la" 17 "8(4)")            # argument vector in Y
    (prinst "subi" 3 3 1)              # and pointer to last argument in Z
