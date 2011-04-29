@@ -2041,7 +2041,7 @@ minimal example for a plain HTML-GUI in <code><a
 href="hello.l">doc/hello.l</a></code>. Start the application server as:
 
 <pre><code>
-$ ./p lib/http.l -'server 8080 "doc/hello.l"' -wait
+$ pil @lib/http.l -'server 8080 "doc/hello.l"' -wait
 </code></pre>
 
 <p>Now point your browser to the address '<code><a
@@ -2128,7 +2128,7 @@ interactively while it is running. For example, the global variable
 <p>A production application would be started in a slightly different way:
 
 <pre><code>
-$ ./p doc/family.l -main -go -wait
+$ pil @doc/family.l -main -go -wait
 </code></pre>
 
 <p>In that case, no debug prompt will appear. In both cases, however, two

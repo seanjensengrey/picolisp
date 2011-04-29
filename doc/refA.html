@@ -395,7 +395,7 @@ href="refC.html#cmd">cmd</a></code>, <a href="ref.html#invoc">Invocation</a> and
 <code><a href="refO.html#opt">opt</a></code>.
 
 <pre><code>
-$ ./pil -"println 'OK" - abc 123
+$ pil -"println 'OK" - abc 123 +
 OK
 : (argv)
 -> ("abc" "123")
@@ -467,7 +467,7 @@ $ ./dbg
 ?
 
 # Start in non-debug mode
-$ ./p
+$ pil
 : (de foo (N)
    ~(assert (>= 90 N 10))
    (bar N) )

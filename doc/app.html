@@ -169,10 +169,10 @@ browser. You should see an empty page with a single line of text.
 
 <h4><a name="how">How does it work?</a></h4>
 
-<p>The above line loads the debugger ('./dbg', which is equivalent to "./p
-dbg.l"), the HTTP server code ("lib/http.l"), the XHTML functions
-("lib/xhtml.l") and the input form framework ("lib/form.l", it will be needed
-later for <a href="#forms">interactive forms</a>).
+<p>The above line loads the debugger ('./dbg', which is equivalent to "./pil
++"), the HTTP server code ("lib/http.l"), the XHTML functions ("lib/xhtml.l")
+and the input form framework ("lib/form.l", it will be needed later for <a
+href="#forms">interactive forms</a>).
 
 <p>Then the <code>server</code> function is called with a port number and a
 default URL. It will listen on that port for incoming HTTP requests in an
@@ -292,7 +292,7 @@ resources.
 function, defined in "lib/http.l"
 
 <pre><code>
-$ ./p lib/http.l -'pw 12' -bye
+$ ./pil lib/http.l -'pw 12' -bye
 </code></pre>
 
 <p>Please execute this command.
@@ -802,7 +802,7 @@ no other browser requests arrive within a default timeout period of 5 minutes.
 as 'dbg' but with a 'p', and with <code>-wait</code>
 
 <pre><code>
-$ ./p lib/http.l lib/xhtml.l lib/form.l -'server 8080 "project.l"' -wait
+$ ./pil lib/http.l lib/xhtml.l lib/form.l -'server 8080 "project.l"' -wait
 </code></pre>
 
 <p>In that way, no command line prompt appears when a client connects.
@@ -2184,7 +2184,7 @@ $ ./dbg app/main.l -main -go
 <p>or in (non-debug) production mode
 
 <pre><code>
-$ ./p app/main.l -main -go -wait
+$ ./pil app/main.l -main -go -wait
 </code></pre>
 
 <p>and go to '<code><a
