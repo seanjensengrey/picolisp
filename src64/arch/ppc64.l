@@ -1,4 +1,4 @@
-# 28apr11abu
+# 29apr11abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -688,6 +688,7 @@
       (regDst A) ) )
 
 (asm test (Dst D Src S)
+   (prinst "li" 31 -2)  # Clear carry
    (if (and (=0 S) (>= 65535 (format Src) 0))
       (let A (dstReg Dst D)
          (prinst "andi." 0 (cadr A) (format Src)) )
