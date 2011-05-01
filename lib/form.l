@@ -1,4 +1,4 @@
-# 22mar11abu
+# 01may11abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -2113,6 +2113,7 @@
    (=: able
       (cond
          ((: obj T))
+         ((not (: obj)))
          ((=T (car "Lst")) T)
          ((== *Lock (: obj)) T)
          (*Lock (rollback) (off *Lock)) ) ) )
