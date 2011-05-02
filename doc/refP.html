@@ -240,6 +240,17 @@ href="refE.html#extract">extract</a></code>.
 -> 1
 </code></pre>
 
+<dt><a name="pil"><code>(pil ['any ..]) -> sym</code></a>
+<dd>Returns the path name to the <code><a
+href="refP.html#pack">pack</a></code>ed <code>any</code> arguments in
+the directory ".pil/" in the user's home directory.
+See also <code><a href="refT.html#tmp">tmp</a></code>.
+
+<pre><code>
+: (pil "history")  # Path to the line editor's history file
+-> "/home/app/.pil/history"
+</code></pre>
+
 <dt><a name="pilog"><code>(pilog 'lst . prg) -> any</code></a>
 <dd>Evaluates a <a href="ref.html#pilog">Pilog</a> query, and executes
 <code>prg</code> for each result set with all Pilog variables bound to their
