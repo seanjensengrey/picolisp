@@ -1097,7 +1097,7 @@ href="refS.html#split">split</a></code> function can be used to extract the
 fields. A typical way to import the contents of such a file is:
 
 <pre><code>
-(load "lib/import.l")
+(load "@lib/import.l")
 
 (in '("bin/utf2" "importFile.txt")              # Pipe: Convert to UTF-8
    (until (eof)                                 # Process whole file
@@ -1393,7 +1393,7 @@ don't have to type it in. Just <code><a href="refL.html#load">load</a></code>
 the file, or start it from the shell as:
 
 <pre><code>
-$ ./dbg doc/shape.l
+$ pil @doc/shape.l +
 </code></pre>
 
 <p>Let's look at it piece by piece. Here's the base class:
@@ -1756,7 +1756,7 @@ $                    # back to the shell
 <p>So, the next time when ..
 
 <pre><code>
-$ ./dbg                 # .. we start PicoLisp
+$ pil +                 # .. we start PicoLisp
 : (pool "test.db")      # and open the database file,
 -> T
 : (show *DB)            # our two symbols are there again
@@ -1784,7 +1784,7 @@ which allows a close mapping of the application data structure to the database.
 for test purposes in the following way:
 
 <pre><code>
-$ ./dbg doc/family.l -main
+$ pil @doc/family.l -main +
 :
 </code></pre>
 
@@ -2051,8 +2051,8 @@ very simple HTML page. You can come back here with the browser's BACK button.
 
 <p>You can call the page repeatedly, or concurrently with many clients if you
 like. To terminate the server, you have to send it a TERM signal (e.g.
-'<code>killall picolisp</code>'), or type the <code>Ctrl-C</code> key in the
-console window.
+'<code>killall pil</code>'), or type the <code>Ctrl-C</code> key in the console
+window.
 
 <p>In our demo database application, a single function <code>person</code> is
 responsible for the whole GUI. Again, please look at <code><a
@@ -2061,7 +2061,7 @@ href="family.l">doc/family.l</a></code>.
 <p>To start the database <i>and</i> the application server, call:
 
 <pre><code>
-$ ./dbg doc/family.l -main -go
+$ pil @doc/family.l -main -go +
 </code></pre>
 
 <p>As before, the database is opened with <code>main</code>. The function
@@ -2133,7 +2133,7 @@ $ pil @doc/family.l -main -go -wait
 </code></pre>
 
 <p>In that case, no debug prompt will appear. In both cases, however, two
-<code>picolisp</code> processes will be running now. One is the initial server
+<code>pil</code> processes will be running now. One is the initial server
 process which will continue to run until it is killed. The other is a child
 process holding the state of the GUI in the browser. It will terminate some time
 after the browser is closed, or when <code>(<a
