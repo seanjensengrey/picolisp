@@ -217,17 +217,17 @@ may grant <code><a href="refS.html#sync">sync</a></code> to the next waiting
 process. See also <code><a href="refH.html#hear">hear</a></code>.
 
 <pre><code>
-: (call 'ps "x")                            # Show processes
+: (call 'ps "x")                          # Show processes
   PID TTY      STAT   TIME COMMAND
   ..
- 1321 pts/0    S      0:00 bin/picolisp ..  # Parent process
- 1324 pts/0    S      0:01 bin/picolisp ..  # First child
- 1325 pts/0    S      0:01 bin/picolisp ..  # Second child
+ 1321 pts/0    S      0:00 /usr/bin/picolisp ..  # Parent process
+ 1324 pts/0    S      0:01 /usr/bin/picolisp ..  # First child
+ 1325 pts/0    S      0:01 /usr/bin/picolisp ..  # Second child
  1326 pts/0    R      0:00 ps x
 -> T
-: *Pid                                      # We are the second child
+: *Pid                                    # We are the second child
 -> 1325
-: (tell 'println '*Pid)                     # Ask all others to print their Pid's
+: (tell 'println '*Pid)                   # Ask all others to print their Pid's
 1324
 -> *Pid
 </code></pre>
