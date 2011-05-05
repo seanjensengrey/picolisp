@@ -587,14 +587,11 @@ $ ./dbg myProject.l -main
 <p>or
 
 <pre><code>
-$ pil myProject.l -main +
+$ ./pil myProject.l -main +
 </code></pre>
 
-if PicoLisp is globally installed in "/usr/bin/" and "/usr/lib/" as recommended
-in the INSTALL file.
-
-<p>In any case, the directory part of the first file name supplied on the
-command line (normally, the path to "lib.l") is remembered internally as the
+<p>In any case, the directory part of the first file name supplied (normally,
+the path to "lib.l" as called by 'pil' or 'dbg') is remembered internally as the
 <i>PicoLisp Home Directory</i>. This path is later automatically substituted for
 any leading "<code>@</code>" character in file name arguments to I/O functions
 (see <code><a href="refP.html#path">path</a></code>).
