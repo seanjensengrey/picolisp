@@ -26,11 +26,12 @@ specificities of PicoLisp, and its differences with other Lisp dialects.
 
 <h3>Now let's start</h3>
 
-<p>If not stated otherwise, all examples assume that PicoLisp was started in the
-installation directory from the shell prompt as
+<p>If not stated otherwise, all examples assume that PicoLisp was started from a
+global installation (see <a href="ref.html#inst">Installation</a>) from the
+shell prompt as
 
 <pre><code>
-$ ./dbg
+$ pil +
 :
 </code></pre>
 
@@ -56,9 +57,9 @@ debugging environment will set the console (tty) to raw mode by itself and do
 the special handling seen above during character input.
 
 <p>If you feel that you absolutely have to use an IDE, <code>rlwrap</code> or
-another input front-end, please remove the entry "@lib/led.l" from "dbg.l".
-Note that in this case, however, you will not have the TAB symbol completion
-feature available during command line editing.
+another input front-end, please remove the entry "@lib/led.l" from "lib.l" and
+"dbg.l". Note that in this case, however, you will not have the TAB symbol
+completion feature available during command line editing.
 
 <h3>Table of content</h3>
 
@@ -100,8 +101,8 @@ which is similar to (though much simpler than) the <code>readline</code> feature
 of the <code>bash</code> shell. Only a subset of the <code>vi</code> mode is
 supported, which is restricted to single-key commands (the "real"
 <code>vi</code> supports multi-key commands and the modification of most
-commands with count prefixes). It is loaded at startup via "dbg.l", you find its
-source in "lib/led.l".
+commands with count prefixes). It is loaded at startup in debug mode, you find
+its source in "lib/led.l".
 
 <p>You can enter lines in the normal way, correcting mistypes with the BACKSPACE
 key, and terminating them with the ENTER key. This is the <i>Insert Mode</i>.
@@ -769,12 +770,12 @@ also <a href="faq.html#lambda">this FAQ entry</a>).
 <p>There are two major ways to debug functions (and methods) at runtime:
 <i>Tracing</i> and <i>single-stepping</i>.
 
-In this section we will use the REPL to explore the debugging facilities, but in
-the <a href="#script">Scripting</a> section, you will learn how to launch
+<p>In this section we will use the REPL to explore the debugging facilities, but
+in the <a href="#script">Scripting</a> section, you will learn how to launch
 PicoLisp scripts with some selected functions debugged:
 
 <pre><code>
-$ ./dbg app/file1.l -"trace 'foo" -main -"debug 'bar" app/file2.l
+$ pil app/file1.l -"trace 'foo" -main -"debug 'bar" app/file2.l +
 </code></pre>
 
 <h3>Tracing</h3>
@@ -1147,7 +1148,7 @@ href="refL.html#load">load</a></code>ed as a file. A typical invocation might
 look like:
 
 <pre><code>
-$ ./dbg app/file1.l -main app/file2.l
+$ pil app/file1.l -main app/file2.l +
 </code></pre>
 
 <p>It loads the debugging environment, an application source file, calls the
@@ -1156,7 +1157,7 @@ development and debugging session, this line is often modified using the shell's
 history mechanisms, e.g. by inserting debugging statements:
 
 <pre><code>
-$ ./dbg app/file1.l -"trace 'foo" -main -"debug 'bar" app/file2.l
+$ pil app/file1.l -"trace 'foo" -main -"debug 'bar" app/file2.l +
 </code></pre>
 
 <p>Another convenience during debugging and testing is to put things into the
@@ -1164,7 +1165,7 @@ command line (shell history) which would otherwise have to be done each time in
 the application's user interface:
 
 <pre><code>
-$ ./dbg app/file1.l -main app/file2.l -go -'login "name" "password"'
+$ pil app/file1.l -main app/file2.l -go -'login "name" "password"' +
 </code></pre>
 
 <p>The final production release of an application usually includes a shell
@@ -1262,8 +1263,8 @@ processing.
 <p>Utilities are typically used outside the context of the PicoLisp environment.
 All examples above assumed that the current working directory is the PicoLisp
 installation directory, which is usually all right for applications developed in
-that environment. Command line file arguments like "dbg.l" or "app/file1.l" will
-be properly found.
+that environment. Command line file arguments like "app/file1.l" will be
+properly found.
 
 <p>To allow utilities to run in arbitrary places on the host file system, the
 concept of <i>home directory substitution</i> was introduced. The interpreter
