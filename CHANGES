@@ -1,4 +1,5 @@
 * XXjun11 picoLisp-3.0.7
+   Changed '@' to '!' for functions in URLs
    64-bit version for PowerPC (ppc64)
    Local 'pil' startup script
    Bug in 'replace' (64-bit)

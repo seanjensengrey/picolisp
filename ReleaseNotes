@@ -1,4 +1,4 @@
-27apr11abu
+06may11abu
 (c) Software Lab. Alexander Burger
 
 
@@ -23,3 +23,7 @@
 3. An implementation of the 64-bit version for PowerPC (ppc64). Code generation
    could probably be further optimized, and there may be bugs. But self-assembly
    works, and the unit tests pass.
+
+4. Changed the meta-character for function calls in URLs from '@' to '!' This
+   was necessary, because '@' may conflict with home directory specifiers in
+   path names.

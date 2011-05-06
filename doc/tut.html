@@ -1906,7 +1906,7 @@ first of March in the year zero.
 
 <pre><code>
 (dm url> ()
-   (list "@person" '*ID This) )
+   (list "!person" '*ID This) )
 </code></pre>
 
 <p>It is needed later in the GUI, to cause a click on a link to switch to that
@@ -2069,7 +2069,7 @@ $ pil @doc/family.l -main -go +
 
 <pre><code>
 (de go ()
-   (server 8080 "@person") )
+   (server 8080 "!person") )
 </code></pre>
 
 <p>It starts the HTTP server listening on TCP port 8080 (we did a similar thing

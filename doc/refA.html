@@ -49,18 +49,18 @@ href="refP.html#pre?">pre?</a></code>.
 
 <pre><code>
 : (allowed ("app/" "img/")  # Initialize
-   "@start" "@stop" "favicon.ico" "lib.css" "@psh" )
+   "!start" "!stop" "favicon.ico" "lib.css" "!psh" )
 -> NIL
-: (allow "@myFoo")  # additional item
--> "@myFoo"
+: (allow "!myFoo")  # additional item
+-> "!myFoo"
 : (allow "myDir/" T)  # additional prefix
 -> "myDir/"
 
 : *Allow
--> (("@stop" ("@psh" ("@myFoo") "@start") "favicon.ico" NIL "lib.css") "app/" "img/" "myDir/")
+-> (("!stop" ("!psh" ("!myFoo") "!start") "favicon.ico" NIL "lib.css") "app/" "img/" "myDir/")
 
 : (idx *Allow)  # items
--> ("@myFoo" "@psh" "@start" "@stop" "favicon.ico" "lib.css")
+-> ("!myFoo" "!psh" "!start" "!stop" "favicon.ico" "lib.css")
 : (cdr *Allow)  # prefixes
 -> ("app/" "img/" "myDir/")
 </code></pre>
@@ -241,9 +241,9 @@ href="refA.html#allowed">allowed</a></code>.
 
 <pre><code>
 : *Allow
--> (("@stop" ("@psh" NIL "@start") "favicon.ico" NIL "lib.css") "app/" "img/")
-: (allow "@myFoo")  # additionally allowed item
--> "@myFoo"
+-> (("!stop" ("!psh" NIL "!start") "favicon.ico" NIL "lib.css") "app/" "img/")
+: (allow "!myFoo")  # additionally allowed item
+-> "!myFoo"
 : (allow "myDir/" T)  # additionally allowed prefix
 -> "myDir/"
 </code></pre>
@@ -258,7 +258,7 @@ href="refA.html#allow">allow</a></code>.
 
 <pre><code>
 : (allowed ("app/" "img/")  # allowed prefixes
-   "@start" "@stop" "favicon.ico" "lib.css" "@psh" )  # allowed items
+   "!start" "!stop" "favicon.ico" "lib.css" "!psh" )  # allowed items
 -> NIL
 </code></pre>
 

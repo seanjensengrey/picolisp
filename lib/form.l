@@ -1,4 +1,4 @@
-# 01may11abu
+# 06may11abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -6,7 +6,7 @@
 
 (allow (path "@img/") T)
 (push1 '*JS (allow (path "@lib/form.js")))
-(mapc allow '(*Gui *Get *Got *Form *Evt *Drop "@jsForm" "@jsHint"))
+(mapc allow '(*Gui *Get *Got *Form *Evt *Drop "!jsForm" "!jsHint"))
 
 (one "*Cnt")
 (off "*Lst" "*Post2" "*Cho")

@@ -1,4 +1,4 @@
-# 25apr11abu
+# 06may11abu
 # (c) Software Lab. Alexander Burger
 
 (load "@lib/http.l" "@lib/xhtml.l" "@lib/form.l" "@lib/ps.l")
@@ -15,7 +15,7 @@
 (rel txt (+String))                    # Info
 
 (dm url> (Tab)
-   (list "@person" '*ID This) )
+   (list "!person" '*ID This) )
 
 
 (class +Man +Person)
@@ -128,9 +128,9 @@
             (----)
             (gui '(+E/R +TextField) '(txt : home obj) 40 4)
             (gui '(+Rid +Button) "Contemporaries"
-               '(url "@contemporaries" (: home obj)) )
+               '(url "!contemporaries" (: home obj)) )
             (gui '(+Rid +Button) "Tree View"
-               '(url "@treeReport" (: home obj)) )
+               '(url "!treeReport" (: home obj)) )
             (editButton T) ) ) ) )
 
 
@@ -237,6 +237,6 @@
 
 (de go ()
    (rollback)
-   (server 8080 "@person") )
+   (server 8080 "!person") )
 
 # vi:et:ts=3:sw=3

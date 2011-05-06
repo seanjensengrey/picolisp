@@ -204,9 +204,9 @@ are stripped off - is interpreted according so some rules. The most prominent
 ones are:
 
 <p><ul>
-<li>If a path starts with an at-mark ('@'), the rest (without the '@') is taken
-as the name of a Lisp function to be called. All arguments following the
-question mark are passed to that function.
+<li>If a path starts with an exclamation-mark ('!'), the rest (without the '!')
+is taken as the name of a Lisp function to be called. All arguments following
+the question mark are passed to that function.
 
 <li>If a path ends with ".l" (a dot and a lower case 'L'), it is taken as a Lisp
 source file name to be <code><a href="refL.html#load">(load)</a></code>ed. This
@@ -264,7 +264,7 @@ href="refA.html#allow">allow</a></code> functions
 <pre><code>
 (allowed ("img/")
    "favicon.ico" "lib.css"
-   "@start" "customer.l" "article.l")
+   "!start" "customer.l" "article.l")
 </code></pre>
 
 <p>This is usually called in the beginning of an application, and allows access
@@ -275,7 +275,7 @@ to the directory "img/", to the function 'start', and to the files
 <code>allow</code>
 
 <pre><code>
-(allow "@foo")
+(allow "!foo")
 (allow "newdir/" T)
 </code></pre>
 
@@ -1122,7 +1122,7 @@ needed once the calculator is running.
 recommended by the <a href="#security">Security</a> chapter)
 
 <pre><code>
-(allowed NIL "@calculator" "favicon.ico" "lib.css")
+(allowed NIL "!calculator" "favicon.ico" "lib.css")
 </code></pre>
 
 <p>at the beginning of "misc/calc.l". This will restrict external access to that
