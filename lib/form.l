@@ -186,7 +186,7 @@
                ((disallowed)
                   (notAllowed *Url)
                   (http404) )
-               ((= '@ (car Url))
+               ((= '! (car Url))
                   ((intern (pack (cdr Url)))) )
                ((tail '("." "l") Url)
                   (load *Url) ) ) ) ) ) )
