@@ -1,4 +1,4 @@
-05may11abu
+07may11abu
 (c) Software Lab. Alexander Burger
 
 
@@ -95,8 +95,9 @@ If that is not available, you can (as root) create four symbolic links from
       ----------
 
 In a global installation, the 'pil' command should be used. You can either start
-in plain or in debug mode. The difference is that for debug mode the command
-must be followed by a single plus sign ('+') argument.
+in plain or in debug mode. The difference is that for debug mode the command is
+followed by single plus ('+') sign. The '+' must be the very last argument on
+the command line.
 
    $ pil       # Plain mode
    :

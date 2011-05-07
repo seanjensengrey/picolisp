@@ -1,4 +1,4 @@
-06may11abu
+07may11abu
 (c) Software Lab. Alexander Burger
 
 
@@ -27,3 +27,7 @@
 4. Changed the meta-character for function calls in URLs from '@' to '!' This
    was necessary, because '@' may conflict with home directory specifiers in
    path names.
+
+   As a result, it may be necessary to fix existing applications. This involves
+   usually changing things like "@start" and "@stop" to "!start" and "!stop" in
+   all relevant places.
