@@ -1,4 +1,4 @@
-# 06may11abu
+# 09may11abu
 # (c) Software Lab. Alexander Burger
 
 ### GUI ###
@@ -29,7 +29,7 @@
    (and (app) (setq *Menu 3))
    (menu "PicoLisp App"
       (<h2> NIL "PicoLisp App")
-      (<img> "img/7fach.gif" "7fach Logo")
+      (<img> "@img/7fach.gif" "7fach Logo")
       (----)
       (form NIL
          (gui '(+Init +Map +TextField)
