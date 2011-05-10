@@ -326,7 +326,7 @@ the server process (you must have generated a <a href="#pw">".pw" file</a> for
 this), and enter the <code>html</code> statement
 
 <pre><code>
-$ bin/psh 8080
+$ /usr/share/picolisp/bin/psh 8080
 : (html 0 "Hello" "@lib.css" NIL "Hello World!")
 HTTP/1.0 200 OK
 Server: PicoLisp
@@ -456,7 +456,7 @@ application server is running, and you did generate a <a href="#pw">".pw"
 file</a>)
 
 <pre><code>
-$ bin/psh 8080
+$ /usr/share/picolisp/bin/psh 8080
 :
 </code></pre>
 
@@ -1089,8 +1089,8 @@ so far, we want to build a simple bignum calculator. ("bignum" because PicoLisp
 can do <i>only</i> bignums)
 
 <p>It uses a single form, a single numeric input field, and lots of buttons. It
-can be found in the PicoLisp distribution in "misc/calc.l", together with a
-directly executable wrapper script "misc/calc".
+can be found in the PicoLisp distribution (e.g. under "/usr/share/picolisp/") in
+"misc/calc.l", together with a directly executable wrapper script "misc/calc".
 
 <p>To use it, change to the PicoLisp installation directory, and start it as
 
@@ -1098,10 +1098,11 @@ directly executable wrapper script "misc/calc".
 $ misc/calc
 </code></pre>
 
-<p>If you want to use it from other directories too, change the two relative
-path names in the first line to absolute paths. We recommend symbolic links in
-some global directories, as described in the <a
-href="tut.html#script">Scripting</a> section of the PicoLisp Tutorial.
+<p>or call it with an absolute path, e.g.
+
+<pre><code>
+$ /usr/share/picolisp/misc/calc
+</code></pre>
 
 <p>If you like to get a PicoLisp prompt for inspection, start it instead as
 
@@ -2177,6 +2178,15 @@ with a some initial data and two sample reports.
 
 <p><hr>
 <h3><a name="getStarted">Getting Started</a></h3>
+
+<p>For a global installation (see <a href="ref.html#inst">Installation</a>),
+please create a symbolic link to the place where the program files are
+installed. This is necessary because the application needs read/write access to
+the current working directory (for the database and other runtime data).
+
+<pre><code>
+$ ln -s /usr/share/picolisp/app
+</code></pre>
 
 <p>As ever, you may start up the application in debugging mode
 
