@@ -1,4 +1,4 @@
-# 06may11abu
+# 12may11abu
 # (c) Software Lab. Alexander Burger
 
 (load "@lib/http.l" "@lib/xhtml.l" "@lib/form.l" "@lib/ps.l")
@@ -95,7 +95,7 @@
 (de person ()
    (app)
    (action
-      (html 0 (get (default *ID (val *DB)) 'nm) "lib.css" NIL
+      (html 0 (get (default *ID (val *DB)) 'nm) "@lib.css" NIL
          (form NIL
             (<h2> NIL (<id> (: nm)))
             (panel T "Person '@1'" T '(choPerson) 'nm '+Person)
@@ -138,7 +138,7 @@
 # Show all contemporaries of a person
 (de contemporaries (*ID)
    (action
-      (html 0 "Contemporaries" "lib.css" NIL
+      (html 0 "Contemporaries" "@lib.css" NIL
          (form NIL
             (<h3> NIL (<id> "Contemporaries of " (: nm)))
             (ifn (: obj dat)
@@ -212,7 +212,7 @@
 
 # Tree display of a person's descendants
 (de treeReport (This)
-   (html 0 "Family Tree View" "lib.css" NIL
+   (html 0 "Family Tree View" "@lib.css" NIL
       (<h3> NIL "Family Tree View")
       (<ul> NIL
          (recur (This)
@@ -227,7 +227,7 @@
 
 ### RUN ###
 (de main ()
-   (pool "doc/family/" *Dbs)
+   (pool "family/" *Dbs)
    (unless (val *DB)
       (put>
          (set *DB (request '(+Man) 'nm "Adam"))

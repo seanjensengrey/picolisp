@@ -1800,11 +1800,15 @@ entity/relation class framework (see also <a href="ref.html#dbase">Database</a>)
 which allows a close mapping of the application data structure to the database.
 
 <p>We provided a simple yet complete database and GUI demo application in
-<code><a href="family.l">@doc/family.l</a></code>. We recommend to start it up
-for test purposes in the following way:
+<code><a href="family.tgz">@doc/family.tgz</a></code>. It contains the sources
+in <code><a href="family.l">@doc/family.l</a></code>, and an initial database in
+the "family/" subdirectory.
+
+<p>To use it, please unpack it first in your current working directory, then
+start it up in the following way:
 
 <pre><code>
-$ pil @doc/family.l -main +
+$ pil family.l -main +
 :
 </code></pre>
 
@@ -2081,7 +2085,7 @@ href="family.l">@doc/family.l</a></code>.
 <p>To start the database <i>and</i> the application server, call:
 
 <pre><code>
-$ pil @doc/family.l -main -go +
+$ pil family.l -main -go +
 </code></pre>
 
 <p>As before, the database is opened with <code>main</code>. The function
@@ -2100,9 +2104,9 @@ that port will cause the function <code>person</code> to be invoked.
 href="http://localhost:8080" target="GUI">http://localhost:8080</a></code>'.
 
 <p>You should see a new browser window with an input form created by the
-function <code>person</code>. We provided an initial database in
-"@doc/family/[1-4]". You can navigate through it by clicking on the pencil icons
-besides the input fields.
+function <code>person</code>. We provided an initial database in "family/[1-4]".
+You can navigate through it by clicking on the pencil icons besides the input
+fields.
 
 <p>The chart with the children data can be scrolled using the down
 (<code>v</code>) and up (<code>^</code>) buttons.
@@ -2149,7 +2153,7 @@ interactively while it is running. For example, the global variable
 <p>A production application would be started in a slightly different way:
 
 <pre><code>
-$ pil @doc/family.l -main -go -wait
+$ pil family.l -main -go -wait
 </code></pre>
 
 <p>In that case, no debug prompt will appear. In both cases, however, two
@@ -2166,9 +2170,9 @@ PicoLisp prompt.
 (de person ()
    (app)
    (action
-      (html 0 (get (default *ID (seq (db: +Person))) 'nm) "lib.css" NIL
+      (html 0 (get (default *ID (val *DB)) 'nm) "@lib.css" NIL
          (form NIL
-            (&lt;h3&gt; (&lt;id&gt; (: nm)))
+            (&lt;h2&gt; (&lt;id&gt; (: nm)))
 </code></pre>
 
 <p>For an in-depth explanation of that startup code, please refer to the guide
