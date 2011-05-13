@@ -1,4 +1,4 @@
-# 06may11abu
+# 13may11abu
 # (c) Software Lab. Alexander Burger
 
 # *Home *Gate *Host *Port *Port1 *Port% *Http1 *Chunked
@@ -65,7 +65,7 @@
 # Local Password
 (de pw (N)
    (if N
-      (out ".pw" (prinl (fmt64 (in "/dev/random" (rd N)))))
+      (out ".pw" (prinl (fmt64 (in "/dev/urandom" (rd N)))))
       (in ".pw" (line T)) ) )
 
 # PicoLisp Shell
