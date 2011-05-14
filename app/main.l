@@ -1,8 +1,8 @@
-# 06may11abu
+# 14may11abu
 # (c) Software Lab. Alexander Burger
 
 (allowed ("app/" "@img/")
-   "!start" "!stop" "favicon.ico" "@lib.css" "!psh" )
+   "!start" "!stop" "@lib.css" "!psh" )
 
 (load "@lib/http.l" "@lib/xhtml.l" "@lib/form.l" "@lib/ps.l" "@lib/adm.l")
 

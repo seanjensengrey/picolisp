@@ -263,13 +263,12 @@ href="refA.html#allow">allow</a></code> functions
 
 <pre><code>
 (allowed ("img/")
-   "favicon.ico" "@lib.css"
-   "!start" "customer.l" "article.l")
+   "!start" "@lib.css" "customer.l" "article.l" )
 </code></pre>
 
 <p>This is usually called in the beginning of an application, and allows access
-to the directory "img/", to the function 'start', and to the files
-"favicon.ico", "@lib.css", "customer.l" and "article.l".
+to the directory "img/", to the function 'start', and to the files "@lib.css",
+"customer.l" and "article.l".
 
 <p>Later in the program, <code>*Allow</code> may be dynamically extended with
 <code>allow</code>
@@ -1123,7 +1122,7 @@ needed once the calculator is running.
 recommended by the <a href="#security">Security</a> chapter)
 
 <pre><code>
-(allowed NIL "!calculator" "favicon.ico" "@lib.css")
+(allowed NIL "!calculator" "@lib.css")
 </code></pre>
 
 <p>at the beginning of "misc/calc.l". This will restrict external access to that

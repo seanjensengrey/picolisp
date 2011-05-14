@@ -49,7 +49,7 @@ href="refP.html#pre?">pre?</a></code>.
 
 <pre><code>
 : (allowed ("app/" "img/")  # Initialize
-   "!start" "!stop" "favicon.ico" "lib.css" "!psh" )
+   "!start" "!stop" "lib.css" "!psh" )
 -> NIL
 : (allow "!myFoo")  # additional item
 -> "!myFoo"
@@ -57,10 +57,10 @@ href="refP.html#pre?">pre?</a></code>.
 -> "myDir/"
 
 : *Allow
--> (("!stop" ("!psh" ("!myFoo") "!start") "favicon.ico" NIL "lib.css") "app/" "img/" "myDir/")
+-> (("!start" ("!psh" ("!myFoo")) "!stop" NIL "lib.css") "app/" "img/" "myDir/")
 
 : (idx *Allow)  # items
--> ("!myFoo" "!psh" "!start" "!stop" "favicon.ico" "lib.css")
+-> ("!myFoo" "!psh" "!start" "!stop" "lib.css")
 : (cdr *Allow)  # prefixes
 -> ("app/" "img/" "myDir/")
 </code></pre>
@@ -241,7 +241,7 @@ href="refA.html#allowed">allowed</a></code>.
 
 <pre><code>
 : *Allow
--> (("!stop" ("!psh" NIL "!start") "favicon.ico" NIL "lib.css") "app/" "img/")
+-> (("!start" ("!psh") "!stop" NIL "lib.css") "app/" "img/")
 : (allow "!myFoo")  # additionally allowed item
 -> "!myFoo"
 : (allow "myDir/" T)  # additionally allowed prefix
@@ -258,7 +258,7 @@ href="refA.html#allow">allow</a></code>.
 
 <pre><code>
 : (allowed ("app/" "img/")  # allowed prefixes
-   "!start" "!stop" "favicon.ico" "lib.css" "!psh" )  # allowed items
+   "!start" "!stop" "lib.css" "!psh" )  # allowed items
 -> NIL
 </code></pre>
 

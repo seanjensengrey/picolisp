@@ -1,9 +1,9 @@
-# 09may11abu
+# 14may11abu
 # (c) Software Lab. Alexander Burger
 
 # *Init *Accu *Stack
 
-(allowed NIL "!calculator" "favicon.ico" "@lib.css")
+(allowed NIL "!calculator" "@lib.css")
 (load "@lib/http.l" "@lib/xhtml.l" "@lib/form.l")
 
 # Calculator logic
