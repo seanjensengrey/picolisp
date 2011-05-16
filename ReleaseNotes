@@ -1,4 +1,4 @@
-07may11abu
+16may11abu
 (c) Software Lab. Alexander Burger
 
 
@@ -31,3 +31,6 @@
    As a result, it may be necessary to fix existing applications. This involves
    usually changing things like "@start" and "@stop" to "!start" and "!stop" in
    all relevant places.
+
+5. For Ersatz PicoLisp, the startup script's name was changed from "picolisp" to
+   "pil", to be consistent with 'pil' in "real" PicoLisp.

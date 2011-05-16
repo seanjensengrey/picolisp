@@ -1,4 +1,4 @@
-07may11abu
+16may11abu
 (c) Software Lab. Alexander Burger
 
 
@@ -146,10 +146,10 @@ Note that 'pil' can also serve as a template for your own stand-alone scripts.
 If you just want to test the ready-to-run Ersatz PicoLisp (it needs a Java
 runtime system), use
 
-   $ ersatz/picolisp +
+   $ ersatz/pil +
    :
 
-instead of './dbg' './pil +'.
+instead of './dbg' or './pil +'.
 
 
       Documentation
