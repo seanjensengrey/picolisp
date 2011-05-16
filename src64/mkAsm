@@ -3,7 +3,7 @@
 
 if test -x ../bin/picolisp
 then
-   ../bin/picolisp ../lib.l @lib/misc.l mkAsm.l "$@"
+   ../pil mkAsm.l "$@"
 else
    ../ersatz/pil mkAsm.l "$@"
 fi
