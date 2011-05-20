@@ -1,4 +1,4 @@
-# 17jan11abu
+# 20may11abu
 # (c) Software Lab. Alexander Burger
 
 # *Rule
@@ -161,10 +161,16 @@
                   (cond
                      ((not (; Rel aux)) (quit "No Aux"))
                      ((atom (car Val))
+                        (and (; Rel ub) (setq Val (ubZval Val)))
                         (init Tree Val (append Val T)) )
-                     ((>= (cdr Val) (car Val))
-                        (init Tree (car Val) (append (cdr Val) T)) )
-                     (T (init Tree (append (car Val) T) (cdr Val))) ) )
+                     ((atom (cdar Val))
+                        (init Tree
+                           (ubZval (mapcar car Val))
+                           (ubZval (mapcar cdr Val) T) ) )
+                     (T
+                        (if (>= (cdr Val) (car Val))
+                           (init Tree (car Val) (append (cdr Val) T))
+                           (init Tree (append (car Val) T) (cdr Val)) ) ) ) )
                ((isa '+Key Rel)
                   (init Tree (car Val) (cdr Val)) )
                ((>= (cdr Val) (car Val))

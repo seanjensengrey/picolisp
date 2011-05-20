@@ -1,4 +1,4 @@
-16may11abu
+20may11abu
 (c) Software Lab. Alexander Burger
 
 
@@ -34,3 +34,7 @@
 
 5. For Ersatz PicoLisp, the startup script's name was changed from "picolisp" to
    "pil", to be consistent with 'pil' in "real" PicoLisp.
+
+6. There is a new prefix class '+UB' for '+Aux' relations. It maintains
+   UB-Trees, which allow efficient range access to multidimensional data.
+   Currently, only numeric keys are supported.

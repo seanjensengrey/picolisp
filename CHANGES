@@ -1,4 +1,5 @@
 * XXjun11 picoLisp-3.0.7
+   UB-Tree support in "lib/db.l"
    Renamed "ersatz/picolisp" to "ersatz/pil"
    Changed '@' to '!' for functions in URLs
    64-bit version for PowerPC (ppc64)
