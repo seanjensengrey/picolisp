@@ -697,7 +697,7 @@
       (while (find gt0 Lst)
          (map
             '((L)
-               (let N (or (gt0 (car L)) 0)
+               (let N (min 1 (max 0 (car L)))
                   (and (bit? 1 N) (setq Res (| Res P)))
                   (setq P (>> -1 P))
                   (set L (>> 1 N)) ) )
