@@ -1,4 +1,4 @@
-# 20may11abu
+# 30may11abu
 # (c) Software Lab. Alexander Burger
 
 # *Dbs *Jnl *Blob upd
@@ -697,10 +697,9 @@
       (while (find gt0 Lst)
          (map
             '((L)
-               (let N (min 1 (max 0 (car L)))
-                  (and (bit? 1 N) (setq Res (| Res P)))
-                  (setq P (>> -1 P))
-                  (set L (>> 1 N)) ) )
+               (and (bit? 1 (car L)) (setq Res (| Res P)))
+               (setq P (>> -1 P))
+               (set L (>> 1 (car L))) )
             Lst ) )
       (cons Res X) ) )
 
