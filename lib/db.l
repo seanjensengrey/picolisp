@@ -1,4 +1,4 @@
-# 30may11abu
+# 06jun11abu
 # (c) Software Lab. Alexander Burger
 
 # *Dbs *Jnl *Blob upd
@@ -806,9 +806,10 @@
 (var Dbf)
 (var Aux)
 
-(de dbSync ()
+(de dbSync (Obj)
    (let *Run NIL
-      (while (lock *DB) (wait 40))
+      (while (lock (or Obj *DB))
+         (wait 40) )
       (sync) ) )
 
 (de new! ("Typ" . @)
