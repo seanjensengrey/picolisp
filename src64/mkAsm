@@ -1,7 +1,10 @@
 #!/bin/sh
-# 16may11abu
+# 08jun11abu
 
-if test -x ../bin/picolisp
+if test -x /usr/bin/picolisp
+then
+   /usr/bin/pil mkAsm.l "$@"
+elif test -x ../bin/picolisp
 then
    ../pil mkAsm.l "$@"
 else
