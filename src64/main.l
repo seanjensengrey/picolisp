@@ -1,4 +1,4 @@
-# 23apr11abu
+# 08jun11abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -1708,11 +1708,11 @@
                      else
                         atom E  # Atomic?
                         if z  # No: Arrary or structure
-                           null A  # Returned NULL?
+                           null C  # Primary return value?
+                           ldz C A  # Yes: Get into C
+                           null C  # Value NULL?
                            ldz E Nil  # Yes: Return NIL
                            if nz
-                              null C  # Pointer?
-                              ldz C A  # Yes: Load into C
                               push X
                               push Y
                               push Z
