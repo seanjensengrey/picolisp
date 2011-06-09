@@ -1,4 +1,4 @@
-# 08jun11abu
+# 09jun11abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -1541,11 +1541,17 @@
                   end
                   atom E  # Fill bytes?
                while z  # Yes
-                  ld A (E)  # Next byte value
-                  shr A 4  # in B
-                  ld (Z) B  # Store in buffer
-                  inc Z  # Increment buffer pointer
-                  dec C  # Buffer full?
+                  ld A (E)  # Next value
+                  shr A 4  # Byte?
+                  if nc  # Yes
+                     ld (Z) B  # Store in buffer
+                     inc Z  # Increment buffer pointer
+                     dec C  # Buffer full?
+                  else
+                     st4 (Z)  # Store in buffer
+                     add Z 4  # Size of int
+                     sub C 4  # Buffer full?
+                  end
                until z  # Yes
                pop Z
             end
