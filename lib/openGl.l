@@ -23,6 +23,15 @@
    "Dbl6" (0 . 1.0) )
 
 # Utilities
+(de iv-iv (Lst)
+   (cons NIL (16)
+      (mapcan
+         '((N)
+            (if (=0 N)
+               (list 0 0 0 0)
+               (cons (- N)) ) )
+         Lst ) ) )
+
 (de fv-iv (Lst)
    (cons NIL (16)
       (mapcan
@@ -249,7 +258,7 @@
    (native `*GlutLib "glShadeModel" NIL Num) )
 
 (de glLightiv (Light Pname Params)
-   (native `*GlutLib "glLightiv" NIL Light Pname (cons NIL (16) Params)) )
+   (native `*GlutLib "glLightiv" NIL Light Pname (iv-iv Params)) )
 
 (de glMaterialf (Face Pname Param)
    (set "Flt1" Param)
