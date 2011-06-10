@@ -1,4 +1,4 @@
-# 09jun11abu
+# 10jun11abu
 # 27jul10jk
 # (c) Software Lab. Alexander Burger
 
@@ -22,6 +22,16 @@
    "Dbl5" (0 . 1.0)
    "Dbl6" (0 . 1.0) )
 
+# Utilities
+(de fv-iv (Lst)
+   (list NIL (16)
+      (mapcan
+         '((N)
+            (if (lt0 (*/ -2147483647 N 1.0))
+               (cons @)
+               (list 0 0 0 0) ) )
+         Lst ) ) )
+
 
 ### /usr/include/GL/gl.h ###
 ### Constant Definitions ###
@@ -38,33 +48,37 @@
 (def 'GL_POLYGON        (hex "0009"))
 
 # Matrix Mode
-(def 'GL_MATRIX_MODE (hex "0BA0"))
-(def 'GL_MODELVIEW   (hex "1700"))
-(def 'GL_PROJECTION  (hex "1701"))
-(def 'GL_TEXTURE     (hex "1702"))
+(def 'GL_MATRIX_MODE    (hex "0BA0"))
+(def 'GL_MODELVIEW      (hex "1700"))
+(def 'GL_PROJECTION     (hex "1701"))
+(def 'GL_TEXTURE        (hex "1702"))
 
 # Points
 
 # Lines
-(def 'GL_LINE_SMOOTH          (hex "00000B20"))
+(def 'GL_LINE_SMOOTH       (hex "00000B20"))
 
 # Polygons
-(def 'GL_CULL_FACE            (hex "00000B44"))
+(def 'GL_FRONT             (hex "0404"))
+(def 'GL_CULL_FACE         (hex "00000B44"))
 
 # Display Lists
 
 # Depth buffer
-(def 'GL_LESS                 (hex "00000201"))
-(def 'GL_DEPTH_TEST           (hex "00000B71"))
+(def 'GL_LESS              (hex "00000201"))
+(def 'GL_DEPTH_TEST        (hex "00000B71"))
 
 # Lighting
-(def 'GL_LIGHTING             (hex "00000B50"))
-(def 'GL_LIGHT0               (hex "00004000"))
-(def 'GL_AMBIENT_AND_DIFFUSE  (hex "00001602"))
-(def 'GL_FRONT_AND_BACK       (hex "00000408"))
-(def 'GL_FLAT                 (hex "00001D00"))
-(def 'GL_SMOOTH               (hex "00001D01"))
-(def 'GL_COLOR_MATERIAL       (hex "00000B57"))
+(def 'GL_LIGHTING             (hex "0B50"))
+(def 'GL_LIGHT0               (hex "4000"))
+(def 'GL_SPECULAR             (hex "1202"))
+(def 'GL_SHININESS            (hex "1601"))
+(def 'GL_POSITION             (hex "1203"))
+(def 'GL_AMBIENT_AND_DIFFUSE  (hex "1602"))
+(def 'GL_FRONT_AND_BACK       (hex "0408"))
+(def 'GL_FLAT                 (hex "1D00"))
+(def 'GL_SMOOTH               (hex "1D01"))
+(def 'GL_COLOR_MATERIAL       (hex "0B57"))
 
 # User clipping planes
 
@@ -73,9 +87,9 @@
 # Alpha testing
 
 # Blending
-(def 'GL_BLEND                (hex "00000BE2"))
-(def 'GL_SRC_ALPHA            (hex "00000302"))
-(def 'GL_ONE_MINUS_SRC_ALPHA  (hex "00000303"))
+(def 'GL_BLEND                (hex "0BE2"))
+(def 'GL_SRC_ALPHA            (hex "0302"))
+(def 'GL_ONE_MINUS_SRC_ALPHA  (hex "0303"))
 
 # Render Mode
 
@@ -98,8 +112,8 @@
 # Evaluators
 
 # Hints
-(def 'GL_LINE_SMOOTH_HINT     (hex "00000C52"))
-(def 'GL_NICEST               (hex "00001102"))
+(def 'GL_LINE_SMOOTH_HINT     (hex "0C52"))
+(def 'GL_NICEST               (hex "1102"))
 
 # Scissor box
 
@@ -233,6 +247,16 @@
 # Lighting
 (de glShadeModel (Num)
    (native `*GlutLib "glShadeModel" NIL Num) )
+
+(de glLightiv (Light Pname Params)
+   (native `*GlutLib "glLightiv" NIL Light Pname (list NIL (16) Params)) )
+
+(de glMaterialf (Face Pname Param)
+   (set "Flt1" Param)
+   (native `*GlutLib "glMaterialf" NIL Face Pname "Flt1") )
+
+(de glMaterialfv (Face Pname Params)  # Calls 'iv' internally!
+   (native `*GlutLib "glMaterialiv" NIL Face Pname (fv-iv Params)) )
 
 (de glColorMaterial (Face Mode)
    (native `*GlutLib "glColorMaterial" NIL Face Mode) )
@@ -378,6 +402,14 @@
 (de glutSolidCube (Size)
    (set "Dbl1" Size)
    (native `*GlutLib "glutSolidCube" NIL "Dbl1") )
+
+(de glutWireSphere (Radius Slices Stacks)
+   (set "Dbl1" Radius)
+   (native `*GlutLib "glutWireSphere" NIL "Dbl1" Slices Stacks) )
+
+(de glutSolidSphere (Radius Slices Stacks)
+   (set "Dbl1" Radius)
+   (native `*GlutLib "glutSolidSphere" NIL "Dbl1" Slices Stacks) )
 
 # Teapot rendering functions
 
