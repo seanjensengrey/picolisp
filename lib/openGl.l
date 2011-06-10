@@ -249,7 +249,7 @@
    (native `*GlutLib "glShadeModel" NIL Num) )
 
 (de glLightiv (Light Pname Params)
-   (native `*GlutLib "glLightiv" NIL Light Pname (list NIL (16) Params)) )
+   (native `*GlutLib "glLightiv" NIL Light Pname (cons NIL (16) Params)) )
 
 (de glMaterialf (Face Pname Param)
    (set "Flt1" Param)
