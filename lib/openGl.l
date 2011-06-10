@@ -24,7 +24,7 @@
 
 # Utilities
 (de fv-iv (Lst)
-   (list NIL (16)
+   (cons NIL (16)
       (mapcan
          '((N)
             (if (lt0 (*/ -2147483647 N 1.0))
