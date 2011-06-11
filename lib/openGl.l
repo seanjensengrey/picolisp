@@ -1,4 +1,4 @@
-# 10jun11abu
+# 11jun11abu
 # 27jul10jk
 # (c) Software Lab. Alexander Burger
 
@@ -23,23 +23,13 @@
    "Dbl6" (0 . 1.0) )
 
 # Utilities
-(de iv-iv (Lst)
-   (cons NIL (16)
-      (mapcan
-         '((N)
-            (if (=0 N)
-               (list 0 0 0 0)
-               (cons (- N)) ) )
-         Lst ) ) )
+(de ivect (Lst)
+   (mapcar '((N) (- -4294967296 N)) Lst) )
 
-(de fv-iv (Lst)
-   (cons NIL (16)
-      (mapcan
-         '((N)
-            (if (lt0 (*/ -2147483647 N 1.0))
-               (cons @)
-               (list 0 0 0 0) ) )
-         Lst ) ) )
+(de fvect (Lst)
+   (mapcar
+      '((N) (- -4294967296 (*/ 2147483647 N 1.0)))
+      Lst ) )
 
 
 ### /usr/include/GL/gl.h ###
@@ -258,14 +248,16 @@
    (native `*GlutLib "glShadeModel" NIL Num) )
 
 (de glLightiv (Light Pname Params)
-   (native `*GlutLib "glLightiv" NIL Light Pname (iv-iv Params)) )
+   (native `*GlutLib "glLightiv" NIL Light Pname
+      (cons NIL (16) (ivect Params)) ) )
 
 (de glMaterialf (Face Pname Param)
    (set "Flt1" Param)
    (native `*GlutLib "glMaterialf" NIL Face Pname "Flt1") )
 
 (de glMaterialfv (Face Pname Params)  # Calls 'iv' internally!
-   (native `*GlutLib "glMaterialiv" NIL Face Pname (fv-iv Params)) )
+   (native `*GlutLib "glMaterialiv" NIL Face Pname
+      (cons NIL (16) (fvect Params)) ) )
 
 (de glColorMaterial (Face Mode)
    (native `*GlutLib "glColorMaterial" NIL Face Mode) )
