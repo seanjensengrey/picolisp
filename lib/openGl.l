@@ -1,4 +1,4 @@
-# 11jun11abu
+# 12jun11abu
 # 27jul10jk
 # (c) Software Lab. Alexander Burger
 
@@ -373,6 +373,7 @@
 (de timerFunc (Msec Fun Val)
    (native `*GlutLib "glutTimerFunc" NIL Msec (lisp 'timerFunc Fun) Val) )
 
+# Window-specific callback functions
 (de keyboardFunc (Fun)
    (native `*GlutLib "glutKeyboardFunc" NIL (lisp 'keyboardFunc Fun)) )
 
