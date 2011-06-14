@@ -1,4 +1,4 @@
-# 09jun11abu
+# 14jun11abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -1539,18 +1539,95 @@
                      loop
                      break T
                   end
-                  atom E  # Fill bytes?
+                  atom E  # Fill structure?
                while z  # Yes
                   ld A (E)  # Next value
-                  shr A 4  # Byte?
-                  if nc  # Yes
-                     ld (Z) B  # Store in buffer
-                     inc Z  # Increment buffer pointer
-                     dec C  # Buffer full?
+                  atom A  # Byte or unsigned?
+                  if nz  # Yes
+                     shr A 4  # Byte?
+                     if nc  # Yes
+                        ld (Z) B  # Store byte in buffer
+                        inc Z  # Increment buffer pointer
+                        dec C  # Buffer full?
+                     else
+                        st4 (Z)  # Store unsigned in buffer
+                        add Z 4  # Size of unsigned
+                        sub C 4  # Buffer full?
+                     end
                   else
-                     st4 (Z)  # Store in buffer
-                     add Z 4  # Size of int
-                     sub C 4  # Buffer full?
+                     push C
+                     push X
+                     push Y
+                     ld Y Z  # Y on buffer
+                     ld C (A CDR)  # Get length
+                     shr C 4  # Normalize
+                     add Z C  # Size of buffer
+                     push C  # Save it
+                     ld A (A)  # 'num' or 'sym'
+                     num A  # (num . cnt)?
+                     if nz  # Yes
+                        cnt A  # Short?
+                        if nz  # Yes
+                           shr A 4  # Normalize
+                           if c  # Sign?
+                              neg A  # Yes
+                           end
+                        else
+                           test A SIGN  # Get sign
+                           push F  # Save
+                           off A (| SIGN BIG)  # Get cell pointer
+                           ld X (A CDR)  # High word
+                           ld A (A)  # Low word
+                           shr X 5  # Get highest four bits
+                           rcr A 1
+                           shr X 1
+                           rcr A 1
+                           shr X 1
+                           rcr A 1
+                           shr X 1
+                           rcr A 1
+                           pop F  # Negative
+                           if nz  # Yes
+                              neg A  # Negate
+                           end
+                        end
+                        ? *LittleEndian
+                           do
+                              ld (Y) B  # Store byte
+                              inc Y  # Increment pointer
+                              shr A 8
+                              dec C  # Done?
+                           until z  # Yes
+                        =
+                        ? (not *LittleEndian)
+                           ld Y Z
+                           do
+                              dec Y  # Decrement pointer
+                              ld (Y) B  # Store byte
+                              shr A 8
+                              dec C  # Done?
+                           until z  # Yes
+                        =
+                     else
+                        sym A  # (sym . cnt)?
+                        if nz  # Yes
+                           ld X (A TAIL)  # Get name
+                           call nameX_X
+                           ld C 0
+                           do
+                              call symByteCX_FACX  # Next byte
+                           while nz
+                              ld (Y) B  # Store it
+                              inc Y  # Increment pointer
+                           loop
+                           set (Y) 0  # Null byte
+                        end
+                     end
+                     pop A  # 'cnt'
+                     pop Y
+                     pop X
+                     pop C
+                     sub C A  # Buffer full?
                   end
                until z  # Yes
                pop Z

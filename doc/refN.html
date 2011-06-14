@@ -160,13 +160,32 @@ structures, e.g.
    (N (B . 7))    # {long; byte[7];}   -> (1234 (1 2 3 4 5 6 7))
 </code></pre>
 
-<p>Arguments can be numbers (passed as 64-bit integers), fixpoint numbers
-(passed as cons pairs consisting of a the value and the scale), symbols (passed
-as strings), or a list with a variable in the CAR (to recieve the returned
-structure data, ignored when the CAR is <code>NIL</code>), a cons pair for the
-size- and value-specification in the CADR, and an optional sequence of
-initialization bytes (positive numbers) or unsigned integers (negative numbers)
-in the CDDR.
+<p>Arguments can be
+<ul>
+<li>numbers (passed as 64-bit integers)
+<li>fixpoint numbers, passed as cons pairs consisting of a the value and the
+   scale. If the scale is positive, the number is passed as a
+   <code>double</code>, otherwise as a <code>float</code>.
+<li>symbols (passed as strings), or
+<li>structures, as a list with
+   <ul>
+   <li>a variable in the CAR (to recieve the returned structure data, ignored
+      when the CAR is <code>NIL</code>)
+   <li>a cons pair for the size- and value-specification in the CADR (see the
+      value and size specifications above), and
+   <li>an optional sequence of initialization items in the CDDR, where each
+      may be
+      <ul>
+      <li>a positive number, stored as an unsigned byte value
+      <li>a negative number, whose absolute value is stored as an unsigned
+         integer
+      <li>a pair <code>(num . cnt)</code> where '<code>num</code>' is stored in
+         a field of '<code>cnt</code>' bytes
+      <li>a pair <code>(sym . cnt)</code> where '<code>sym</code>' is stored as
+         a null-terminated string in a field of '<code>cnt</code>' bytes
+      </ul>
+   </ul>
+</ul>
 
 <p>The number of fixpoint arguments is limited to six. For NaN or negative
 infinity <code>NIL</code>, and for positive infinity <code>T</code> is returned.

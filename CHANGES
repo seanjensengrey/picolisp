@@ -1,4 +1,5 @@
 * XXjun11 picoLisp-3.0.7
+   Numbers and strings in 'native' structure arguments
    Signal portability problems
    'dbSync' on arbitrary objects
    UB-Tree support in "lib/db.l"
