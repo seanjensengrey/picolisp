@@ -1,4 +1,4 @@
-# 18apr11abu
+# 16jun11abu
 # (c) Software Lab. Alexander Burger
 
 .SILENT:
@@ -9,15 +9,15 @@ lib = ../lib
 ifeq ($(shell uname), Linux)
 	OS = Linux
 	SYS = linux
-   ifeq ($(shell uname -m), x86_64)
-      ARCH = x86-64
-      AS = as
-   else
-   ifeq ($(shell uname -m), ppc64)
-      ARCH = ppc64
-      AS = as -mppc64 -a64
-   endif
-   endif
+	ifeq ($(shell uname -m), x86_64)
+		ARCH = x86-64
+		AS = as
+	else
+	ifeq ($(shell uname -m), ppc64)
+		ARCH = ppc64
+		AS = as -mppc64 -a64
+	endif
+	endif
 	LD-MAIN = gcc -m64 -rdynamic -lc -lm -ldl
 	LD-SHARED = gcc -m64 -shared -export-dynamic
 	STRIP = strip
