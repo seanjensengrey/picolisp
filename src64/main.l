@@ -1,4 +1,4 @@
-# 14jun11abu
+# 20jun11abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -1480,21 +1480,11 @@
                neg E  # Yes
             end
          else
-            test E SIGN  # Get sign
-            push F  # Save
-            off E (| SIGN BIG)  # Get cell pointer
-            ld A (E CDR)  # High word
-            ld E (E)  # Low word
-            shr A 5  # Get highest four bits
-            rcr E 1
-            shr A 1
-            rcr E 1
-            shr A 1
-            rcr E 1
-            shr A 1
-            rcr E 1
-            pop F  # Negative
-            if nz  # Yes
+            test E SIGN  # Sign?
+            if z  # No
+               ld E (E DIG)
+            else
+               ld E (E (- DIG SIGN))
                neg E  # Negate
             end
          end
@@ -1573,21 +1563,11 @@
                               neg A  # Yes
                            end
                         else
-                           test A SIGN  # Get sign
-                           push F  # Save
-                           off A (| SIGN BIG)  # Get cell pointer
-                           ld X (A CDR)  # High word
-                           ld A (A)  # Low word
-                           shr X 5  # Get highest four bits
-                           rcr A 1
-                           shr X 1
-                           rcr A 1
-                           shr X 1
-                           rcr A 1
-                           shr X 1
-                           rcr A 1
-                           pop F  # Negative
-                           if nz  # Yes
+                           test A SIGN  # Sign?
+                           if z  # No
+                              ld A (A DIG)
+                           else
+                              ld A (A (- DIG SIGN))
                               neg A  # Negate
                            end
                         end
@@ -1733,26 +1713,7 @@
                   add C 8  # Size of long/pointer
                end
                ld E A  # Number
-               null E  # Negative?
-               if ns  # No
-                  test E (hex "F000000000000000")  # Fit in short?
-                  if z  # Yes
-                     shl E 4  # Make short number
-                     or E CNT
-                  else
-                     call boxNumE_E  # Make bignum
-                  end
-               else
-                  neg E  # Negate
-                  test E (hex "F000000000000000")  # Fit in short?
-                  if z  # Yes
-                     shl E 4  # Make negative short number
-                     or E (| SIGN CNT)
-                  else
-                     call boxNumE_E  # Make bignum
-                     or E SIGN  # Set negative
-                  end
-               end
+               call boxE_E
             else
                cmp E SSym  # 'S'?
                if eq  # Yes
@@ -1894,19 +1855,19 @@
    link  # Apply args
    push (Z I)  # 'fun'
    xchg A E  # First arg
-   call boxCntE_E  # Make number
+   call boxE_E  # Make number
    push E
    ld E C  # Second arg
-   call boxCntE_E  # Make number
+   call boxE_E  # Make number
    push E
    ld E A  # Third arg
-   call boxCntE_E  # Make number
+   call boxE_E  # Make number
    push E
    ld E X  # Fourth arg
-   call boxCntE_E  # Make number
+   call boxE_E  # Make number
    push E
    ld E Y  # Fifth arg
-   call boxCntE_E  # Make number
+   call boxE_E  # Make number
    push E
    ld Z S  # Z on last argument
    link  # Close frame
@@ -2069,19 +2030,19 @@
    link  # Apply args
    push ZERO  # Space for 'fun'
    xchg C E  # First arg
-   call boxCntE_E  # Make number
+   call boxE_E  # Make number
    push E
    ld E C  # Second arg
-   call boxCntE_E  # Make number
+   call boxE_E  # Make number
    push E
    ld E X  # Third arg
-   call boxCntE_E  # Make number
+   call boxE_E  # Make number
    push E
    ld E Y  # Fourth arg
-   call boxCntE_E  # Make number
+   call boxE_E  # Make number
    push E
    ld E Z  # Fifth arg
-   call boxCntE_E  # Make number
+   call boxE_E  # Make number
    push E
    ld Z S  # Z on last argument
    link  # Close frame
@@ -2253,16 +2214,24 @@
    end
    ret  # 'z' if null, 's' if negative
 
-(code 'boxCntE_E 0)
+(code 'boxE_E 0)
    null E  # Positive?
    if ns  # Yes
+      test E (hex "F000000000000000")  # Fit in short number?
+      jnz boxNumE_E  # No
       shl E 4  # Make short number
       or E CNT
       ret
    end
    neg E  # Else negate
-   shl E 4  # Make short number
-   or E 10  # with SIGN
+   test E (hex "F000000000000000")  # Fit in short?
+   if z  # Yes
+      shl E 4  # Make negative short number
+      or E (| SIGN CNT)
+      ret
+   end
+   call boxNumE_E  # Make bignum
+   or E SIGN  # Set negative
    ret
 
 (code 'putStringB 0)

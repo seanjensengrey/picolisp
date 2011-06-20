@@ -1,4 +1,4 @@
-# 22apr11abu
+# 20jun11abu
 # (c) Software Lab. Alexander Burger
 
 ### Destructive primitives ###
@@ -3022,6 +3022,6 @@
    add E C
    pop Y
    pop X
-   jmp boxCntE_E  # Return short number
+   jmp boxE_E  # Return short number
 
 # vi:et:ts=3:sw=3
