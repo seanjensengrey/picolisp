@@ -167,7 +167,7 @@ structures, e.g.
    scale. If the scale is positive, the number is passed as a
    <code>double</code>, otherwise as a <code>float</code>.
 <li>symbols (passed as strings), or
-<li>structures, as a list with
+<li>structures, as lists with
    <ul>
    <li>a variable in the CAR (to recieve the returned structure data, ignored
       when the CAR is <code>NIL</code>)
@@ -188,6 +188,9 @@ structures, e.g.
       as a fill-byte value for the remaining space in the structure.
    </ul>
 </ul>
+
+<p><code>native</code> takes care of allocating memory for strings, arrays or
+structures, and frees that memory when done.
 
 <p>The number of fixpoint arguments is limited to six. For NaN or negative
 infinity <code>NIL</code>, and for positive infinity <code>T</code> is returned.
@@ -218,8 +221,9 @@ This is 123.456
 
 <p>which accepts a symbol name as the first argument, and up to 5 numbers.
 <code>lisp()</code> calls that symbol with the five numbers, and expects a
-numeric return value. All numbers in this context should not be larger than 60
-bits (signed). See also <code><a href="refL.html#lisp">lisp</a></code>.
+numeric return value. "Numbers" in this context are 64-bit scalars, and may not
+only represent integers, but also pointers or other encoded data. See also
+<code><a href="refL.html#lisp">lisp</a></code>.
 
 <dt><a name="need"><code>(need 'cnt ['lst ['any]]) -> lst</code></a>
 <dt><code>(need 'cnt ['num|sym]) -> lst</code>
