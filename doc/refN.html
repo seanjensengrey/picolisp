@@ -162,12 +162,12 @@ structures, e.g.
 
 <p>Arguments can be
 <ul>
-<li>numbers (passed as 64-bit integers)
+<li>integers (up to 64-bit) or pointers, passed as numbers
 <li>fixpoint numbers, passed as cons pairs consisting of a the value and the
    scale. If the scale is positive, the number is passed as a
    <code>double</code>, otherwise as a <code>float</code>.
-<li>symbols (passed as strings), or
-<li>structures, as lists with
+<li>strings, passed as symbols, or
+<li>structures, passed as lists with
    <ul>
    <li>a variable in the CAR (to recieve the returned structure data, ignored
       when the CAR is <code>NIL</code>)
