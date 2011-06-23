@@ -1,4 +1,4 @@
-# 13may11abu
+# 23jun11abu
 # (c) Software Lab. Alexander Burger
 
 # *Home *Gate *Host *Port *Port1 *Port% *Http1 *Chunked
@@ -220,12 +220,12 @@
                      ((tail '("." "l") @U)
                         (and *SesId (timeout *Timeout))
                         (apply script L *Url) )
-                     ((assoc (stem @U ".") *Mimes)
-                        (apply httpEcho (cdr @) *Url) )
                      ((=T (car (info *Url)))
-                        (if (info (setq *Url (pack *Url "default")))
+                        (if (info (setq *Url (pack *Url "/default")))
                            (apply script L *Url)
                            (http404) ) )
+                     ((assoc (stem @U ".") *Mimes)
+                        (apply httpEcho (cdr @) *Url) )
                      (T (httpEcho *Url "application/octet-stream" 1 T)) ) ) ) ) )
       (and S (=0 *Http1) (task (close S))) ) )
 
