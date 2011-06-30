@@ -1,4 +1,6 @@
-* XXjun11 picoLisp-3.0.7
+* XXsep11 picoLisp-3.0.8
+
+* 30jun11 picoLisp-3.0.7
    Numbers and strings in 'native' structure arguments
    Signal portability problems
    'dbSync' on arbitrary objects
