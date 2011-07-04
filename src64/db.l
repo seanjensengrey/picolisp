@@ -1,4 +1,4 @@
-# 21apr11abu
+# 04jul11abu
 # (c) Software Lab. Alexander Burger
 
 # 6 bytes in little endian format
@@ -560,7 +560,7 @@
       pop Z
       pop E
    else
-      atom (Ext)  # Remote databases?
+      atom (Ext)  # Extended databases?
    end
    ret  # 'z' if OK
 
@@ -1388,7 +1388,7 @@
       call rwUnlockDbA  # Unlock
    else
       shr A 6  # Revert to file number
-      ld Z (Ext)  # Remote databases?
+      ld Z (Ext)  # Extended databases?
       atom Z
       jnz dbfErrX  # No
       ld C ((Z))  # First offset
@@ -1403,7 +1403,7 @@
          shr C 4  # Normalize
          cmp A C  # Matching entry?
       while ge  # No
-         ld Z E  # Try next remote DB
+         ld Z E  # Try next DB extension
       loop
       push Y  # Save name
       push ((Z) CDR)  # fun ((Obj) ..)
@@ -1418,8 +1418,9 @@
       ld E (E CDR)  # Properties?
       atom E
       if z  # Yes
-         or E SYM  # Set 'extern' tag
-         ld (Z TAIL) E  # Set property list
+         ld A E  # Set 'extern' tag
+         or A SYM
+         ld (Z TAIL) A  # Set property list
          do
             atom (E CDR)  # Find end
          while z
