@@ -1,4 +1,4 @@
-# 20jun11abu
+# 04jul11abu
 # (c) Software Lab. Alexander Burger
 
 ### Destructive primitives ###
@@ -2948,6 +2948,7 @@
          add C (E DIG)  # Add next digit
          ld E (E BIG)
       loop
+      shr E 3  # Keep sign
       add C E  # Add final short
    end
    ld E C  # Return counter
@@ -2964,9 +2965,7 @@
    mul E  # times 'Seed'
    add D 1  # plus 1
    ld (Seed) D  # Save
-   shl C 32  # Get middle 64 bits
-   shr A 32
-   or A C
+   shr A (- 32 3)  # Get higher 32 bits
    ld E A
    off E 7  # Keep sign
    or E CNT  # Make short number
