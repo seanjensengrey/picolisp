@@ -1,4 +1,4 @@
-/* 07mar11abu
+/* 08jul11abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -1137,8 +1137,7 @@ static u_int64_t initSeed(any x) {
 
 // (seed 'any) -> cnt
 any doSeed(any ex) {
-   return boxCnt(
-         hi(Seed = initSeed(EVAL(cadr(ex))) * 6364136223846793005LL + 1) );
+   return box(hi(Seed = initSeed(EVAL(cadr(ex))) * 6364136223846793005LL));
 }
 
 // (rand ['cnt1 'cnt2] | ['T]) -> cnt | flg
@@ -1149,7 +1148,7 @@ any doRand(any ex) {
    x = cdr(ex);
    Seed = Seed * 6364136223846793005LL + 1;
    if (isNil(x = EVAL(car(x))))
-      return boxCnt(hi(Seed));
+      return box(hi(Seed));
    if (x == T)
       return hi(Seed) & 1 ? T : Nil;
    n = xCnt(ex,x);

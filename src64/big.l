@@ -1,4 +1,4 @@
-# 04jul11abu
+# 08jul11abu
 # (c) Software Lab. Alexander Burger
 
 ### Destructive primitives ###
@@ -2963,7 +2963,6 @@
    call initSeedE_E  # Initialize 'Seed'
    ld A 6364136223846793005  # Multiplier
    mul E  # times 'Seed'
-   add D 1  # plus 1
    ld (Seed) D  # Save
    shr A (- 32 3)  # Get higher 32 bits
    ld E A
@@ -2985,9 +2984,7 @@
    eval  # Eval first arg
    cmp E Nil  # Any?
    if eq  # No
-      shl C 32  # Get middle 64 bits
-      shr A 32
-      or A C
+      shr A (- 32 3)  # Get higher 32 bits
       ld E A
       off E 7  # Keep sign
       or E CNT  # Make short number
