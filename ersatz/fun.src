@@ -1,4 +1,4 @@
-# 07mar11abu
+# 08jul11abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -3165,7 +3165,7 @@ x| (num x)
 
 # (seed 'any) -> cnt
 seed (n)
-   n = initSeed(ex.Cdr.Car.eval()) * 6364136223846793005L + 1;
+   n = initSeed(ex.Cdr.Car.eval()) * 6364136223846793005L;
    return new Number(Seed = n);
 
 # (rand ['cnt1 'cnt2] | ['T]) -> cnt | flg
