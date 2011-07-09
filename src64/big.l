@@ -1,4 +1,4 @@
-# 08jul11abu
+# 09jul11abu
 # (c) Software Lab. Alexander Burger
 
 ### Destructive primitives ###
@@ -2968,6 +2968,33 @@
    ld E A
    off E 7  # Keep sign
    or E CNT  # Make short number
+   ret
+
+# (hash 'any) -> cnt
+(code 'doHash 2)
+   push X
+   ld E (E CDR)  # Get arg
+   ld E (E)
+   eval  # Eval it
+   call initSeedE_E  # Initialize
+   ld X E  # Value in X
+   ld C 64  # Counter
+   ld E 0  # Result
+   do
+      ld A X  # Value XOR Result
+      xor A E
+      test A 1  # LSB set?
+      if nz  # Yes
+         xor E (hex "14002")  # CRC Polynom x**16 + x**15 + x**2 + 1
+      end
+      shr X 1  # Shift value
+      shr E 1  # and result
+      dec C  # Done?
+   until z  # Yes
+   inc E  # Plus 1
+   shl E 4  # Make short number
+   or E CNT  # Make short number
+   pop X
    ret
 
 # (rand ['cnt1 'cnt2] | ['T]) -> cnt | flg

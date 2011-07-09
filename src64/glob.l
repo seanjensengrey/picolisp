@@ -1,4 +1,4 @@
-# 20apr11abu
+# 09jul11abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Data)
@@ -481,6 +481,7 @@
    initFun NIL       "|"         doBitOr
    initFun NIL       "x|"        doBitXor
    initFun NIL       "seed"      doSeed
+   initFun NIL       "hash"      doHash
    initFun NIL       "rand"      doRand
 
    # Input/Output

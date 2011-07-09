@@ -1,4 +1,4 @@
-/* 08jul11abu
+/* 09jul11abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -1138,6 +1138,20 @@ static u_int64_t initSeed(any x) {
 // (seed 'any) -> cnt
 any doSeed(any ex) {
    return box(hi(Seed = initSeed(EVAL(cadr(ex))) * 6364136223846793005LL));
+}
+
+// (hash 'any) -> cnt
+any doHash(any ex) {
+   word2 n = initSeed(EVAL(cadr(ex)));
+   int i = 64;
+   int j = 0;
+
+   do {
+      if (((int)n ^ j) & 1)
+         j ^= 0x14002;  /* CRC Polynom x**16 + x**15 + x**2 + 1 */
+      n >>= 1,  j >>= 1;
+   } while (--i);
+   return box(2 * (j + 1));
 }
 
 // (rand ['cnt1 'cnt2] | ['T]) -> cnt | flg

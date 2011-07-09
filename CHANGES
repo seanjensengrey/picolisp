@@ -1,4 +1,5 @@
 * XXsep11 picoLisp-3.0.8
+   'hash' function
    Bug in 'dbFetchEX' for db extensions
 
 * 30jun11 picoLisp-3.0.7

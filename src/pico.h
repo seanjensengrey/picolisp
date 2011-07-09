@@ -1,4 +1,4 @@
-/* 10jun11abu
+/* 09jul11abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -544,6 +544,7 @@ any doGetl(any);
 any doGlue(any);
 any doGt(any);
 any doGt0(any);
+any doHash(any);
 any doHead(any);
 any doHeap(any);
 any doHear(any);

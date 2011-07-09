@@ -32,11 +32,11 @@ href="refR.html#rel">rel</a></code>.
 <code><a href="refI.html#idx">idx</a></code> tree structure. Such an
 optimization is sometimes called "memoization". <code>sym</code> must be a
 transient symbol representing a unique key for the argument(s) to the
-calculation.
+calculation. See also <code><a href="refH.html#hash">hash</a></code>.
 
 <pre><code>
 : (de fibonacci (N)
-   (cache '*Fibonacci (format N)
+   (cache '*Fibo (pack (char (hash N)) N)
       (if (> 2 N)
          1
          (+

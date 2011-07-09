@@ -1,4 +1,4 @@
-// 01mar11abu
+// 09jul11abu
 // (c) Software Lab. Alexander Burger
 
 import java.util.*;
@@ -243,7 +243,7 @@ public class PicoLisp {
                n += b[i];
          }
       }
-      return n;
+      return n>=0? n*2 : -n*2+1;
    }
 
    final static Any date(int y, int m, int d) {
@@ -574,7 +574,7 @@ public class PicoLisp {
       return null;
    }
 
-   final static Any mkChar(char c) {return new Symbol(null, "" + c);}
+   final static Any mkChar(int c) {return new Symbol(null, "" + (char)(c >= 0x10000? 0xFFFF : c));}
    final static Any mkStr(String nm) {return nm == null || nm.length() == 0? Nil : new Symbol(null, nm);}
    final static Any mkStr(StringBuilder sb) {return mkStr(sb.toString());}
    final static Symbol mkSymbol(Any val) {return new Symbol(val, null);}
