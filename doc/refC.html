@@ -36,7 +36,7 @@ calculation. See also <code><a href="refH.html#hash">hash</a></code>.
 
 <pre><code>
 : (de fibonacci (N)
-   (cache '*Fibo (pack (char (hash N)) N)
+   (cache '(NIL) (pack (char (hash N)) N)
       (if (> 2 N)
          1
          (+
