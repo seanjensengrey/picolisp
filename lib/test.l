@@ -8,7 +8,9 @@
 # Global usage:
 # pil @lib/test.l $(/bin/pwd) -bye +
 
-(setq *PWD (opt))
+(setq
+   *CMD (cmd)
+   *PWD (opt) )
 
 (test T (pool (tmp "db")))
 

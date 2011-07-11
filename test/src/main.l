@@ -85,7 +85,7 @@
 
 
 ### info ###
-(test '(T . @) (info "test"))
+(test '(T . @) (info "@test"))
 (test (5 . @)
    (out (tmp "info") (prinl "info"))
    (info (tmp "info")) )
@@ -116,22 +116,22 @@
 ### argv ###
 (test '("abc" "123")
    (pipe
-      (call "bin/picolisp" "-prog (println (argv)) (bye)" "abc" 123)
+      (call *CMD "-prog (println (argv)) (bye)" "abc" 123)
       (read) ) )
 (test '("abc" "123")
    (pipe
-      (call "bin/picolisp" "-prog (argv A B) (println (list A B)) (bye)" "abc" 123)
+      (call *CMD "-prog (argv A B) (println (list A B)) (bye)" "abc" 123)
       (read) ) )
 
 
 ### opt ###
 (test '("abc" "123")
    (pipe
-      (call "bin/picolisp" "-prog (println (list (opt) (opt))) (bye)" "abc" 123)
+      (call *CMD "-prog (println (list (opt) (opt))) (bye)" "abc" 123)
       (read) ) )
 (test "abc"
    (pipe
-      (call "bin/picolisp" "-de f () (println (opt))" "-f" "abc" "-bye")
+      (call *CMD "-de f () (println (opt))" "-f" "abc" "-bye")
       (read) ) )
 
 
