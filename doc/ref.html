@@ -420,7 +420,10 @@ href="refN.html#new">new</a></code> functions.
 <p>External symbols reside in a database file (or a similar resources, see
 <code><a href="refE.html#*Ext">*Ext</a></code>), and are loaded into memory -
 and written back to the file - dynamically as needed, and transparently to the
-programmer.
+programmer. They are kept in memory ("cached") as long as they are accessible
+("referred to") from other parts of the program, or when they were modified but
+not yet written to the database file (by <code><a
+href="refC.html#commit">commit</a></code>).
 
 <p>The interpreter recognizes external symbols internally by an additional tag
 bit in the tail structure.
