@@ -1,4 +1,4 @@
-# 10jun11abu
+# 11jul11abu
 # (c) Software Lab. Alexander Burger
 
 ### alarm ###
@@ -76,13 +76,12 @@
 
 
 ### pwd ###
-(test (path '@) (pack (pwd) '/))
+(test *PWD (pwd))
 
 
 ### cd ###
-(cd "test")
-(test (path "@test") (pwd))
-(cd "..")
+(chdir "/tmp"
+   (test "/tmp" (pwd)) )
 
 
 ### info ###

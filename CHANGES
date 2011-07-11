@@ -1,4 +1,5 @@
 * XXsep11 picoLisp-3.0.8
+   "lib/test.l" position independent
    'hash' function
    Bug in 'dbFetchEX' for db extensions
 
