@@ -2,7 +2,7 @@
 # (c) Software Lab. Alexander Burger
 
 ### path ###
-(test *PWD (pwd))
+(test 'task (cadr (in (path "@lib.l") (read))))
 (test (char "+") (char (path "+@")))
 
 
