@@ -1,4 +1,4 @@
-/* 25oct10abu
+/* 14jul11abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -1056,28 +1056,29 @@ any get(any x, any key) {
 any prop(any x, any key) {
    any y, z;
 
-   if (!isCell(y = tail1(x)))
-      return Nil;
-   if (!isCell(car(y))) {
-      if (key == car(y))
-         return key;
-   }
-   else if (key == cdar(y))
-      return car(y);
-   while (isCell(z = cdr(y))) {
-      if (!isCell(car(z))) {
-         if (key == car(z)) {
-            cdr(y) = cdr(z),  cdr(z) = tail1(x),  Tail(x, z);
+   if (isCell(y = tail1(x))) {
+      if (!isCell(car(y))) {
+         if (key == car(y))
             return key;
+      }
+      else if (key == cdar(y))
+         return car(y);
+      while (isCell(z = cdr(y))) {
+         if (!isCell(car(z))) {
+            if (key == car(z)) {
+               cdr(y) = cdr(z),  cdr(z) = tail1(x),  Tail(x, z);
+               return key;
+            }
          }
+         else if (key == cdar(z)) {
+            cdr(y) = cdr(z),  cdr(z) = tail1(x),  Tail(x, z);
+            return car(z);
+         }
+         y = z;
       }
-      else if (key == cdar(z)) {
-         cdr(y) = cdr(z),  cdr(z) = tail1(x),  Tail(x, z);
-         return car(z);
-      }
-      y = z;
    }
-   return Nil;
+   Tail(x, cons(y = cons(Nil,key), tail1(x)));
+   return y;
 }
 
 // (put 'sym1|lst ['sym2|cnt ..] 'sym|0 'any) -> any
@@ -1131,7 +1132,7 @@ any doGet(any ex) {
    return Pop(c1);
 }
 
-// (prop 'sym1|lst ['sym2|cnt ..] 'sym) -> lst|sym
+// (prop 'sym1|lst ['sym2|cnt ..] 'sym) -> var
 any doProp(any ex) {
    any x;
    cell c1, c2;
@@ -1149,7 +1150,8 @@ any doProp(any ex) {
       data(c2) = EVAL(car(x));
    }
    NeedSym(ex,data(c1));
-   Fetch(ex,data(c1));
+   CheckNil(ex,data(c1));
+   Touch(ex,data(c1));
    return prop(Pop(c1), data(c2));
 }
 
@@ -1224,7 +1226,7 @@ any doCol(any ex) {
    return y;
 }
 
-// (:: sym|0 [sym1|cnt .. sym2]) -> lst|sym
+// (:: sym|0 [sym1|cnt .. sym2]) -> var
 any doPropCol(any ex) {
    any x, y;
 
@@ -1242,6 +1244,9 @@ any doPropCol(any ex) {
          }
       }
    }
+   NeedSym(ex,y);
+   CheckNil(ex,y);
+   Touch(ex,y);
    return prop(y, car(x));
 }
 

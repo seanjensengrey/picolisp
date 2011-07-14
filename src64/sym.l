@@ -1,4 +1,4 @@
-# 28mar11abu
+# 14jul11abu
 # (c) Software Lab. Alexander Burger
 
 ### Compare long names ###
@@ -2622,73 +2622,91 @@
    ret
 
 (code 'propEC_E 0)
-   ld A (E TAIL)  # Get tail
-   num A  # No properties?
-   jnz retNil  # Return NIL
-   off A SYM  # Clear 'extern' tag
-   atom (A)  # First property atomic?
-   if nz  # Yes
-      cmp C (A)  # Found flag?
-      if eq  # Yes
-         ld E C  # Return key
-         ret
-      end
-   else
-      cmp C ((A) CDR)  # Found property?
-      if eq  # Yes
-         ld E (A)  # Return property
-         ret
-      end
-   end
    push X
-   do
-      ld X (A CDR)  # Next property
-      atom X  # Any?
-   while z  # Yes
-      atom (X)  # Atomic?
+   ld A (E TAIL)  # Get tail
+   num A  # Properties?
+   if z  # Yes
+      off A SYM  # Clear 'extern' tag
+      atom (A)  # First property atomic?
       if nz  # Yes
-         cmp C (X)  # Found flag?
+         cmp C (A)  # Found flag?
          if eq  # Yes
-            ld (A CDR) (X CDR)  # Unlink cell
-            ld A (E TAIL)  # Get tail
-            sym A  # Extern?
-            if z  # No
-               ld (X CDR) A  # Insert cell in front
-            else
-               off A SYM  # Clear 'extern' tag
-               ld (X CDR) A  # Insert cell in front
-               or X SYM  # Set 'extern' tag
-            end
-            ld (E TAIL) X
             ld E C  # Return key
             pop X
             ret
          end
       else
-         cmp C ((X) CDR)  # Found property?
+         cmp C ((A) CDR)  # Found property?
          if eq  # Yes
-            ld (A CDR) (X CDR)  # Unlink cell
-            ld A (E TAIL)  # Get tail
-            sym A  # Extern?
-            if z  # No
-               ld (X CDR) A  # Insert cell in front
-               ld (E TAIL) X
-               ld E (X)  # Return property
-            else
-               off A SYM  # Clear 'extern' tag
-               ld (X CDR) A  # Insert cell in front
-               ld A (X)  # Return property
-               or X SYM  # Set 'extern' tag
-               ld (E TAIL) X
-               ld E A
-            end
+            ld E (A)  # Return property
             pop X
             ret
          end
       end
-      ld A X
-   loop
-   ld E Nil  # Return NIL
+      do
+         ld X (A CDR)  # Next property
+         atom X  # Any?
+      while z  # Yes
+         atom (X)  # Atomic?
+         if nz  # Yes
+            cmp C (X)  # Found flag?
+            if eq  # Yes
+               ld (A CDR) (X CDR)  # Unlink cell
+               ld A (E TAIL)  # Get tail
+               sym A  # Extern?
+               if z  # No
+                  ld (X CDR) A  # Insert cell in front
+               else
+                  off A SYM  # Clear 'extern' tag
+                  ld (X CDR) A  # Insert cell in front
+                  or X SYM  # Set 'extern' tag
+               end
+               ld (E TAIL) X
+               ld E C  # Return key
+               pop X
+               ret
+            end
+         else
+            cmp C ((X) CDR)  # Found property?
+            if eq  # Yes
+               ld (A CDR) (X CDR)  # Unlink cell
+               ld A (E TAIL)  # Get tail
+               sym A  # Extern?
+               if z  # No
+                  ld (X CDR) A  # Insert cell in front
+                  ld (E TAIL) X
+                  ld E (X)  # Return property
+               else
+                  off A SYM  # Clear 'extern' tag
+                  ld (X CDR) A  # Insert cell in front
+                  ld A (X)  # Return property
+                  or X SYM  # Set 'extern' tag
+                  ld (E TAIL) X
+                  ld E A
+               end
+               pop X
+               ret
+            end
+         end
+         ld A X
+      loop
+   end
+   call cons_A  # New property cell
+   ld (A) Nil  # (NIL . key)
+   ld (A CDR) C
+   call consA_C  # New first property
+   ld (C) A
+   ld X (E TAIL)  # Get tail
+   sym X  # Extern?
+   if z  # No
+      ld (C CDR) X
+   else
+      off X SYM  # Clear 'extern' tag
+      ld (C CDR) X
+      or C SYM  # Set 'extern' tag
+   end
+   ld (E TAIL) C  # Set new tail
+   ld E A  # Return first (new) cell
    pop X
    ret
 
@@ -2775,7 +2793,7 @@
    pop X
    ret
 
-# (prop 'sym1|lst ['sym2|cnt ..] 'sym) -> lst|sym
+# (prop 'sym1|lst ['sym2|cnt ..] 'sym) -> var
 (code 'doProp 2)
    push X
    push Y
@@ -2807,9 +2825,11 @@
    jnz symErrEX
    sym E
    jz symErrEX
+   cmp E Nil  # Can't be NIL
+   jeq protErrEX
    sym (E TAIL)  # External symbol?
    if nz  # Yes
-      call dbFetchEX  # Fetch it
+      call dbTouchEX  # Touch it
    end
    ld C (L I)  # Get key
    call propEC_E
@@ -2916,7 +2936,7 @@
    pop X
    ret
 
-# (:: sym|0 [sym1|cnt .. sym2]) -> lst|sym
+# (:: sym|0 [sym1|cnt .. sym2]) -> var
 (code 'doPropCol 2)
    push X
    push Y
@@ -2938,6 +2958,16 @@
       while z  # Yes
          call getnECX_E
       loop
+   end
+   num E  # Need symbol
+   jnz symErrEX
+   sym E
+   jz symErrEX
+   cmp E Nil  # Can't be NIL
+   jeq protErrEX
+   sym (E TAIL)  # External symbol?
+   if nz  # Yes
+      call dbTouchEX  # Touch it
    end
    call propEC_E
    pop Y

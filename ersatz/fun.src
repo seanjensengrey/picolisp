@@ -1,4 +1,4 @@
-# 09jul11abu
+# 14jul11abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -1990,7 +1990,7 @@ get (x)
       x = x.get(ex.Car.eval());
    return x;
 
-# (prop 'sym1|lst ['sym2|cnt ..] 'sym) -> lst|sym
+# (prop 'sym1|lst ['sym2|cnt ..] 'sym) -> var
 prop (x)
    x = (ex = ex.Cdr).Car.eval();
    while ((ex = ex.Cdr).Cdr instanceof Cell)
@@ -2021,7 +2021,7 @@ prop (x)
    while (ex.Cdr instanceof Cell);
    return x;
 
-# (:: sym|0 [sym1|cnt .. sym2]) -> lst|sym
+# (:: sym|0 [sym1|cnt .. sym2]) -> var
 :: (x)
    x = This.Car;
    while ((ex = ex.Cdr).Cdr instanceof Cell)
