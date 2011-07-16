@@ -1,4 +1,4 @@
-# 15jul11abu
+# 16jul11abu
 # (c) Software Lab. Alexander Burger
 
 # *Board a1 .. h8
@@ -485,20 +485,22 @@
 
 (de myMove ()
    (let? M
-      (cond
-         ((moved? (if *Me *Black *White))
-            (game *Me *Depth moves move cost) )
-         (*Me
-            (if (member (get *Moved 1 'field 'x) (1 2 3 5))
-               (bookMove 'e7 'e5)
-               (bookMove 'd7 'd5) ) )
-         ((rand T) (bookMove 'e2 'e4))
-         (T (bookMove 'd2 'd4)) )
-      (move (car (push '*Undo (cadr M))))
+      (cadr
+         (cond
+            ((moved? (if *Me *Black *White))
+               (game *Me *Depth moves move cost) )
+            (*Me
+               (if (member (get *Moved 1 'field 'x) (1 2 3 5))
+                  (bookMove 'e7 'e5)
+                  (bookMove 'd7 'd5) ) )
+            ((rand T) (bookMove 'e2 'e4))
+            (T (bookMove 'd2 'd4)) ) )
+      (move (car (push '*Undo M)))
       (off *Redo)
       (cons
-         (cdr (asoq (caaadr M) (cdadr M)))
-         (pick cdr (cdaadr M)) ) ) )
+         (caar M)
+         (cdr (asoq (caar M) (cdr M)))
+         (pick cdr (cdar M)) ) ) )
 
 (de yourMove (From To)
    (when
@@ -548,9 +550,7 @@
          ((not Args) (xchg '*Me '*You) (myMove))
          ((== '- (car Args)) (and *Undo (undo)))
          ((== '+ (car Args)) (and *Redo (redo)))
-         ((yourMove (car Args) (cadr Args))
-            (display T)
-            (myMove) ) ) ) )
+         ((yourMove (car Args) (cadr Args)) (display T) (myMove)) ) ) )
 
 # Print position to file
 (de ppos (File)
