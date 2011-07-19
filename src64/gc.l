@@ -1,4 +1,4 @@
-# 16feb11abu
+# 19jul11abu
 # (c) Software Lab. Alexander Burger
 
 # Mark data
@@ -132,13 +132,13 @@
       sub Y (StkSize)  # Next segment
       shr C 1  # In use?
       if c  # Yes
+         push C
          null (Y -II)  # Active?
          if z  # Yes
             ld E (Y -I)  # Mark 'tag'
             call markE
          else
             push Y
-            push C
             ld Y ((Y -II))  # Else get saved L
             do
                null Y  # End of stack?
@@ -153,9 +153,9 @@
                loop
                ld Y (Y)  # Next frame
             loop
-            pop C
             pop Y
          end
+         pop C
          continue T
       end
    until z
