@@ -1,4 +1,4 @@
-# 15apr11abu
+# 20jul11abu
 # (c) Software Lab. Alexander Burger
 
 ############ lib.l ############
@@ -751,6 +751,9 @@
 # *Rule
 
 (de be CL
+   (clause CL) )
+
+(de clause (CL)
    (with (car CL)
       (if (== *Rule This)
          (=: T (conc (: T) (cons (cdr CL))))
