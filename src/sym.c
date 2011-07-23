@@ -1,4 +1,4 @@
-/* 14jul11abu
+/* 22jul11abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -26,12 +26,12 @@ unsigned long ehash(any x) {
    return h % EHASH;
 }
 
-bool hashed(any s, long h, any *tab) {
-   any x;
-
-   for (x = tab[h];  isCell(x);  x = cdr(x))
+bool hashed(any s, any x) {
+   while (isCell(x)) {
       if (s == car(x))
          return YES;
+      x = cdr(x);
+   }
    return NO;
 }
 
@@ -61,6 +61,18 @@ any findHash(any s, any *p) {
    return NULL;
 }
 
+void unintern(any s, any *p) {
+   any x;
+
+   while (isCell(x = *p)) {
+      if (s == car(x)) {
+         *p = cdr(x);
+         return;
+      }
+      p = &x->cdr;
+   }
+}
+
 /* Get symbol name */
 any name(any s) {
    for (s = tail1(s); isCell(s); s = cdr(s));
@@ -70,6 +82,7 @@ any name(any s) {
 // (name 'sym ['sym2]) -> sym
 any doName(any ex) {
    any x, y, *p;
+   unsigned long n;
    cell c1;
 
    x = cdr(ex),  data(c1) = EVAL(car(x));
@@ -77,11 +90,13 @@ any doName(any ex) {
    y = name(data(c1));
    if (!isCell(x = cdr(x)))
       return isNum(y)? consStr(y) : Nil;
-   if (isNil(data(c1)) || isExt(data(c1)) || hashed(data(c1), ihash(y), Intern))
+   n = ihash(y);
+   if (isNil(data(c1)) || isExt(data(c1)) || hashed(data(c1), Intern[n]))
       err(ex, data(c1), "Can't rename");
    Save(c1);
    x = EVAL(car(x));
    NeedSym(ex,x);
+   unintern(data(c1), Transient + n);
    for (p = &tail(data(c1)); isCell(*p); p = &cdr(*p));
    *p = name(x);
    return Pop(c1);
@@ -262,7 +277,7 @@ any doBoxQ(any x) {
 any doStrQ(any x) {
    x = cdr(x);
    return isSym(x = EVAL(car(x))) &&
-         !isExt(x) && !hashed(x, ihash(name(x)), Intern)? x : Nil;
+         !isExt(x) && !hashed(x, Intern[ihash(name(x))])? x : Nil;
 }
 
 // (ext? 'any) -> sym | NIL
@@ -282,7 +297,7 @@ any doTouch(any ex) {
 
 // (zap 'sym) -> sym
 any doZap(any ex) {
-   any x, y, *h;
+   any x;
 
    x = cdr(ex),  x = EVAL(car(x));
    NeedSym(ex,x);
@@ -291,11 +306,7 @@ any doZap(any ex) {
    else {
       if (x >= Nil  &&  x <= Bye)
          protError(ex,x);
-      for (h = Intern + ihash(name(x)); isCell(y = *h); h = &y->cdr)
-         if (x == car(y)) {
-            *h = cdr(y);
-            break;
-         }
+      unintern(x, Intern + ihash(name(x)));
    }
    return x;
 }

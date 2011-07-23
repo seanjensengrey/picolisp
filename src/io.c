@@ -1,4 +1,4 @@
-/* 09mar11abu
+/* 22jul11abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -403,7 +403,7 @@ void binPrint(int extn, any x) {
       if (!isNum(y = name(x)))
          binPrint(extn, y);
       else if (!isExt(x))
-         prNum(hashed(x, ihash(y), Intern)? INTERN : TRANSIENT, y);
+         prNum(hashed(x, Intern[ihash(y)])? INTERN : TRANSIENT, y);
       else
          prNum(EXTERN, extn? extOffs(-extn, y) : y);
    }
@@ -2377,7 +2377,7 @@ void print1(any x) {
          Env.put('$'),  outWord(num(x)/sizeof(cell));
       else if (isExt(x))
          Env.put('{'),  outSym(c),  Env.put('}');
-      else if (hashed(x, ihash(y), Intern)) {
+      else if (hashed(x, Intern[ihash(y)])) {
          if (unDig(y) == '.')
             Env.put('\\'),  Env.put('.');
          else {

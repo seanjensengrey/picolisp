@@ -1,4 +1,4 @@
-# 14jul11abu
+# 22jul11abu
 # (c) Software Lab. Alexander Burger
 
 ### Compare long names ###
@@ -350,9 +350,10 @@
    loop
 
 ### Unintern a symbol ###
+# E symbol
 # X name
 # Y tree
-(code 'uninternXY 0)
+(code 'uninternEXY 0)
    cmp X ZERO  # Name?
    jeq ret  # No
    cnt X  # Short name?
@@ -365,6 +366,8 @@
          call nameA_A  # Get name
          cmp A X  # Equal?
          if eq  # Yes
+            cmp E (C)  # Correct symbol?
+            jne Ret  # No
             ld A (C CDR)  # Get subtrees
             atom (A)  # Left branch?
             if nz  # No
@@ -418,6 +421,8 @@
       call nameA_A  # Get name
       call cmpLongAX_F  # Equal?
       if eq  # Yes
+         cmp E (C)  # Correct symbol?
+         jne Ret  # No
          ld A (C CDR)  # Get subtrees
          atom (A)  # Left branch?
          if nz  # No
@@ -545,14 +550,19 @@
       jz symErrEX
       ld X (E TAIL)
       call nameX_X  # Get name
+      push X  # Save new name
       ld E (L I)  # Get first symbol
+      ld X (E TAIL)
+      call nameX_X  # Get name
+      ld Y Transient
+      call uninternEXY  # Unintern
       lea Y (E TAIL)
       do
          num (Y)  # Find name
       while z
          lea Y ((Y) CDR)
       loop
-      ld (Y) X  # Store name of second
+      pop (Y)  # Store name of second
       drop
    end
    pop Y
@@ -1081,7 +1091,7 @@
       ld X (E TAIL)
       call nameX_X  # Get name
       ld Y Intern
-      call uninternXY  # Unintern symbol
+      call uninternEXY  # Unintern symbol
       pop Y
    end
    pop X
