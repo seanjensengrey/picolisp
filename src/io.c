@@ -1,4 +1,4 @@
-/* 22jul11abu
+/* 27jul11abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -2382,7 +2382,7 @@ void print1(any x) {
             Env.put('\\'),  Env.put('.');
          else {
             do {
-               if (strchr(Delim, c))
+               if (c == '\\' || strchr(Delim, c))
                   Env.put('\\');
                Env.put(c);
             } while (c = symByte(NULL));

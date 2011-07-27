@@ -1,4 +1,4 @@
-# 23apr11abu
+# 27jul11abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -4772,9 +4772,11 @@
             ld C 0
             call symByteCX_FACX  # Get first byte
             do
+               cmp B (char "\\")  # Backslash?
+               jeq 10  # Yes
                memb Delim "(DelimEnd-Delim)"  # Delimiter?
                if eq  # Yes
-                  push A  # Save char
+10                push A  # Save char
                   ld B (char "\\")  # Print backslash
                   call (PutB)
                   pop A
@@ -4804,9 +4806,9 @@
          call symByteCX_FACX  # Get first byte
          do
             cmp B (char "\\")  # Backslash?
-            jz 20
+            jeq 20
             cmp B (char "\^")  # Caret?
-            jz 20
+            jeq 20
             null Y  # Transient symbol markup?
             jnz 30  # Yes
             cmp B (char "\"")  # Double quote?
