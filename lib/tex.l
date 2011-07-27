@@ -18,13 +18,16 @@
    (prinl) )
 
 (de tex (S  . @)
-   (prin "\\" S "{")
-   (_tex (next))
-   (while (args)
-      (when (next)
-         (prin "\\\\")
-         (_tex (arg)) ) )
-   (prinl "}") )
+   (prin "\\" S)
+   (when (args)
+      (prin "{")
+      (_tex (next))
+      (while (args)
+         (when (next)
+            (prin "\\\\")
+            (_tex (arg)) ) )
+      (prin "}") )
+   (prinl) )
 
 (de texl (S Lst)
    (prin "\\" S "{")
@@ -36,44 +39,21 @@
    (prinl "}") )
 
 (de _tex (X)
-   (when X
-      (ifn (sym? X)
-         (prin X)
-         (let N 0
-            (for (L (chop X) L (cdr L))
-               (cond
-                  ((head '("!" "{") L)
-                     (prin "\\textbf{")
-                     (inc 'N)
-                     (pop 'L) )
-                  ((head '("/" "{") L)
-                     (prin "\\textit{")
-                     (inc 'N)
-                     (pop 'L) )
-                  ((head '("_" "{") L)
-                     (prin "\\underline{")
-                     (inc 'N)
-                     (pop 'L) )
-                  ((head '("\^" "{") L)
-                     (prin "\^{")
-                     (inc 'N)
-                     (pop 'L) )
-                  ((= `(char 8364) (car L))
-                     (prin "\\EUR") )
-                  ((sub? (car L) "#$%&_{")
-                     (prin "\\" (car L)) )
-                  ((sub? (car L) "<²>")
-                     (prin "$" (car L) "$") )
-                  (T
-                     (prin
-                        (case (car L)
-                           ("\"" "\\char34")
-                           ("\\" "$\\backslash$")
-                           ("\^" "\\char94")
-                           ("}" (if (=0 N) "\\}" (dec 'N) "}"))
-                           ("~" "\\char126")
-                           (T (car L)) ) ) ) ) )
-            (do N (prin "}")) ) ) ) )
+   (for C (chop X)
+      (cond
+         ((sub? C "#$%&_{}")
+            (prin "\\" C) )
+         ((sub? C "<²>")
+            (prin "$" C "$") )
+         (T
+            (prin
+               (case C
+                  (`(char 8364) "\\EUR")
+                  ("\"" "\\char34")
+                  ("\\" "$\\backslash$")
+                  ("\^" "\\char94")
+                  ("~" "\\char126")
+                  (T C) ) ) ) ) ) ) )
 
 
 ### TeX Document ###
