@@ -1,4 +1,4 @@
-# 10may11abu
+# 27jul11abu
 # (c) Software Lab. Alexander Burger
 
 # Convert to PDF document
@@ -91,24 +91,24 @@
       (pack "latex -interaction=batchmode " Doc ".tex >/dev/null") )
    (call 'rm (pack Doc ".aux") (pack Doc ".log")) )
 
-(de \block (S . Prg)
+(de \\block (S . Prg)
    (prinl "\\begin{" S "}")
    (prEval Prg 2)
    (prinl "\\end{" S "}") )
 
 
 ### Tabular environment ###
-(de \table (Fmt . Prg)
+(de \\table (Fmt . Prg)
    (prinl "\\begin{tabular}[c]{" Fmt "}")
    (prEval Prg 2)
    (prinl "\\end{tabular}") )
 
-(de \carry ()
+(de \\carry ()
    (prinl "\\end{tabular}")
    (prinl)
    (prinl "\\begin{tabular}[c]{" "Fmt" "}") )
 
-(de \head @
+(de \\head @
    (prin "\\textbf{" (next) "}")
    (while (args)
       (prin " & \\textbf{")
@@ -116,7 +116,7 @@
       (prin "}") )
    (prinl "\\\\") )
 
-(de \row @
+(de \\row @
    (when (=0 (next))
       (next)
       (prin "\\raggedleft ") )
@@ -137,15 +137,15 @@
          (prin "}") ) )
    (prinl "\\\\") )
 
-(de \hline ()
+(de \\hline ()
    (prinl "\\hline") )
 
-(de \cline (C1 C2)
+(de \\cline (C1 C2)
    (prinl "\\cline{" C1 "-" C2 "}") )
 
 
 ### Letter Document Class ###
-(de \letter (Lst . Prg)
+(de \\letter (Lst . Prg)
    (prin "\\begin{letter}{" (pop 'Lst))
    (while Lst
       (when (pop 'Lst)
@@ -154,11 +154,11 @@
    (prEval Prg 2)
    (prinl "\\end{letter}") )
 
-(de \signature (S)
+(de \\signature (S)
    (tex "signature" S) )
 
-(de \opening (S)
+(de \\opening (S)
    (tex "opening" S) )
 
-(de \closing (S)
+(de \\closing (S)
    (tex "closing" S) )
