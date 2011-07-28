@@ -1,4 +1,4 @@
-# 27jul11abu
+# 28jul11abu
 # (c) Software Lab. Alexander Burger
 
 # Convert to PDF document
@@ -18,7 +18,7 @@
    (prinl) )
 
 (de tex (S  . @)
-   (prin "\\" S)
+   (prin "\\" (or S (next)))
    (when (args)
       (prin "{")
       (_tex (next))
@@ -27,16 +27,17 @@
             (prin "\\\\")
             (_tex (arg)) ) )
       (prin "}") )
-   (prinl) )
+   (and S (prinl)) )
 
 (de texl (S Lst)
-   (prin "\\" S "{")
+   (prin "\\" (or S (next)) "{")
    (_tex (pop 'Lst))
    (while Lst
       (when (pop 'Lst)
          (prin "\\\\")
          (_tex @) ) )
-   (prinl "}") )
+   (prin "}")
+   (and S (prinl)) )
 
 (de _tex (X)
    (for C (chop X)
