@@ -12,34 +12,30 @@
          (pack Doc ".dvi")
          (pack Doc ".ps") ) ) )
 
-# Tex Formatter
-(de texFmt (S)
-   (_tex S)
-   (prinl) )
-
+# Tex Formatting
 (de tex (S  . @)
    (prin "\\" (or S (next)))
    (when (args)
       (prin "{")
-      (_tex (next))
+      (texPrin (next))
       (while (args)
          (when (next)
             (prin "\\\\")
-            (_tex (arg)) ) )
+            (texPrin (arg)) ) )
       (prin "}") )
    (and S (prinl)) )
 
 (de texl (S Lst)
    (prin "\\" (or S (next)) "{")
-   (_tex (pop 'Lst))
+   (texPrin (pop 'Lst))
    (while Lst
       (when (pop 'Lst)
          (prin "\\\\")
-         (_tex @) ) )
+         (texPrin @) ) )
    (prin "}")
    (and S (prinl)) )
 
-(de _tex (X)
+(de texPrin (X)
    (for C (chop X)
       (cond
          ((sub? C "#$%&_{}")
@@ -93,7 +89,7 @@
    (prin "\\textbf{" (next) "}")
    (while (args)
       (prin " & \\textbf{")
-      (_tex (next))
+      (texPrin (next))
       (prin "}") )
    (prinl "\\\\") )
 
@@ -102,9 +98,9 @@
       (next)
       (prin "\\raggedleft ") )
    (ifn (=T (arg))
-      (_tex (arg))
+      (texPrin (arg))
       (prin "\\textbf{")
-      (_tex (next))
+      (texPrin (next))
       (prin "}") )
    (while (args)
       (prin " & ")
@@ -112,9 +108,9 @@
          (next)
          (prin "\\raggedleft ") )
       (ifn (=T (arg))
-         (_tex (arg))
+         (texPrin (arg))
          (prin "\\textbf{")
-         (_tex (next))
+         (texPrin (next))
          (prin "}") ) )
    (prinl "\\\\") )
 
