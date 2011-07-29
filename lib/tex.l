@@ -40,21 +40,22 @@
    (and S (prinl)) )
 
 (de texPrin (X)
-   (for C (chop X)
-      (cond
-         ((sub? C "#$%&_{}")
-            (prin "\\" C) )
-         ((sub? C "<²>")
-            (prin "$" C "$") )
-         (T
-            (prin
-               (case C
-                  (`(char 8364) "\\EUR")
-                  ("\"" "\\char34")
-                  ("\\" "$\\backslash$")
-                  ("\^" "\\char94")
-                  ("~" "\\char126")
-                  (T C) ) ) ) ) ) ) )
+   (let Q NIL
+      (for C (chop X)
+         (cond
+            ((sub? C "#$%&_{}")
+               (prin "\\" C) )
+            ((sub? C "<²>")
+               (prin "$" C "$") )
+            (T
+               (prin
+                  (case C
+                     (`(char 8364) "\\EUR")
+                     ("\"" (if (onOff Q) "``" "''"))
+                     ("\\" "$\\backslash$")
+                     ("\^" "\\char94")
+                     ("~" "\\char126")
+                     (T C) ) ) ) ) ) ) )
 
 
 ### TeX Document ###
