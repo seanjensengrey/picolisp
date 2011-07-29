@@ -77,6 +77,11 @@
    (prEval Prg 2)
    (prinl "\\end{" S "}") )
 
+(de \\figure (S . Prg)
+   (prinl "\\begin{figure}" S)
+   (prEval Prg 2)
+   (prinl "\\end{figure}") )
+
 
 ### Tabular environment ###
 (de \\table (Fmt . Prg)
