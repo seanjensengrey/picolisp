@@ -1,4 +1,4 @@
-# 23jun11abu
+# 05aug11abu
 # (c) Software Lab. Alexander Burger
 
 # *Home *Gate *Host *Port *Port1 *Port% *Http1 *Chunked
@@ -209,14 +209,12 @@
                      ((match '("-" @X "." "h" "t" "m" "l") @U)
                         (and *SesId (timeout *Timeout))
                         (try 'html> (extern (ht:Pack @X))) )
-                     ((= '! (car @U))
-                        (if (disallowed)
-                           (prog (notAllowed *Url) (http404))
-                           (and *SesId (timeout *Timeout))
-                           (apply (val (intern (ht:Pack (cdr @U)))) L) ) )
                      ((disallowed)
                         (notAllowed *Url)
                         (http404) )
+                     ((= '! (car @U))
+                        (and *SesId (timeout *Timeout))
+                        (apply (val (intern (ht:Pack (cdr @U)))) L) )
                      ((tail '("." "l") @U)
                         (and *SesId (timeout *Timeout))
                         (apply script L *Url) )
