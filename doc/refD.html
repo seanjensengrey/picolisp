@@ -203,14 +203,14 @@ href="refD.html#datStr">datStr</a></code>.
 <dt><code>(date 'dat) -> (y m d)</code>
 <dt><code>(date 'y 'm 'd) -> dat | NIL</code>
 <dt><code>(date '(y m d)) -> dat | NIL</code>
-<dd>Calculates a (gregorian) calendar date, represented as the number of days
-since first of March in the year 0. When called without arguments, the current
-date is returned. When called with a <code>T</code> argument, the current
-Coordinated Universal Time (UTC) is returned. When called with a single number
-<code>dat</code>, it is taken as a date and a list with the corresponding year,
-month and day is returned. When called with three numbers (or a list of three
-numbers) for the year, month and day, the corresponding date is returned (or
-<code>NIL</code> if they do not represent a legal date). See also <code><a
+<dd>Calculates a (gregorian) calendar date. It is represented as a day number,
+starting first of March of the year 0 AD. When called without arguments, the
+current date is returned. When called with a <code>T</code> argument, the
+current Coordinated Universal Time (UTC) is returned. When called with a single
+number <code>dat</code>, it is taken as a date and a list with the corresponding
+year, month and day is returned. When called with three numbers (or a list of
+three numbers) for the year, month and day, the corresponding date is returned
+(or <code>NIL</code> if they do not represent a legal date). See also <code><a
 href="refT.html#time">time</a></code>, <code><a
 href="refS.html#stamp">stamp</a></code>, <code><a
 href="ref_.html#$dat">$dat</a></code>, <code><a
