@@ -643,9 +643,9 @@ symbols and lists) and for read-macros:
 -> -12345678901245678901234567890
 </code></pre>
 
-<p>Fixed-point numbers can be input by embedding a decimal point
-'<code>.</code>', and setting the global variable <code><a
-href="refS.html#*Scl">*Scl</a></code> appropriately:
+<p>Fixpoint numbers can be input by embedding a decimal point '<code>.</code>',
+and setting the global variable <code><a href="refS.html#*Scl">*Scl</a></code>
+appropriately:
 
 <pre><code>
 : *Scl
@@ -664,11 +664,11 @@ href="refS.html#*Scl">*Scl</a></code> appropriately:
 -> 456780
 </code></pre>
 
-<p>Thus, fixed-point input simply scales the number to an integer value
+<p>Thus, fixpoint input simply scales the number to an integer value
 corresponding to the number of digits in <code><a
 href="refS.html#*Scl">*Scl</a></code>.
 
-<p>Formatted output of scaled fixed-point values can be done with the <code><a
+<p>Formatted output of scaled fixpoint values can be done with the <code><a
 href="refF.html#format">format</a></code> and <code><a
 href="refR.html#round">round</a></code> functions:
 
@@ -1516,7 +1516,7 @@ include
    <dt><code><a href="refS.html#+String">+String</a></code>
    <dd>Strings (just a general case of symbols)
    <dt><code><a href="refN.html#+Number">+Number</a></code>
-   <dd>Integers and fixed-point numbers
+   <dd>Integers and fixpoint numbers
    <dt><code><a href="refD.html#+Date">+Date</a></code>
    <dd>Calendar date values, represented by a number
    <dt><code><a href="refT.html#+Time">+Time</a></code>
