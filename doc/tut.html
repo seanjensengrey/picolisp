@@ -51,10 +51,8 @@ arrows),</li>
 to make <code>&quot;</code> appear).</li>
 </ul>
 
-<p>We notice that some people try to use Emacs - or some other IDE - as a
-front-end to the PicoLisp console. This is not recommended, because the PicoLisp
-debugging environment will set the console (tty) to raw mode by itself and do
-the special handling seen above during character input.
+<p>If you prefer to use Emacs, please use the picolisp-mode bundled in
+"@lib/el".
 
 <p>If you feel that you absolutely have to use an IDE, <code>rlwrap</code> or
 another input front-end, please remove the entry "@lib/led.l" from "lib.l" and
@@ -222,11 +220,6 @@ path names in the file system) matching the partial input are shown in sequence.
 <li>ESC terminates <i>Input Mode</i> and enters <i>Command Mode</i>
 
 </ul>
-
-<h3>Behaviour of double-quoted strings</h3>
-
-Don't try to display &quot; in the REPL, it may be removed and the string you
-wanted to quote will be underlined. Just close with another &quot; keystroke.
 
 <h3>Conclusion</h3>
 
