@@ -1,4 +1,4 @@
-/* 27jul11abu
+/* 18aug11abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -247,9 +247,11 @@ void flushAll(void) {
 static int stdinByte(void) {
    inFile *p;
 
-   if (!(p = InFiles[STDIN_FILENO]) || p->ix == p->cnt && (p->ix < 0 || !slow(p,NO)))
-      bye(0);
-   return p->buf[p->ix++];
+   if ((p = InFiles[STDIN_FILENO]) && (p->ix != p->cnt || (p->ix >= 0 && slow(p,NO))))
+      return p->buf[p->ix++];
+   if (!isatty(STDIN_FILENO))
+      return -1;
+   bye(0);
 }
 
 static int getBinary(void) {

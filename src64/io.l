@@ -1,4 +1,4 @@
-# 27jul11abu
+# 18aug11abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -433,6 +433,13 @@
          pop Z
          ret
       end
+   end
+   cc isatty(0)  # STDIN
+   nul4  # on a tty?
+   if z  # No
+      ld A -1  # Return EOF
+      pop Z
+      ret
    end
    ld E 0  # Exit OK
    jmp byeE
