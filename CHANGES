@@ -1,4 +1,5 @@
 * XXsep11 picoLisp-3.0.8
+   Bug in 'rand' (64-bit)
    EOF bug in pipes to stdin
    'clause' function
    'prop' and '::' cons default cell
