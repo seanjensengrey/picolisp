@@ -1,4 +1,4 @@
-# 20jun11abu
+# 24aug11abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -186,8 +186,7 @@
 
 (code 'execErrS)
    cc fprintf((stderr) ExecErr (S))
-   ld E 127
-   jmp finishE
+   cc exit(127)
 
 # Install interrupting signal
 (code 'iSignalCE)

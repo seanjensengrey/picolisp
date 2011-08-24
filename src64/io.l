@@ -1,4 +1,4 @@
-# 18aug11abu
+# 24aug11abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -1469,7 +1469,8 @@
                   ld4 (S 4)  # Close write pipe
                   call closeAX
                end
-               cc execvp((S 8) &(S 8))  # Execute program
+               add S I  # Drop 'pipe' structure
+               cc execvp((S) S)  # Execute program
                jmp execErrS  # Error if failed
             end
             cc setpgid(A 0)  # Set process group
@@ -1601,7 +1602,8 @@
                   ld4 (S)  # Close read pipe
                   call closeAX
                end
-               cc execvp((S 8) &(S 8))  # Execute program
+               add S I  # Drop 'pipe' structure
+               cc execvp((S) S)  # Execute program
                jmp execErrS  # Error if failed
             end
             cc setpgid(A 0)  # Set process group
