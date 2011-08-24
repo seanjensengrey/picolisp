@@ -1,4 +1,4 @@
-# 06apr11abu
+# 24aug11abu
 # (c) Software Lab. Alexander Burger
 
 # Debug print routine
@@ -277,7 +277,7 @@
          ret
       end
    loop
-   pop A  # Drop target frame
+   add S I  # Drop target frame
    do  # Top level bindings
       null Y  # Any?
    while nz  # Yes

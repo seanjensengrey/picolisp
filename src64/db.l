@@ -1,4 +1,4 @@
-# 04jul11abu
+# 24aug11abu
 # (c) Software Lab. Alexander Burger
 
 # 6 bytes in little endian format
@@ -1122,7 +1122,7 @@
       add X BLKSIZE  # Increment block index
       cmp X Y  # Less than 'next'?
       if ge  # No
-         pop A  # Drop file number
+         add S I  # Drop file number
          ld E Nil  # Return NIL
          break T
       end
@@ -1309,7 +1309,7 @@
          end
       loop
       pop A  # Get result
-      pop C  # Drop list head
+      add S I  # Drop list head
    end
    ret
 
@@ -1412,7 +1412,7 @@
       ld Z S  # Z on (last) argument
       call applyXYZ_E  # Apply
       pop Z  # Get symbol
-      pop A  # Drop 'fun'
+      add S I  # Drop 'fun'
       pop Y  # Get name
       ld (Z) (E)  # Set symbol's value
       ld E (E CDR)  # Properties?
@@ -1613,7 +1613,7 @@
             while nc
                call rdBlockLinkZ_Z  # Read next block
             loop
-            pop A  # Drop count
+            add S I  # Drop count
          end
          add X VIII  # Increment by sizeof(dbFile)
          sub Y VIII  # Done?
@@ -2037,7 +2037,7 @@
       end
       ld E TSym  # Return T
    end
-   pop A  # Drop second arg
+   add S I  # Drop second arg
    pop Y
    pop X
    ret
@@ -2239,10 +2239,7 @@
          ld (E CDR) (S II)  # 'syms'
       end
    end
-90 pop A  # Drop 'next'
-   pop A  # and 'blks'
-   pop A  # and 'syms'
-   pop A  # and 'flg'
+90 add S IV  # Drop 'next', 'blks', 'syms' and 'flg'
    null (DbJnl)  # Journal?
    if nz  # Yes
       call unLockJnl  # Unlock journal

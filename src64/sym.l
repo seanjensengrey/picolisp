@@ -1,4 +1,4 @@
-# 22jul11abu
+# 24aug11abu
 # (c) Software Lab. Alexander Burger
 
 ### Compare long names ###
@@ -278,7 +278,7 @@
       mul 6364136223846793005  # Randomize
       cmp A E  # Equal to key?
       if eq  # Yes
-         pop A  # Drop name
+         add S I  # Drop name
          ld E (X)  # Found symbol
          ret
       end
@@ -1408,8 +1408,7 @@
       end
       ld (S) A
    loop
-   pop A  # Drop locals
-   pop A
+   add S II  # Drop locals
    pop Z
    pop Y
    pop X

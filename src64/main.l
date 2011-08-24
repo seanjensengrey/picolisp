@@ -1143,7 +1143,7 @@
       ld (EnvBind) L  # Close bind frame
       push 0  # Init env swap
       prog Z  # Run body
-      pop A  # Drop env swap
+      add S I  # Drop env swap
       pop L  # Get link
       do  # Unbind symbols
          pop X  # Next symbol
@@ -1177,7 +1177,7 @@
       ld (EnvBind) L  # Close bind frame
       push 0  # Init env swap
       prog Z  # Run body
-      pop A  # Drop env swap
+      add S I  # Drop env swap
       pop L  # Get link
       do  # Unbind symbols
          pop X  # Next symbol
@@ -1233,7 +1233,7 @@
    end
    pop (EnvArgs)  # Restore varArgs base
    pop (EnvNext)   # and 'next'
-   pop A  # Drop env swap
+   add S I  # Drop env swap
    pop L  # Get link
    do  # Unbind symbols
       pop X  # Next symbol
@@ -1659,7 +1659,7 @@
    loop
    ld E (Z -II)  # Get result
    drop
-   pop A  # Drop library handle
+   add S I  # Drop library handle
    pop Z
    pop Y
    pop X

@@ -792,7 +792,7 @@
             until z  # No
             sub (S I) 255  # Decrement counter
          loop
-         pop A  # Drop second count
+         add S I  # Drop second count
          ld A (S)  # Retrieve count
          call (PutBinBZ)  # Output last count
          do
@@ -801,7 +801,7 @@
             call prByteCEXY  # Output next data byte
          loop
       end
-      pop A  # Drop count
+      add S I  # Drop count
       pop Y
       pop X
       ret
@@ -1479,7 +1479,7 @@
             ld4 (S)  # Get read pipe
             ld (Y I) A  # Set 'fd'
             call initInFileA_A
-            pop A  # Drop 'pipe' structure
+            add S I  # Drop 'pipe' structure
             do
                ld S Z  # Clean up buffers
                pop Z  # Chain
@@ -1612,7 +1612,7 @@
             ld4 (S 4)  # Get write pipe
             ld (Y I) A  # Set 'fd'
             call initOutFileA_A
-            pop C  # Drop 'pipe' structure
+            add S I  # Drop 'pipe' structure
             do
                ld S Z  # Clean up buffers
                pop Z  # Chain
@@ -3155,7 +3155,7 @@
       end
       ld (S) A  # New milliseconds
    loop
-   pop A  # Drop milliseconds
+   add S I  # Drop milliseconds
    pop Z
    pop Y
    pop X
@@ -3927,7 +3927,7 @@
          ld E (L I)  # Get result
          drop
       end
-      pop A  # Drop set
+      add S I  # Drop set
       pop X
    end
    drop

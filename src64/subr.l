@@ -1,4 +1,4 @@
-# 21apr11abu
+# 24aug11abu
 # (c) Software Lab. Alexander Burger
 
 # (car 'var) -> any
@@ -1779,7 +1779,7 @@
          ld E (S)  # Get CAR
          call isBlankE_F  # Blank?
          if eq  # Yes
-            pop A  # Drop CAR
+            add S I  # Drop CAR
             ld E Nil  # Return NIL
             ret
          end
@@ -3511,7 +3511,7 @@
             jlt stkErr
             call unifyCEYZ_F  # Match?
             if eq  # Yes
-               pop A  # Drop pilog environment
+               add S I  # Drop pilog environment
                ret  # 'z'
             end
          end
