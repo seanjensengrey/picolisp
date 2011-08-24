@@ -631,9 +631,13 @@ href="ref.html#num-io">fixpoint numbers</a>, with unlimited precision.
 
 <p>The reasons for this design decision are manifold. Floating point numbers
 smack of imperfection, they don't give "exact" results, have limited precision
-and range, and require an extra data type. For fixpoint support, the system must
-handle just integer arithmetics, I/O and string conversions. The rest is under
-programmer's control and responsibility (the essence of PicoLisp).
+and range, and require an extra data type. It is hard to understand what really
+goes on (How many digits of precision do we have today? Are perhaps 10-byte
+floats used for intermediate results? How does rounding behave?).
+
+<p>For fixpoint support, the system must handle just integer arithmetics, I/O
+and string conversions. The rest is under programmer's control and
+responsibility (the essence of PicoLisp).
 
 <p>Carefully scaled fixpoint calculations can do anything floating points can
 do.
