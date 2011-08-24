@@ -1408,11 +1408,11 @@
       end
       ld (S) A
    loop
-   add S II  # Drop locals
+   lea S (S II)  # Drop locals
    pop Z
    pop Y
    pop X
-   ret
+   ret  # 'z' or 'nz'
 
 # (pre? 'any1 'any2) -> any2 | NIL
 (code 'doPreQ 2)

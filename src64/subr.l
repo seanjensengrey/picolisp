@@ -3511,7 +3511,7 @@
             jlt stkErr
             call unifyCEYZ_F  # Match?
             if eq  # Yes
-               add S I  # Drop pilog environment
+               lea S (S I)  # Drop pilog environment
                ret  # 'z'
             end
          end
