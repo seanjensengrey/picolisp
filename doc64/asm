@@ -1,4 +1,4 @@
-# 24aug11abu
+# 25aug11abu
 # (c) Software Lab. Alexander Burger
 
 
@@ -99,10 +99,10 @@
       load dst end src  # Load 'dst'..'end' from 'src' (non-overlapping)
 
    Arithmetics:
-      add dst src       # Add 'src' to 'dst'
-      addc dst src      # Add 'src' to 'dst' with Carry
-      sub dst src       # Subtract 'src' from 'dst'
-      subc dst src      # Subtract 'src' from 'dst' with Carry
+      add dst src       # Add 'src' to 'dst' [zsc]
+      addc dst src      # Add 'src' to 'dst' with Carry [zsc]
+      sub dst src       # Subtract 'src' from 'dst' [zsc]
+      subc dst src      # Subtract 'src' from 'dst' with Carry [zsc]
 
       inc dst           # Increment 'dst' [zs.]
       dec dst           # Increment 'dst' [zs.]
