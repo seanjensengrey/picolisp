@@ -1,4 +1,6 @@
 * XXsep11 picoLisp-3.0.8
+   GC bug in 64-bit bignums
+   Bug in 64-bit 'exec' error handling
    Bug in 'rand' (64-bit)
    EOF bug in pipes to stdin
    'clause' function
