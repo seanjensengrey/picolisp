@@ -1,4 +1,4 @@
-# 25aug11abu
+# 01sep11abu
 # Amit Kulkarni <amitkulz@gmail.com>
 # (c) Software Lab. Alexander Burger
 
@@ -6,7 +6,7 @@
 (equ ENOENT 2)       # No such file or directory
 (equ EINTR 4)        # Interrupted system call
 (equ EBADF 9)        # Bad file number
-(equ EAGAIN 11)      # Try again
+(equ EAGAIN 35)      # Try again
 (equ EACCES 13)      # Permission denied
 (equ EPIPE 32)       # Broken pipe
 (equ ECONNRESET 54)  # Connection reset by peer
@@ -15,10 +15,10 @@
 (equ O_RDONLY 0)
 (equ O_WRONLY 1)
 (equ O_RDWR 2)
-(equ O_CREAT 64)
-(equ O_EXCL 128)
-(equ O_TRUNC 512)
-(equ O_APPEND 1024)
+(equ O_CREAT 512)
+(equ O_EXCL 2048)
+(equ O_TRUNC 1024)
+(equ O_APPEND 8)
 (equ F_GETFD 1)
 (equ F_SETFD 2)
 (equ FD_CLOEXEC 1)
@@ -90,19 +90,19 @@
 
 (equ SIGHUP 1)  # Signals
 (equ SIGINT 2)
-(equ SIGUSR1 10)
-(equ SIGUSR2 12)
+(equ SIGUSR1 30)
+(equ SIGUSR2 31)
 (equ SIGPIPE 13)
 (equ SIGALRM 14)
 (equ SIGTERM 15)
-(equ SIGCHLD 17)
-(equ SIGCONT 18)
-(equ SIGSTOP 19)
-(equ SIGTSTP 20)
+(equ SIGCHLD 20)
+(equ SIGCONT 19)
+(equ SIGSTOP 17)
+(equ SIGTSTP 18)
 (equ SIGTTIN 21)
 (equ SIGTTOU 22)
-(equ SIGIO 29)
-(equ SIGNALS 30)  # Highest used signal number plus 1
+(equ SIGIO 23)
+(equ SIGNALS 31)  # Highest used signal number plus 1
 
 # wait
 (equ WNOHANG 1)
