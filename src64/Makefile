@@ -1,4 +1,4 @@
-# 29aug11abu
+# 06sep11abu
 # (c) Software Lab. Alexander Burger
 
 .SILENT:
@@ -45,8 +45,8 @@ ifeq ($(UNAME), Linux)
 		AS = as -mppc64 -a64
 	endif
 	endif
-	LD-MAIN = gcc -m64 -rdynamic -lc -lm -ldl
-	LD-SHARED = gcc -m64 -shared -export-dynamic
+	LD-MAIN = -m64 -rdynamic -lc -lm -ldl
+	LD-SHARED = -m64 -shared -export-dynamic
 	STRIP = strip
 else
 ifeq ($(UNAME), SunOS)
@@ -56,8 +56,8 @@ ifeq ($(UNAME), SunOS)
 	MKASM-BASE =
 	MKASM-LIB = -fpic
 	AS = gas --64
-	LD-MAIN = gcc -m64 -lc -lm -ldl -lsocket -lnsl
-	LD-SHARED = gcc -m64 -shared
+	LD-MAIN = -m64 -lc -lm -ldl -lsocket -lnsl
+	LD-SHARED = -m64 -shared
 	STRIP = strip
 else
 ifeq ($(UNAME), OpenBSD)
@@ -67,8 +67,8 @@ ifeq ($(UNAME), OpenBSD)
 	MKASM-BASE =
 	MKASM-LIB = -fpic
 	AS = as
-	LD-MAIN = gcc -m64 -rdynamic -lc -lm -ldl
-	LD-SHARED = gcc -m64 -shared
+	LD-MAIN = -m64 -rdynamic -lc -lm
+	LD-SHARED = -m64 -shared
 	STRIP = strip
 endif
 endif
@@ -90,15 +90,15 @@ picolisp: $(bin)/picolisp $(lib)/ext $(lib)/ht
 
 $(bin)/picolisp: $(ARCH).$(SYS).base.o
 	mkdir -p $(bin) $(lib)
-	$(LD-MAIN) -o $(bin)/picolisp $(ARCH).$(SYS).base.o
+	gcc -o $(bin)/picolisp $(ARCH).$(SYS).base.o $(LD-MAIN)
 	$(STRIP) $(bin)/picolisp
 
 $(lib)/ext: $(ARCH).$(SYS).ext.o
-	$(LD-SHARED) -o $(lib)/ext $(ARCH).$(SYS).ext.o
+	gcc -o $(lib)/ext $(ARCH).$(SYS).ext.o $(LD-SHARED)
 	$(STRIP) $(lib)/ext
 
 $(lib)/ht: $(ARCH).$(SYS).ht.o
-	$(LD-SHARED) -o $(lib)/ht $(ARCH).$(SYS).ht.o
+	gcc -o $(lib)/ht $(ARCH).$(SYS).ht.o $(LD-SHARED)
 	$(STRIP) $(lib)/ht
 
 .s.o:

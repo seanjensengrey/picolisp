@@ -1,4 +1,4 @@
-# 01sep11abu
+# 06sep11abu
 # Amit Kulkarni <amitkulz@gmail.com>
 # (c) Software Lab. Alexander Burger
 
@@ -26,6 +26,10 @@
 # stdio
 (equ BUFSIZ 1024)
 (equ PIPE_BUF 512)
+
+(equ stdin  "$__sF")
+(equ stdout "$__sF+128")
+(equ stderr "$__sF+256")
 
 (equ MAXPATHLEN 1024)
 
