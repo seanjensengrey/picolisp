@@ -1,4 +1,4 @@
-# 11jul11abu
+# 07sep11abu
 # (c) Software Lab. Alexander Burger
 
 ### alarm ###
@@ -11,7 +11,7 @@
 
 
 ### sigio ###
-(unless (= *OS "SunOS")
+(unless (member *OS '("SunOS" "OpenBSD"))
    (off "SigVal")
    (sigio (setq "SigSock" (port T 0 "SigPort"))
       (setq "SigVal" (udp "SigSock")) )
