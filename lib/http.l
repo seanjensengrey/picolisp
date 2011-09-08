@@ -1,4 +1,4 @@
-# 05aug11abu
+# 08sep11abu
 # (c) Software Lab. Alexander Burger
 
 # *Home *Gate *Host *Port *Port1 *Port% *Http1 *Chunked
@@ -119,7 +119,8 @@
             (find pre? (cdr *Allow) (circ *Url)) ) ) ) )
 
 (de notAllowed (X S)
-   (msg X S " [" *Adr "] not allowed") )
+   (unless (= X "favicon.ico")
+      (msg X S " [" *Adr "] not allowed") ) )
 
 # Application startup
 (de app ()
