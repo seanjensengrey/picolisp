@@ -1,4 +1,4 @@
-# 27aug11abu
+# 07sep11abu
 # Amit Kulkarni <amitkulz@gmail.com>
 # (c) Software Lab. Alexander Burger
 
@@ -21,21 +21,21 @@
    ret
 
 (code 'wifstoppedS_F 0)  # WIFSTOPPED
-   ld A 0
-   cc WIFSTOPPED((S I))  # Get status
-   nul4
+   ld A (S I)  # Get status
+   cmp B `(hex "7F")  # (((status) & 0xff) == 0x7f)
    ret
 
 (code 'wifsignaledS_F 0)  # WIFSIGNALED
-   ld A 0
-   cc WIFSIGNALED((S I))  # Get status
-   nul4
+   ld A (S I)  # Get status
+   and B `(hex "7F")  # (((status) & 0x7f) + 1) >> 1) > 0)
+   inc B
+   shr B 1
    ret
 
 (code 'wtermsigS_A 0)  # WTERMSIG
-   ld A 0
-   cc WTERMSIG((S I))  # Get status
-   nul4
+   ld A (S I)  # Get status
+   and B `(hex "7F")  # ((status) & 0x7f)
+   zxt
    ret
 
 # vi:et:ts=3:sw=3
