@@ -1,4 +1,4 @@
-/* 09jul11abu
+/* 08sep11abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -1118,10 +1118,10 @@ any doBitXor(any ex) {
 }
 
 /* Random numbers */
-static u_int64_t Seed;
+static uint64_t Seed;
 
-static u_int64_t initSeed(any x) {
-   u_int64_t n;
+static uint64_t initSeed(any x) {
+   uint64_t n;
 
    for (n = 0; isCell(x); x = cdr(x))
       n += initSeed(car(x));

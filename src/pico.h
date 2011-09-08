@@ -1,8 +1,9 @@
-/* 22jul11abu
+/* 08sep11abu
  * (c) Software Lab. Alexander Burger
  */
 
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #include <unistd.h>
