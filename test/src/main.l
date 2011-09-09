@@ -1,5 +1,11 @@
-# 07sep11abu
+# 09sep11abu
 # (c) Software Lab. Alexander Burger
+
+### Evaluation ###
+(test 2
+   (when 1
+      ('((N) N) (and 2))
+      @ ) )
 
 ### alarm ###
 (let N 6
