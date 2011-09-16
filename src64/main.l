@@ -1,4 +1,4 @@
-# 24aug11abu
+# 16sep11abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -89,10 +89,10 @@
    ld L 0  # Init link register
    call heapAlloc  # Allocate initial heap
    ld E Nil  # Init internal symbols
-   lea Z (E IV)  # Skip padding
+   lea Z (E VI)  # Skip padding and 'pico' cell
    do
       ld X (E TAIL)  # Get name
-      ld Y Intern
+      ld Y "pico-24"  # From initial symbol namespace
       call internEXY_FE  # Store to internals
       ld E Z
       cnt (Z TAIL)  # Short name?

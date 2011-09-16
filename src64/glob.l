@@ -1,4 +1,4 @@
-# 09jul11abu
+# 16sep11abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Data)
@@ -71,8 +71,7 @@
 : DbLog        word  0           # Transaction log file
 
 # GC relevant data
-:: Intern      word  Nil         # Short internal names
-               word  Nil         # Long internal names
+:: Intern      word  pico        # Current namespace of internal symbols
 :: Transient   word  Nil         # Short transient names
                word  Nil         # Long transient names
 : Alarm        word  Nil         # Alarm handler
@@ -136,7 +135,11 @@
                word  Nil         # CDR when NIL is accessed as an empty list
                word  0           # Padding
 
+               word  Nil         # Short internal names
+               word  Nil         # Long internal names
+
    # Protected symbols
+   initSym pico      "pico"      .-24
    initSym OS        "*OS"       TgOS
    initSym DB        "*DB"       Db1
    initFun Meth      "meth"      doMeth
@@ -306,6 +309,7 @@
    initFun NIL       "fun?"      doFunQ
    initFun NIL       "getd"      doGetd
    initFun NIL       "all"       doAll
+   initFun NIL       "symbols"   doSymbols
    initFun NIL       "intern"    doIntern
    initFun NIL       "extern"    doExtern
    initFun NIL       "===="      doHide
@@ -1177,6 +1181,7 @@
 : ErrTok asciz "!? "
 : Dashes asciz " -- "
 : ProtErr asciz "Protected symbol"
+: SymNsErr asciz "Bad symbol namespace"
 : StkErr asciz "Stack overflow"
 : ArgErr asciz "Bad argument"
 : NumErr asciz "Number expected"

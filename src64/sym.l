@@ -1,4 +1,4 @@
-# 24aug11abu
+# 16sep11abu
 # (c) Software Lab. Alexander Burger
 
 ### Compare long names ###
@@ -256,7 +256,7 @@
 
 (code 'findSymX_E 0)  # Y
    ld E 0  # No symbol yet
-   ld Y Intern
+   ld Y ((Intern))
    call internEXY_FE  # New internal symbol?
    jnc Ret  # No
    ld (E) Nil  # Init to 'NIL'
@@ -534,7 +534,7 @@
       push Y
       ld X (E TAIL)
       call nameX_X  # Get name
-      ld Y Intern  # Internal symbol?
+      ld Y ((Intern))  # Internal symbol?
       call isInternEXY_F
       pop Y
       pop X
@@ -786,8 +786,8 @@
       cmp (E) Nil  # Internal trees?
       if eq  # Yes
          cmp (E CDR) Nil  # Short names?
-         ldz E (Intern)  # Yes
-         ldnz E (Intern I)
+         ldz E (((Intern)))  # Yes
+         ldnz E (((Intern)) I)
       else
          cmp (E) TSym  # Transient trees?
          ldnz E Extern  # No: External symbols
@@ -800,9 +800,9 @@
    else
       cmp E Nil  # Nil?
       if eq  # Yes
-         ld X (Intern I)  # Internal symbols
+         ld X (((Intern)) I)  # Internal symbols
          call consTreeXE_E
-         ld X (Intern)
+         ld X (((Intern)))
       else
          cmp E TSym  # T?
          if eq  # Yes
@@ -879,6 +879,56 @@
 90 drop  # Return E
    ret
 
+# (symbols) -> sym
+# (symbols 'sym) -> sym
+# (symbols 'sym1 'sym2) -> sym
+(code 'doSymbols 2)
+   push X
+   push Y
+   ld X E
+   ld Y (E CDR)  # Y on args
+   atom Y  # Any?
+   if nz  # No
+      ld E (Intern)  # Return current symbol namespace
+   else
+      ld E (Y)  # Eval first
+      eval
+      num E  # Need symbol
+      jnz symErrEX
+      sym E
+      jz symErrEX
+      ld Y (Y CDR)  # Second arg?
+      atom Y  # Any?
+      if nz  # No
+         atom (E)  # Value must be a cell
+         jnz symNsErrEX
+         xchg (Intern) E  # Set new symbol namespace, return old
+      else
+         link
+         push E  # <L II> Save new symbol namespace
+         ld E (Y)
+         eval+  # Eval source symbol namespace
+         push E  # Save source
+         link
+         num E  # Need symbol
+         jnz symErrEX
+         sym E
+         jz symErrEX
+         ld C (E)  # Get source
+         atom C  # Must be a cell
+         jnz symNsErrEX
+         call copyC_E  # Copy source
+         ld A (L II)  # Get new symbol namespace
+         ld (A) E  # Store source copy
+         ld E (Intern)  # Return current symbol namespace
+         ld (Intern) A  # Store new
+         drop
+      end
+   end
+   pop Y
+   pop X
+   ret
+
 # (intern 'sym) -> sym
 (code 'doIntern 2)
    push X
@@ -894,7 +944,7 @@
    cmp X ZERO  # Any?
    if ne  # Yes
       push Y
-      ld Y Intern  # Insert internal
+      ld Y ((Intern))  # Insert internal
       call internEXY_FE
       pop Y
       pop X
@@ -1031,7 +1081,7 @@
    push Y
    ld X (E TAIL)  # Get name
    call nameX_X
-   ld Y Intern  # Internal symbol?
+   ld Y ((Intern))  # Internal symbol?
    call isInternEXY_F
    ldz E Nil  # Return NIL
    pop Y
@@ -1090,7 +1140,7 @@
       push Y
       ld X (E TAIL)
       call nameX_X  # Get name
-      ld Y Intern
+      ld Y ((Intern))
       call uninternEXY  # Unintern symbol
       pop Y
    end
