@@ -1,4 +1,4 @@
-# 16sep11abu
+# 20sep11abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -1521,7 +1521,7 @@
                      ld A E  # Byte value
                      shr A 4  # in B
                      do
-                        sub C 1  # Done?
+                        dec C  # Done?
                      while ns  # No
                         ld (Z) B  # Store byte in buffer
                         inc Z  # Increment buffer pointer

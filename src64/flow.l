@@ -1,4 +1,4 @@
-# 24aug11abu
+# 20sep11abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -3027,7 +3027,7 @@
    end
    do
       call space  # Output spaces
-      sub C 1  # 'cnt' times
+      dec C  # 'cnt' times
    until sz
    push E
    atom Y  # 'sym'?

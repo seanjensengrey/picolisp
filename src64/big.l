@@ -1,4 +1,4 @@
-# 26aug11abu
+# 20sep11abu
 # (c) Software Lab. Alexander Burger
 
 ### Destructive primitives ###
@@ -666,7 +666,7 @@
                ret
             end
             ld A (E DIG)  # Add carry to next digit
-            add A 1
+            inc A
          loop
       end
       ld C (A DIG)  # Add digits

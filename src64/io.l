@@ -1,4 +1,4 @@
-# 16sep11abu
+# 20sep11abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -4437,7 +4437,7 @@
          call evCntEX_FE  # Evaluate second
          ld A (Chr)  # Get Chr again
          do
-            sub Y 1  # Decrement first 'cnt'
+            dec Y  # Decrement first 'cnt'
          while ns
             null A  # EOF?
             if s  # Yes
@@ -4460,7 +4460,7 @@
                ret
             end
             call (PutB)  # Output byte
-            sub E 1  # Decrement 'cnt'
+            dec E  # Decrement 'cnt'
          while nz
             call (Get_A)  # Get next
          loop
@@ -5056,7 +5056,7 @@
       ld C E  # Keep in E
       call xCntCX_FC  # Get cnt
       do
-         sub C 1  # 'cnt' times
+         dec C  # 'cnt' times
       while ns
          call space  # Output spaces
       loop
