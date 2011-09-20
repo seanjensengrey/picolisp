@@ -1,4 +1,4 @@
-# 15apr11abu
+# 20sep11abu
 # (c) Software Lab. Alexander Burger
 
 (de task (Key . Prg)
@@ -64,6 +64,7 @@
 
 (====)
 
+### Definitions ###
 (de expr ("F")
    (set "F"
       (list '@ (list 'pass (box (getd "F")))) ) )
@@ -127,9 +128,6 @@
       (NIL (val "Var")) ) )
 
 (====)
-
-(de scl (N)
-   (setq *Scl N) )
 
 ### I/O ###
 (de tab (Lst . @)
@@ -265,6 +263,9 @@
    (apply meta X This) )
 
 ### Math ###
+(de scl (N)
+   (setq *Scl N) )
+
 (de sqrt (N F)
    (cond
       ((lt0 N) (quit "Bad argument" N))
