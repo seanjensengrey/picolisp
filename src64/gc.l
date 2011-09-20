@@ -1,4 +1,4 @@
-# 15sep11abu
+# 20sep11abu
 # (c) Software Lab. Alexander Burger
 
 # Mark data
@@ -1051,53 +1051,6 @@
    pop (E)  # Set new cell's CAR
    ld (E CDR) C  # Set CDR
    or E BIG  # Make number
-   ret
-
-# Deep copy of a cell structure
-(code 'copyC_E 0)
-   ld A (C)  # CAR
-   ld C (C CDR)  # CDR
-   atom A  # CAR atomic?
-   if nz  # Yes
-      atom C  # CDR also atomic?
-      if nz  # Yes
-         call cons_E
-         ld (E) A
-         ld (E CDR) C
-         ret
-      end
-      push A  # Save CAR
-      call copyC_E  # Recurse on CDR
-      ld C E  # Result in C
-      call consC_E
-      pop (E)  # Cons CAR
-      ld (E CDR) C
-      ret
-   end
-   atom C  # CDR atomic?
-   if nz  # Yes
-      push C  # Save CDR
-      ld C A  # Recurse on CAR
-      call copyC_E
-      ld A E  # Result in A
-      call consA_E
-      ld (E) A
-      pop (E CDR)  # Cons with CDR
-      ret
-   end
-   # Both are non-atomic
-   push A  # Save CAR
-   call copyC_E  # Recurse on CDR
-   pop C
-   link
-   push E  # <L I> Result
-   link
-   call copyC_E  # Recurse on CAR
-   ld A E  # Result in A
-   call consA_E
-   ld (E) A
-   ld (E CDR) (L I)  # Cons with CDR
-   drop
    ret
 
 # vi:et:ts=3:sw=3

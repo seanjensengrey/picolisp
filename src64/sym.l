@@ -820,6 +820,7 @@
    pop X
    ret
 
+# Build sorted list from tree
 (code 'consTreeXE_E 0)
    atom X  # Tree empty?
    jnz ret  # Yes
@@ -879,6 +880,54 @@
 90 drop  # Return E
    ret
 
+# Build balanced copy of a namespace
+(code 'balanceXY 0)  # ACE
+   ld E Nil  # Build list
+   call consTreeXE_E
+   link
+   push E  # <L I> Save list
+   link
+   ld A E  # Get list in A
+   ld C 0  # Calculate length
+   do
+      atom A  # More cells?
+   while z  # Yes
+      inc C  # Increment length
+      ld A (A CDR)  # Next cell
+   loop
+   call balanceCEY
+   drop
+   ret
+
+(code 'balanceCEY 0)
+   do
+      null C  # Length zero?
+      jz ret  # Yes
+      push C  # <S II> Save length
+      push E  # <S I> and list
+      inc C  # (length + 1) / 2
+      shr C 1
+      push C  # <S> Rest length
+      do
+         dec C  # nth
+      while nsz
+         ld E (E CDR)
+      loop
+      push (E CDR)  # Save rest
+      ld E (E)  # Next symbol
+      ld X (E TAIL)  # Get name
+      call nameX_X
+      call internEXY_FE  # Insert
+      pop E  # Retrieve rest
+      ld C (S II)  # Get length
+      sub C (S)  # minus rest length
+      call balanceCEY  # Recurse
+      pop C  # Retrieve rest length
+      dec C  # Decrement
+      pop E  # Retrieve list
+      add S I  # Drop length
+   loop  # Tail recurse
+
 # (symbols) -> sym
 # (symbols 'sym1) -> sym2
 # (symbols 'sym1 'sym2) -> sym3
@@ -902,13 +951,12 @@
       if nz  # No
          atom (E)  # Value must be a cell
          jnz symNsErrEX
-         xchg (Intern) E  # Set new symbol namespace, return old
       else
          link
          push E  # <L II> Save new symbol namespace
          ld E (Y)
          eval+  # Eval source symbol namespace
-         push E  # Save source
+         push E  # <L I> Source
          link
          num E  # Need symbol
          jnz symErrEX
@@ -917,13 +965,18 @@
          ld C (E)  # Get source
          atom C  # Must be a cell
          jnz symNsErrEX
-         call copyC_E  # Copy source
-         ld A (L II)  # Get new symbol namespace
-         ld (A) E  # Store source copy
-         ld E (Intern)  # Return old symbol namespace
-         ld (Intern) A  # Store new
+         ld X (C)  # Source short names
+         call cons_Y  # Create namespace cell
+         ld (Y) Nil  # Initialize
+         ld (Y CDR) Nil
+         ld ((L II)) Y  # Set in new symbol namespace
+         call balanceXY  # Balanced copy of short names
+         ld X (((L I)) CDR)  # Source long names
+         call balanceXY  # Balanced copy of long names
+         ld E (L II)  # Get new symbol namespace
          drop
       end
+      xchg (Intern) E  # Set new symbol namespace, return old
    end
    pop Y
    pop X
