@@ -1,4 +1,4 @@
-# 16sep11abu
+# 20sep11abu
 # (c) Software Lab. Alexander Burger
 
 ### Compare long names ###
@@ -880,8 +880,8 @@
    ret
 
 # (symbols) -> sym
-# (symbols 'sym) -> sym
-# (symbols 'sym1 'sym2) -> sym
+# (symbols 'sym1) -> sym2
+# (symbols 'sym1 'sym2) -> sym3
 (code 'doSymbols 2)
    push X
    push Y
@@ -920,7 +920,7 @@
          call copyC_E  # Copy source
          ld A (L II)  # Get new symbol namespace
          ld (A) E  # Store source copy
-         ld E (Intern)  # Return current symbol namespace
+         ld E (Intern)  # Return old symbol namespace
          ld (Intern) A  # Store new
          drop
       end

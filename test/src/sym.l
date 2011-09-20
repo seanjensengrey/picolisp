@@ -1,4 +1,4 @@
-# 13jul11abu
+# 20sep11abu
 # (c) Software Lab. Alexander Burger
 
 ### name ###
@@ -36,6 +36,18 @@
 (test '(test)
    (filter '((S) (= S "test")) (all)) )
 
+
+### symbols ###
+(when (== 64 64)
+   (test T (bool (pair pico)))
+   (test 'pico (symbols 'myLib 'pico)) )
+
+(when (== 64 64)
+   (one Foo)
+   (test 'myLib (symbols 'pico)) )
+
+(when (== 64 64)
+   (test 1 myLib~Foo) )
 
 ### intern ###
 (test car (val (intern (pack "c" "a" "r"))))

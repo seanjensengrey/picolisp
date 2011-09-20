@@ -896,6 +896,43 @@ href="refE.html#ext?">ext?</a></code>.
 -> NIL
 </code></pre>
 
+<dt><a name="symbols"><code>(symbols) -> sym</code></a>
+<dt><code>(symbols 'sym1) -> sym2</code>
+<dt><code>(symbols 'sym1 'sym2) -> sym3</code>
+<dd>(64-bit version only) Creates and manages namespaces of internal symbols: In
+the first form, the current namespace is returned. In the second form, the
+current namespace is set to <code>sym1</code>, and the previous namespace
+<code>sym2</code> is returned. In the third form, <code>sym1</code> is assigned
+a copy of an existing namespace <code>sym2</code> and becomes the new current
+namespace, returning the previous namespace <code>sym3</code>. See also <code><a
+href="refP.html#pico">pico</a></code> and <code><a
+href="refI.html#intern">intern</a></code>.
+
+<pre><code>
+: (symbols 'myLib 'pico)
+-> pico
+: (de foo (X)
+   (bar (inx X)) )
+-> foo
+
+: (symbols 'pico)
+-> myLib
+: (pp 'foo)
+(de foo . NIL)
+-> foo
+: (pp 'myLib~foo)
+(de "foo" (X)
+   ("bar" ("inx" X)) )
+-> "foo"
+
+: (symbols 'myLib)
+-> pico
+: (pp 'foo)
+(de foo (X)
+   (bar (inx X)) )
+-> foo
+</code></pre>
+
 <dt><a name="sync"><code>(sync) -> flg</code></a>
 <dd>Waits for pending data from all family processes. While other processes are
 still sending data (via the <code><a href="refT.html#tell">tell</a></code>
