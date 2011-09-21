@@ -1,4 +1,4 @@
-# 20sep11abu
+# 21sep11abu
 # (c) Software Lab. Alexander Burger
 
 ### Compare long names ###
@@ -881,7 +881,7 @@
    ret
 
 # Build balanced copy of a namespace
-(code 'balanceXY 0)  # ACE
+(code 'balanceXY)  # ACE
    ld E Nil  # Build list
    call consTreeXE_E
    link
