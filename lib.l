@@ -1,4 +1,4 @@
-# 20sep11abu
+# 21sep11abu
 # (c) Software Lab. Alexander Burger
 
 (de task (Key . Prg)
@@ -235,6 +235,11 @@
          (or
             (loc S (car X))
             (loc S (cdr X)) ) ) ) )
+
+(de import Lst
+   (for Sym Lst
+      (unless (== Sym (intern Sym))
+         (quit "Import conflict" Sym) ) ) )
 
 ### OOP ###
 (de class Lst
