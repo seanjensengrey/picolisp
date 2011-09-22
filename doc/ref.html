@@ -892,6 +892,20 @@ the list.
 -> (a b c d e f g h i)
 </code></pre>
 
+<p>When a tilde character is used to separate two symbol names (without
+surrounding whitespace), the first is taken as a namespace to look up the second
+(64-bit version only).
+
+<pre><code>
+: 'libA~foo  # Look up 'foo' in namespace 'libA'
+-> "foo"     # "foo" is not interned in the current namespace
+</code></pre>
+
+<p>Reading <code>libA~foo</code> is equivalent to switching the current
+namespace to <code>libA</code> (with <code><a
+href="refS.html#symbols">symbols</a></code>), reading the symbol
+<code>foo</code>, and then switching back to the original namespace.
+
 <p>Brackets ('<code>[</code>' and '<code>]</code>') can be used as super
 parentheses. A closing bracket will match the innermost opening bracket, or all
 currently open parentheses.
