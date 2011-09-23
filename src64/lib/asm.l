@@ -1,9 +1,9 @@
-# 23apr11abu
+# 23sep11abu
 # (c) Software Lab. Alexander Burger
 
 # *LittleEndian *AlignedCode *Registers optimize
 
-# *FPic *Section *Label *Tags *Program *Statement
+# *FPic *Section *Label *Srcs *Tags *Program *Statement
 # *Instructions *IfStack *DoStack
 # "*Mode" "*Modes"
 
@@ -41,16 +41,23 @@
    (ge jnc . jc) )
 
 (de build ("File" "Tags" . "Prg")
-   (off *Section *Tags *IfStack *DoStack)
+   (off *Section *Srcs *Tags *IfStack *DoStack)
    (out "File"
       (prinl "/* " (datSym (date)) " */")
       (run "Prg") )
    (when "Tags"
+      (out "tags"
+         (for Lbl (idx '*Srcs)
+            (let S (; Lbl src)
+               (prinl
+                  Lbl "^I"
+                  (pack (car S) (cadr S)) "^I"
+                  (cddr S) ) ) ) )
       (out "Tags"
          (for Sym (idx '*Tags)
             (and
                (sym? (val Sym))
-               (; Sym 0 src)
+               (; Sym 0 tag)
                (prinl Sym " (" (cdr @) " . \"@src64/" (car @) "\")") ) ) ) ) )
 
 (de asm Args
@@ -58,6 +65,9 @@
 
 (de fpic ()
    (on *FPic) )
+
+(de idxSrcs (Lbl)
+   (idx '*Srcs (def Lbl 'src (file)) T) )
 
 # Sections
 (de section (Fun @Sym)
@@ -74,15 +84,18 @@
          (when (reg Lbl)
             (quit "Register" Lbl) )
          (when Lbl
-            (def Lbl 'src (cdr (file)))
+            (idxSrcs Lbl)
+            (def Lbl 'tag (cdr (file)))
             (label (setq *Label Lbl) T) )
          (setq *Program
             (make
                (while (and (skip "#") (<> "(" (peek)))
                   (let Atom (read)
                      (cond
-                        ((== ': Atom)  # Label
-                           (link (cons ': (read))) )
+                        ((memq Atom '(: ::))  # Label
+                           (let Lbl (read)
+                              (idxSrcs Lbl)
+                              (link ((if (== ': Atom) cons list) Atom Lbl)) ) )
                         ((== '? Atom)  # Conditional
                            (unless (eval (read))
                               (while (and (skip "#") (n== '= (read)))) ) )
@@ -227,6 +240,7 @@
    (| 2 (>> -4 N)) )
 
 (de equ Args
+   (idxSrcs (car Args))
    (let Val (run (cdr Args) 1)
       (def (car Args) 'equ Val)
       (def (car Args) Val) ) )
@@ -442,7 +456,6 @@
       (js (address) "*Mode")
       (jsz (address) "*Mode")
       (jz (address) "*Mode")
-      (:: (read))
       (ld (destination) "*Mode" (source) "*Mode")
       (ld2 (source) "*Mode")
       (ld4 (source) "*Mode")

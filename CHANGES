@@ -1,4 +1,5 @@
 * XXsep11 picoLisp-3.0.8
+   "src64/tags" for 'vi' source access
    'import' symbols function
    Namespace support with 'symbols' (64-bit)
    Bug in '@' lambda bindings (32-bit)
