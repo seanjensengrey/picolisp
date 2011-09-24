@@ -1,4 +1,4 @@
-# 21sep11abu
+# 24sep11abu
 # (c) Software Lab. Alexander Burger
 
 ### Compare long names ###
@@ -2473,13 +2473,7 @@
    ret
 
 ### Property access ###
-(code 'setAE 0)
-   ld (A) E  # Set value
-   ret
-
 (code 'putACE 0)
-   cmp C ZERO  # Key is zero?
-   jeq setAE  # Yes
    push X
    ld X (A TAIL)  # Properties
    num X  # Any?
@@ -2854,8 +2848,6 @@
    jnz symErrEX
    sym E
    jz symErrEX
-   cmp E Nil  # Can't be NIL
-   jeq protErrEX
    ld E (Y)  # Eval 'any'
    eval
    ld A (L II)  # Get symbol
@@ -2868,7 +2860,13 @@
       pop E
    end
    ld C (L I)  # Get key
-   call putACE  # Put value or propery
+   cmp C ZERO  # Key is zero?
+   if eq  # Yes
+      call checkVarAX  # Check variable
+      ld (A) E  # Set value
+   else
+      call putACE  # Put value or propery
+   end
    drop
    pop Y
    pop X
@@ -3007,8 +3005,6 @@
    jnz symErrEX
    sym E
    jz symErrEX
-   cmp E Nil  # Can't be NIL
-   jeq protErrEX
    sym (E TAIL)  # External symbol?
    if nz  # Yes
       call dbTouchEX  # Touch it
@@ -3019,7 +3015,13 @@
    eval
    pop A  # Retrieve symbol
    pop C  # and key
-   call putACE  # Put value or propery
+   cmp C ZERO  # Key is zero?
+   if eq  # Yes
+      call checkVarAX  # Check variable
+      ld (A) E  # Set value
+   else
+      call putACE  # Put value or propery
+   end
    pop Y
    pop X
    ret

@@ -1,4 +1,4 @@
-/* 09sep11abu
+/* 24sep11abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -218,10 +218,10 @@ any doDef(any ex) {
 
    x = cdr(ex),  Push(c1, EVAL(car(x)));
    NeedSym(ex,data(c1));
-   CheckVar(ex,data(c1));
    Touch(ex,data(c1));
    x = cdr(x),  Push(c2, EVAL(car(x)));
    if (!isCell(cdr(x))) {
+      CheckVar(ex,data(c1));
       if (!isNil(y = val(data(c1)))  &&  y != data(c1)  &&  !equal(data(c2), y))
          redefMsg(data(c1), NULL);
       val(data(c1)) = data(c2);

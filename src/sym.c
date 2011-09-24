@@ -1,4 +1,4 @@
-/* 08sep11abu
+/* 24sep11abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -1110,11 +1110,12 @@ any doPut(any ex) {
       data(c2) = EVAL(car(x));
    }
    NeedSym(ex,data(c1));
-   CheckNil(ex,data(c1));
    Push(c3, EVAL(car(x)));
    Touch(ex,data(c1));
-   if (isNum(data(c2)) && IsZero(data(c2)))
+   if (isNum(data(c2)) && IsZero(data(c2))) {
+      CheckVar(ex,data(c1));
       val(data(c1)) = x = data(c3);
+   }
    else
       put(data(c1), data(c2), x = data(c3));
    drop(c1);
@@ -1207,11 +1208,12 @@ any doSetCol(any ex) {
       }
    }
    NeedSym(ex,y);
-   CheckNil(ex,y);
    Push(c1, EVAL(car(x)));
    Touch(ex,y);
-   if (isNum(z) && IsZero(z))
+   if (isNum(z) && IsZero(z)) {
+      CheckVar(ex,y);
       val(y) = x = data(c1);
+   }
    else
       put(y, z, x = data(c1));
    drop(c1);

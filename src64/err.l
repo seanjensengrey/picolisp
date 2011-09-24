@@ -1,4 +1,4 @@
-# 16sep11abu
+# 24sep11abu
 # (c) Software Lab. Alexander Burger
 
 # Debug print routine
@@ -368,6 +368,14 @@
    cmp A TSym  # A > T ?
    jgt Ret  # Yes
    ld E A
+   jmp protErrEX
+
+(code 'checkVarCX 0)
+   cmp C Nil  # C < NIL ?
+   jlt ret  # Yes
+   cmp C TSym  # C > T ?
+   jgt Ret  # Yes
+   ld E C
    jmp protErrEX
 
 (code 'checkVarYX 0)
