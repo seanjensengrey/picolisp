@@ -1,4 +1,4 @@
-# 24sep11abu
+# 25sep11abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -461,10 +461,6 @@
    jnz symErrEX
    sym E
    jz symErrEX
-   sym (E TAIL)  # External symbol?
-   if nz  # Yes
-      call dbTouchEX  # Touch it
-   end
    link
    push E  # <L II/III> First symbol
    ld Y (Y CDR)  # Next arg
@@ -475,23 +471,28 @@
    ld Y (Y CDR)  # Third arg?
    atom Y
    if nz  # No
-      ld C (L II)  # First symbol
-      call checkVarCX  # Check
-      ld A (C)  # Current value
+      ld E (L II)  # First symbol
+      call checkVarEX  # Check
+      sym (E TAIL)  # External symbol?
+      if nz  # Yes
+         call dbTouchEX  # Touch it
+      end
+      ld A (E)  # Current value
       cmp A Nil  # NIL?
       if ne  # NO
-         cmp A C  # Auto-symbol?
+         cmp A E  # Auto-symbol?
          if ne  # No
+            ld E (L I)  # New value
             call equalAE_F  # Changing?
             if ne  # Yes
-               ld E C  # Get sym
+               ld E (L II)  # Get symbol
                ld C 0  # No class
                call redefMsgEC
+               ld E (L II)  # Get symbol again
             end
          end
       end
-      ld E (L II)  # Get symbol
-      ld (E) (L I)  # Set new value
+      ld (E) (L I)  # Set symbol to new value
       ld C 0  # No key
       call putSrcEC_E  # Put source information
    else
@@ -500,6 +501,10 @@
       tuck E  # <L I> Third arg
       link
       ld E (L III)  # First symbol
+      sym (E TAIL)  # External symbol?
+      if nz  # Yes
+         call dbTouchEX  # Touch it
+      end
       ld C (L II)  # Second arg
       call getEC_E  # Current property value
       cmp E Nil  # NIL?
