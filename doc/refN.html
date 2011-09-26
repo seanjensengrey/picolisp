@@ -76,9 +76,11 @@ href="refG.html#gt0">gt0</a></code>.
 <dt><a name="name"><code>(name 'sym ['sym2]) -> sym</code></a>
 <dd>Returns, if <code>sym2</code> is not given, a new transient symbol with the
 name of <code>sym</code>. Otherwise <code>sym</code> must be a transient symbol,
-and its name is changed to that of <code>sym2</code>. See also <code><a
-href="refS.html#str">str</a></code>, <code><a
+and its name is changed to that of <code>sym2</code> (note that this may give
+inconsistencies if the symbol is still referred to from other namespaces). See
+also <code><a href="refS.html#str">str</a></code>, <code><a
 href="refS.html#sym">sym</a></code>, <code><a
+href="refS.html#symbols">symbols</a></code>, <code><a
 href="refZ.html#zap">zap</a></code> and <code><a
 href="refI.html#intern">intern</a></code>.
 
