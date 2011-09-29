@@ -149,6 +149,7 @@
    ld C 0  # Top frame
    call unwindC_Z  # Unwind
    ld (EnvProtect) 0  # Reset environments
+   ld (EnvIntern) pico
    ld (EnvTask) Nil
    ld (EnvArgs) 0
    ld (EnvNext) 0

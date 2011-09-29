@@ -1,4 +1,4 @@
-# 20sep11abu
+# 29sep11abu
 # (c) Software Lab. Alexander Burger
 
 (data 'HtData)
@@ -217,7 +217,7 @@ align 8  asciz "<hr>"
                call prExtNmX  # Print external
             else
                push Y
-               ld Y ((Intern))
+               ld Y ((EnvIntern))
                call isInternEXY_F  # Internal symbol?
                ld C 0
                if eq  # Yes

@@ -1,4 +1,4 @@
-# 20sep11abu
+# 29sep11abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -849,7 +849,7 @@
          ld B NIX  # Output NIX
          call (PutBinBZ)
       else
-         ld Y ((Intern))
+         ld Y ((EnvIntern))
          call isInternEXY_F  # Internal symbol?
          ld C INTERN  # Yes
          ldnz C TRANSIENT  # No
@@ -2116,7 +2116,7 @@
 
 (code 'rdAtomBY_E)  # X
    link
-   push (Intern)  # <L II> Current symbol namespace
+   push (EnvIntern)  # <L II> Current symbol namespace
    push ZERO  # <L I> Result
    ld C 4  # Build name
    ld X S
@@ -2133,7 +2133,7 @@
          ld X 0  # Clear error context
          atom (E)  # Value must be a cell
          jnz symNsErrEX
-         ld (Intern) E  # Switch symbol namespace
+         ld (EnvIntern) E  # Switch symbol namespace
          ld C 4  # Build new name
          lea X (L I)  # Safe
          ld (X) ZERO
@@ -2163,7 +2163,7 @@
          call findSymX_E  # Find or create symbol
       end
    end
-   ld (Intern) (L II)  # Restore current symbol namespace
+   ld (EnvIntern) (L II)  # Restore current symbol namespace
    drop
    ret
 
@@ -4089,6 +4089,7 @@
    end
    push Y
    link
+   push (EnvIntern)  # <L III> Keep current namespace
    push ZERO  # <L II>
    push ZERO  # <L I>
    link
@@ -4100,8 +4101,7 @@
    ld E Nil  # Close transient scope
    call doHide
    do
-      ld A ((InFiles))  # Get stdin
-      cmp A (InFile)  # Reading from file?
+      cmp ((InFiles)) (InFile)  # Reading from file?
       if ne  # Yes
          ld C 0  # No terminator
          call readC_E  # Read expression
@@ -4129,8 +4129,7 @@
       cmp E Nil
    while ne
       ld (L I) E  # Save read expression
-      ld A ((InFiles))  # Get stdin
-      cmp A (InFile)  # Reading from file?
+      cmp ((InFiles)) (InFile)  # Reading from file?
       if nz  # Yes
 10       eval  # Evaluate
       else
@@ -4153,6 +4152,10 @@
       end
       ld (L I) E  # Save result
    loop
+   null ((InFile) VI)  # File?
+   if nz  # Yes
+      ld (EnvIntern) (L III)  # Restore namespace
+   end
    call popInFiles
    ld E Nil  # Close transient scope
    call doHide
@@ -4791,7 +4794,7 @@
          ret
       end
       push Y
-      ld Y ((Intern))
+      ld Y ((EnvIntern))
       call isInternEXY_F  # Internal symbol?
       if eq  # Yes
          cmp X (hex "2E2")  # Dot?

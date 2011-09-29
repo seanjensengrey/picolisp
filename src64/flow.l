@@ -1,4 +1,4 @@
-# 25sep11abu
+# 29sep11abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -106,12 +106,7 @@
    end
    ret
 
-(code 'redefineCEX 0)
-   num E  # Need symbol
-   jnz symErrEX
-   sym E
-   jz symErrEX
-   call checkVarEX
+(code 'redefineCE 0)
    ld A (E)  # Current value
    cmp A Nil  # NIL?
    if ne  # NO
@@ -536,7 +531,8 @@
    ld X (E CDR)  # Args
    ld E (X)  # Symbol in E
    ld C (X CDR)  # Body in C
-   call redefineCEX  # Redefine
+   call needSymEX
+   call redefineCE  # Redefine
    pop X
    ret
 
@@ -572,7 +568,8 @@
    if ne  # No
       push C  # Save class
       ld C (Meth)  # Get 'meth' code pointer
-      call redefineCEX  # Redefine
+      call needSymEX
+      call redefineCE  # Redefine
       pop C
    end
    ld A (Y CDR)  # Explicit inheritance?

@@ -1,4 +1,4 @@
-# 24sep11abu
+# 29sep11abu
 # (c) Software Lab. Alexander Burger
 
 ### Compare long names ###
@@ -256,7 +256,7 @@
 
 (code 'findSymX_E 0)  # Y
    ld E 0  # No symbol yet
-   ld Y ((Intern))
+   ld Y ((EnvIntern))
    call internEXY_FE  # New internal symbol?
    jnc Ret  # No
    ld (E) Nil  # Init to 'NIL'
@@ -534,7 +534,7 @@
       push Y
       ld X (E TAIL)
       call nameX_X  # Get name
-      ld Y ((Intern))  # Internal symbol?
+      ld Y ((EnvIntern))  # Internal symbol?
       call isInternEXY_F
       pop Y
       pop X
@@ -786,8 +786,8 @@
       cmp (E) Nil  # Internal trees?
       if eq  # Yes
          cmp (E CDR) Nil  # Short names?
-         ldz E (((Intern)))  # Yes
-         ldnz E (((Intern)) I)
+         ldz E (((EnvIntern)))  # Yes
+         ldnz E (((EnvIntern)) I)
       else
          cmp (E) TSym  # Transient trees?
          ldnz E Extern  # No: External symbols
@@ -800,9 +800,9 @@
    else
       cmp E Nil  # Nil?
       if eq  # Yes
-         ld X (((Intern)) I)  # Internal symbols
+         ld X (((EnvIntern)) I)  # Internal symbols
          call consTreeXE_E
-         ld X (((Intern)))
+         ld X (((EnvIntern)))
       else
          cmp E TSym  # T?
          if eq  # Yes
@@ -938,7 +938,7 @@
    ld Y (E CDR)  # Y on args
    atom Y  # Any?
    if nz  # No
-      ld E (Intern)  # Return current symbol namespace
+      ld E (EnvIntern)  # Return current symbol namespace
    else
       ld E (Y)  # Eval first
       eval
@@ -952,11 +952,12 @@
          atom (E)  # Value must be a cell
          jnz symNsErrEX
       else
+         call checkVarEX
          link
-         push E  # <L II> Save new symbol namespace
+         push E  # <L III> Save new symbol namespace
          ld E (Y)
          eval+  # Eval source symbol namespace
-         push E  # <L I> Source
+         push E  # <L II> Source
          link
          num E  # Need symbol
          jnz symErrEX
@@ -969,14 +970,17 @@
          call cons_Y  # Create namespace cell
          ld (Y) Nil  # Initialize
          ld (Y CDR) Nil
-         ld ((L II)) Y  # Set in new symbol namespace
+         tuck Y  # <L I> New value
+         link
          call balanceXY  # Balanced copy of short names
-         ld X (((L I)) CDR)  # Source long names
+         ld X (((L II)) CDR)  # Source long names
          call balanceXY  # Balanced copy of long names
-         ld E (L II)  # Get new symbol namespace
+         ld C (L I)  # Get value
+         ld E (L III)  # And new symbol namespace
+         call redefineCE  # Redefine
          drop
       end
-      xchg (Intern) E  # Set new symbol namespace, return old
+      xchg (EnvIntern) E  # Set new symbol namespace, return old
    end
    pop Y
    pop X
@@ -997,7 +1001,7 @@
    cmp X ZERO  # Any?
    if ne  # Yes
       push Y
-      ld Y ((Intern))  # Insert internal
+      ld Y ((EnvIntern))  # Insert internal
       call internEXY_FE
       pop Y
       pop X
@@ -1134,7 +1138,7 @@
    push Y
    ld X (E TAIL)  # Get name
    call nameX_X
-   ld Y ((Intern))  # Internal symbol?
+   ld Y ((EnvIntern))  # Internal symbol?
    call isInternEXY_F
    ldz E Nil  # Return NIL
    pop Y
@@ -1193,7 +1197,7 @@
       push Y
       ld X (E TAIL)
       call nameX_X  # Get name
-      ld Y ((Intern))
+      ld Y ((EnvIntern))
       call uninternEXY  # Unintern symbol
       pop Y
    end

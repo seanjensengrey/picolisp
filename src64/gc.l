@@ -1,4 +1,4 @@
-# 20sep11abu
+# 29sep11abu
 # (c) Software Lab. Alexander Burger
 
 # Mark data
@@ -91,13 +91,16 @@
       null X  # Done?
    until eq  # Yes
    ### Mark ###
-   ld Y Intern  # Mark globals
+   ld Y GcMark  # Mark globals
    do
       ld E (Y)  # Next global
       call markE  # Mark it
       add Y I
       cmp Y GcMarkEnd  # Done?
    until eq  # Yes
+   ### Mark Env ###
+   ld E (EnvIntern)  # Mark current namespace
+   call markE
    ### Mark stack(s) ###
    ld Y L
    do
