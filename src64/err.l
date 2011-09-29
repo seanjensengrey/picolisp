@@ -1,4 +1,4 @@
-# 16sep11abu
+# 29sep11abu
 # (c) Software Lab. Alexander Burger
 
 # Debug print routine
@@ -76,7 +76,6 @@
       pop E  # Retrieve reason
    end
    ld (Chr) 0  # Init globals
-   ld (Intern) pico
    ld (ExtN) 0
    ld (Break) 0
    ld (Alarm) Nil
