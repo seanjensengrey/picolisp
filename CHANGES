@@ -1,4 +1,6 @@
-* XXsep11 picoLisp-3.0.8
+* XXdec11 picoLisp-3.0.9
+
+* 30sep11 picoLisp-3.0.8
    'load' preserves current namespace
    "src64/tags" for 'vi' source access
    'import' symbols function
