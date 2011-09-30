@@ -1,4 +1,4 @@
-29aug11abu
+30sep11abu
 (c) Software Lab. Alexander Burger
 
 
@@ -42,8 +42,8 @@ installation, and invoke them explicitly as desired.
 
       $ (cd src; make picolisp)
 
-   or - if you have an x86-64 system (under Linux, SunOS or OpenBSD), or a ppc64
-   system (under Linux) - build the 64-bit version
+   or - if you have an x86-64 system (under Linux or SunOS), or a ppc64 system
+   (under Linux) - build the 64-bit version
 
       $ (cd src64; make picolisp)
 
@@ -60,7 +60,6 @@ installation, and invoke them explicitly as desired.
 
      - http://software-lab.de/x86-64.linux.tgz
      - http://software-lab.de/x86-64.sunOs.tgz
-     - http://software-lab.de/x86-64.openBsd.tgz
      - http://software-lab.de/ppc64.linux.tgz
 
    - Else, build a 32-bit version first, and use the resulting bin/picolisp to
