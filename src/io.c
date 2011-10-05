@@ -1,4 +1,4 @@
-/* 18aug11abu
+/* 05oct11abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -2171,14 +2171,15 @@ any doPipe(any ex) {
    return x;
 }
 
-// (open 'any) -> cnt | NIL
+// (open 'any ['flg]) -> cnt | NIL
 any doOpen(any ex) {
    any x = evSym(cdr(ex));
    char nm[pathSize(x)];
    int fd;
 
    pathString(x, nm);
-   while ((fd = open(nm, O_CREAT|O_RDWR, 0666)) < 0) {
+   x = caddr(ex);
+   while ((fd = open(nm, isNil(EVAL(x))? O_CREAT|O_RDWR:O_RDONLY, 0666)) < 0) {
       if (errno != EINTR)
          return Nil;
       if (*Signal)
