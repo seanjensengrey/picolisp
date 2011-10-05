@@ -2178,8 +2178,8 @@ any doOpen(any ex) {
    int fd;
 
    pathString(x, nm);
-   x = caddr(ex);
-   while ((fd = open(nm, isNil(EVAL(x))? O_CREAT|O_RDWR:O_RDONLY, 0666)) < 0) {
+   x = caddr(ex),  x = EVAL(x);
+   while ((fd = open(nm, isNil(x)? O_CREAT|O_RDWR : O_RDONLY, 0666)) < 0) {
       if (errno != EINTR)
          return Nil;
       if (*Signal)
