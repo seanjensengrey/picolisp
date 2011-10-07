@@ -1,4 +1,4 @@
-# 23sep11abu
+# 07oct11abu
 # (c) Software Lab. Alexander Burger
 
 # *LittleEndian *AlignedCode *Registers optimize
@@ -423,6 +423,7 @@
       (cmpn (destination) "*Mode" (source) "*Mode" (source) "*Mode")
       (cnt (source) "*Mode")
       (dbg)
+      (dc2 (read))
       (dec (destination) "*Mode")
       (div (source) "*Mode")
       (drop)
@@ -529,6 +530,9 @@
 
 (asm bytes (Lst)
    (prinst ".byte" (glue ", " Lst)) )
+
+(asm dc2 (Lst)
+   (prinst ".short" (glue ", " Lst)) )
 
 (asm hx2 (Lst)
    (prinst ".short" (glue ", " (mapcar hex Lst))) )
