@@ -1,4 +1,4 @@
-# 06sep11abu
+# 09oct11abu
 # (c) Software Lab. Alexander Burger
 
 .SILENT:
@@ -14,18 +14,13 @@ else
 		UNAME = SunOS
 		MACHINE = x86_64
 	else
-		ifneq ($(filter x86-64.openBsd, $(MAKECMDGOALS)),)
-			UNAME = OpenBSD
-			MACHINE = x86_64
-		else
-			ifneq ($(filter ppc64.linux, $(MAKECMDGOALS)),)
-				UNAME = Linux
-				MACHINE = ppc64
-			else
-				UNAME = $(shell uname)
-				MACHINE = $(shell uname -m)
-			endif
-		endif
+      ifneq ($(filter ppc64.linux, $(MAKECMDGOALS)),)
+         UNAME = Linux
+         MACHINE = ppc64
+      else
+         UNAME = $(shell uname)
+         MACHINE = $(shell uname -m)
+      endif
 	endif
 endif
 
@@ -59,18 +54,6 @@ ifeq ($(UNAME), SunOS)
 	LD-MAIN = -m64 -lc -lm -ldl -lsocket -lnsl
 	LD-SHARED = -m64 -shared
 	STRIP = strip
-else
-ifeq ($(UNAME), OpenBSD)
-	OS = OpenBSD
-	SYS = openBsd
-	ARCH = x86-64
-	MKASM-BASE =
-	MKASM-LIB = -fpic
-	AS = as
-	LD-MAIN = -m64 -rdynamic -lc -lm
-	LD-SHARED = -m64 -shared
-	STRIP = strip
-endif
 endif
 endif
 
@@ -83,7 +66,6 @@ all: picolisp
 
 x86-64.linux: $(sFiles)
 x86-64.sunOs: $(sFiles)
-x86-64.openBsd: $(sFiles)
 ppc64.linux: $(sFiles)
 
 picolisp: $(bin)/picolisp $(lib)/ext $(lib)/ht
