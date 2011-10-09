@@ -1,5 +1,7 @@
-# 20sep11abu
+# 09oct11abu
 # (c) Software Lab. Alexander Burger
+
+(setq *OS (java (java "java.lang.System" "getProperty" "os.name")))
 
 ############ lib.l ############
 
