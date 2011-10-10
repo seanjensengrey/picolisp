@@ -1,4 +1,4 @@
-# 21sep11abu
+# 09oct11abu
 # (c) Software Lab. Alexander Burger
 
 (de task (Key . Prg)
@@ -235,6 +235,9 @@
          (or
             (loc S (car X))
             (loc S (cdr X)) ) ) ) )
+
+(de local Lst
+   (mapc zap Lst) )
 
 (de import Lst
    (for Sym Lst
