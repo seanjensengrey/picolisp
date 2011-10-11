@@ -37,6 +37,19 @@ NIL 5286
 -> T
 </code></pre>
 
+<dt><a name="*Prompt"><code>*Prompt</code></a>
+<dd>A global variable holding a (possibly empty) expression, to be evaluated and
+<code><a href="refP.html#prin">prin</a></code>ted every time before a prompt is
+output to the console in the "read-eval-print-loop" (REPL).
+
+<pre><code>
+: (setq *Prompt '(pack "[" (stamp) "]"))
+-> (pack "[" (stamp) "]")
+[2011-10-11 16:50:05]: (+ 1 2 3)
+-> 6
+[2011-10-11 16:50:11]:
+</code></pre>
+
 <dt><a name="pack"><code>(pack 'any ..) -> sym</code></a>
 <dd>Returns a transient symbol whose name is concatenated from all arguments
 <code>any</code>. A <code>NIL</code> arguments contributes nothing to the result

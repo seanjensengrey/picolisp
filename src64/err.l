@@ -1,4 +1,4 @@
-# 29sep11abu
+# 11oct11abu
 # (c) Software Lab. Alexander Burger
 
 # Debug print routine
@@ -11,7 +11,7 @@
    ld (OutFile) ((OutFiles) II)  # Set to OutFiles[2] (stderr)
    push (PutB)  # Save 'put'
    ld (PutB) putStdoutB  # Set new
-   call printE  # Print argument
+   call printE_E  # Print argument
    call newline  # and a newline
    pop (PutB)  # Restore 'put'
    pop (OutFile)  # and output channel
@@ -110,13 +110,13 @@
       call outStringC
       push E  # Save reason
       ld E X  # Get context
-      call printE  # Print context
+      call printE_E  # Print context
       call newline
       pop E  # Retrieve reason
    end
    null E  # Reason?
    if nz  # Yes
-      call printE  # Print reason
+      call printE_E  # Print reason
       ld C Dashes  # Print " -- "
       call outStringC
    end

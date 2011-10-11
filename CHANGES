@@ -1,4 +1,5 @@
 * XXdec11 picoLisp-3.0.9
+   '*Prompt' global variable
    'local' symbols function
    'open' optional 'flg' argument
 

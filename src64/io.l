@@ -1,4 +1,4 @@
-# 05oct11abu
+# 11oct11abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -4106,12 +4106,15 @@
          ld C 0  # No terminator
          call readC_E  # Read expression
       else
-         ld A (L -I)
-         or B B  # Prompt?
+         null (L -I)  # Prompt?
          if nz  # Yes
             null (Chr)
             if z
-               call (PutB)  # Output prompt
+               ld E (Prompt)  # Output prompt prefix
+               eval
+               call prinE_E
+               ld A (L -I)  # Output prompt
+               call (PutB)
                call space
                call flushAll
             end
@@ -4754,9 +4757,12 @@
 
 # Print one expression
 (code 'printE_E)
-   push E  # Save expression
+   link
+   push E  # <L I> Save expression
+   link
    call printE  # Print it
-   pop E  # Restore
+   ld E (L I)  # Restore
+   drop
    ret
 
 (code 'printE 0)
@@ -4973,9 +4979,12 @@
 
 # Print string representation
 (code 'prinE_E 0)
-   push E  # Save expression
+   link
+   push E  # <L I> Save expression
+   link
    call prinE  # Print it
-   pop E  # Restore
+   ld E (L I)  # Restore
+   drop
    ret
 
 (code 'prinE 0)

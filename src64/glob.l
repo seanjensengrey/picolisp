@@ -1,4 +1,4 @@
-# 29sep11abu
+# 11oct11abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Data)
@@ -159,6 +159,7 @@
    initSym At2       "@@"        Nil
    initSym At3       "@@@"       Nil
    initSym This      "This"      Nil
+   initSym Prompt    "*Prompt"   Nil
    initSym Dbg       "*Dbg"      Nil
    initSym Zap       "*Zap"      Nil
    initSym Ext       "*Ext"      Nil
