@@ -1,4 +1,4 @@
-# 09oct11abu
+# 14oct11abu
 # (c) Software Lab. Alexander Burger
 
 .SILENT:
@@ -72,7 +72,7 @@ picolisp: $(bin)/picolisp $(lib)/ext $(lib)/ht
 
 $(bin)/picolisp: $(ARCH).$(SYS).base.o
 	mkdir -p $(bin) $(lib)
-	gcc -o $(bin)/picolisp $(ARCH).$(SYS).base.o $(LD-MAIN)
+	gcc -o $(bin)/picolisp $(ARCH).$(SYS).base.o -Wl,--no-as-needed $(LD-MAIN)
 	$(STRIP) $(bin)/picolisp
 
 $(lib)/ext: $(ARCH).$(SYS).ext.o
