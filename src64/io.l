@@ -1,4 +1,4 @@
-# 11oct11abu
+# 17oct11abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -4111,7 +4111,7 @@
             null (Chr)
             if z
                ld E (Prompt)  # Output prompt prefix
-               eval
+               call runE_E  # Execute
                call prinE_E
                ld A (L -I)  # Output prompt
                call (PutB)

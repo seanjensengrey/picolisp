@@ -1,10 +1,10 @@
-# 11oct11abu
+# 17oct11abu
 # (c) Software Lab. Alexander Burger
 
 # Prompt
 (when (== 64 64)
-   (setq *Prompt
-      '(unless (== (symbols) 'pico) (symbols)) ) )
+   (de *Prompt
+      (unless (== (symbols) 'pico) (symbols)) ) )
 
 # Browsing
 (de doc (Sym Browser)

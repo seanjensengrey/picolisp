@@ -1,4 +1,4 @@
-// 11oct11abu
+// 17oct11abu
 // (c) Software Lab. Alexander Burger
 
 import java.util.*;
@@ -468,7 +468,7 @@ public class PicoLisp {
             y = InFile.read('\0');
          else {
             if (pr != '\0'  &&  InFile.Chr == 0) {
-               OutFile.Wr.print(Prompt.Car.eval().name() + pr);
+               OutFile.Wr.print(Prompt.Car.run().name() + pr);
                OutFile.space();
                OutFile.Wr.flush();
             }
