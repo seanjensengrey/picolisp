@@ -44,8 +44,9 @@ every time before a prompt is output to the console in the
 "read-eval-print-loop" (REPL).
 
 <pre><code>
-: (setq *Prompt '(list (pack "[" (stamp) "]")))
--> (pack "[" (stamp) "]")
+: (de *Prompt (pack "[" (stamp) "]"))
+# *Prompt redefined
+-> *Prompt
 [2011-10-11 16:50:05]: (+ 1 2 3)
 -> 6
 [2011-10-11 16:50:11]:
