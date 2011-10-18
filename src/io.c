@@ -1,4 +1,4 @@
-/* 11oct11abu
+/* 18oct11abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -2044,7 +2044,7 @@ any load(any ex, int pr, any x) {
          data(c1) = read1(0);
       else {
          if (pr && !Chr)
-            prin(EVAL(val(Prompt))), Env.put(pr), space(), flushAll();
+            prin(run(val(Prompt))), Env.put(pr), space(), flushAll();
          data(c1) = read1(isatty(STDIN_FILENO)? '\n' : 0);
          if (Chr == '\n')
             Chr = 0;
