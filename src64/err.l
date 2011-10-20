@@ -1,4 +1,4 @@
-# 12oct11abu
+# 19oct11abu
 # (c) Software Lab. Alexander Burger
 
 # Debug print routine
@@ -659,9 +659,14 @@
    ld Y IpGetsocknameErr
    jmp errnoEXY
 
-(code 'ipSetsockoptErrX)
+(code 'ipV6onlyErrX)
    ld E 0
-   ld Y IpSetsockoptErr
+   ld Y IpV6onlyErr
+   jmp errnoEXY
+
+(code 'ipReuseaddrErrX)
+   ld E 0
+   ld Y IpReuseaddrErr
    jmp errnoEXY
 
 (code 'ipBindErrX)

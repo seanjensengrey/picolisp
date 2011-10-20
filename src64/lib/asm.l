@@ -1,4 +1,4 @@
-# 23sep11abu
+# 19oct11abu
 # (c) Software Lab. Alexander Burger
 
 # *LittleEndian *AlignedCode *Registers optimize
@@ -232,11 +232,14 @@
             (T X) ) )
       ((asoq (car X) *Registers)
          (cons (car X) (operand (cadr X))) )
-      ((memq (car X) '(+ - * */ / % >> & | pack short char hex oct))
+      ((memq (car X) '(+ - * */ / % >> & | %% pack short char hex oct))
          (apply (car X) (mapcar operand (cdr X))) )
       (T (cons (car X) (operand (cadr X)))) ) )
 
 # Constants
+(de %% (N)
+   (>> -3 (>> 3 (+ N 7))) )
+
 (de short (N)
    (| 2 (>> -4 N)) )
 

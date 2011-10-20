@@ -1,4 +1,4 @@
-# 11oct11abu
+# 20oct11abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Data)
@@ -134,12 +134,12 @@
    initSym Nil       "NIL"       Nil
                word  Nil         # CDR when NIL is accessed as an empty list
                word  0           # Padding
-
+: Pico
                word  Nil         # Short internal names
                word  Nil         # Long internal names
 
    # Protected symbols
-   initSym pico      "pico"      .-24
+   initSym pico      "pico"      Pico
    initSym OS        "*OS"       TgOS
    initSym DB        "*DB"       Db1
    initFun Meth      "meth"      doMeth
@@ -613,7 +613,7 @@
 : OrgTermio skip TERMIOS         # Original termio structure
 : Flock     skip FLOCK           # File lock structure
 : Tms       skip TMS             # 'times' structure
-: Addr      skip SOCKADDR_IN     # Internet socket address
+: Addr      skip SOCKADDR_IN6    # Internet socket address
 
 : TBuf      byte (+ INTERN 4)    # 'T' in PLIO format
             byte (char "T")
@@ -1231,7 +1231,8 @@
 : TellErr asciz "Tell PIPE_BUF"
 : IpSocketErr asciz "IP socket error: %s"
 : IpGetsocknameErr asciz "IP getsockname error: %s"
-: IpSetsockoptErr asciz "IP setsockopt error: %s"
+: IpV6onlyErr asciz "IP IPV6_V6ONLY error: %s"
+: IpReuseaddrErr asciz "IP SO_REUSEADDR error: %s"
 : IpBindErr asciz "IP bind error: %s"
 : IpListenErr asciz "IP listen error: %s"
 : UdpOvflErr asciz "UDP overflow"
