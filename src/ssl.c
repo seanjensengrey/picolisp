@@ -1,4 +1,4 @@
-/* 20oct11abu
+/* 21oct11abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -56,12 +56,11 @@ static int sslConnect(SSL *ssl, char *node, char *service) {
       for (p = lst; p; p = p->ai_next) {
          if ((sd = socket(p->ai_family, p->ai_socktype, 0)) >= 0) {
             if (connect(sd, p->ai_addr, p->ai_addrlen) == 0) {
-               freeaddrinfo(lst);
                SSL_set_fd(ssl, sd);
-               if (SSL_connect(ssl) >= 0)
+               if (SSL_connect(ssl) >= 0) {
+                  freeaddrinfo(lst);
                   return sd;
-               close(sd);
-               return -1;
+               }
             }
             close(sd);
          }
