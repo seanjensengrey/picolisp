@@ -1,4 +1,4 @@
-/* 21oct11abu
+/* 22oct11abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -184,7 +184,7 @@ int main(int ac, char *av[]) {
                giveup("Can't lock");
             if (fstat(fd,&st) < 0  ||  (Size = st.st_size) == 0)
                giveup("Can't access");
-            lenLen = sprintf(len, "%lld\n", Size);
+            lenLen = sprintf(len, "%ld\n", Size);
             if ((Data = malloc(Size)) == NULL)
                giveup("Can't alloc");
             if (read(fd, Data, Size) != Size)
