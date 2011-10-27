@@ -407,16 +407,15 @@ href="refD.html#db/3">db/3</a></code>.
 (setq *Ext           # Set up external offsets
    (mapcar
       '((@Host @Ext)
-         (let Sock NIL
-            (cons @Ext
-               (curry (@Host @Ext Sock) (Obj)
-                  (when (or Sock (setq Sock (connect @Host 4040)))
-                     (ext @Ext
-                        (out Sock (pr (cons 'qsym Obj)))
-                        (prog1 (in Sock (rd))
-                           (unless @
-                              (close Sock)
-                              (off Sock) ) ) ) ) ) ) ) )
+         (cons @Ext
+            (curry (@Host @Ext (Sock)) (Obj)
+               (when (or Sock (setq Sock (connect @Host 4040)))
+                  (ext @Ext
+                     (out Sock (pr (cons 'qsym Obj)))
+                     (prog1 (in Sock (rd))
+                        (unless @
+                           (close Sock)
+                           (off Sock) ) ) ) ) ) ) )
       '("localhost")
       '(20) ) )
 

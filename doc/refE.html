@@ -46,16 +46,15 @@ href="ref.html#external">external symbols</a></code>.
 : (setq *Ext  # Define extension functions
    (mapcar
       '((@Host @Ext)
-         (let Sock NIL
-            (cons @Ext
-               (curry (@Host @Ext Sock) (Obj)
-                  (when (or Sock (setq Sock (connect @Host 4040)))
-                     (ext @Ext
-                        (out Sock (pr (cons 'qsym Obj)))
-                        (prog1 (in Sock (rd))
-                           (unless @
-                              (close Sock)
-                              (off Sock) ) ) ) ) ) ) ) )
+         (cons @Ext
+            (curry (@Host @Ext (Sock)) (Obj)
+               (when (or Sock (setq Sock (connect @Host 4040)))
+                  (ext @Ext
+                     (out Sock (pr (cons 'qsym Obj)))
+                     (prog1 (in Sock (rd))
+                        (unless @
+                           (close Sock)
+                           (off Sock) ) ) ) ) ) ) )
       '("10.10.12.1" "10.10.12.2" "10.10.12.3" "10.10.12.4")
       (20 40 60 80) ) )
 
