@@ -1,4 +1,4 @@
-# 22jul11abu
+# 27oct11abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -27,7 +27,7 @@ env (i x y)
       do {
          if ((x = ex.Car.eval()) instanceof Cell) {
             do
-               y = new Cell(x.Car instanceof Cell? x.Car : new Cell(x.Car, x.Car.Car), y);
+               y = new Cell(x.Car instanceof Cell? new Cell(x.Car.Car, x.Car.Cdr) : new Cell(x.Car, x.Car.Car), y);
             while ((x = x.Cdr) instanceof Cell);
          }
          else if (x != Nil) {
