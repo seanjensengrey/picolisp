@@ -1,4 +1,4 @@
-/* 11oct11abu
+/* 27oct11abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -302,7 +302,9 @@ any doEnv(any x) {
          if (isCell(data(c2))) {
             do
                data(c1) = cons(
-                  isCell(car(data(c2)))? car(data(c2)) : cons(car(data(c2)), val(car(data(c2)))),
+                  isCell(car(data(c2)))?
+                     cons(caar(data(c2)), cdar(data(c2))) :
+                     cons(car(data(c2)), val(car(data(c2)))),
                   data(c1) );
             while (isCell(data(c2) = cdr(data(c2))));
          }

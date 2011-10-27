@@ -1,4 +1,4 @@
-# 20oct11abu
+# 27oct11abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -655,12 +655,15 @@
          atom E  # 'lst'?
          if z  # Yes
             do
-               ld A (E)  # Already a pair?
-               atom A
-               if nz  # No
-                  call cons_A  # Cons symbol and its value
-                  ld (A) (E)
-                  ld (A CDR) ((E))
+               call cons_A  # Prepare new cell
+               ld C (E)  # Next item already a pair?
+               atom C
+               if z  # Yes
+                  ld (A) (C)  # Copy it
+                  ld (A CDR) (C CDR)
+               else
+                  ld (A) C  # Cons symbol and its value
+                  ld (A CDR) (C)
                end
                call consA_C  # Cons to result
                ld (C) A
