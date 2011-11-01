@@ -1,4 +1,4 @@
-# 14oct11abu
+# 01nov11abu
 # (c) Software Lab. Alexander Burger
 
 .SILENT:
@@ -89,7 +89,7 @@ $(lib)/ht: $(ARCH).$(SYS).ht.o
 
 # Explicit builds for cross-assembly
 $(ARCH).$(SYS).base.s: lib/asm.l arch/$(ARCH).l $(baseFiles) sys/$(ARCH).$(SYS).code.l
-	./mkAsm $(ARCH) $(SYS) $(OS) base $(lib)/tags $(baseFiles) sys/$(ARCH).$(SYS).code.l $(MKASM-BASE)
+	./mkAsm $(ARCH) $(SYS) $(OS) base $(lib)/map $(baseFiles) sys/$(ARCH).$(SYS).code.l $(MKASM-BASE)
 
 $(ARCH).$(SYS).ext.s: lib/asm.l arch/$(ARCH).l ext.l $(ARCH).$(SYS).base.s
 	./mkAsm $(ARCH) $(SYS) $(OS) ext "" $(MKASM-LIB) ext.l

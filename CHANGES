@@ -1,4 +1,5 @@
 * XXdec11 picoLisp-3.0.9
+   Improved "tags" file handling
    IPv6 support
    '*Prompt' global variable
    'local' symbols function
