@@ -1,4 +1,4 @@
-.\" 31oct11abu
+.\" 05nov11abu
 .\"
 .TH PICOLISP 1 "" "" "User Commands"
 .SH NAME
@@ -73,25 +73,22 @@ line arguments. A minimal interactive session is started with:
 $ pil +
 .RE
 .P
-Here you can enter Lisp expressions,
+Here you can access the reference manual
 .P
 .RS
-: (quote Hello world)
-.RE
-.RS
--> (Hello world)
+: (doc)
 .RE
 .P
-access online documentation for most functions,
+and the online documentation for most functions,
 .P
 .RS
-: (doc 'quote)
+: (doc 'vi)
 .RE
 .P
-or inspect their sources:
+or directly inspect their sources:
 .P
 .RS
-: (vi 'quote)
+: (vi 'doc)
 .RE
 .P
 The interpreter can be terminated with
