@@ -1,4 +1,4 @@
-# 09oct11abu
+# 08nov11abu
 # (c) Software Lab. Alexander Burger
 
 (setq *OS (java (java "java.lang.System" "getProperty" "os.name")))
@@ -207,8 +207,8 @@
                (cons (car L) (recurse (cdr L))) ) ) ) ) )
 
 (de object ("Sym" "Val" . @)
-   (def "Sym" "Val")
    (putl "Sym")
+   (def "Sym" "Val")
    (while (args)
       (put "Sym" (next) (next)) )
    "Sym" )
