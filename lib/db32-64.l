@@ -11,7 +11,6 @@
 ##
 ## 3. On the 64-bit system:
 ##    $ pil app/main.l @lib/too.l @lib/db32-64.l
-##    : (call 'mkdir "-p" "db/app/" *Blob)
 ##    : (pool "db/app/" *Dbs)
 ##    : (import32)
 ##    : (bye)
