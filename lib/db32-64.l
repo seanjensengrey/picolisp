@@ -10,7 +10,11 @@
 ##    and unpack it in the application's runtime directory
 ##
 ## 3. On the 64-bit system:
-##    $ pil app/main.l @lib/too.l @lib/db32-64.l -main -import32 -bye
+##    $ pil app/main.l @lib/too.l @lib/db32-64.l
+##    : (call 'mkdir "-p" "db/app/" *Blob)
+##    : (pool "db/app/" *Dbs)
+##    : (import32)
+##    : (bye)
 
 # 64-bit DB export -> "~/.pil/db64.tgz"
 (de export64 (Pool Dbs Blob)
