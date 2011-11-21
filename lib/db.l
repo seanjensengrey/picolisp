@@ -1,4 +1,4 @@
-# 13jul11abu
+# 21nov11abu
 # (c) Software Lab. Alexander Burger
 
 # *Dbs *Jnl *Blob upd
@@ -839,14 +839,15 @@
          (commit 'upd) ) ) )
 
 (de blob! (Obj Var File)
-   (and *Jnl (blob+ Obj Var))
-   (put!> Obj Var File) )
+   (put!> Obj Var File)
+   (blob+ Obj Var) )
 
 (de blob+ (Obj Var)
-   (chdir *Blob
-      (call 'ln "-sf"
-         (pack (glue "/" (chop Obj)) "." Var)
-         (pack (name Obj) "." Var) ) ) )
+   (when *Jnl
+      (chdir *Blob
+         (call 'ln "-sf"
+            (pack (glue "/" (chop Obj)) "." Var)
+            (pack (name Obj) "." Var) ) ) ) )
 
 (dm T @
    (while (args)

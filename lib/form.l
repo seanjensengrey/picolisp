@@ -1,4 +1,4 @@
-# 08sep11abu
+# 21nov11abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -1901,9 +1901,9 @@
       (let? Obj (eval (: erObj))
          (protect
             (when (put!> Obj (: erVar) (bool Val))
-               (and *Jnl (blob+ Obj (: erVar)))
                (out (blob Obj (: erVar))
-                  (prin (=: org Val)) ) ) ) ) )
+                  (prin (=: org Val)) )
+               (blob+ Obj (: erVar)) ) ) ) )
    (super Val Dn) )
 
 (dm upd> ()
