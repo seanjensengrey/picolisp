@@ -1,4 +1,4 @@
-# 20apr10abu
+# 22nov11abu
 # (c) Software Lab. Alexander Burger
 
 # *JS *Style *Menu *Tab *ID
@@ -88,13 +88,8 @@
    (httpHead NIL Upd)
    (ht:Out *Chunked
       ## (xml? T)
-      (prinl "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">")
-      (prinl
-         "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\""
-         (or *Lang "en")
-         "\" lang=\""
-         (or *Lang "en")
-         "\">" )
+      (prinl "<!DOCTYPE html>")
+      (prinl "<html lang=\"" (or *Lang "en") "\">")
       (prinl "<head>")
       (and Ttl (<tag> 'title NIL Ttl) (prinl))
       (and *Host *Port (prinl "<base href=\"" (baseHRef) "\"/>"))
