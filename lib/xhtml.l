@@ -189,8 +189,9 @@
    (tag 'li Attr 2 Prg)
    (prinl) )
 
-(de <href> (Str Url)
+(de <href> (Str Url Tar)
    (prin "<a href=\"" (sesId Url) "\"")
+   (and Tar (prin " target=\"" Tar "\""))
    (and *Style (htStyle @))
    (prin '>)
    (ht:Prin Str)
