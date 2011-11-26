@@ -1,4 +1,4 @@
-/* 18nov11abu
+/* 24nov11abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -206,4 +206,19 @@ a:hover {
    padding: 1ex;
    margin: 1ex 5em 1ex 1em;
    border: dashed thin;
+}
+
+/* Hints */
+.hint {
+   font-size: small;
+   background-color: #707070;
+}
+
+.hints {
+   font-size: small;
+   color: black;
+   padding-left: 3px;
+   padding-top: 3px;
+   border: 1px solid;
+   background-color: white;
 }
