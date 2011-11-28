@@ -1,4 +1,4 @@
-# 26nov11abu
+# 28nov11abu
 # (c) Software Lab. Alexander Burger
 
 # *JS "*JS" *Style *Menu *Tab *ID
@@ -521,7 +521,7 @@
    (prin
       "<form enctype=\"multipart/form-data\" action=\""
       (sesId Url)
-      (and *JS "\" onkeydown=\"formKey(event)\" onsubmit=\"return doPost(this)")
+      (and *JS "\" onkeydown=\"return formKey(event)\" onsubmit=\"return doPost(this)")
       "\" method=\"post\">" )
    (tag 'fieldset Attr 2 Prg)
    (prinl "</form>") )
