@@ -521,7 +521,7 @@
    (prin
       "<form enctype=\"multipart/form-data\" action=\""
       (sesId Url)
-      (and *JS "\" onkeydown=\"return formKey(event)\" onsubmit=\"return doPost(this)")
+      (and *JS "\" onkeydown=\"return formKey(event)\" onkeypress=\"return formKey(event)\" onsubmit=\"return doPost(this)")
       "\" method=\"post\">" )
    (tag 'fieldset Attr 2 Prg)
    (prinl "</form>") )
