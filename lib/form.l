@@ -1,4 +1,4 @@
-# 26nov11abu
+# 01dec11abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -6,7 +6,7 @@
 
 (allow (path "@img/") T)
 (push1 '*JS (allow (path "@lib/form.js")))
-(mapc allow '(*Gui *Get *Got *Form *Evt *Drop "!jsForm" "!jsHint"))
+(mapc allow '(*Gui *Get *Got *Form *Evt *Drop "!jsForm" *JsHint "!jsHint"))
 
 (one "*Cnt")
 (off "*Lst" "*Post2" "*Cho")
@@ -516,12 +516,12 @@
                ")" ) ) )
       (extra "Var") ) )
 
-(de jsHint (I Str)
+(de jsHint (I)
    (httpHead "text/plain; charset=utf-8")
    (ht:Out *Chunked
       (let? L
          (if (sym? I)
-            ((; I hint) Str)
+            ((; I hint) *JsHint)
             (let? Lst (get "*Lst" (- "*Cnt" (format *Get)))
                (try 'hint>
                   (get
@@ -530,7 +530,7 @@
                         (get Lst 1 (+ (length (car Lst)) (format *Form)) 1) )
                      'gui
                      I )
-                  Str ) ) )
+                  *JsHint ) ) )
          (prin
             (ht:Fmt
                (if (atom (car L))
