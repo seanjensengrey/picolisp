@@ -73,9 +73,9 @@ quit (str)
    str = evString(ex = ex.Cdr);
    return err(null, (ex = ex.Cdr) instanceof Cell? ex.Car.eval() : null, str);
 
-# (java 'cls 'T 'any ..) -> obj
-# (java 'cls 'msg 'any ..) -> obj
-# (java 'obj 'msg 'any ..) -> obj
+# (java 'cls 'T ['any ..]) -> obj
+# (java 'cls 'msg ['any ..]) -> obj
+# (java 'obj 'msg ['any ..]) -> obj
 # (java 'obj ['cnt]) -> any
 java (num i j k x y z s v o)
    y = (x = ex.Cdr).Car.eval();
