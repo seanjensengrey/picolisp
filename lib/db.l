@@ -1,4 +1,4 @@
-# 21nov11abu
+# 12dec11abu
 # (c) Software Lab. Alexander Burger
 
 # *Dbs *Jnl *Blob upd
@@ -715,13 +715,10 @@
 (dm rel> (Obj Old New Hook)
    (unless New
       (for Var (: dep)
-         (del> Obj Var (get Obj Var)) ) )
+         (let? V (get Obj Var)
+            (rel> (meta Obj Var) Obj V
+               (put> (meta Obj Var) Obj V NIL) ) ) ) )
    (extra Obj Old New Hook) )
-
-(dm lose> (Obj Val Hook)
-   (for Var (: dep)
-      (del> Obj Var (get Obj Var)) )
-   (extra Obj Val Hook) )
 
 
 (class +List)
@@ -1020,58 +1017,46 @@
 
 (dm set> (Val)
    (unless (= Val (val This))
-      (let
-         (L
-            (extract
-               '((X)
-                  (pop 'X)
-                  (unless (== (meta Val X) (meta (val This) X))
-                     X ) )
-               (getl This) )
-            V (mapcar
-               '((X)
-                  (prog1
-                     (get This X)
-                     (if (meta This X)
-                        (put> This X)
-                        (put This X) ) ) )
-               L ) )
+      (let L
+         (extract
+            '((X)
+               (pop 'X)
+               (and
+                  (meta Val X)
+                  (n== @ (meta (val This) X))
+                  X ) )
+            (getl This) )
+         (for Var L
+            (let V (get This Var)
+               (rel> (meta This Var) This V
+                  (put> (meta This Var) This V NIL) ) ) )
          (xchg This 'Val)
-         (mapc
-            '((X V)
-               (if (meta This X)
-                  (put> This X V)
-                  (put This X V) ) )
-            L V ) )
+         (for Var L
+            (rel> (meta This Var) This NIL
+               (put> (meta This Var) This NIL (get This Var)) ) ) )
       (upd> This (val This) Val) )
    (val This) )
 
 (dm set!> (Val)
    (unless (= Val (val This))
       (dbSync)
-      (let
-         (L
-            (extract
-               '((X)
-                  (pop 'X)
-                  (unless (== (meta Val X) (meta (val This) X))
-                     X ) )
-               (getl This) )
-            V (mapcar
-               '((X)
-                  (prog1
-                     (get This X)
-                     (if (meta This X)
-                        (put> This X)
-                        (put This X) ) ) )
-               L ) )
+      (let L
+         (extract
+            '((X)
+               (pop 'X)
+               (and
+                  (meta Val X)
+                  (n== @ (meta (val This) X))
+                  X ) )
+            (getl This) )
+         (for Var L
+            (let V (get This Var)
+               (rel> (meta This Var) This V
+                  (put> (meta This Var) This V NIL) ) ) )
          (xchg This 'Val)
-         (mapc
-            '((X V)
-               (if (meta This X)
-                  (put> This X V)
-                  (put This X V) ) )
-            L V ) )
+         (for Var L
+            (rel> (meta This Var) This NIL
+               (put> (meta This Var) This NIL (get This Var)) ) ) )
       (upd> This (val This) Val)
       (commit 'upd) )
    (val This) )
