@@ -1,4 +1,4 @@
-# 01dec11abu
+# 19dec11abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -523,14 +523,15 @@
          (if (sym? I)
             ((; I hint) *JsHint)
             (let? Lst (get "*Lst" (- "*Cnt" (format *Get)))
-               (try 'hint>
-                  (get
-                     (if (gt0 (format *Form))
-                        (get Lst @)
-                        (get Lst 1 (+ (length (car Lst)) (format *Form)) 1) )
-                     'gui
-                     I )
-                  *JsHint ) ) )
+               (pair
+                  (hint>
+                     (get
+                        (if (gt0 (format *Form))
+                           (get Lst @)
+                           (get Lst 1 (+ (length (car Lst)) (format *Form)) 1) )
+                        'gui
+                        I )
+                     *JsHint ) ) ) )
          (prin
             (ht:Fmt
                (if (atom (car L))
@@ -549,7 +550,20 @@
    (pass extra) )
 
 (dm hint> (Str)
-   ((: hint) Str) )
+   ((: hint) (extra Str)) )
+
+(de dbHint (Str Var Cls Hook)
+   (make
+      (for
+         (Q
+            (goal
+               (cons
+                  (list 'db Var Cls Hook Str '@@) ) )
+            (prove Q) )
+         (let V (get (asoq '@@ @) -1 Var)
+            (unless (member V (made))
+               (link V) ) )
+         (T (nth (made) 24)) ) ) )
 
 
 (class +Hint1 +hint)
@@ -560,6 +574,7 @@
    (pass extra) )
 
 (dm hint> (Str)
+   (setq Str (extra Str))
    (extract '((S) (pre? Str S))
       (eval (: hint)) ) )
 
@@ -567,6 +582,7 @@
 (class +Hint2 +hint)
 
 (dm hint> (Str)
+   (setq Str (extra Str))
    (extract '((X) (pre? Str (if (atom X) X (car X))))
       (with (field -1) (eval (: hint))) ) )
 
@@ -743,6 +759,9 @@
 (dm val> ()
    (uppc (extra)) )
 
+(dm hint> (Str)
+   (extra (uppc Str)) )
+
 
 (class +Lowc)
 
@@ -751,6 +770,9 @@
 
 (dm val> ()
    (lowc (extra)) )
+
+(dm hint> (Str)
+   (extra (lowc Str)) )
 
 
 # Field enable/disable
@@ -939,6 +961,9 @@
    (set> This) )
 
 (dm val> ())
+
+(dm hint> (Str)
+   Str )
 
 (dm init> ()
    (upd> This) )
@@ -2012,17 +2037,10 @@
                (collect (: objVar) (last (: objTyp)) NIL T (: objVar)) ) ) ) ) )
 
 (dm hint> (Str)
-   (make
-      (for
-         (Q
-            (goal
-               (cons
-                  (list 'db (: objVar) (last (: objTyp)) (: objHook) Str '@@) ) )
-            (prove Q) )
-         (let V (get (asoq '@@ @) -1 (: objVar))
-            (unless (member V (made))
-               (link V) ) )
-         (T (nth (made) 24)) ) ) )
+   (dbHint (extra Str)
+      (: objVar)
+      (last (: objTyp))
+      (: objHook) ) )
 
 (dm txt> (Obj)
    (if (ext? Obj)
