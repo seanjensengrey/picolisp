@@ -1,4 +1,4 @@
-# 01nov11abu
+# 27dec11abu
 # (c) Software Lab. Alexander Burger
 
 # *LittleEndian *AlignedCode *Registers optimize
@@ -429,7 +429,6 @@
       (cmp4 (source) "*Mode")
       (cmpn (destination) "*Mode" (source) "*Mode" (source) "*Mode")
       (cnt (source) "*Mode")
-      (dbg)
       (dec (destination) "*Mode")
       (div (source) "*Mode")
       (drop)
