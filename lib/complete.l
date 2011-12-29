@@ -8,7 +8,7 @@
             (setq "Pre" (pop '"Lst")) )
          (let "Str" (pack "Lst")
             (for "Sym" (all)
-               (and (pre? "Str" "Sym") (prinl "Pre" "Sym")) ) ) )
+               (and (pre? "Str" "Sym") (getd "Sym") (prinl "Pre" "Sym")) ) ) )
       (let ("Path" (rot (split "Lst" "/"))  "Str" (pack (car "Path")))
          (setq "Path" (and (cdr "Path") (pack (glue "/" @) "/")))
          (for "Sym" (dir "Path" T)
