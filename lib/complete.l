@@ -1,4 +1,4 @@
-# 29dec11abu
+# 30dec11abu
 # (c) Software Lab. Alexander Burger
 
 (if (opt)
@@ -19,6 +19,6 @@
                (and
                   (pre? "Str" "Sym")
                   (prinl "Path" "Sym") ) ) ) ) )
-   (prinl "+ -bye") )
+   (prinl '+) )
 
 # vi:et:ts=3:sw=3
