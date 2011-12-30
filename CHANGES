@@ -1,4 +1,6 @@
-* XXdec11 picoLisp-3.0.9
+* XXmar11 picoLisp-3.0.10
+
+* 30dec11 picoLisp-3.0.9
    Bash completion
    Changed GUI '+Hint' system
    Calculated message passing (64-bit)
