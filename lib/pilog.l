@@ -1,4 +1,4 @@
-# 20jul11abu
+# 02jan12abu
 # (c) Software Lab. Alexander Burger
 
 # *Rule
@@ -555,6 +555,7 @@
 
 (repeat)
 
+### Debug ###
 `*Dbg
 (load "@lib/sq.l")
 

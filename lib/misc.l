@@ -1,4 +1,4 @@
-# 13jun11abu
+# 02jan12abu
 # (c) Software Lab. Alexander Burger
 
 # *Allow *Tmp
@@ -451,6 +451,7 @@
    (out S (prinl "RCPT TO:" To "^M"))
    (pre? "250 " (in S (line T))) )
 
+### Debug ###
 `*Dbg
 
 # Hex Dump

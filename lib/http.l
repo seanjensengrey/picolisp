@@ -1,4 +1,4 @@
-# 26nov11abu
+# 02jan12abu
 # (c) Software Lab. Alexander Burger
 
 # *Home *Gate *Host *Port *Port1 *Port% *Http1 *Chunked
@@ -448,6 +448,7 @@
 (de http404 ()
    (httpStat 404 "Not Found") )
 
+### Debug ###
 `*Dbg
 (noLint 'http '"O")
 
