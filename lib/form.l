@@ -1,4 +1,4 @@
-# 19dec11abu
+# 02jan12abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -65,35 +65,35 @@
                   (htPrin "Prg") )
                (set "*App")
                (let gui
-                  '(@
+                  '((X . @)
                      (inc '"*Ix")
                      (with
                         (cond
-                           ((pair (next)) (pass new @))
-                           ((not (arg)) (pass new))
-                           ((num? (arg))
+                           ((pair X) (pass new X))
+                           ((not X) (pass new))
+                           ((num? X)
                               (ifn "*Chart"
                                  (quit "no chart" (rest))
                                  (with "*Chart"
-                                    (let (I (arg)  L (last (: gui)))
-                                       (when (get L I)
+                                    (let L (last (: gui))
+                                       (when (get L X)
                                           (inc (:: rows))
                                           (conc (: gui)
                                              (list (setq L (need (: cols)))) ) )
                                        (let Fld (pass new)
-                                          (set (nth L I) Fld)
+                                          (set (nth L X) Fld)
                                           (and (get Fld 'chg) (get Fld 'able) (=: lock))
                                           (set> Fld
                                              (get
                                                 ((: put)
                                                    (get (nth (: data) (: ofs)) (: rows))
                                                    (+ (: ofs) (: rows) -1) )
-                                                I )
+                                                X )
                                              T )
-                                          (put Fld 'chart (list This (: rows) I))
+                                          (put Fld 'chart (list This (: rows) X))
                                           Fld ) ) ) ) )
-                           ((get "*App" (arg)) (quit "gui conflict" (arg)))
-                           (T (put "*App" (arg) (pass new))) )
+                           ((get "*App" X) (quit "gui conflict" X))
+                           (T (put "*App" X (pass new))) )
                         (=: home gui (conc (: home gui) (cons This)))
                         (unless (: chart) (init> This))
                         (when (: id)
