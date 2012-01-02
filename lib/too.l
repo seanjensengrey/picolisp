@@ -39,7 +39,6 @@
       (markData (pop 'X)) )
    (and (ext? X) (markExt X)) )
 
-
 ### DB Mapping ###
 (de dbMap ("ObjFun" "TreeFun")
    (default "ObjFun" quote "TreeFun" quote)
@@ -90,7 +89,6 @@
    (while (pair "X")
       (dbMapV (pop '"X")) )
    (and (ext? "X") (_dbMap "X")) )
-
 
 ### DB Check ###
 (de dbCheck ()
@@ -214,7 +212,6 @@
                                           (link X) ) ) ) ) ) ) ) ) ) ) )
       (cons Obj @) ) )
 
-
 ### Rebuild tree ###
 (de rebuild (X Var Cls Hook)
    (let Lst NIL
@@ -250,7 +247,6 @@
          (rel> (meta Obj Var) Obj NIL
             (put> (meta Obj Var) Obj NIL @) )
          (at (0 . 10000) (commit)) ) ) )
-
 
 ### Database file management ###
 (de dbfCheck ()
@@ -404,7 +400,6 @@
             (dbfReloc (cdr X))
             Dbf ) )
       (commit) ) )
-
 
 ### Dump Objects ###
 (de dump CL

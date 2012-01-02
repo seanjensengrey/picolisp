@@ -43,7 +43,6 @@
    (in (list 'file "--brief" "--mime" File)
       (line T) ) )
 
-
 ### HTTP-Client ###
 (de client (Host Port How . Prg)
    (let? Sock (connect Host Port)
@@ -76,7 +75,6 @@
       (load "@dbg.l")
       (off *Err)
       (quit) ) )
-
 
 ### HTTP-Server ###
 (de server (P H)
