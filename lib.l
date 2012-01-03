@@ -1,4 +1,4 @@
-# 08nov11abu
+# 03jan12abu
 # (c) Software Lab. Alexander Burger
 
 (de task (Key . Prg)
@@ -265,7 +265,7 @@
 
 # Class variables
 (de var X
-   (put *Class (car X) (cdr X)) )
+   (def *Class (car X) (cdr X)) )
 
 (de var: X
    (apply meta X This) )
