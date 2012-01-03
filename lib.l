@@ -266,8 +266,8 @@
 # Class variables
 (de var X
    (if (pair (car X))
-      (def (cdar X) (caar X) (cdr X))
-      (def *Class (car X) (cdr X)) ) )
+      (put (cdar X) (caar X) (cdr X))
+      (put *Class (car X) (cdr X)) ) )
 
 (de var: X
    (apply meta X This) )
