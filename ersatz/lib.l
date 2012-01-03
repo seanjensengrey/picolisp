@@ -1,4 +1,4 @@
-# 11nov11abu
+# 03jan12abu
 # (c) Software Lab. Alexander Burger
 
 (setq *OS (java (java "java.lang.System" "getProperty" "os.name")))
@@ -218,7 +218,9 @@
 
 # Class variables
 (de var X
-   (put *Class (car X) (cdr X)) )
+   (if (pair (car X))
+      (def (cdar X) (caar X) (cdr X))
+      (def *Class (car X) (cdr X)) ) )
 
 (de var: X
    (apply meta X This) )
