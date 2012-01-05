@@ -1,4 +1,4 @@
-# 02jan12abu
+# 05jan12abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -346,11 +346,20 @@
       (noButton) ) )
 
 (de diaform (Lst . Prg)
-   (if (and *PRG (not (: diaform)))
-      (_dlg 'dialog (env Lst))
-      (=: env (env Lst))
-      (=: diaform T)
-      (run Prg 1) ) )
+   (cond
+      ((num? (caar Lst))  # Dst
+         (gui (gt0 (caar Lst)) '(+ChoButton)
+            (cons 'diaform
+               (list 'cons
+                  (list 'cons (lit (car Lst)) '(field 1))
+                  (lit (env (cdr Lst))) )
+               Prg ) ) )
+      ((and *PRG (not (: diaform)))
+         (_dlg 'dialog (env Lst)) )
+      (T
+         (=: env (env Lst))
+         (=: diaform T)
+         (run Prg 1) ) ) )
 
 (de saveButton (Exe)
    (gui '(+Button) ,"Save" Exe) )
@@ -902,7 +911,6 @@
          "i" *Form '- (: id)
          "\\\").focus()\",420)" ) ) )
 
-
 ### Styles ###
 (class +Style)
 # style
@@ -936,7 +944,6 @@
 
 (dm js> ()
    (pack (extra) "&#" (and (lt0 (val> This)) "red")) )
-
 
 ### Form field classes ###
 (de showFld "Prg"
@@ -1592,7 +1599,6 @@
 (dm set> (Val Dn)
    (=: str Val) )
 
-
 ### GUI charts ###
 (class +Chart)
 # home gui rows cols ofs lock put get data clip
@@ -1717,7 +1723,6 @@
 # (cols)
 (dm T (N)
    (super N list car) )
-
 
 ### DB GUI ###
 (de newUrl @
@@ -2162,6 +2167,9 @@
 
 # Form object
 (de <id> "Lst"
+   (idObj "Lst") )
+
+(de idObj ("Lst")
    (with (if *PRG (: obj) (=: obj *ID))
       (and (: T) (prin "["))
       (for "X" (if (=T (car "Lst")) (cdr "Lst") "Lst")
@@ -2188,6 +2196,26 @@
       (stepBtn Var Cls Hook Msg) )
    (--) )
 
+# Standard ID form
+(de idForm ("Entity" "Cho" "Var" "Cls" "Able" "Del" "Lst" . "Prg")
+   (ifn *ID
+      (prog
+         (<h3> NIL ,"Select" " " "Entity")
+         (form 'dialog
+            (if (pair "Cho")
+               (eval @)
+               (choDlg NIL "Cho" (list "Var" "Cls")) ) ) )
+      (<h3> NIL "Entity")
+      (form NIL
+         (<h2> NIL (idObj "Lst"))
+         (panel "Able" (pack "Entity" " '@1'") "Del"
+            (or
+               (pair "Cho")
+               (list 'choDlg NIL (lit "Cho") (lit (list "Var" "Cls"))) )
+            "Var" "Cls" )
+         (run "Prg") ) ) )
+
+### Debug ###
 `*Dbg
 (noLint 'gui)
 (noLint 'choDlg 'gui)

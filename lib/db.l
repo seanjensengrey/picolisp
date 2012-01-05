@@ -1,4 +1,4 @@
-# 12dec11abu
+# 05jan12abu
 # (c) Software Lab. Alexander Burger
 
 # *Dbs *Jnl *Blob upd
@@ -294,13 +294,8 @@
       ,"Symbolic type expected" ) )
 
 
-# (+String) [num]
+# (+String)
 (class +String +Symbol)
-# len
-
-(dm T (Var Lst)
-   (=: len (car Lst))
-   (super Var (cdr Lst)) )
 
 (dm mis> (Val Obj)
    (and Val (not (str? Val)) ,"String type expected") )
@@ -837,7 +832,8 @@
 
 (de blob! (Obj Var File)
    (put!> Obj Var File)
-   (blob+ Obj Var) )
+   (blob+ Obj Var)
+   File )
 
 (de blob+ (Obj Var)
    (when *Jnl
