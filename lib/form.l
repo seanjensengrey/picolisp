@@ -1,4 +1,4 @@
-# 05jan12abu
+# 20jan12abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -82,6 +82,7 @@
                                              (list (setq L (need (: cols)))) ) )
                                        (let Fld (pass new)
                                           (set (nth L X) Fld)
+                                          (put Fld 'chart (list This (: rows) X))
                                           (and (get Fld 'chg) (get Fld 'able) (=: lock))
                                           (set> Fld
                                              (get
@@ -90,7 +91,6 @@
                                                    (+ (: ofs) (: rows) -1) )
                                                 X )
                                              T )
-                                          (put Fld 'chart (list This (: rows) X))
                                           Fld ) ) ) ) )
                            ((get "*App" X) (quit "gui conflict" X))
                            (T (put "*App" X (pass new))) )
