@@ -48,7 +48,7 @@ prefix strings. See also <code><a href="refA.html#allow">allow</a></code>,
 href="refP.html#pre?">pre?</a></code>.
 
 <pre><code>
-: (allowed ("app/" "img/")  # Initialize
+: (allowed ("app/")  # Initialize
    "!start" "!stop" "lib.css" "!psh" )
 -> NIL
 : (allow "!myFoo")  # additional item
@@ -258,7 +258,7 @@ should specify the initially allowed items. See also <code><a
 href="refA.html#allow">allow</a></code>.
 
 <pre><code>
-: (allowed ("app/" "img/")  # allowed prefixes
+: (allowed ("app/")  # allowed prefixes
    "!start" "!stop" "lib.css" "!psh" )  # allowed items
 -> NIL
 </code></pre>
