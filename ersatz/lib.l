@@ -1,4 +1,4 @@
-# 03jan12abu
+# 28jan12abu
 # (c) Software Lab. Alexander Burger
 
 (setq *OS (java (java "java.lang.System" "getProperty" "os.name")))
@@ -415,7 +415,7 @@
 (de *DayFmt "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday")
 (de *MonFmt "January" "February" "March" "April" "May" "June" "July" "August" "September" "October" "November" "December")
 
-(de locale (Ctry Lang App)  # "DE" "de" ["app/loc/"]
+(de locale (Ctry Lang . @)  # "DE" "de" ["app/loc/" ..]
    (load (if (setq *Ctry Ctry) (pack "@loc/" @ ".l") "@loc/NIL.l"))
    (ifn (setq *Lang Lang)
       (for S (idx '*Uni)
@@ -424,7 +424,8 @@
          (sort
             (make
                ("loc" (pack "@loc/" Lang))
-               (and App ("loc" (pack App Lang))) ) )
+               (while (args)
+                  ("loc" (pack (next) Lang)) ) ) )
          (balance '*Uni L T)
          (for S L
             (set (car (idx '*Uni S)) (val S)) ) ) ) )

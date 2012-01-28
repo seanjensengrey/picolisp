@@ -1,4 +1,5 @@
 * XXmmm12 picoLisp-3.0.10
+   'locale' optional arguments
 
 * 30dec11 picoLisp-3.0.9
    Bash completion
