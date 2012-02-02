@@ -57,12 +57,12 @@ href="refP.html#pre?">pre?</a></code>.
 -> "myDir/"
 
 : *Allow
--> (("!start" ("!psh" ("!myFoo")) "!stop" NIL "lib.css") "app/" "img/" "myDir/")
+-> (("!start" ("!psh" ("!myFoo")) "!stop" NIL "lib.css") "app/" "myDir/")
 
 : (idx *Allow)  # items
 -> ("!myFoo" "!psh" "!start" "!stop" "lib.css")
 : (cdr *Allow)  # prefixes
--> ("app/" "img/" "myDir/")
+-> ("app/" "myDir/")
 </code></pre>
 
 <dt><a name="+Alt"><code>+Alt</code></a>
@@ -242,7 +242,7 @@ href="refA.html#allowed">allowed</a></code>.
 
 <pre><code>
 : *Allow
--> (("!start" ("!psh") "!stop" NIL "lib.css") "app/" "img/")
+-> (("!start" ("!psh") "!stop" NIL "lib.css") "app/")
 : (allow "!myFoo")  # additionally allowed item
 -> "!myFoo"
 : (allow "myDir/" T)  # additionally allowed prefix
