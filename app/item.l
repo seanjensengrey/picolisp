@@ -1,4 +1,4 @@
-# 05jan12abu
+# 05feb12abu
 # (c) Software Lab. Alexander Burger
 
 (must "Item" Item)
@@ -30,6 +30,6 @@
       (<spread> NIL (editButton T))
       (gui '(+Img)
          '(and (: home obj jpg) (allow (blob (: home obj) 'jpg)))
-         ,"Picture") ) )
+         ,"Picture" ) ) )
 
 # vi:et:ts=3:sw=3
