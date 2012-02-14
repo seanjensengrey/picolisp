@@ -1,4 +1,4 @@
-# 05jan12abu
+# 14feb12abu
 # (c) Software Lab. Alexander Burger
 
 # *Dbs *Jnl *Blob upd
@@ -53,7 +53,8 @@
                (fetch Tree Val) )
             (let Key (cons (if (isa '+Fold This) (fold Val) Val))
                (let? A (: aux)
-                  (while (and (args) (== (pop 'A) (next)))
+                  (while (and (args) (== (pop 'A) (arg 1)))
+                     (next)
                      (conc Key (cons (next))) )
                   (and (: ub) (setq Key (ubZval Key))) )
                (let Q (init Tree Key (append Key T))
