@@ -1,4 +1,5 @@
 * XXmmm12 picoLisp-3.0.10
+   Bug in 'db' for partial '+Aux' access
    Bug in 'interface' (Ersatz)
    'locale' optional arguments
 
