@@ -3524,8 +3524,6 @@
                ld E C  # Save C
                call isLetterOrDigitA_F  # Letter or digit?
                if nz  # Yes
-                  sub (S II) 1  # Decrement 'cnt'
-                  break z
                   call caseDataA_AC  # Get case info
                   and A (hex "FFFF")
                   shr A 6  # Make index
@@ -3538,6 +3536,8 @@
                   call charSymACX_CX  # Pack char
                   xchg X (S)  # Swap status
                   ld (S I) C
+                  dec (S II)  # Decrement 'cnt'
+                  break z
                end
                ld C E  # Restore C
             loop
@@ -3545,8 +3545,12 @@
             call consSymX_E  # Make transient symbol
             drop
          end
+         pop Y
+         pop X
+         ret
       end
    end
+   ld E Nil
    pop Y
    pop X
    ret

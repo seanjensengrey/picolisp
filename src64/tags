@@ -991,7 +991,7 @@ ipSocketErrX	err.l	652
 ipV6onlyErrX	err.l	662
 isBlankE_F	sym.l	696
 isInternEXY_F	sym.l	37
-isLetterOrDigitA_F	sym.l	3554
+isLetterOrDigitA_F	sym.l	3558
 isLifeE_F	db.l	525
 isaCE_F	flow.l	1009
 jnlErrX	err.l	618
