@@ -1,4 +1,4 @@
-# 29sep11abu
+# 29feb12abu
 # (c) Software Lab. Alexander Burger
 
 ### Compare long names ###
@@ -3525,7 +3525,7 @@
                call isLetterOrDigitA_F  # Letter or digit?
                if nz  # Yes
                   sub (S II) 1  # Decrement 'cnt'
-                  break s
+                  break z
                   call caseDataA_AC  # Get case info
                   and A (hex "FFFF")
                   shr A 6  # Make index
