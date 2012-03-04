@@ -1,4 +1,4 @@
-# 02jan12abu
+# 04mar12abu
 # (c) Software Lab. Alexander Burger
 
 # *Home *Gate *Host *Port *Port1 *Port% *Http1 *Chunked
@@ -208,7 +208,7 @@
                   (cond
                      ((match '("-" @X "." "h" "t" "m" "l") @U)
                         (and *SesId (timeout *Timeout))
-                        (try 'html> (extern (ht:Pack @X))) )
+                        (apply try L 'html> (extern (ht:Pack @X))) )
                      ((disallowed)
                         (notAllowed *Url)
                         (http404) )
