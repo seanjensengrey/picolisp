@@ -1,4 +1,4 @@
-# 27jan12abu
+# 07mar12abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -1170,7 +1170,8 @@
 
 (de _delRow (Exe)
    (eval Exe)
-   (set> (: chart 1) (remove (row) (: chart 1 data))) )
+   (set> (: chart 1)
+      (remove (row) (val> (: chart 1))) ) )
 
 # Move row up
 (class +BubbleButton +Tiny +JS +Able +Tip +Button)
@@ -1180,7 +1181,7 @@
       '(> (: chart 2) 1)
       ,"Shift row up"
       "\^"
-      '(let L (: chart 1 data)
+      '(let L (val> (: chart 1))
          (set> (: chart 1)
             (conc
                (cut (row -2) 'L)
@@ -1692,7 +1693,7 @@
 
 (dm log> (Lst)
    (=: ofs (max (: ofs) (- (length (: data)) (: rows) -2)))
-   (set> This (conc (: data) (cons Lst))) )
+   (set> This (conc (val> This) (cons Lst))) )
 
 (dm clr> ()
    (set> This) )
@@ -1710,12 +1711,17 @@
 
 (dm cut> (N)
    (get> This)
-   (=: clip (get (: data) (: ofs)))
-   (set> This (remove (or N (: ofs)) (: data))) )
+   (=: clip (get (val> This) (: ofs)))
+   (set> This
+      (remove (or N (: ofs)) (val> This)) ) )
 
 (dm paste> (Flg N)
    (get> This)
-   (set> This (insert (or N (: ofs)) (: data) (unless Flg (: clip)))) )
+   (set> This
+      (insert
+         (or N (: ofs))
+         (val> This)
+         (unless Flg (: clip)) ) ) )
 
 
 (class +Chart1 +Chart)
@@ -2157,7 +2163,7 @@
       (goal
          (list
             (list 'lst '@@
-               (by '((This) (eval Exe)) sort (: data)) ) ) ) ) )
+               (by '((This) (eval Exe)) sort (val> This)) ) ) ) ) )
 
 (dm clr> ()
    (query> This (fail)) )
