@@ -1,4 +1,4 @@
-# 29feb12abu
+# 12mar12abu
 # (c) Software Lab. Alexander Burger
 
 ### Compare long names ###
@@ -2855,15 +2855,18 @@
    ld E (Y)  # Eval 'any'
    eval
    ld A (L II)  # Get symbol
+   ld C (L I)  # Get key
    sym (A TAIL)  # External symbol?
    if nz  # Yes
-      push E  # Save 'any'
-      ld E A  # Get symbol
-      call dbTouchEX  # Touch it
-      ld A E
-      pop E
+      cmp C Nil  # Volatile property?
+      if ne  # No
+         push E  # Save 'any'
+         ld E A  # Get symbol
+         call dbTouchEX  # Touch it
+         ld A E
+         pop E
+      end
    end
-   ld C (L I)  # Get key
    cmp C ZERO  # Key is zero?
    if eq  # Yes
       call checkVarAX  # Check variable
@@ -3011,7 +3014,10 @@
    jz symErrEX
    sym (E TAIL)  # External symbol?
    if nz  # Yes
-      call dbTouchEX  # Touch it
+      cmp C Nil  # Volatile property?
+      if ne  # No
+         call dbTouchEX  # Touch it
+      end
    end
    push C  # Save key
    push E  # Save symbol

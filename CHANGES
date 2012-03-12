@@ -1,4 +1,5 @@
 * XXmmm12 picoLisp-3.0.10
+   Volatile 'NIL' property
    Bug in 'fold' (64-bit)
    Bug in 'db' for partial '+Aux' access
    Bug in 'interface' (Ersatz)

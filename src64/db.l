@@ -1,4 +1,4 @@
-# 24aug11abu
+# 11mar12abu
 # (c) Software Lab. Alexander Burger
 
 # 6 bytes in little endian format
@@ -1704,15 +1704,21 @@
                   while z  # Yes
                      atom (Y)  # Flag?
                      if z  # No
-                        ld E ((Y) CDR)  # Print key
-                        call binPrintEZ
-                        ld E ((Y))  # Print value
-                        call binPrintEZ
+                        ld E ((Y) CDR)  # Get key
+                        cmp E Nil  # Volatile property?
+                        if ne  # No
+                           call binPrintEZ  # Print key
+                           ld E ((Y))  # Print value
+                           call binPrintEZ
+                        end
                      else
-                        ld E (Y)  # Print key
-                        call binPrintEZ
-                        ld E TSym  # Print 'T'
-                        call binPrintEZ
+                        ld E (Y)  # Get key
+                        cmp E Nil  # Volatile property?
+                        if ne  # No
+                           call binPrintEZ  # Print key
+                           ld E TSym  # Print 'T'
+                           call binPrintEZ
+                        end
                      end
                      ld Y (Y CDR)
                   loop
