@@ -1,4 +1,4 @@
-# 04mar12abu
+# 20mar12abu
 # (c) Software Lab. Alexander Burger
 
 # *Home *Gate *Host *Port *Port1 *Port% *Http1 *Chunked
@@ -238,7 +238,11 @@
    (use (L @X @Y Pil)
       (setq *Http1 (format (car @H))  *Chunked (gt0 *Http1)  Pil)
       (if (index "~" @U)
-         (setq *ConId (pack (head @ @U))  @U (cdr (nth @U @)))
+         (setq
+            *ConId (head @ @U)
+            @U (cdr (nth @U @))
+            *ConId
+            (pack (if (member "/" *ConId) (cdr @) *ConId)) )
          (off *ConId) )
       (while (setq L (line))
          (cond
@@ -292,7 +296,7 @@
             ((match '(@N ~(chop "; filename=") . @V) @X)
                (match '("\"" @N "\"") @N)
                (match '("\"" @V "\"") @V)
-               (if (_htSet @N (pack (stem @V '/ "\\")))
+               (if (_htSet @N (pack (stem @V "/" "\\")))
                   (let F (tmp @)
                      (unless (out F (echo (pack "^M^J" *MPartLim)))
                         (call 'rm "-f" F) ) )

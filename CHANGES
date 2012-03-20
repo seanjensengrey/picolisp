@@ -1,4 +1,5 @@
 * XXmmm12 picoLisp-3.0.10
+   'httpGate' session bug
    Simplified 'sigio'
    Volatile 'NIL' property
    Bug in 'fold' (64-bit)
