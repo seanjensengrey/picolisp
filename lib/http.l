@@ -1,4 +1,4 @@
-# 20mar12abu
+# 21mar12abu
 # (c) Software Lab. Alexander Burger
 
 # *Home *Gate *Host *Port *Port1 *Port% *Http1 *Chunked
@@ -241,8 +241,7 @@
          (setq
             *ConId (head @ @U)
             @U (cdr (nth @U @))
-            *ConId
-            (pack (if (member "/" *ConId) (cdr @) *ConId)) )
+            *ConId (pack (if (member "/" *ConId) (cdr @) *ConId)) )
          (off *ConId) )
       (while (setq L (line))
          (cond
