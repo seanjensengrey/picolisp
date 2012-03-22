@@ -1,4 +1,5 @@
 * XXmmm12 picoLisp-3.0.10
+   Bug in 'firstByteA_B' (64-bit)
    'httpGate' session bug
    Simplified 'sigio'
    Volatile 'NIL' property
