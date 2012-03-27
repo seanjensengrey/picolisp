@@ -1,4 +1,4 @@
-# 11mar12abu
+# 27mar12abu
 # (c) Software Lab. Alexander Burger
 
 # 6 bytes in little endian format
@@ -549,7 +549,10 @@
       call getAdrZ_A  # Get 'next'
       pop C  # Get block index
       cmp C A  # Less than 'next'?
-      jge retnz  # No
+      if ge  # No
+         clrz  # 'nz'
+         jmp 90
+      end
       ld E C  # Block index
       shl E ((DbFile) II)  # Shift
       ld C BLK  # Read link field
@@ -557,7 +560,7 @@
       ld B (Z)  # Get tag byte
       and B BLKTAG  # Block tag
       cmp B 1  # One?
-      pop Z
+90    pop Z
       pop E
    else
       atom (Ext)  # Extended databases?

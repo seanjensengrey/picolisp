@@ -439,7 +439,7 @@ boxNum_E	gc.l	848
 boxNum_X	gc.l	860
 brkErrX	err.l	494
 brkLoadE_E	flow.l	2856
-bufAoAC_C	db.l	953
+bufAoAC_C	db.l	956
 bufStringE_SZ	io.l	1142
 byeE	flow.l	3439
 byteNumBCX_CX	io.l	463
@@ -479,7 +479,7 @@ checkVarEX	err.l	381
 checkVarYX	err.l	373
 chopExtNmX_E	db.l	133
 circE_YF	main.l	738
-cleanUpY	db.l	567
+cleanUpY	db.l	570
 closeAX	io.l	5
 closeErrEX	err.l	506
 closeErrX	err.l	504
@@ -535,16 +535,16 @@ currFdX_C	io.l	1333
 currFd_C	io.l	1337
 cutLocalCX	flow.l	2824
 dateXYZ_E	main.l	2357
-dbAEX	db.l	1328
-dbFetchEX	db.l	1316
+dbAEX	db.l	1331
+dbFetchEX	db.l	1319
 dbFileBlkY_AC	db.l	246
 dbRdErr	err.l	628
 dbSizErr	err.l	640
-dbSizeX_A	db.l	1221
+dbSizeX_A	db.l	1224
 dbSyncErrX	err.l	597
-dbTouchEX	db.l	1442
+dbTouchEX	db.l	1445
 dbWrErr	err.l	634
-dbZapE	db.l	1474
+dbZapE	db.l	1477
 dbfBuf_AF	db.l	51
 dbfErrX	err.l	613
 dbgS	err.l	5
@@ -629,7 +629,7 @@ doCmd	main.l	2906
 doCnt	apply.l	1413
 doCo	flow.l	2537
 doCol	sym.l	3048
-doCommit	db.l	1495
+doCommit	db.l	1498
 doCon	subr.l	725
 doConc	subr.l	781
 doCond	flow.l	1908
@@ -640,7 +640,7 @@ doCtl	io.l	4254
 doCtty	main.l	2704
 doCut	sym.l	1919
 doDate	main.l	2418
-doDbck	db.l	2110
+doDbck	db.l	2113
 doDe	flow.l	532
 doDec	big.l	2323
 doDef	flow.l	448
@@ -685,7 +685,7 @@ doFold	sym.l	3509
 doFor	flow.l	2219
 doFork	flow.l	3253
 doFormat	big.l	2089
-doFree	db.l	2052
+doFree	db.l	2055
 doFrom	io.l	3543
 doFull	subr.l	1075
 doFunQ	sym.l	750
@@ -704,7 +704,7 @@ doHeap	main.l	517
 doHear	io.l	3228
 doHide	sym.l	1090
 doHost	net.l	190
-doId	db.l	1025
+doId	db.l	1028
 doIdx	sym.l	2159
 doIf	flow.l	1794
 doIf2	flow.l	1813
@@ -717,7 +717,7 @@ doIntern	sym.l	998
 doIpid	flow.l	3198
 doIsa	flow.l	961
 doJob	flow.l	1418
-doJournal	db.l	968
+doJournal	db.l	971
 doKey	io.l	3376
 doKill	flow.l	3230
 doLast	subr.l	2044
@@ -726,7 +726,7 @@ doLe0	big.l	2693
 doLength	subr.l	2741
 doLet	flow.l	1468
 doLetQ	flow.l	1529
-doLieu	db.l	1154
+doLieu	db.l	1157
 doLine	io.l	3699
 doLines	io.l	3852
 doLink	subr.l	1172
@@ -735,7 +735,7 @@ doList	subr.l	887
 doListen	net.l	157
 doLit	flow.l	150
 doLoad	io.l	4171
-doLock	db.l	1182
+doLock	db.l	1185
 doLoop	flow.l	2162
 doLowQ	sym.l	3375
 doLowc	sym.l	3405
@@ -752,7 +752,7 @@ doMapcar	apply.l	987
 doMapcon	apply.l	1041
 doMaplist	apply.l	933
 doMaps	apply.l	790
-doMark	db.l	1970
+doMark	db.l	1973
 doMatch	subr.l	3128
 doMax	subr.l	2327
 doMaxi	apply.l	1511
@@ -802,7 +802,7 @@ doPeek	io.l	3431
 doPick	apply.l	1369
 doPipe	io.l	4275
 doPoll	io.l	3320
-doPool	db.l	648
+doPool	db.l	651
 doPop	sym.l	1895
 doPort	net.l	5
 doPr	io.l	5229
@@ -839,7 +839,7 @@ doReplace	subr.l	1499
 doRest	main.l	2333
 doReverse	subr.l	1678
 doRewind	io.l	5129
-doRollback	db.l	1895
+doRollback	db.l	1898
 doRot	subr.l	848
 doRun	flow.l	306
 doSect	subr.l	2541
@@ -847,7 +847,7 @@ doSeed	big.l	2961
 doSeek	apply.l	1275
 doSemicol	sym.l	2967
 doSend	flow.l	1127
-doSeq	db.l	1081
+doSeq	db.l	1084
 doSet	sym.l	1604
 doSetCol	sym.l	2996
 doSetq	sym.l	1637
@@ -954,12 +954,12 @@ fmtScaleCX_CX	big.l	2061
 fmtWordACX_CX	big.l	2046
 forkErrX	err.l	515
 forkLispX_FE	flow.l	3266
-fsyncDB	db.l	929
+fsyncDB	db.l	932
 funqE_FE	main.l	2089
 gc	gc.l	65
 getAdrZ_A	db.l	6
 getBinaryZ_FB	io.l	447
-getBlockZ_FB	db.l	593
+getBlockZ_FB	db.l	596
 getChar_A	io.l	1975
 getEC_E	sym.l	2672
 getParse_A	io.l	1795
@@ -974,7 +974,7 @@ idErrXL	err.l	623
 idxDelXY_E	sym.l	2289
 idxGetXY_E	sym.l	2202
 idxPutXY_E	sym.l	2219
-ignLog	db.l	921
+ignLog	db.l	924
 inReadyC_F	io.l	2694
 incE_A	big.l	1491
 initInFileAC_A	io.l	65
@@ -1083,7 +1083,7 @@ pushErrFilesY	io.l	1853
 pushInFilesY	io.l	1818
 pushOutFilesY	io.l	1842
 putACE	sym.l	2488
-putBlockBZ	db.l	609
+putBlockBZ	db.l	612
 putSrcEC_E	flow.l	25
 putStdoutB	io.l	4625
 putStringB	main.l	2230
@@ -1122,7 +1122,7 @@ retc	err.l	707
 retnc	err.l	710
 retnz	err.l	716
 retz	err.l	713
-rewindLog	db.l	925
+rewindLog	db.l	928
 runE_E	main.l	2077
 rwUnlockDbA	db.l	269
 s_isdirS_F	sys/x86-64.linux.code.l	16
@@ -1180,7 +1180,7 @@ trSyncErrX	err.l	602
 traceCY	flow.l	3022
 trimE_E	subr.l	1769
 truncErrX	err.l	592
-truncLog	db.l	944
+truncLog	db.l	947
 tryLockCE_FA	db.l	299
 twiceA_A	big.l	47
 twiceBigA_A	big.l	57
