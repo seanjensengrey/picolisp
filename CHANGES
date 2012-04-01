@@ -1,4 +1,5 @@
 * XXmmm12 picoLisp-3.0.10
+   Pilog 'for/[2-4]' predicate
    Bug in 'isLifeE_F' (64-bit)
    Bug in 'firstByteA_B' (64-bit)
    'httpGate' session bug
