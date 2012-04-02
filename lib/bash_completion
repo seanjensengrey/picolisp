@@ -1,15 +1,22 @@
-# Bash completion for pil (picolisp front-end)
+# Bash completion for picolisp + pil
 # Alexander Burger <abu@software-lab.de>
 
 have pil &&
 _pil()
 {
-    local cur
+    local CMD=$(
+      echo ${COMP_WORDS[0]}
+      for I in $(seq $((COMP_CWORD-1)))
+      do
+         local ARG="${COMP_WORDS[$I]}"
+         test "${ARG:0:1}" = "-" || echo "$ARG"
+      done )
+    local IFS=$'\n'
 
-    _get_comp_words_by_ref cur
-    COMPREPLY=($(${COMP_WORDS[0]} @lib/complete.l "$cur" -bye +))
+    COMPREPLY=($($CMD /usr/lib/picolisp/lib/complete.l "${COMP_WORDS[$COMP_CWORD]}" -bye +))
     return 0
 } &&
-complete -F _pil pil
+complete -o nospace  -F _pil  picolisp  &&
+complete -o nospace  -F _pil  pil
 
 # ex: ts=4 sw=4 et filetype=sh
