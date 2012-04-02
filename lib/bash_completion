@@ -6,9 +6,8 @@ _pil()
 {
     local CMD=$(
       echo ${COMP_WORDS[0]}
-      for I in $(seq $((COMP_CWORD-1)))
+      for ARG in "${COMP_WORDS[@]:1:$((COMP_CWORD-1))}"
       do
-         local ARG="${COMP_WORDS[$I]}"
          test "${ARG:0:1}" = "-" || echo "$ARG"
       done )
     local IFS=$'\n'
