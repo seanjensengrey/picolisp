@@ -1,4 +1,4 @@
-# 02apr12abu
+# 03apr12abu
 # (c) Software Lab. Alexander Burger
 
 (if (opt)
@@ -17,7 +17,8 @@
             (setq "Path" (and (cdr "Path") (pack (glue "/" @) "/")))
             (for "Sym" (dir "Path" T)
                (when (pre? "Str" "Sym")
-                  (prinl "Path" "Sym"
+                  (prinl "Path"
+                     (replace (chop "Sym") " " "\\ ")
                      (if (=T (car (info (pack "Path" "Sym"))))
                         "/"
                         " " ) ) ) ) ) ) )
