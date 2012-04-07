@@ -1,4 +1,4 @@
-# 03jan12abu
+# 07apr12abu
 # (c) Software Lab. Alexander Burger
 
 (de task (Key . Prg)
@@ -273,8 +273,10 @@
    (apply meta X This) )
 
 ### Math ###
-(de scl (N)
-   (setq *Scl N) )
+(de scl ("N" . "Prg")
+   (if "Prg"
+      (let *Scl "N" (run "Prg"))
+      (setq *Scl "N") ) )
 
 (de sqrt (N F)
    (cond

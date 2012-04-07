@@ -163,9 +163,12 @@ href="refS.html#step">step</a></code>.
 -> {7-6}
 </code></pre>
 
-<dt><a name="scl"><code>(scl 'num) -> num</code></a>
-<dd>Sets <code><a href="refS.html#*Scl">*Scl</a></code> globally to
-<code>num</code>. See also <a href="ref.html#num-io">Numbers</a>.
+<dt><a name="scl"><code>(scl 'num [. prg]) -> num</code></a>
+<dd>If <code>prg</code> is given, it binds <code><a
+href="refS.html#*Scl">*Scl</a></code> dynamically to <code>num</code> during the
+execution of <code>prg</code>. Otherwise, it sets <code><a
+href="refS.html#*Scl">*Scl</a></code> globally to <code>num</code>. See also <a
+href="ref.html#num-io">Numbers</a>.
 
 <pre><code>
 : (scl 0)
@@ -181,6 +184,10 @@ href="refS.html#step">step</a></code>.
 -> 3
 : (str "123.45")
 -> (123450)
+: (scl 1 (str "123.45"))
+-> (1235)
+: *Scl
+-> 3
 </code></pre>
 
 <dt><a name="script"><code>(script 'any ..) -> any</code></a>

@@ -1,4 +1,4 @@
-# 28jan12abu
+# 07apr12abu
 # (c) Software Lab. Alexander Burger
 
 (setq *OS (java (java "java.lang.System" "getProperty" "os.name")))
@@ -226,8 +226,10 @@
    (apply meta X This) )
 
 ### Math ###
-(de scl (N)
-   (setq *Scl N) )
+(de scl ("N" . "Prg")
+   (if "Prg"
+      (let *Scl "N" (run "Prg"))
+      (setq *Scl "N") ) )
 
 (de sqrt (N F)
    (cond
