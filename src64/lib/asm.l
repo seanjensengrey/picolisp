@@ -1,4 +1,4 @@
-# 19jan12abu
+# 08apr12abu
 # (c) Software Lab. Alexander Burger
 
 # *LittleEndian *AlignedCode *Registers optimize
@@ -436,7 +436,7 @@
       (eval+)
       (eval/ret)
       (exec (reg (read)))
-      (fix)
+      (fnum)
       (fval)
       (hx2 (read))
       (inc (destination) "*Mode")

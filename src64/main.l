@@ -1,4 +1,4 @@
-# 18mar12abu
+# 08apr12abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -1675,7 +1675,7 @@
                add C 4  # Size of float
             end
          end
-         fix  # Get fixpoint number or flg
+         fnum  # Get fixpoint number or flg
       else
          cmp E ISym  # 'I'?
          if eq  # Yes

@@ -1,4 +1,4 @@
-# 19jan12abu
+# 08apr12abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -1041,7 +1041,7 @@
 (asm fval ()
    (prinst "lfs" 1 "0(14)") )
 
-(asm fix ()
+(asm fnum ()
    (prinst "srdi" 0 15 4)  # Normalize scale (ignore sign)
    (prinst "std" 0 "-8(1)")
    (prinst "lfd" 0 "-8(1)")  # Get scale in f13
