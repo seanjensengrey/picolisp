@@ -1,4 +1,6 @@
-* XXmmm12 picoLisp-3.0.10
+* DDmmm12 picoLisp-3.1.1
+
+* 10apr12 picoLisp-3.1.0
    Generalized 'scl'
    Pilog 'for/[2-4]' predicate
    Bug in 'isLifeE_F' (64-bit)
