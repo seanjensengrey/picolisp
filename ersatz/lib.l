@@ -1,4 +1,4 @@
-# 07apr12abu
+# 13apr12abu
 # (c) Software Lab. Alexander Burger
 
 (setq *OS (java (java "java.lang.System" "getProperty" "os.name")))
@@ -1374,7 +1374,7 @@
       (push '"Who" "Y")
       (ifn (= `(char "+") (char "Y"))
          (and (pair (val "Y")) ("nest" @) (link "Y"))
-         (for "Z" (val "Y")
+         (for "Z" (pair (val "Y"))
             (if (atom "Z")
                (and ("match" "Z") (link "Y"))
                (when ("nest" (cdr "Z"))
