@@ -1,4 +1,4 @@
-# 08apr12abu
+# 16apr12abu
 # (c) Software Lab. Alexander Burger
 
 # *LittleEndian *AlignedCode *Registers optimize
@@ -431,13 +431,12 @@
       (dec (destination) "*Mode")
       (div (source) "*Mode")
       (drop)
-      (dval)
       (eval)
       (eval+)
       (eval/ret)
       (exec (reg (read)))
-      (fnum)
-      (fval)
+      (fixnum)
+      (float)
       (hx2 (read))
       (inc (destination) "*Mode")
       (initCode)
@@ -467,6 +466,8 @@
       (ld2 (source) "*Mode")
       (ld4 (source) "*Mode")
       (ldc (destination) "*Mode" (source) "*Mode")
+      (ldd)
+      (ldf)
       (ldnc (destination) "*Mode" (source) "*Mode")
       (ldnz (destination) "*Mode" (source) "*Mode")
       (ldz (destination) "*Mode" (source) "*Mode")
@@ -506,6 +507,8 @@
       (slen (destination) "*Mode" (source) "*Mode")
       (st2 (destination) "*Mode")
       (st4 (destination) "*Mode")
+      (std)
+      (stf)
       (sub (destination) "*Mode" (source) "*Mode")
       (subc (destination) "*Mode" (source) "*Mode")
       (sym (source) "*Mode")

@@ -1,4 +1,4 @@
-# 08apr12abu
+# 16apr12abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -579,13 +579,13 @@
 (asm jgt (Adr A)
    (_jmp "ja" "jbe") )
 
-(asm dval ()
+(asm ldd ()
    (prinst "movsd" "(%rdx)" "%xmm0") )
 
-(asm fval ()
+(asm ldf ()
    (prinst "movss" "(%rdx)" "%xmm0") )
 
-(asm fnum ()
+(asm fixnum ()
    (prinst "shr" "$4" "%rbx")                # Normalize scale
    (prinst "jc" "1f")                        # Jump if negative
    (prinst "cvtsi2sd" "%rbx" "%xmm7")        # Mulitply double with scale
@@ -615,6 +615,60 @@
    (prinst "jc" "5f")                        # Yes: Skip
    (prinst "mov" "$TSym" "%rbx")             # Load T
    (prinl "5:") )
+
+(asm float ()
+   (prinst "mov" "%rax" "%r10")              # Normalize scale
+   (prinst "shr" "$4" "%r10")                # Negative?
+   (prinst "jc" "3f")                        # Yes: Skip
+   (prinst "testb" "$0x02" "(%r13)")         # Short fixnum?
+   (prinst "jz" "2f")                        # No: Skip
+   (prinst "cvtsi2sd" "%r10" "%xmm7")        # Convert scale
+   (prinst "mov" "(%r13)" "%r10")            # Normalize fixnum
+   (prinst "shr" "$4" "%r10")                # Negative?
+   (prinst "jnc" "1f")                       # No: Skip
+   (prinst "neg" "%r10")                     # Else negate
+   (prinl "1:")
+   (prinst "cvtsi2sd" "%r10" "%xmm0")        # Convert fixnum to double
+   (prinst "divsd" "%xmm7" "%xmm0")          # Divide by scale
+   (prinst "jmp" "4f")                       # Done
+   (prinl "2:")
+   (prinst "cmpq" "$Nil" "(%r13)")           # Minus infinite?
+   (prinst "mov" "$0x7FF0000000000000" "%r10")
+   (prinst "jnz" "1f")                       # No: Skip
+   (prinst "mov" "$0xFFF0000000000000" "%r10")
+   (prinl "1:")
+   (prinst "push" "%r10")
+   (prinst "movsd" "(%rsp)" "%xmm0")
+   (prinst "add" "$8" "%rsp")
+   (prinst "jmp" "4f")                       # Done
+   (prinl "3:")
+   (prinst "testb" "$0x02" "(%r13)")         # Short fixnum?
+   (prinst "jz" "2f")                        # No: Skip
+   (prinst "cvtsi2ss" "%r10" "%xmm7")        # Convert scale
+   (prinst "mov" "(%r13)" "%r10")            # Normalize fixnum
+   (prinst "shr" "$4" "%r10")                # Negative?
+   (prinst "jnc" "1f")                       # No: Skip
+   (prinst "neg" "%r10")                     # Else negate
+   (prinl "1:")
+   (prinst "cvtsi2ss" "%r10" "%xmm0")        # Convert fixnum to float
+   (prinst "divss" "%xmm7" "%xmm0")          # Divide by scale
+   (prinst "jmp" "4f")                       # Done
+   (prinl "2:")
+   (prinst "cmpq" "$Nil" "(%r13)")           # Minus infinite?
+   (prinst "mov" "$0x7F800000" "%r10")
+   (prinst "jnz" "1f")
+   (prinst "mov" "$0xFF800000" "%r10")
+   (prinl "1:")
+   (prinst "push" "%r10")
+   (prinst "movss" "(%rsp)" "%xmm0")
+   (prinst "add" "$8" "%rsp")
+   (prinl "4:") )
+
+(asm std ()
+   (prinst "movsd" "%xmm0" "(%r15)") )
+
+(asm stf ()
+   (prinst "movss" "%xmm0" "(%r15)") )
 
 (asm cc (Adr A Arg M)
    (unless (== 'cc (caar (seek '((L) (== (cadr L) *Statement)) *Program)))

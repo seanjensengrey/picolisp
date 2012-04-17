@@ -1,4 +1,4 @@
-# 08apr12abu
+# 16apr12abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -1499,7 +1499,7 @@
             if nz  # Yes
                push (E)  # Pass number or flag
                push C  # as fixpoint value
-            else
+            else  # Structure
                ld E C  # Ignore variable
                ld C ((E))  # Get buffer size
                shr C 4  # Normalize
@@ -1537,70 +1537,89 @@
                         add Z 4  # Size of unsigned
                         sub C 4  # Buffer full?
                      end
-                  else
-                     push C
+                  else  # (num|sym . cnt) or ([-]1.0 . lst)
                      push X
-                     push Y
-                     ld Y Z  # Y on buffer
-                     ld C (A CDR)  # Get length
-                     shr C 4  # Normalize
-                     add Z C  # Size of buffer
-                     push C  # Save it
-                     ld A (A)  # 'num' or 'sym'
-                     num A  # (num . cnt)?
+                     ld X (A CDR)  # 'cnt' or 'lst'
+                     ld A (A)  # 'num', 'sym' or [-]1.0
+                     cnt X  # 'cnt'?
                      if nz  # Yes
-                        cnt A  # Short?
+                        push Y
+                        ld Y Z  # Y on buffer
+                        shr X 4  # Normalize length
+                        add Z X  # Field width
+                        sub C X  # New buffer size
+                        num A  # (num . cnt)?
                         if nz  # Yes
-                           shr A 4  # Normalize
-                           if c  # Sign?
-                              neg A  # Yes
-                           end
-                        else
-                           test A SIGN  # Sign?
-                           if z  # No
-                              ld A (A DIG)
+                           cnt A  # Short?
+                           if nz  # Yes
+                              shr A 4  # Normalize
+                              if c  # Sign?
+                                 neg A  # Yes
+                              end
                            else
-                              ld A (A (- DIG SIGN))
-                              neg A  # Negate
+                              test A SIGN  # Sign?
+                              if z  # No
+                                 ld A (A DIG)
+                              else
+                                 ld A (A (- DIG SIGN))
+                                 neg A  # Negate
+                              end
+                           end
+                           ? *LittleEndian
+                              do
+                                 ld (Y) B  # Store byte
+                                 inc Y  # Increment pointer
+                                 shr A 8
+                                 dec X  # Done?
+                              until z  # Yes
+                           =
+                           ? (not *LittleEndian)
+                              ld Y Z
+                              do
+                                 dec Y  # Decrement pointer
+                                 ld (Y) B  # Store byte
+                                 shr A 8
+                                 dec X  # Done?
+                              until z  # Yes
+                           =
+                        else
+                           sym A  # (sym . cnt)?
+                           if nz  # Yes
+                              push C
+                              ld X (A TAIL)  # Get name
+                              call nameX_X
+                              ld C 0
+                              do
+                                 call symByteCX_FACX  # Next byte
+                              while nz
+                                 ld (Y) B  # Store it
+                                 inc Y  # Increment pointer
+                              loop
+                              set (Y) 0  # Null byte
+                              pop C
                            end
                         end
-                        ? *LittleEndian
-                           do
-                              ld (Y) B  # Store byte
-                              inc Y  # Increment pointer
-                              shr A 8
-                              dec C  # Done?
-                           until z  # Yes
-                        =
-                        ? (not *LittleEndian)
-                           ld Y Z
-                           do
-                              dec Y  # Decrement pointer
-                              ld (Y) B  # Store byte
-                              shr A 8
-                              dec C  # Done?
-                           until z  # Yes
-                        =
-                     else
-                        sym A  # (sym . cnt)?
-                        if nz  # Yes
-                           ld X (A TAIL)  # Get name
-                           call nameX_X
-                           ld C 0
-                           do
-                              call symByteCX_FACX  # Next byte
-                           while nz
-                              ld (Y) B  # Store it
-                              inc Y  # Increment pointer
-                           loop
-                           set (Y) 0  # Null byte
-                        end
+                        pop Y
+                     else  # ([-]1.0 . lst)
+                        do
+                           atom X  # More fixpoint numbers?
+                        while z  # Yes
+                           float  # Convert to floating point
+                           test A SIGN  # Scale negative?
+                           if z  # No
+                              std  # Store double value
+                              add Z 8  # Size of double
+                              sub C 8  # Decrement buffer size
+                           else
+                              stf  # Store float value
+                              add Z 4  # Size of float
+                              sub C 4  # Decrement buffer size
+                           end
+                           ld X (X CDR)
+                        loop
                      end
-                     pop A  # 'cnt'
-                     pop Y
                      pop X
-                     pop C
-                     sub C A  # Buffer full?
+                     null C  # Buffer full?
                   end
                until z  # Yes
                pop Z
@@ -1668,14 +1687,14 @@
          if nz  # Yes
             test E SIGN  # Negative?
             if z  # No
-               dval  # Get double value
+               ldd  # Get double value
                add C 8  # Size of double
             else
-               fval  # Get float value
+               ldf  # Get float value
                add C 4  # Size of float
             end
          end
-         fnum  # Get fixpoint number or flg
+         fixnum  # Get fixpoint number or flg
       else
          cmp E ISym  # 'I'?
          if eq  # Yes

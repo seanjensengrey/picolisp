@@ -1,4 +1,4 @@
-# 08apr12abu
+# 16apr12abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -1035,13 +1035,13 @@
       (("bne" + "cr1" ".+12") ("beq" + ".+8") ("b" NIL @Lbl))
       (("bne" + "cr1" ".+8") ("bnectr" NIL)) ) )
 
-(asm dval ()
+(asm ldd ()
    (prinst "lfd" 1 "0(14)") )
 
-(asm fval ()
+(asm ldf ()
    (prinst "lfs" 1 "0(14)") )
 
-(asm fnum ()
+(asm fixnum ()
    (prinst "srdi" 0 15 4)  # Normalize scale (ignore sign)
    (prinst "std" 0 "-8(1)")
    (prinst "lfd" 0 "-8(1)")  # Get scale in f13
@@ -1071,6 +1071,15 @@
    (prinst "sldi" 15 15 4)  # Make short number
    (prinst "ori" 15 15 2)
    (prinl "4:") )
+
+(asm float ()
+   #{!}# )
+
+(asm std ()
+   (prinst "stfd" 1 "0(14)") )
+
+(asm stf ()
+   (prinst "stfs" 1 "0(14)") )
 
 (asm cc (Adr A Arg M)
    (let Reg (3 4 5 6 7 8 9 10)  # Support only max. 8 parameters
