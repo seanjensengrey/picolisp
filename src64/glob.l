@@ -1,4 +1,4 @@
-# 20oct11abu
+# 22apr12abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Data)
@@ -192,6 +192,7 @@
    initFun NIL       "quit"      doQuit
    initFun NIL       "errno"     doErrno
    initFun NIL       "native"    doNative
+   initFun NIL       "struct"    doStruct
    initFun NIL       "lisp"      doLisp
    initFun NIL       "args"      doArgs
    initFun NIL       "next"      doNext

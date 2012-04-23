@@ -128,7 +128,7 @@ NIL
 -> T
 </code></pre>
 
-<dt><a name="native"><code>(native 'cnt1|sym1 'cnt2|sym2 'sym|lst 'any ..) -> any</code></a>
+<dt><a name="native"><code>(native 'cnt1|sym1 'cnt2|sym2 'any 'any ..) -> any</code></a>
 <dd>(64-bit version only) Calls a native C function. The first argument should
 specify a shared object library, either <code>"@"</code> (the current main
 program), <code>sym1</code> (a library path name), or <code>cnt1</code> (a
@@ -137,10 +137,11 @@ symbol name <code>sym2</code>, or a function pointer <code>cnt2</code> obtained
 by a previous call). Practically, the first two arguments will be always passed
 as transient symbols, which will get the library handle and function pointer
 assigned as values to be cached and used in subsequent calls. The third
-<code>sym|lst</code> argument is a return value specification, while all
-following arguments are the arguments to the native function.
+argument <code>any</code> is a result specification, while all following
+arguments are the arguments to the native function.
 
-<p>The return value specification may either be one of the atoms
+<p><a name="natResult">The result specification</a> may either be one of the
+atoms
 
 <pre><code>
    NIL   void
@@ -173,10 +174,10 @@ structures, e.g.
    <ul>
    <li>a variable in the CAR (to recieve the returned structure data, ignored
       when the CAR is <code>NIL</code>)
-   <li>a cons pair for the size and value specification in the CADR (see above),
-      and
-   <li>an optional sequence of initialization items in the CDDR, where each
-      may be
+   <li>a cons pair for the size and result specification in the CADR (see
+      above), and
+   <li>an optional sequence of <a name="natItem">initialization items</a> in the
+      CDDR, where each may be
       <ul>
       <li>a positive number, stored as an unsigned byte value
       <li>a negative number, whose absolute value is stored as an unsigned

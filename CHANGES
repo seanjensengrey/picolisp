@@ -1,5 +1,6 @@
 * DDmmm12 picoLisp-3.1.1
-   double/float in 'native' structures
+   Native 'struct' function (64-bit)
+   double/float in 'native' structures (64-bit)
    Allow 'zap' protected symbols outside 'pico' namespace (64-bit)
    Bug in 'who'
 

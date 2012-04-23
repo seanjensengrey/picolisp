@@ -759,6 +759,24 @@ href="refS.html#sym">sym</a></code>.
 -> (a "*" 3 "+" b "*" 4)
 </code></pre>
 
+<dt><a name="str?"><code>(str? 'any) -> sym | NIL</code></a>
+<dd>Returns the argument <code>any</code> when it is a transient symbol
+(string), otherwise <code>NIL</code>. See also <code><a
+href="refS.html#sym?">sym?</a></code>, <code><a
+href="refB.html#box?">box?</a></code> and <code><a
+href="refE.html#ext?">ext?</a></code>.
+
+<pre><code>
+: (str? 123)
+-> NIL
+: (str? '{ABC})
+-> NIL
+: (str? 'abc)
+-> NIL
+: (str? "abc")
+-> "abc"
+</code></pre>
+
 <dt><a name="strDat"><code>(strDat 'sym) -> dat</code></a>
 <dd>Converts a string <code>sym</code> in the date format of the current
 <code><a href="refL.html#locale">locale</a></code> to a <code><a
@@ -792,22 +810,49 @@ href="refD.html#datStr">datStr</a></code>.
 -> (a b c)
 </code></pre>
 
-<dt><a name="str?"><code>(str? 'any) -> sym | NIL</code></a>
-<dd>Returns the argument <code>any</code> when it is a transient symbol
-(string), otherwise <code>NIL</code>. See also <code><a
-href="refS.html#sym?">sym?</a></code>, <code><a
-href="refB.html#box?">box?</a></code> and <code><a
-href="refE.html#ext?">ext?</a></code>.
+<dt><a name="struct"><code>(struct 'num 'any 'any ..) -> any</code></a>
+<dd>Creates or extracts data structures, suitable to be passed to or returned
+from <code><a href="refN.html#native">native</a></code> C functions. The first
+<code>num</code> argument should be a native value, either a scalar, or a
+pointer obtained by calling functions like <code>malloc()</code>. The second
+argument <code>any</code> is a <a href="refN.html#natResult">result
+specification</a>, while all following <a
+href="refN.html#natItem">initialization items</a> are data items are stored in
+the structure pointed to by the first argument.
 
 <pre><code>
-: (str? 123)
+: (scl 2)
+-> 2
+
+## /* We assume the following C structure */
+## typedef struct value {
+##    int x, y;
+##    double a, b, c;
+##    long z;
+##    char nm[4];
+## } value;
+
+# Allocate structure
+: (setq P (native "@" "malloc" 'N 44))
+-> 9204032
+
+# Store to integers, three doubles, a long, and four characters
+: (struct P 'N -7 -4 (1.0 0.11 0.22 0.33) (7 . 8) 65 66 67 0)
+-> 9204032
+
+# Extract the structure
+: (struct P '((I . 2) (1.0 . 3) N (C . 4)))
+-> ((7 4) (11 22 33) 7 ("A" "B" "C" NIL))
+
+# Do both in a single call (allows conversions of data types)
+: (struct P
+   '((I . 2) (1.0 . 3) N (C . 4))
+   -7 -4 (1.0 0.11 0.22 0.33) (7 . 8) 65 66 67 0 )
+-> ((7 4) (11 22 33) 7 ("A" "B" "C" NIL))
+
+# De-allocate structure
+: (native "@" "free" NIL P)
 -> NIL
-: (str? '{ABC})
--> NIL
-: (str? 'abc)
--> NIL
-: (str? "abc")
--> "abc"
 </code></pre>
 
 <dt><a name="sub?"><code>(sub? 'any1 'any2) -> any2 | NIL</code></a>

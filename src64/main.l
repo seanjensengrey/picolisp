@@ -1,4 +1,4 @@
-# 16apr12abu
+# 23apr12abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -1372,7 +1372,7 @@
    or E CNT
    ret
 
-# (native 'cnt1|sym1 'cnt2|sym2 'sym|lst 'any ..) -> any
+# (native 'cnt1|sym1 'cnt2|sym2 'any 'any ..) -> any
 (code 'doNative 2)
    push X
    push Y
@@ -1525,102 +1525,8 @@
                   atom E  # Fill structure?
                while z  # Yes
                   ld A (E)  # Next value
-                  atom A  # Byte or unsigned?
-                  if nz  # Yes
-                     shr A 4  # Byte?
-                     if nc  # Yes
-                        ld (Z) B  # Store byte in buffer
-                        inc Z  # Increment buffer pointer
-                        dec C  # Buffer full?
-                     else
-                        st4 (Z)  # Store unsigned in buffer
-                        add Z 4  # Size of unsigned
-                        sub C 4  # Buffer full?
-                     end
-                  else  # (num|sym . cnt) or ([-]1.0 . lst)
-                     push X
-                     ld X (A CDR)  # 'cnt' or 'lst'
-                     ld A (A)  # 'num', 'sym' or [-]1.0
-                     cnt X  # 'cnt'?
-                     if nz  # Yes
-                        push Y
-                        ld Y Z  # Y on buffer
-                        shr X 4  # Normalize length
-                        add Z X  # Field width
-                        sub C X  # New buffer size
-                        num A  # (num . cnt)?
-                        if nz  # Yes
-                           cnt A  # Short?
-                           if nz  # Yes
-                              shr A 4  # Normalize
-                              if c  # Sign?
-                                 neg A  # Yes
-                              end
-                           else
-                              test A SIGN  # Sign?
-                              if z  # No
-                                 ld A (A DIG)
-                              else
-                                 ld A (A (- DIG SIGN))
-                                 neg A  # Negate
-                              end
-                           end
-                           ? *LittleEndian
-                              do
-                                 ld (Y) B  # Store byte
-                                 inc Y  # Increment pointer
-                                 shr A 8
-                                 dec X  # Done?
-                              until z  # Yes
-                           =
-                           ? (not *LittleEndian)
-                              ld Y Z
-                              do
-                                 dec Y  # Decrement pointer
-                                 ld (Y) B  # Store byte
-                                 shr A 8
-                                 dec X  # Done?
-                              until z  # Yes
-                           =
-                        else
-                           sym A  # (sym . cnt)?
-                           if nz  # Yes
-                              push C
-                              ld X (A TAIL)  # Get name
-                              call nameX_X
-                              ld C 0
-                              do
-                                 call symByteCX_FACX  # Next byte
-                              while nz
-                                 ld (Y) B  # Store it
-                                 inc Y  # Increment pointer
-                              loop
-                              set (Y) 0  # Null byte
-                              pop C
-                           end
-                        end
-                        pop Y
-                     else  # ([-]1.0 . lst)
-                        do
-                           atom X  # More fixpoint numbers?
-                        while z  # Yes
-                           float  # Convert to floating point
-                           test A SIGN  # Scale negative?
-                           if z  # No
-                              std  # Store double value
-                              add Z 8  # Size of double
-                              sub C 8  # Decrement buffer size
-                           else
-                              stf  # Store float value
-                              add Z 4  # Size of float
-                              sub C 4  # Decrement buffer size
-                           end
-                           ld X (X CDR)
-                        loop
-                     end
-                     pop X
-                     null C  # Buffer full?
-                  end
+                  call natBufACZ_CZ  # Store in buffer
+                  null C  # Buffer full?
                until z  # Yes
                pop Z
             end
@@ -1675,6 +1581,105 @@
    add S I  # Drop library handle
    pop Z
    pop Y
+   pop X
+   ret
+
+(code 'natBufACZ_CZ 0)
+   atom A  # Byte or unsigned?
+   if nz  # Yes
+      shr A 4  # Byte?
+      if nc  # Yes
+         ld (Z) B  # Store byte in buffer
+         inc Z  # Increment buffer pointer
+         dec C  # Decrement size
+         ret
+      end
+      st4 (Z)  # Store unsigned in buffer
+      add Z 4  # Size of unsigned
+      sub C 4  # Decrement size
+      ret
+   end
+   # (num|sym . cnt) or ([-]1.0 . lst)
+   push X
+   ld X (A CDR)  # 'cnt' or 'lst'
+   ld A (A)  # 'num', 'sym' or [-]1.0
+   cnt X  # 'cnt'?
+   if nz  # Yes
+      push Y
+      ld Y Z  # Y on buffer
+      shr X 4  # Normalize length
+      add Z X  # Field width
+      sub C X  # New buffer size
+      num A  # (num . cnt)?
+      if nz  # Yes
+         cnt A  # Short?
+         if nz  # Yes
+            shr A 4  # Normalize
+            if c  # Sign?
+               neg A  # Yes
+            end
+         else
+            test A SIGN  # Sign?
+            if z  # No
+               ld A (A DIG)
+            else
+               ld A (A (- DIG SIGN))
+               neg A  # Negate
+            end
+         end
+         ? *LittleEndian
+            do
+               ld (Y) B  # Store byte
+               inc Y  # Increment pointer
+               shr A 8
+               dec X  # Done?
+            until z  # Yes
+         =
+         ? (not *LittleEndian)
+            ld Y Z
+            do
+               dec Y  # Decrement pointer
+               ld (Y) B  # Store byte
+               shr A 8
+               dec X  # Done?
+            until z  # Yes
+         =
+      else
+         sym A  # (sym . cnt)?
+         if nz  # Yes
+            push C
+            ld X (A TAIL)  # Get name
+            call nameX_X
+            ld C 0
+            do
+               call symByteCX_FACX  # Next byte
+            while nz
+               ld (Y) B  # Store it
+               inc Y  # Increment pointer
+            loop
+            set (Y) 0  # Null byte
+            pop C
+         end
+      end
+      pop Y
+   else  # ([-]1.0 . lst)
+      do
+         atom X  # More fixpoint numbers?
+      while z  # Yes
+         float  # Convert to floating point
+         test A SIGN  # Scale negative?
+         if z  # No
+            std  # Store double value
+            add Z 8  # Size of double
+            sub C 8  # Decrement buffer size
+         else
+            stf  # Store float value
+            add Z 4  # Size of float
+            sub C 4  # Decrement buffer size
+         end
+         ld X (X CDR)
+      loop
+   end
    pop X
    ret
 
@@ -1824,6 +1829,50 @@
          end
       end
    end
+   ret
+
+# (struct 'num 'any 'any ..) -> any
+(code 'doStruct 2)
+   push X
+   push Y
+   push Z
+   ld X E
+   ld Y (E CDR)  # Y on args
+   ld E (Y)  # Eval native value (pointer or scalar)
+   eval
+   num E  # Number?
+   jz numErrEX  # No
+   cnt E  # Short?
+   if nz  # Yes
+      shr E 4  # Normalize
+      ld Z E  # Native value in Z
+   else
+      ld Z (E DIG)  # Native value in Z
+   end
+   ld Y (Y CDR)  # Next arg
+   ld E (Y)
+   eval  # Eval 'any'
+   link
+   push E  # <L I> Result specification
+   link
+   push Z  # Save native value
+   do
+      ld Y (Y CDR)  # Arguments?
+      atom Y
+   while z  # Yes
+      ld E (Y)  # Eval next struct element
+      eval
+      ld A E  # in A (unused C)
+      call natBufACZ_CZ  # Store in buffer
+   loop
+   pop A  # Get native value
+   ld C 0  # No pointer yet
+   ld E (L I)  # Result specification
+   call natRetACE_CE  # Extract return value
+   drop
+   pop Z
+   pop Y
+   pop X
    ret
 
 (code 'fetchCharC_AC 0)
