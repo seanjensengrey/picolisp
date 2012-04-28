@@ -817,8 +817,8 @@ from <code><a href="refN.html#native">native</a></code> C functions. The first
 pointer obtained by calling functions like <code>malloc()</code>. The second
 argument <code>any</code> is a <a href="refN.html#natResult">result
 specification</a>, while all following <a
-href="refN.html#natItem">initialization items</a> are data items are stored in
-the structure pointed to by the first argument.
+href="refN.html#natItem">initialization items</a> are stored in the structure
+pointed to by the first argument.
 
 <pre><code>
 : (scl 2)
@@ -836,7 +836,7 @@ the structure pointed to by the first argument.
 : (setq P (native "@" "malloc" 'N 44))
 -> 9204032
 
-# Store to integers, three doubles, a long, and four characters
+# Store two integers, three doubles, one long, and four characters
 : (struct P 'N -7 -4 (1.0 0.11 0.22 0.33) (7 . 8) 65 66 67 0)
 -> 9204032
 
@@ -844,7 +844,7 @@ the structure pointed to by the first argument.
 : (struct P '((I . 2) (1.0 . 3) N (C . 4)))
 -> ((7 4) (11 22 33) 7 ("A" "B" "C" NIL))
 
-# Do both in a single call (allows conversions of data types)
+# Do both in a single call (allowing conversions of data types)
 : (struct P
    '((I . 2) (1.0 . 3) N (C . 4))
    -7 -4 (1.0 0.11 0.22 0.33) (7 . 8) 65 66 67 0 )
