@@ -1,4 +1,4 @@
-# 16apr12abu
+# 30apr12abu
 # (c) Software Lab. Alexander Burger
 
 
@@ -163,7 +163,7 @@
 
       call adr          # Call 'adr'
       cc adr(src ..)    # C-Call to 'adr' with 'src' arguments
-      cc adr reg        # C-Call to 'adr' with end of stacked args in 'reg'
+      cc adr reg        # C-Call to 'adr' with top of stacked args in 'reg'
       ldd               # Load double value pointed to by 'C'
       ldf               # Load float value pointed to by 'C'
       fixnum            # Convert double with scale 'E' to fixnum in 'E'

@@ -1,4 +1,4 @@
-# 16apr12abu
+# 30apr12abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -676,10 +676,6 @@
    (let Reg '("%rdi" "%rsi" "%rdx" "%rcx" "%r8" "%r9")
       (if (lst? Arg)
          (let Lea NIL
-            (when (nth Arg 7)
-               (setq  # Maximally 6 args in registers
-                  Arg (append (head 6 Arg) (reverse (tail -6 Arg)))
-                  M (append (head 6 M) (reverse (tail -6 M))) ) )
             (mapc
                '((Src S)
                   (if (== '& Src)
@@ -694,43 +690,70 @@
                                     (T (cons (recurse (car Src)) (recurse (cdr Src)))) ) )
                               S ) ) )
                      (cond
-                        ((not Reg)  # 'Src' not stack-relative here!
-                           (ifn Lea
-                              (prinst "pushq" Src)
-                              (prinst "lea" Src "%rax")
-                              (prinst "pushq" "%rax") ) )
                         ((and (=0 S) (= "0" Src))
                            (prinst "xor" (car Reg) (pop 'Reg)) )
                         ((= "$pop" Src)
                            (prinst "pop" (pop 'Reg)) )
                         (T (prinst (if Lea "lea" "mov") Src (pop 'Reg))) )
                      (off Lea) ) )
-               Arg
-               M )
+               (head 6 Arg)
+               (head 6 M) )
+            (prinst "push" "%rbp")
+            (prinst "mov" "%rsp" "%rbp")
+            (when (nth Arg 7)  # Maximally 6 args in registers
+               (prinst "sub" (pack "$" (* 8 (length @))) "%rsp") )
+            (prinst "andb" "$~15" "%spl")  # Align stack
+            (let Ofs 0
+               (mapc  # 'Src' not lea or stack-relative here!
+                  '((Src S)
+                     (unless (and (=0 S) (= "0" Src))  # Keep for 'xor' later
+                        (setq Src
+                           (src
+                              (recur (Src)
+                                 (cond
+                                    ((= "%rdx" Src) "%r12")
+                                    ((atom Src) Src)
+                                    (T (cons (recurse (car Src)) (recurse (cdr Src)))) ) )
+                              S ) ) )
+                     (ifn (and (=0 S) (= "0" Src))
+                        (prinst "movq" Src (pack Ofs "(%rsp)"))
+                        (prinst "xor" "%rax" "%rax")
+                        (prinst "movq" "%rax" (pack Ofs "(%rsp)")) )
+                     (inc 'Ofs 8) )
+                  (nth Arg 7)
+                  (nth M 7) ) )
             # Don't use SSE registers in varargs for static calls
             (when (member Adr '("printf" "fprintf" "sprintf" "open" "fcntl"))
                (prinst "xor" "%al" "%al") ) )
+         (prinst "mov" "%rsp" "%rax")  # A on arguments
+         (prinst "push" "%rbp")
+         (prinst "mov" "%rsp" "%rbp")
+         (prinst "mov" Arg "%rbx")
+         (prinst "sub" "%rax" "%rbx")  # Size of arguments
+         (prinst "sub" "%rbx" "%rsp")  # Allocate space
+         (prinst "andb" "$~15" "%spl")  # Align stack
+         (prinst "mov" "%rsp" "%rbx")  # E on stack space
          (prinst "lea" "5f(%rip)" "%r11")
          (mapc
             '((R X)
                (prinl "1:")
-               (prinst "cmp" "%rsp" Arg)
+               (prinst "cmp" "%rax" Arg)
                (prinst "jz" "9f")
-               (prinst "pop" "%r10")
+               (prinst "mov" "(%rax)" "%r10")
+               (prinst "add" "$16" "%rax")
                (prinst "or" "%r10" "%r10")
                (prinst "jz" "7f")
                (prinst "call" "*%r11")
-               (prinst "add" "$8" "%rsp")
                (prinst "jmp" "1b")
                (prinl "5:")
                (unless (= R "%r9")
                   (prinst "lea" "(5f-5b)(%r11)" "%r11") )
                (prinst "shr" "$4" "%r10")
                (prinst "jc" "3f")
-               (prinst "testb" "$0x02" "8(%rsp)")
+               (prinst "testb" "$0x02" "-8(%rax)")
                (prinst "jz" "2f")
                (prinst "cvtsi2sd" "%r10" "%xmm7")
-               (prinst "mov" "8(%rsp)" "%r10")
+               (prinst "mov" "-8(%rax)" "%r10")
                (prinst "shr" "$4" "%r10")
                (prinst "jnc" "1f")
                (prinst "neg" "%r10")
@@ -739,19 +762,19 @@
                (prinst "divsd" "%xmm7" X)
                (prinst "ret")
                (prinl "2:")
-               (prinst "cmpq" "$Nil" "8(%rsp)")
+               (prinst "cmpq" "$Nil" "-8(%rax)")
                (prinst "mov" "$0x7FF0000000000000" "%r10")
                (prinst "jnz" "1f")
                (prinst "mov" "$0xFFF0000000000000" "%r10")
                (prinl "1:")
-               (prinst "mov" "%r10" "8(%rsp)")
-               (prinst "movsd" "8(%rsp)" X)
+               (prinst "mov" "%r10" "-8(%rax)")
+               (prinst "movsd" "-8(%rax)" X)
                (prinst "ret")
                (prinl "3:")
-               (prinst "testb" "$0x02" "8(%rsp)")
+               (prinst "testb" "$0x02" "-8(%rax)")
                (prinst "jz" "2f")
                (prinst "cvtsi2ss" "%r10" "%xmm7")
-               (prinst "mov" "8(%rsp)" "%r10")
+               (prinst "mov" "-8(%rax)" "%r10")
                (prinst "shr" "$4" "%r10")
                (prinst "jnc" "1f")
                (prinst "neg" "%r10")
@@ -760,37 +783,32 @@
                (prinst "divss" "%xmm7" X)
                (prinst "ret")
                (prinl "2:")
-               (prinst "cmpq" "$Nil" "8(%rsp)")
+               (prinst "cmpq" "$Nil" "-8(%rax)")
                (prinst "mov" "$0x7F800000" "%r10")
                (prinst "jnz" "1f")
                (prinst "mov" "$0xFF800000" "%r10")
                (prinl "1:")
-               (prinst "mov" "%r10" "8(%rsp)")
-               (prinst "movss" "8(%rsp)" X)
+               (prinst "mov" "%r10" "-8(%rax)")
+               (prinst "movss" "-8(%rax)" X)
                (prinst "ret")
                (prinl "7:")
-               (prinst "pop" R) )
+               (prinst "mov" "-8(%rax)" R) )
             Reg
             '("%xmm0" "%xmm1" "%xmm2" "%xmm3" "%xmm4" "%xmm5") )
-         (prinst "mov" Arg "%r11")
          (prinl "1:")
-         (prinst "cmp" "%rsp" Arg)
-         (prinst "jz" "1f")
-         (prinst "sub" "$16" Arg)
-         (prinst "sub" "$8" "%r11")
-         (prinst "mov" (pack "8(" Arg ")") "%r10")
-         (prinst "or" "%r10" "(%r11)")
+         (prinst "cmp" "%rax" Arg)
+         (prinst "jz" "9f")
+         (prinst "mov" "8(%rax)" "%r10")
+         (prinst "add" "$16" "%rax")
+         (prinst "mov" "%r10" "(%rbx)")
+         (prinst "add" "$8" "%rbx")
          (prinst "jmp 1b")
-         (prinl "1:")
-         (prinst "mov" "%r11" "%rsp")
          (prinl "9:")
          # Maximally 6 SSE registers in varargs for dynamic calls
          (prinst "mov" "$6" "%al") ) )
    ((get 'call 'asm) Adr A)
-   (and
-      (lst? Arg)
-      (gt0 (- (length Arg) 6))
-      (prinst "lea" (pack (* @ 8) "(%rsp)") "%rsp") )
+   (prinst "mov" "%rbp" "%rsp")
+   (prinst "pop" "%rbp")
    (unless (== 'cc (caadr (memq *Statement *Program)))
       (prinst "mov" "%r12" "%rdx")
       (prinst "xor" "%r12" "%r12") ) )

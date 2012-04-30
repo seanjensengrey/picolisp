@@ -1,4 +1,4 @@
-# 16apr12abu
+# 30apr12abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -1109,7 +1109,7 @@
                      (off Lea) ) )
                Arg
                M ) )
-         (let Lim 27
+         (let Lim 27  #{MADA}#
             (prinst "mr" Lim Arg)
             (prinst "ld" 11 "flt1@got(2)")
             (for R Reg

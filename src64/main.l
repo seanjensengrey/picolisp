@@ -1,4 +1,4 @@
-# 23apr12abu
+# 30apr12abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -1459,6 +1459,8 @@
    loop
    ld X S  # X on last argument
    link
+   push (Link)  # Save Link
+   ld (Link) L
    lea Y (Z -II)  # Limit
    do
       cmp X Y  # More args?
@@ -1534,22 +1536,13 @@
       end
       add X I  # Next arg
    loop
-   ld X S  # Start of args in X
-   off S 15  # Align stack to cell boundary
-   ld A S  # Keep end of duplicated args in A
-   ld C L  # Top of args
-   sub C X  # Bytes
-   sub S C  # Space for args
-   movm (S) (X) (L)  # Duplicate args
+   lea X (L -I)  # Top of arguments
    ld Y (Z)  # Get function pointer
-   cc (Y) A  # Call C-function
-   ld S X  # Drop duplicated args
+   cc (Y) X  # Call C-function
+   ld (Link) (L -I)  # Restore Link
    ld E (Z -II)  # Get result specification
    ld C 0  # No pointer yet
-   push (Link)  # Save L
-   ld (Link) L
    call natRetACE_CE  # Extract return value
-   pop (Link)
    ld (Z -II) E  # Save result
    lea Y (Z -III)  # Clean up allocated C args
    do
