@@ -725,14 +725,14 @@
             # Don't use SSE registers in varargs for static calls
             (when (member Adr '("printf" "fprintf" "sprintf" "open" "fcntl"))
                (prinst "xor" "%al" "%al") ) )
-         (prinst "mov" "%rsp" "%rax")  # A on arguments
-         (prinst "push" "%rbp")
+         (prinst "mov" "%rsp" "%rax")     # A on arguments
+         (prinst "push" "%rbp")           # Link
          (prinst "mov" "%rsp" "%rbp")
          (prinst "mov" Arg "%rbx")
-         (prinst "sub" "%rax" "%rbx")  # Size of arguments
-         (prinst "sub" "%rbx" "%rsp")  # Allocate space
-         (prinst "andb" "$~15" "%spl")  # Align stack
-         (prinst "mov" "%rsp" "%rbx")  # E on stack space
+         (prinst "sub" "%rax" "%rbx")     # Size of arguments
+         (prinst "sub" "%rbx" "%rsp")     # Allocate space
+         (prinst "andb" "$~15" "%spl")    # Align stack
+         (prinst "mov" "%rsp" "%rbx")     # E on stack space
          (prinst "lea" "5f(%rip)" "%r11")
          (mapc
             '((R X)
