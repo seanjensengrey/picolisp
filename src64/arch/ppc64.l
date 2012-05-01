@@ -1109,21 +1109,20 @@
                      (off Lea) ) )
                Arg
                M ) )
-         (let Lim 27  #{MADA}#
-            (prinst "mr" Lim Arg)
-            (prinst "ld" 11 "flt1@got(2)")
-            (for R Reg
-               (prinst "cmpd" Lim 1)
-               (prinst "beq-" "2f")
-               (prinst "ld" 0 "0(1)")
-               (prinst "cmpdi" 0 0)  # Float?
-               (prinst "beq-" "1f")  # No
-               (prinst "mtctr" 11)  # Else call float conversion
-               (prinst "bctrl")
-               (prinl "1:")
-               (prinst "ld" R "8(1)")  # Get value
-               (prinst "addi" 1 1 16) )
-            (prinl "2:") ) ) )
+         (prinst "mr" 27 1)            # 27 on arguments
+         (prinst "ld" 11 "flt1@got(2)")
+         (for R Reg
+            (prinst "cmpd" Arg 27)
+            (prinst "beq-" "2f")
+            (prinst "ld" 0 "0(27)")
+            (prinst "cmpdi" 0 0)       # Float?
+            (prinst "beq-" "1f")       # No
+            (prinst "mtctr" 11)        # Else call float conversion
+            (prinst "bctrl")
+            (prinl "1:")
+            (prinst "ld" R "8(27)")    # Get value
+            (prinst "addi" 27 27 16) )
+         (prinl "2:") ) )
    (nond
       (A  # Absolute
          (unless (= Adr "exit")
@@ -1459,28 +1458,28 @@
             (prinst "li" @u1 -1)
             (prinst "blr") ) )
       (prinl)
-      (let R 28  # 'cc' uses 27 for 'Lim'
+      (let R 28  # 'cc' uses 27 as argument pointer
          (for F 8
             (label (pack "flt" F))
             (unless (= 8 F)
                (prinst "addi" 11 11 (pack "flt" (inc F) "-flt" F)) )
             (prinst "srdi" 0 0 4)  # Scale (ignore sign)
-            (prinst "std" 0 "0(1)")
-            (prinst "ld" R "8(1)")  # Value
+            (prinst "std" 0 "0(27)")
+            (prinst "ld" R "8(27)")  # Value
             (prinst "andi." 0 R "0x02")  # Short?
             (prinst "beq-" "2f")  # No
-            (prinst "lfd" 0 "0(1)")  # Get scale in f13
+            (prinst "lfd" 0 "0(27)")  # Get scale in f13
             (prinst "fcfid" 13 0)
             (prinst "andi." 0 R "0x08")  # Value negative?
             (prinst "srdi" R R 4)  # Scale value
             (prinst "beq-" "1f")
             (prinst "neg" R R)  # Negate
             (prinl "1:")
-            (prinst "std" R "8(1)")  # Get value
-            (prinst "lfd" 0 "8(1)")
+            (prinst "std" R "8(27)")  # Get value
+            (prinst "lfd" 0 "8(27)")
             (prinst "fcfid" F 0)
             (prinst "fdiv" F F 13)  # Divide by scale
-            (prinst "stfd" F "8(1)")
+            (prinst "stfd" F "8(27)")
             (prinst "blr")
             (prinl "2:")  # T or NIL
             (prinst "cmpd" 25 R)  # Nil?
@@ -1488,8 +1487,8 @@
             (prinst "bne-" ".+8")
             (prinst "li" R (hex "FFF"))  # -inf
             (prinst "rotrdi" R R 12)
-            (prinst "std" R "8(1)")  # Get value
-            (prinst "lfd" 0 "8(1)")
+            (prinst "std" R "8(27)")  # Get value
+            (prinst "lfd" 0 "8(27)")
             (prinst "blr") ) )
       (prinl)
       (label "begin")
