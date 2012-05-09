@@ -138,8 +138,8 @@ by a previous call). Practically, the first two arguments will be always passed
 as transient symbols, which will get the library handle and function pointer
 assigned as values to be cached and used in subsequent calls. The third argument
 <code>any</code> is a result specification, while all following arguments are
-the arguments to the native function. See also <code><a
-href="refS.html#struct">struct</a></code>.
+the arguments to the native function. The functionality is described in detail
+in <a href="native.html">Native C Calls</a>.
 
 <p><a name="natResult">The result specification</a> may either be one of the
 atoms
@@ -205,6 +205,20 @@ structures, and frees that memory when done.
 <p>The number of fixpoint arguments is limited to six. For NaN or negative
 infinity <code>NIL</code>, and for positive infinity <code>T</code> is returned.
 
+<p>The C function may in turn call a function
+
+<pre><code>
+   long lisp(char*, long, long, long, long, long);
+</code></pre>
+
+<p>which accepts a symbol name as the first argument, and up to 5 numbers.
+<code>lisp()</code> calls that symbol with the five numbers, and expects a
+numeric return value. "Numbers" in this context are 64-bit scalars, and may not
+only represent integers, but also pointers or other encoded data. See also
+<code><a href="refS.html#struct">struct</a></code>, <code><a
+href="refL.html#lisp">lisp</a></code> and <code><a
+href="refE.html#errno">errno</a></code>.
+
 <pre><code>
 : (native "@" "getenv" 'S "TERM")  # Same as (sys "TERM")
 -> "xterm"
@@ -221,20 +235,10 @@ This is 123.456
    (native "@" "time" NIL '(Tim (8 B . 8)))  # time_t 8   # Get time_t structure
    (native "@" "localtime" '(I . 9) (cons NIL (8) Tim)) ) # Read local time
 -> (32 18 13 31 11 109 4 364 0)  # 13:18:32, Dec. 31st, 2009
+
+: (native "libcrypto.so" "SHA1" '(B . 20) "abcd" 4 0)
+-> (129 254 139 254 135 87 108 62 203 34 66 111 142 87 132 115 130 145 122 207)
 </code></pre>
-
-<p>The C function may in turn call a function
-
-<pre><code>
-   long lisp(char*, long, long, long, long, long);
-</code></pre>
-
-<p>which accepts a symbol name as the first argument, and up to 5 numbers.
-<code>lisp()</code> calls that symbol with the five numbers, and expects a
-numeric return value. "Numbers" in this context are 64-bit scalars, and may not
-only represent integers, but also pointers or other encoded data. See also
-<code><a href="refE.html#errno">errno</a></code> and <code><a
-href="refL.html#lisp">lisp</a></code>.
 
 <dt><a name="need"><code>(need 'cnt ['lst ['any]]) -> lst</code></a>
 <dt><code>(need 'cnt ['num|sym]) -> lst</code>

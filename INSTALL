@@ -1,4 +1,4 @@
-10jan12abu
+02may12abu
 (c) Software Lab. Alexander Burger
 
 
@@ -155,8 +155,9 @@ instead of './dbg' or './pil +'.
       -------------
 
 For further information, please look at "doc/index.html". There you find the
-PicoLisp Reference Manual (doc/ref.html), the PicoLisp tutorials (doc/tut.html
-and doc/app.html), and the frequently asked questions (doc/faq.html).
+PicoLisp Reference Manual ("doc/ref.html"), the PicoLisp tutorials
+("doc/tut.html", "doc/app.html", "doc/select.html" and "doc/native.html"), and
+the frequently asked questions ("doc/faq.html").
 
 For details about the 64-bit version, refer to "doc64/README", "doc64/asm" and
 "doc64/structures".
