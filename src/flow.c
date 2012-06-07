@@ -1,4 +1,4 @@
-/* 11mar12abu
+/* 07jun12abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -1171,7 +1171,7 @@ any doAt(any ex) {
    any x;
 
    x = cdr(ex),  x = EVAL(car(x));
-   NeedCell(ex,x);
+   NeedPair(ex,x);
    if (isNil(cdr(x)))
       return Nil;
    NeedCnt(ex,car(x));

@@ -63,7 +63,6 @@ CaseLower	glob.l	1115
 CaseUpper	glob.l	1091
 Catch	glob.l	20
 CbErr	glob.l	1163
-CellErr	glob.l	1194
 Child	glob.l	44
 Children	glob.l	43
 Chr	glob.l	585
@@ -243,6 +242,7 @@ OutFiles	glob.l	28
 PIPE_BUF	sys/x86-64.linux.defs.l	27
 PPid	glob.l	156
 PRepl	glob.l	1143
+PairErr	glob.l	1194
 Penv	glob.l	56
 Pico	glob.l	137
 Pid	glob.l	157
@@ -471,8 +471,6 @@ cbl6	main.l	1959
 cbl7	main.l	1963
 cbl8	main.l	1967
 cbl9	main.l	1971
-cellErrAX	err.l	438
-cellErrEX	err.l	440
 charSymACX_CX	io.l	1256
 checkVarAX	err.l	365
 checkVarEX	err.l	381
@@ -1059,6 +1057,8 @@ packAoACX_CX	db.l	108
 packECX_CX	sym.l	1303
 packExtNmX_E	db.l	87
 packOctACX_CX	db.l	120
+pairErrAX	err.l	438
+pairErrEX	err.l	440
 parseBCE_E	io.l	3893
 pathStringE_SZ	io.l	1172
 pico	glob.l	142

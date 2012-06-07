@@ -1,4 +1,4 @@
-# 24aug11abu
+# 07jun12abu
 # (c) Software Lab. Alexander Burger
 
 (code 'applyXYZ_E 0)
@@ -40,7 +40,7 @@
       jnz undefinedCX
       cmp S (StkLimit)  # Stack check
       jlt stkErrX
-      atom C  # Cell?
+      atom C  # Pair?
       if z  # Yes
          # Apply EXPR
          push X
@@ -394,7 +394,7 @@
       jnz undefinedCX
       cmp S (StkLimit)  # Stack check
       jlt stkErrX
-      atom C  # Cell?
+      atom C  # Pair?
       if z  # Yes
          # Apply EXPR
          push X
@@ -1067,7 +1067,7 @@
       lea Z (L II)  # Last arg
       call applyXYZ_E  # Apply
       pop Y
-      atom E  # Got cell?
+      atom E  # Got pair?
       if z  # Yes
          null (L -I)  # Result tail?
          if z  # No
@@ -1127,7 +1127,7 @@
       lea Z (L II)  # Last arg
       call applyVarXYZ_E  # Apply
       pop Y
-      atom E  # Got cell?
+      atom E  # Got pair?
       if z  # Yes
          null (L -I)  # Result tail?
          if z  # No
@@ -1653,7 +1653,7 @@
       ld (L I) C
       ret
    end
-   atom A  # Cell?
+   atom A  # Pair?
    jnz ret  # No
    cmp (A CDR) Nil  # CDR?
    if ne  # Yes

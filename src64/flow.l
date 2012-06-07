@@ -1,4 +1,4 @@
-# 12mar12abu
+# 07jun12abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -157,7 +157,7 @@
       if ne  # No
          cmp E TSym  # T?
          if ne  # No
-            atom E  # Cell?
+            atom E  # Pair?
             jnz 10  # No
             num (E)  # CAR number?
             if z  # No
@@ -2102,8 +2102,8 @@
    ld Y (E CDR)  # Y on args
    ld E (Y)  # Eval first
    eval
-   atom E  # Need cell
-   jnz cellErrEX
+   atom E  # Need pair
+   jnz pairErrEX
    cmp (E CDR) Nil  # CDR?
    jeq 10  # No
    ld A (E)  # Get 'cnt1'
@@ -2169,7 +2169,7 @@
       ld Y X  # Body in Y
       do
          ld E (Y)  # Next expression
-         atom E  # Cell?
+         atom E  # Pair?
          if z  # Yes
             ld A (E)  # Get CAR
             cmp A Nil  # NIL?

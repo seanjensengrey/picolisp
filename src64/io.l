@@ -1,4 +1,4 @@
-# 17oct11abu
+# 07jun12abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -2131,7 +2131,7 @@
          ld X (L I)  # Get name so far
          call findSymX_E  # Find or create symbol
          ld X 0  # Clear error context
-         atom (E)  # Value must be a cell
+         atom (E)  # Value must be a pair
          jnz symNsErrEX
          ld (EnvIntern) E  # Switch symbol namespace
          ld C 4  # Build new name

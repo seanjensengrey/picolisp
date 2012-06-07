@@ -1,4 +1,4 @@
-# 18may12abu
+# 07jun12abu
 # (c) Software Lab. Alexander Burger
 
 (data 'HtData)
@@ -28,7 +28,7 @@
       eval
       num E  # Number?
       jnz 20  # Yes
-      atom E  # Cell?
+      atom E  # Pair?
       jz 20  # Yes
       sym (E TAIL)  # External symbol?
       if nz  # Yes

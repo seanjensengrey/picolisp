@@ -222,7 +222,7 @@ the three base types and the symbol variations:
                      |
             +--------+--------+
             |        |        |
-         Number    Symbol    List
+         Number    Symbol    Pair
                      |
                      |
    +--------+--------+--------+
@@ -297,11 +297,11 @@ from the cell's start address. Therefore, the bit pattern of a symbol will be:
 
 <p>Thus, a symbol is recognized by the interpreter when bit(2) is non-zero.
 
-<p>A property is a key-value pair, represented as a cell in the symbol's tail.
-This is called a "property list". The property list may be terminated by a
+<p>A property is a key-value pair, represented by a cons pair in the symbol's
+tail. This is called a "property list". The property list may be terminated by a
 number representing the symbol's name. In the following example, a symbol with
-the name <code>"abc"</code> has three properties: A KEY/VAL cell, a cell with
-only a KEY, and another KEY/VAL cell.
+the name <code>"abc"</code> has three properties: A KEY/VAL pair, a cell with
+only a KEY, and another KEY/VAL pair.
 
 <pre><code>
             Symbol
@@ -324,9 +324,9 @@ only a KEY, and another KEY/VAL cell.
 </code></pre>
 
 <p>Each property in a symbol's tail is either a symbol (like the single KEY
-above, then it represents the boolean value <code>T</code>), or a cell with the
-property key in its CDR and the property value in its CAR. In both cases, the
-key should be a symbol, because searches in the property list are performed
+above, then it represents the boolean value <code>T</code>), or a cons pair with
+the property key in its CDR and the property value in its CAR. In both cases,
+the key should be a symbol, because searches in the property list are performed
 using pointer comparisons.
 
 <p>The name of a symbol is stored as a number at the end of the tail. It
@@ -448,8 +448,8 @@ specified at creation time.
 <p><hr>
 <h4><a name="lst">Lists</a></h4>
 
-<p>A list is a sequence of one or more cells, holding numbers, symbols, or
-lists.
+<p>A list is a sequence of one or more cells (cons pairs), holding numbers,
+symbols, or cons pairs.
 
 <pre><code>
       |
@@ -1819,7 +1819,7 @@ abbreviations:
 <li><code>dat</code> - Date: Days, starting first of March of the year 0 A.D.
 <li><code>tim</code> - Time: Seconds since midnight
 <li><code>obj</code> - Object/Class: A symbol with methods and/or classes
-<li><code>var</code> - Variable: Either a symbol or a cell
+<li><code>var</code> - Variable: Either a symbol or a cons pair
 <li><code>exe</code> - Executable: A list as executable expression (<code>eval</code>)
 <li><code>prg</code> - Prog-Body: A list of executable expressions (<code>run</code>)
 <li><code>fun</code> - Function: Either a number (code-pointer), a symbol (message) or a list (lambda)

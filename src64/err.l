@@ -1,4 +1,4 @@
-# 19oct11abu
+# 07jun12abu
 # (c) Software Lab. Alexander Burger
 
 # Debug print routine
@@ -435,10 +435,10 @@
    ld Y ExtErr
    jmp errEXYZ
 
-(code 'cellErrAX)
+(code 'pairErrAX)
    ld E A
-(code 'cellErrEX)
-   ld Y CellErr
+(code 'pairErrEX)
+   ld Y PairErr
    jmp errEXYZ
 
 (code 'atomErrAX)

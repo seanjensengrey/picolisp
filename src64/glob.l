@@ -1,4 +1,4 @@
-# 22apr12abu
+# 07jun12abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Data)
@@ -1191,7 +1191,7 @@
 : CntErr asciz "Small number expected"
 : SymErr asciz "Symbol expected"
 : ExtErr asciz "External symbol expected"
-: CellErr asciz "Cell expected"
+: PairErr asciz "Cons pair expected"
 : AtomErr asciz "Atom expected"
 : LstErr asciz "List expected"
 : VarErr asciz "Variable expected"

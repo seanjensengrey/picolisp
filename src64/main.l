@@ -1,4 +1,4 @@
-# 30apr12abu
+# 07jun12abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -931,7 +931,7 @@
       cmp E Nil
       jeq 30  # [<sym> NIL]
       atom E
-      jz 10  # [<sym> <cell>]
+      jz 10  # [<sym> <pair>]
       cmp E TSym
       jeq 10  # [<sym> T]
       push X  # [<sym> <sym>]
@@ -1007,9 +1007,9 @@
       loop
    end
    atom E
-   if nz  # [<cell> <sym>]
+   if nz  # [<pair> <sym>]
       cmp E TSym
-      if eq  # [<cell> T]
+      if eq  # [<pair> T]
          or B B  # nz
          setc  # lt
          ret
@@ -1017,7 +1017,7 @@
       clrc  # gt
       ret
    end
-   push X  # [<cell> <cell>]
+   push X  # [<pair> <pair>]
    push Y
    ld X A  # Keep originals
    ld Y E
@@ -1045,10 +1045,10 @@
       if nz  # Yes
          cmp E TSym
          if ne
-            clrc  # gt [<cell> <atom>]
+            clrc  # gt [<pair> <atom>]
             break T
          end
-         or B B  # nz [<cell> T]
+         or B B  # nz [<pair> T]
          setc  # lt
          break T
       end
@@ -2161,7 +2161,7 @@
       cmp C E  # Circular?
       jeq retnz  # Yes
       ld A (C)  # Next item
-      atom A  # Cell?
+      atom A  # Pair?
       if z  # Yes
          num (A)  # CAR a number?
          if nz  # Yes

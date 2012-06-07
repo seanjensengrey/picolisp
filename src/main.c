@@ -1,4 +1,4 @@
-/* 18mar12abu
+/* 07jun12abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -572,7 +572,7 @@ void numError(any ex, any x) {err(ex, x, "Number expected");}
 void cntError(any ex, any x) {err(ex, x, "Small number expected");}
 void symError(any ex, any x) {err(ex, x, "Symbol expected");}
 void extError(any ex, any x) {err(ex, x, "External symbol expected");}
-void cellError(any ex, any x) {err(ex, x, "Cell expected");}
+void pairError(any ex, any x) {err(ex, x, "Cons pair expected");}
 void atomError(any ex, any x) {err(ex, x, "Atom expected");}
 void lstError(any ex, any x) {err(ex, x, "List expected");}
 void varError(any ex, any x) {err(ex, x, "Variable expected");}
