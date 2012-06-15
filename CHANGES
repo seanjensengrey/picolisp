@@ -1,4 +1,5 @@
 * DDmmm12 picoLisp-3.1.1
+   '+DbHint' gui prefix class
    Stack alignments (64-bit)
    Native 'struct' function (64-bit)
    double/float in 'native' structures (64-bit)

@@ -1,4 +1,4 @@
-# 13jun12abu
+# 15jun12abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -572,6 +572,17 @@
 (de dbHint (Str Var Cls Hook)
    (queryHint Var
       (cons (list 'db Var Cls Hook Str '@@)) ) )
+
+
+(class +DbHint +Hint)
+
+(dm T (Rel . @)
+   (pass super
+      (list '(Str)
+         (list 'dbHint 'Str
+            (lit (car Rel))
+            (lit (last Rel))
+            (and (meta (cdr Rel) (car Rel) 'hook) (next)) ) ) ) )
 
 
 (class +Hint1 +hint)
