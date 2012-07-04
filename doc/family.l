@@ -1,4 +1,4 @@
-# 12may11abu
+# 04jul12abu
 # (c) Software Lab. Alexander Burger
 
 (load "@lib/http.l" "@lib/xhtml.l" "@lib/form.l" "@lib/ps.l")
@@ -182,7 +182,7 @@
                         (txt> (chart)) )
                      (in (tmp "Contemporaries.txt")
                         (let (Page 1  Fmt (200 120 50 50 120 120 120)  Ttl (line T))
-                           (a4L)
+                           (a4L "Contemporaries")
                            (font (7 . "Helvetica"))
                            (indent 30 10)
                            (down 12)
