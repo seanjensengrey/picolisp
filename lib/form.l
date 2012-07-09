@@ -1,4 +1,4 @@
-# 15jun12abu
+# 09jul12abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -21,9 +21,7 @@
       (if *PRG
          (get "*Lst" (- "*Cnt" *Get) *Form)
          (prog1 (setq *Top (new NIL NIL  'able T  'evt 0))
-            (conc
-               (get "*Lst" (- "*Cnt" *Get))
-               (cons *Top) ) ) )
+            (queue (nth "*Lst" (- "*Cnt" *Get)) *Top) ) )
       (let "Lst" (get "*Lst" (- "*Cnt" *Get) 1)
          (for ("F" . "L") "Lst"
             (let *Form (- "F" (length "Lst"))
@@ -78,8 +76,7 @@
                                     (let L (last (: gui))
                                        (when (get L X)
                                           (inc (:: rows))
-                                          (conc (: gui)
-                                             (list (setq L (need (: cols)))) ) )
+                                          (queue (:: gui) (setq L (need (: cols)))) )
                                        (let Fld (pass new)
                                           (set (nth L X) Fld)
                                           (put Fld 'chart (list This (: rows) X))
@@ -94,7 +91,7 @@
                                           Fld ) ) ) ) )
                            ((get "*App" X) (quit "gui conflict" X))
                            (T (put "*App" X (pass new))) )
-                        (=: home gui (conc (: home gui) (cons This)))
+                        (queue (:: home gui) This)
                         (unless (: chart) (init> This))
                         (when (: id)
                            (let *Gui (val "*App")
@@ -1617,8 +1614,7 @@
 # (cols [put [get]])
 (dm T (N Put Get)
    (setq "*Chart" This)
-   (put (=: home "*App") 'chart
-      (conc (get "*App" 'chart) (cons This)) )
+   (queue (prop (=: home "*App") 'chart) This)
    (=: rows 1)
    (when N
       (=: gui (list (need (=: cols N)))) )
@@ -2145,7 +2141,7 @@
       (and
          (> (: ofs) (- (length (: data)) (max (: rows) (: iniR))))
          (; (prove (: query)) @@) )
-      (=: data (conc (: data) (cons @))) )
+      (queue (:: data) @) )
    (super) )
 
 (dm txt> (Flg)

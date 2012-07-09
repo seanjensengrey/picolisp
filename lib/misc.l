@@ -1,4 +1,4 @@
-# 28jan12abu
+# 07jul12abu
 # (c) Software Lab. Alexander Burger
 
 # *Allow *Tmp
@@ -205,8 +205,7 @@
    (nond
       (*Allow)
       (Flg (idx *Allow X T))
-      ((member X (cdr *Allow))
-         (conc *Allow (cons X)) ) )
+      ((member X (cdr *Allow)) (queue '*Allow X)) )
    X )
 
 ### Telephone ###

@@ -1,4 +1,4 @@
-# 13apr12abu
+# 09jul12abu
 # (c) Software Lab. Alexander Burger
 
 (setq *OS (java (java "java.lang.System" "getProperty" "os.name")))
@@ -566,8 +566,7 @@
    (nond
       (*Allow)
       (Flg (idx *Allow X T))
-      ((member X (cdr *Allow))
-         (conc *Allow (cons X)) ) )
+      ((member X (cdr *Allow)) (queue '*Allow X)) )
    X )
 
 ### Telephone ###
@@ -764,7 +763,7 @@
 (de clause (CL)
    (with (car CL)
       (if (== *Rule This)
-         (=: T (conc (: T) (cons (cdr CL))))
+         (queue (:: T) (cdr CL))
          (=: T (cons (cdr CL)))
          (setq *Rule This) )
       This ) )
@@ -773,12 +772,10 @@
    (conc (get *Rule T) (get *Rule T)) )
 
 (de asserta (CL)
-   (with (car CL)
-      (=: T (cons (cdr CL) (: T))) ) )
+   (push (prop CL 1 T) (cdr CL)) )
 
 (de assertz (CL)
-   (with (car CL)
-      (=: T (conc (: T) (cons (cdr CL)))) ) )
+   (queue (prop CL 1 T) (cdr CL)) )
 
 (de retract (X)
    (if (sym? X)

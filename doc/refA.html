@@ -493,7 +493,7 @@ href="refR.html#retract">retract</a></code>.
 -> a
 
 : (asserta '(a (1)))    # Insert new fact in front
--> (((1)) ((2)) ((3)))
+-> ((1))
 
 : (? (a @N))            # Query
  @N=1
@@ -534,7 +534,7 @@ href="refR.html#retract">retract</a></code>.
 -> a
 
 : (assertz '(a (3)))    # Append new fact at the end
--> (((1)) ((2)) ((3)))
+-> ((3))
 
 : (? (a @N))            # Query
  @N=1
