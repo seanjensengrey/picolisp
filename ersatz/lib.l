@@ -267,7 +267,7 @@
 ### Pretty Printing ###
 (de *PP
    T NIL if ifn when unless while until do case state for
-   with catch finally ! setq default push job use let let?
+   with catch finally ! setq default push bind job use let let?
    prog1 recur redef =: in out tab new )
 (de *PP1 let let? for redef)
 (de *PP2 setq default)
