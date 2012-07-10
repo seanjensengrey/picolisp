@@ -1,4 +1,4 @@
-07dec11abu
+10jul12abu
 (c) Software Lab. Alexander Burger
 
 
@@ -22,7 +22,7 @@ often sacrificed in favor of simpler or more modular structures.
 
 There is no support for
 
-- raw console inpt ('key') and line editing
+- raw console input ('key') and line editing
 - child processes ('fork')
 - interprocess communication ('tell', 'hear', 'ipc', 'udp' etc.)
 - databases (external symbols)
