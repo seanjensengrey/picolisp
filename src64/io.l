@@ -1,4 +1,4 @@
-# 07jun12abu
+# 11jul12abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -4155,10 +4155,7 @@
       end
       ld (L I) E  # Save result
    loop
-   null ((InFile) VI)  # File?
-   if nz  # Yes
-      ld (EnvIntern) (L III)  # Restore namespace
-   end
+   ld (EnvIntern) (L III)  # Restore namespace
    call popInFiles
    ld E Nil  # Close transient scope
    call doHide
