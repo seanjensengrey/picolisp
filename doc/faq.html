@@ -557,6 +557,20 @@ where you need macros in other Lisps are directly expressible as functions in
 PicoLisp, which (as opposed to macros) can be applied, passed around, and
 debugged.
 
+<p>For example, Common Lisp's <code>DO*</code> macro, written as a function:
+
+<pre><code>
+(de do* "Args"
+   (bind (mapcar car (car "Args"))
+      (for "A" (car "Args")
+         (set (car "A") (eval (cadr "A"))) )
+      (until (eval (caadr "Args"))
+         (run (cddr "Args"))
+         (for "A" (car "Args")
+            (and (cddr "A") (set (car "A") (run @))) ) )
+      (run (cdadr "Args")) ) )
+</code></pre>
+
 
 <p><hr>
 <h2><a name="strings">Why are there no strings?</a></h2>
