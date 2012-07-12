@@ -1,4 +1,4 @@
-10jul12abu
+12jul12abu
 (c) Software Lab. Alexander Burger
 
 
@@ -36,8 +36,8 @@ Ersatz PicoLisp can be started - analog to 'pil' - as
 
    $ ersatz/pil
 
-This includes slighly simplfied versions of the standard libraries as loaded by
-the "real" 'pil' (without database, but with Pilog and XML support).
+This includes slightly simplified versions of the standard libraries as loaded
+by the "real" 'pil' (without database, but with Pilog and XML support).
 
 To start it in debug mode, use
 
