@@ -1,8 +1,8 @@
-# 13apr12abu
+# 14jul12abu
 # (c) Software Lab. Alexander Burger
 
 # Prompt
-(when (== 64 64)
+(when symbols
    (de *Prompt
       (unless (== (symbols) 'pico) (symbols)) ) )
 
