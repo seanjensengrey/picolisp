@@ -1,4 +1,4 @@
-# 11jul12abu
+# 17jul12abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -2137,16 +2137,15 @@
          ld C 4  # Build new name
          lea X (L I)  # Safe
          ld (X) ZERO
-         call (Get_A)  # Get next char
-         continue T
+      else
+         memb Delim "(DelimEnd-Delim)"  # Delimiter?
+         break eq   # Yes
+         cmp B (char "\\")  # Backslash?
+         if eq  # Yes
+            call (Get_A)  # Get next char
+         end
+         call byteSymBCX_CX  # Pack char
       end
-      memb Delim "(DelimEnd-Delim)"  # Delimiter?
-      break eq   # Yes
-      cmp B (char "\\")  # Backslash?
-      if eq  # Yes
-         call (Get_A)  # Get next char
-      end
-      call byteSymBCX_CX  # Pack char
       call (Get_A)  # Get next
    loop
    ld X (L I)  # Get name
