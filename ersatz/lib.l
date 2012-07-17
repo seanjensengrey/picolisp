@@ -1,4 +1,4 @@
-# 09jul12abu
+# 16jul12abu
 # (c) Software Lab. Alexander Burger
 
 (setq *OS (java (java "java.lang.System" "getProperty" "os.name")))
@@ -196,6 +196,14 @@
          (or
             (loc S (car X))
             (loc S (cdr X)) ) ) ) )
+
+(de local Lst
+   (mapc zap Lst) )
+
+(de import Lst
+   (for Sym Lst
+      (unless (== Sym (intern Sym))
+         (quit "Import conflict" Sym) ) ) )
 
 ### OOP ###
 (de class Lst
@@ -1305,6 +1313,10 @@
 `*Dbg
 
 ############ lib/debug.l ############
+
+# Prompt
+(de *Prompt
+   (unless (== (symbols) 'pico) (symbols)) )
 
 # Browsing
 (de doc (Sym Browser)
