@@ -967,26 +967,25 @@ href="refI.html#intern">intern</a></code>.
 <pre><code>
 : (symbols 'myLib 'pico)
 -> pico
-: (de foo (X)
-   (bar (inx X)) )
+myLib: (de foo (X)
+   (bar (inc X)) )
 -> foo
-
-: (symbols 'pico)
+myLib: (symbols 'pico)
 -> myLib
 : (pp 'foo)
 (de foo . NIL)
 -> foo
 : (pp 'myLib~foo)
 (de "foo" (X)
-   ("bar" ("inx" X)) )
+   ("bar" (inc X)) )
 -> "foo"
-
 : (symbols 'myLib)
 -> pico
-: (pp 'foo)
+myLib: (pp 'foo)
 (de foo (X)
-   (bar (inx X)) )
+   (bar (inc X)) )
 -> foo
+myLib:
 </code></pre>
 
 <dt><a name="sync"><code>(sync) -> flg</code></a>
