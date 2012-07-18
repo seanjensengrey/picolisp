@@ -448,12 +448,14 @@ href="refI.html#import">import</a></code> and <code><a
 href="refI.html#intern">intern</a></code>.
 
 <pre><code>
-(symbols 'myLib 'pico)
+: (symbols 'myLib 'pico)
+-> pico
+myLib: (local bar foo)
+-> "foo"
 
-(local bar foo)
-(de foo (A)  # 'foo' is local to 'myLib'
+myLib: (de foo (A)  # 'foo' is local to 'myLib'
    ...
-(de bar (B)  # 'bar' is local to 'myLib'
+myLib: (de bar (B)  # 'bar' is local to 'myLib'
    ...
 </code></pre>
 
