@@ -1,10 +1,11 @@
-/* 14mar12abu
+/* 20jul12abu
  * (c) Software Lab. Alexander Burger
  */
 
 /* Lib */
 .left {float: left;}
 .right {float: right;}
+.nofloat {float: none;}
 .clr {clear: both;}
 .norm {text-align: left;}
 .align {text-align: right;}
