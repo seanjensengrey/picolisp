@@ -795,6 +795,17 @@ backslash. Control characters can be written with a preceding hat
 -> ("W" "e" "^I" "r" "d" "\\" "S" "t" "r" "\"" "i" "n" "g")
 </code></pre>
 
+<p>A backslash '<code>\</code>' in a transient symbol name at the end of a line
+discards the newline, and continues the name in the next line. In that case, all
+leading spaces and tabs in that line are discarded, to allow proper source code
+indentation.
+
+<p><pre><code>
+: "abc\
+   def"
+-> "abcdef"
+</code></pre>
+
 <p>The index for transient symbols is cleared automatically before and after
 <code><a href="refL.html#load">load</a></code>ing a source file, or it can be
 reset explicitly with the <code><a href="ref_.html#====">====</a></code>
