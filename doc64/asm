@@ -1,4 +1,4 @@
-# 30apr12abu
+# 28jul12abu
 # (c) Software Lab. Alexander Burger
 
 
@@ -190,9 +190,9 @@
       prog reg          # Evaluate expressions in 'reg', return last result
 
    System:
-      initData          # Init runtime system
-      initCode
-      initMain
+      initData          # Init runtime data
+      initCode          # Init runtime code
+      initMain          # Command in X, arguments in Y, last pointer in Z
 
 ========================================================================
 
