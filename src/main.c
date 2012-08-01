@@ -1,4 +1,4 @@
-/* 07jun12abu
+/* 01aug12abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -1204,7 +1204,7 @@ static void init(int ac, char *av[]) {
    AV = av;
    heapAlloc();
    initSymbols();
-   if (strcmp(av[ac-2], "+") == 0)
+   if (ac >= 2 && strcmp(av[ac-2], "+") == 0)
       val(Dbg) = T,  av[ac-2] = NULL;
    if (av[0] && *av[0] != '-' && (p = strrchr(av[0], '/')) && !(p == av[0]+1 && *av[0] == '.')) {
       Home = malloc(p - av[0] + 2);
