@@ -325,7 +325,7 @@ href="refR.html#remote/2">remote/2</a></code>.
 : (?
    @Nr (2 . 5)          # Select all items with numbers between 2 and 5
    @Sup "Active"        # and suppliers matching "Active"
-   (select (@Item)                                  # Bind results to '@Item"
+   (select (@Item)                                  # Bind results to '@Item'
       ((nr +Item @Nr) (nm +CuSu @Sup (sup +Item)))  # Generator clauses
       (range @Nr @Item nr)                          # Filter clauses
       (part @Sup @Item sup nm) ) )
