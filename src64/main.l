@@ -1,4 +1,4 @@
-# 07jun12abu
+# 05sep12abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -2920,6 +2920,7 @@
       cc readdir(Z)  # Find first directory entry
       null A  # OK?
       if z  # No
+         cc closedir(Z)  # Close directory
 10       ld E Nil  # Return NIL
          pop Z
          pop X
