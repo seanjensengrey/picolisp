@@ -1,4 +1,4 @@
-# 07jun12abu
+# 30sep12abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -483,8 +483,8 @@
                ld E (L II)  # Get symbol
                ld C 0  # No class
                call redefMsgEC
-               ld E (L II)  # Get symbol again
             end
+            ld E (L II)  # Get symbol again
          end
       end
       ld (E) (L I)  # Set symbol to new value
