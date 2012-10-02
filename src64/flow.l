@@ -1,4 +1,4 @@
-# 30sep12abu
+# 02oct12abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -2366,6 +2366,7 @@
             link
             push (Y CDR)  # <S> (any2 . prg)
             do
+               add ((L V)) (hex "10")  # Increment 'sym2'
                ld E ((S))  # Evaluate condition
                eval
                cmp E Nil  # NIL?
@@ -2374,7 +2375,6 @@
                   break T
                end
                ld (At) E
-               add ((L V)) (hex "10")  # Increment 'sym2'
                ld Y X  # Loop body
                call loopY_FE
             while nz
