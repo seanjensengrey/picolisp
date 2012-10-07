@@ -1,4 +1,4 @@
-# 02oct12abu
+# 07oct12abu
 # (c) Software Lab. Alexander Burger
 
 
@@ -94,7 +94,7 @@
       xchg dst dst      # Exchange 'dst's [---]
       movn dst src cnt  # Move 'cnt' bytes from 'src' to 'dst' (non-overlapping)
       mset dst cnt      # Set 'cnt' bytes of memory to B
-      movm dst src end  # Move memory 'src'..'end' to 'dst' (aligned, non-overlapping)
+      movm dst src end  # Move memory 'src'..'end' to 'dst' (aligned)
       save src end dst  # Save 'src'..'end' to 'dst' (aligned, non-overlapping)
       load dst end src  # Load 'dst'..'end' from 'src' (aligned, non-overlapping)
 

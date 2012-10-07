@@ -296,7 +296,7 @@
 
 (asm st4 (Dst D)
    (genCode (Dst D) (list 'st4 Dst) ((op.a Dst D))
-      "*(uint32_t*)@1 = (uint32_t)A.l;" ) )
+      "*(uint32_t*)@1 = A.l;" ) )
 
 (asm xchg (Dst D Dst2 D2)
    (genCode (Dst D Dst2 D2) (list 'xchg Dst Dst2) ((op.n Dst D) (op.n Dst2 D2))
@@ -312,7 +312,7 @@
 
 (asm movm (Dst D Src S End E)
    (genCode (Dst D Src S End E) (list 'movm Dst Src End) ((op.a Dst D) (op.a Src S) (op.a End E))
-      "memcpy(@1, @2, @3 - @2);" ) )
+      "memmove(@1, @2, @3 - @2);" ) )
 
 (asm save (Src S End E Dst D)
    (genCode (Dst D Src S End E) (list 'save Dst Src End) ((op.a Dst D) (op.a Src S) (op.a End E))
@@ -492,7 +492,7 @@
 
 (asm nul4 ()
    (genCode NIL '(nul4) NIL
-      "Carry = cfClr,  Result = A.n << 32;" ) )
+      "Carry = cfClr,  Result = A.l;" ) )
 
 # Byte addressing
 (asm set (Dst D Src S)
