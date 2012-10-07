@@ -492,7 +492,7 @@
 
 (asm nul4 ()
    (genCode NIL '(nul4) NIL
-      "Carry = cfClr,  Result = A.l;" ) )
+      "Carry = cfClr,  Result = (int32_t)A.l;" ) )
 
 # Byte addressing
 (asm set (Dst D Src S)
