@@ -411,28 +411,44 @@
          "   Carry = cfLsb,  Result = @1 = (Source = @1 >> @2-1) >> 1;" ) ) )
 
 (asm rol (Dst D Src S)
-   (genCode (Dst D Src S) (list 'rol Dst Src) ((op.n Dst D) (op.i Src S))
-      "i = @2,  @1 = @1 << i | @1 >> (64 - i);" ) )
+   (if (=0 S)
+      (genCode (Dst D Src) (list 'rol Dst Src) ((op.n Dst D) Src)
+         "@1 = @1 << @2 | @1 >> (64 - @2);" )
+      (genCode (Dst D Src S) (list 'rol Dst Src) ((op.n Dst D) (op.i Src S))
+         "i = @2,  @1 = @1 << i | @1 >> (64 - i);" ) ) )
 
 (asm ror (Dst D Src S)
-   (genCode (Dst D Src S) (list 'ror Dst Src) ((op.n Dst D) (op.i Src S))
-      "i = @2,  @1 = @1 >> i | @1 << (64 - i);" ) )
+   (if (=0 S)
+      (genCode (Dst D Src) (list 'ror Dst Src) ((op.n Dst D) Src)
+         "@1 = @1 >> @2 | @1 << (64 - @2);" )
+      (genCode (Dst D Src S) (list 'ror Dst Src) ((op.n Dst D) (op.i Src S))
+         "i = @2,  @1 = @1 >> i | @1 << (64 - i);" ) ) )
 
 (asm rcl (Dst D Src S)
-   (if (=0 S)
-      (genCode (Dst D Src) (list 'rcl Dst Src) ((op.n Dst D) Src)
-         "Carry = cfMsb,  i = @2-1,  Result = @1 = (Source = @1 << i | @1 >> (64 - i)) << 1;" )
-      (genCode (Dst D Src S) (list 'rcl Dst Src) ((op.n Dst D) (op.i Src S))
-         "if (@2)"
-         "   Carry = cfMsb,  i = @2-1,  Result = @1 = (Source = @1 << i | @1 >> (64 - i)) << 1;" ) ) )
+   (nond
+      ((=0 S)
+         (genCode (Dst D Src S) (list 'rcl Dst Src) ((op.n Dst D) (op.i Src S))
+            "if (@2)"
+            "   i = Carry(),  Carry = cfMsb,  Result = @1 = (Source = @1 << (@2 - 1) | @1 >> (64 - (@2 - 1))) << 1 | i;" ) )
+      ((= "1" Src)
+         (genCode (Dst D Src) (list 'rcl Dst Src) ((op.n Dst D) Src)
+            "i = Carry(),  Carry = cfMsb,  Result = @1 = (Source = @1 << (@2 - 1) | @1 >> (64 - (@2 - 1))) << 1 | i;" ) )
+      (NIL
+         (genCode (Dst D Src) (list 'rcl Dst Src) ((op.n Dst D))
+            "i = Carry(),  Carry = cfMsb,  Result = @1 = (Source = @1) << 1 | i;" ) ) ) )
 
 (asm rcr (Dst D Src S)
-   (if (=0 S)
-      (genCode (Dst D Src) (list 'rcr Dst Src) ((op.n Dst D) Src)
-         "Carry = cfLsb,  i = @2-1,  Result = @1 = (Source = @1 >> i | @1 << (64 - i)) >> 1;" )
-      (genCode (Dst D Src S) (list 'rcr Dst Src) ((op.n Dst D) (op.i Src S))
-         "if (@2)"
-         "   Carry = cfLsb,  i = @2-1,  Result = @1 = (Source = @1 >> i | @1 << (64 - i)) >> 1;" ) ) )
+   (nond
+      ((=0 S)
+         (genCode (Dst D Src S) (list 'rcr Dst Src) ((op.n Dst D) (op.i Src S))
+            "if (@2)"
+            "   i = Carry(),  Carry = cfLsb,  Result = @1 = (Source = @1 >> (@2 - 1) | @1 << (64 - (@2 - 1))) >> 1 | (uint64_t)i << 63;" ) )
+      ((= "1" Src)
+         (genCode (Dst D Src) (list 'rcr Dst Src) ((op.n Dst D) Src)
+            "i = Carry(),  Carry = cfLsb,  Result = @1 = (Source = @1 >> (@2 - 1) | @1 << (64 - (@2 - 1))) >> 1 | (uint64_t)i << 63;" ) )
+      (NIL
+         (genCode (Dst D Src) (list 'rcr Dst Src) ((op.n Dst D))
+            "i = Carry(),  Carry = cfLsb,  Result = @1 = (Source = @1) >> 1 | (uint64_t)i << 63;" ) ) ) )
 
 (asm mul (Src S)
    (genCode (Src S) (list 'mul Src) ((op.n Src S))
