@@ -1,4 +1,4 @@
-# 16apr12abu
+# 29sep12abu
 # (c) Software Lab. Alexander Burger
 
 # *LittleEndian *AlignedCode *Registers optimize
@@ -44,7 +44,9 @@
    (off *Section *Tags *Map *IfStack *DoStack)
    (out "File"
       (prinl "/* " (datSym (date)) " */")
-      (run "Prg") )
+      (prolog "File")
+      (run "Prg")
+      (epilog "File") )
    (when "Map"
       (out "tags"
          (for Lbl (idx '*Tags)
@@ -77,14 +79,10 @@
 (de section (Fun @Sym)
    (def Fun
       (curry (@Sym) (Lbl Align)
-         (unless (== *Section '@Sym)
-            (prinl)
-            (prinl "   ." '@Sym)
-            (setq *Section '@Sym) )
-         (prinl)
+         (newSection '@Sym)
          (when Align
-            ((get 'align 'asm) 16)
-            ((get 'skip 'asm) Align) )
+            ((; 'align asm) 16)
+            ((; 'skip asm) Align) )
          (when (reg Lbl)
             (quit "Register" Lbl) )
          (when Lbl
@@ -108,7 +106,7 @@
                         ((num? Atom)
                            (link (cons ': (pack *Label "_" Atom))) )
                         ((lup *FlowControl Atom)
-                           ((get Atom 'asm) (eval (cadr @))) )
+                           ((; Atom asm) (eval (cadr @))) )
                         ((lup *Instructions Atom)
                            (link (cons Atom (mapcar eval (cdr @)))) )
                         (T (quit "Bad instruction" Atom)) ) ) ) ) )
@@ -125,7 +123,7 @@
          (for *Statement *Program
             (if (== ': (car *Statement))
                (label (cdr *Statement))
-               (apply (get (car *Statement) 'asm) (cdr *Statement)) ) ) ) ) )
+               (apply (; (car *Statement) asm) (cdr *Statement)) ) ) ) ) )
 
 # (data 'lbl)
 # (data 'lbl 0)
@@ -214,12 +212,6 @@
                               (cdr *Conditions) ) )
                         (cadr (pop '*Program)) ) ) ) ) ) ) ) )
 
-# Print instruction
-(de prinst (Name . @)
-   (if (rest)
-      (tab (3 -9 0) NIL Name (glue ", " @))
-      (tab (3 -9) NIL Name) ) )
-
 # Registers
 (de reg (X)
    (cdr (asoq X *Registers)) )
@@ -231,7 +223,7 @@
       ((sym? X)
          (cond
             ((asoq X *Registers) X)
-            ((get X 'equ) @)
+            ((; X equ) @)
             (T X) ) )
       ((asoq (car X) *Registers)
          (cons (car X) (operand (cadr X))) )
@@ -266,7 +258,7 @@
          (pack (and F "~") X) )
       ((reg X) (off "*Mode") @)                 # Register
       ((atom X) (on "*Mode") X)                 # Direct
-      ((or (num? (cdr X)) (get (cdr X) 'equ))
+      ((or (num? (cdr X)) (; (cdr X) equ))
          (prog1 (cons ("source" (car X) F) @)
             (setq "*Mode" (cons "*Mode" 0)) ) )
       ((cdr X)
@@ -300,7 +292,7 @@
          (or F (quit "Bad destination" X))
          (on "*Mode")
          X )
-      ((or (num? (cdr X)) (get (cdr X) 'equ))
+      ((or (num? (cdr X)) (; (cdr X) equ))
          (prog1 (cons ("destination" (car X) T) @)
             (setq "*Mode" (cons "*Mode" 0)) ) )
       ((cdr X)
@@ -425,7 +417,6 @@
       (clrc)
       (clrz)
       (cmp (destination) "*Mode" (source) "*Mode")
-      (cmp4 (source) "*Mode")
       (cmpn (destination) "*Mode" (source) "*Mode" (source) "*Mode")
       (cnt (source) "*Mode")
       (dec (destination) "*Mode")
@@ -521,31 +512,10 @@
 
 
 # Directives
-(de label (Lbl Flg)
-   (and Flg (prinl "   .globl  " Lbl))
-   (prinl Lbl ':) )
 
 (asm :: (Src Lbl)
    (idxTags Lbl Src)
    (label Lbl T) )
-
-(asm word (N)
-   (prinst ".quad" N) )
-
-(asm byte (N)
-   (prinst ".byte" N) )
-
-(asm bytes (Lst)
-   (prinst ".byte" (glue ", " Lst)) )
-
-(asm hx2 (Lst)
-   (prinst ".short" (glue ", " (mapcar hex Lst))) )
-
-(asm ascii (Str)
-   (prinst ".ascii" (pack "\"" Str "\"")) )
-
-(asm asciz (Str)
-   (prinst ".asciz" (pack "\"" Str "\"")) )
 
 (asm initFun (Src Lbl Name Val)
    (initSym Src Lbl Name Val (pack Val (and *AlignedCode "+2"))) )
@@ -575,14 +545,14 @@
                   (setq L (flip L)) )
                (chain L) ) ) ) )
    (if (nth Name 9)
-      (prinst ".quad" ".+20")
-      (prinst ".byte" (glue ", " Name))
+      ((; 'word asm) ".+20")
+      ((; 'bytes asm) Name)
       (off Name) )
    (when Lbl
       (label Lbl T) )
-   (prinst ".quad" Val)
+   ((; 'word asm) Val)
    (while Name
-      (prinst ".byte" (glue ", " (cut 8 'Name))) ) )
+      ((; 'bytes asm) (cut 8 'Name)) ) )
 
 
 # Condition code optimizations
@@ -608,7 +578,7 @@
    movn mset movm save load
    add sub inc dec not neg and or xor off test shl shr rol ror
    mul div zxt setz clrz
-   cmp cmp4 cmpn slen memb null nul4 nul cnt big num sym atom
+   cmp cmpn slen memb null nul4 nul cnt big num sym atom
    call cc return
    eval eval+ eval/ret exec prog )
 
@@ -618,8 +588,8 @@
          (: noCC)
          (loop
             (NIL (setq Lst (cdr Lst)))
-            (T (get Lst 1 1 'useCC))
-            (T (get Lst 1 1 'chgCC) T)
+            (T (; Lst 1 1 useCC))
+            (T (; Lst 1 1 chgCC) T)
             (T (= '(push T NIL) (car Lst)))
             (T (= '(pop T NIL) (car Lst)) T)
             (T (== 'ret (caar Lst))

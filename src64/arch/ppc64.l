@@ -1,4 +1,4 @@
-# 30apr12abu
+# 04oct12abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -803,12 +803,6 @@
          (prinst "subc." 0 (caddr A) (car A)) ) )
    (prinst "subfme" 31 21) )  # Set inverted carry
 
-(asm cmp4 (Src S)
-   (let R (tmpReg)
-      (memory Src S R "lwz")
-      (prinst "subc." 0 3 R) )
-   (prinst "subfme" 31 21) )  # Set inverted carry
-
 (asm cmpn (Dst D Src S Cnt C)
    (memory Dst D 4)
    (memory Src S 5)
@@ -828,11 +822,11 @@
    (unless C (prinst "mr" Cnt 5)) )
 
 (asm null (Src S)
-   (prinst "li" 31 -2)  # Clear carry
+   ##? (prinst "li" 31 -2)  # Clear carry
    (prinst "cmpdi" (srcReg Src S) 0) )
 
 (asm nul4 ()
-   (prinst "li" 31 -2)  # Clear carry
+   ##? (prinst "li" 31 -2)  # Clear carry
    (prinst "sldi" 3 3 32)
    (prinst "sradi." 3 3 32) )
 
@@ -841,7 +835,7 @@
    (memory Dst D (srcByteReg Src S) "stb") )
 
 (asm nul (Src S)
-   (prinst "li" 31 -2)  # Clear carry
+   ##? (prinst "li" 31 -2)  # Clear carry
    (prinst "cmpdi" (srcByteReg Src S) 0) )
 
 # Types
@@ -1035,6 +1029,10 @@
       (("bne" + "cr1" ".+12") ("beq" + ".+8") ("b" NIL @Lbl))
       (("bne" + "cr1" ".+8") ("bnectr" NIL)) ) )
 
+(asm ret ()
+   (prinst "blr") )
+
+# Floating point
 (asm ldd ()
    (prinst "lfd" 1 "0(14)") )
 
@@ -1081,6 +1079,7 @@
 (asm stf ()
    (prinst "stfs" 1 "0(14)") )
 
+# C-Calls
 (asm cc (Adr A Arg M)
    (let Reg (3 4 5 6 7 8 9 10)  # Support only max. 8 parameters
       (if (lst? Arg)
@@ -1151,9 +1150,6 @@
       (lst? Arg)
       (gt0 (- (length Arg) 8))
       (prinst "addi" 1 1 (* @ 8)) ) )
-
-(asm ret ()
-   (prinst "blr") )
 
 (asm begin ()
    (prinst ".quad" ".+24" ".TOC.@tocbase" 0)
@@ -1437,7 +1433,7 @@
             (prinst "sldi" @tmp @rhat 32)      # b*rhat + un0
             (prinst "add" @tmp @tmp @un0)
             (prinst "mulld" 0 @q0 @vn0)
-            (prinst "cmpld" 0 @tmp)            # q0 * vn0 > b*rhat + un1?
+            (prinst "cmpld" 0 @tmp)            # q0 * vn0 > b*rhat + un0?
             (prinst "ble+" "div8")             # No
             (prinl "div7:")
             (prinst "subi" @q0 @q0 1)          # Else decrement 'q0'
@@ -1566,5 +1562,10 @@
 (de optimize (Lst)  #> (cnt . lst)
    (when (noCC L)
       (cons 1 (cons (cons @ (cdar L)))) ) )
+
+### Decoration ###
+(de prolog (File))
+
+(de epilog (File))
 
 # vi:et:ts=3:sw=3

@@ -1,4 +1,4 @@
-# 17jul12abu
+# 24sep12abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -223,7 +223,8 @@
       if z  # Closed
          dec (C I)  # 'ix' = 'cnt' = -1
          dec (C II)
-         ret  # z
+         setz  # Return 'z'
+         ret
       end
       call errno_A
       cmp A EAGAIN  # No data available?

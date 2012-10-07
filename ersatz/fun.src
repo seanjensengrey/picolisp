@@ -1,4 +1,4 @@
-# 17jul12abu
+# 03oct12abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -1468,10 +1468,12 @@ for (i w x y z bnd)
       bnd.Data[1].Car = (y = y.Cdr).Car.eval();
       z = y.Cdr;
    for2:
-      for (y = Nil; (w = z.Car.eval()) != Nil;) {
-         At.Car = w;
+      for (y = Nil;;) {
          if (bnd.Cnt == 4)
             bnd.Data[3].Car = ((Number)bnd.Data[3].Car).add(One);
+         if ((w = z.Car.eval()) == Nil)
+            break;
+         At.Car = w;
          x = ex.Cdr;
          do {
             if (!((y = x.Car) instanceof Cell))

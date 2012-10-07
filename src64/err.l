@@ -1,4 +1,4 @@
-# 07jun12abu
+# 05oct12abu
 # (c) Software Lab. Alexander Burger
 
 # Debug print routine
@@ -35,7 +35,7 @@
    push E  # <L I> Save reason
    link
    sub S (+ 240 IV)  # <S> Message buffer, <S 240> outFrame
-   cc sprintf(S Y Z)  # Build message
+   cc snprintf(S 240 Y Z)  # Build message
    null X  # Error context?
    ld A Nil
    ldnz A X  # Yes

@@ -1,4 +1,4 @@
-# 01nov11abu
+# 07oct12abu
 # (c) Software Lab. Alexander Burger
 
 .SILENT:
@@ -6,100 +6,123 @@
 bin = ../bin
 lib = ../lib
 
-ifneq ($(filter x86-64.linux, $(MAKECMDGOALS)),)
+ifeq ($(MAKECMDGOALS), x86-64.linux)
 	UNAME = Linux
 	MACHINE = x86_64
 else
-	ifneq ($(filter x86-64.sunOs, $(MAKECMDGOALS)),)
+	ifeq ($(MAKECMDGOALS), x86-64.sunOs)
 		UNAME = SunOS
 		MACHINE = x86_64
 	else
-      ifneq ($(filter ppc64.linux, $(MAKECMDGOALS)),)
-         UNAME = Linux
-         MACHINE = ppc64
-      else
-         UNAME = $(shell uname)
-         MACHINE = $(shell uname -m)
-      endif
+		ifeq ($(MAKECMDGOALS), ppc64.linux)
+			UNAME = Linux
+			MACHINE = ppc64
+		else
+			UNAME = $(shell uname)
+			ifeq ($(MAKECMDGOALS), emu)
+				MACHINE = emu
+			else
+				MACHINE = $(shell uname -m)
+			endif
+		endif
 	endif
 endif
 
+SYS =
+FMT = .c
+ARCH = emu
+
 ifeq ($(UNAME), Linux)
 	OS = Linux
-	SYS = linux
 	ifeq ($(MACHINE), x86_64)
+		SYS = .linux
+		FMT = .s
 		ARCH = x86-64
 		MKASM-BASE =
 		MKASM-LIB = -fpic
 		AS = as
 	else
-	ifeq ($(MACHINE), ppc64)
-		ARCH = ppc64
-		MKASM-BASE = -'prSym "ppc64.symtab"'
-		MKASM-LIB = -fpic -'rdSym "ppc64.symtab"'
-		AS = as -mppc64 -a64
+		ifeq ($(MACHINE), ppc64)
+			SYS = .linux
+			FMT = .s
+			ARCH = ppc64
+			MKASM-BASE = -'prSym "ppc64.symtab"'
+			MKASM-LIB = -fpic -'rdSym "ppc64.symtab"'
+			AS = as -mppc64 -a64
+		endif
 	endif
-	endif
-	LD-MAIN = -m64 -rdynamic -lc -lm -ldl
-	LD-SHARED = -m64 -shared -export-dynamic
+	LD-MAIN = -rdynamic -lc -lm -ldl
+	LD-SHARED = -shared -export-dynamic
 	STRIP = strip
 else
-ifeq ($(UNAME), SunOS)
-	OS = SunOS
-	SYS = sunOs
-	ARCH = x86-64
-	MKASM-BASE =
-	MKASM-LIB = -fpic
-	AS = gas --64
-	LD-MAIN = -m64 -lc -lm -ldl -lsocket -lnsl
-	LD-SHARED = -m64 -shared
-	STRIP = strip
-endif
+	ifeq ($(UNAME), SunOS)
+		OS = SunOS
+		SYS = .sunOs
+		FMT = .s
+		ARCH = x86-64
+		MKASM-BASE =
+		MKASM-LIB = -fpic
+		AS = gas --64
+		LD-MAIN = -m64 -lc -lm -ldl -lsocket -lnsl
+		LD-SHARED = -m64 -shared
+		STRIP = strip
+	endif
 endif
 
 baseFiles = version.l glob.l main.l \
 	gc.l apply.l flow.l sym.l subr.l big.l io.l db.l net.l err.l
 
-sFiles = $(ARCH).$(SYS).base.s $(ARCH).$(SYS).ext.s $(ARCH).$(SYS).ht.s
+sFiles = \
+	$(ARCH)$(SYS).base$(FMT) \
+	$(ARCH)$(SYS).ext$(FMT) \
+	$(ARCH)$(SYS).ht$(FMT)
 
 all: picolisp
 
 x86-64.linux: $(sFiles)
 x86-64.sunOs: $(sFiles)
 ppc64.linux: $(sFiles)
+emu: $(sFiles)
 
 picolisp: $(bin)/picolisp $(lib)/ext $(lib)/ht
 
-$(bin)/picolisp: $(ARCH).$(SYS).base.o
-	mkdir -p $(bin) $(lib)
-	gcc -o $(bin)/picolisp $(ARCH).$(SYS).base.o -Wl,--no-as-needed $(LD-MAIN)
+$(bin)/picolisp: $(ARCH)$(SYS).base.o
+	$(CC) -o $(bin)/picolisp $(ARCH)$(SYS).base.o -Wl,--no-as-needed $(LD-MAIN)
 	$(STRIP) $(bin)/picolisp
 
-$(lib)/ext: $(ARCH).$(SYS).ext.o
-	gcc -o $(lib)/ext $(ARCH).$(SYS).ext.o $(LD-SHARED)
+$(lib)/ext: $(ARCH)$(SYS).ext.o
+	$(CC) -o $(lib)/ext $(ARCH)$(SYS).ext.o $(LD-SHARED)
 	$(STRIP) $(lib)/ext
 
-$(lib)/ht: $(ARCH).$(SYS).ht.o
-	gcc -o $(lib)/ht $(ARCH).$(SYS).ht.o $(LD-SHARED)
+$(lib)/ht: $(ARCH)$(SYS).ht.o
+	$(CC) -o $(lib)/ht $(ARCH)$(SYS).ht.o $(LD-SHARED)
 	$(STRIP) $(lib)/ht
+
+# Explicit builds for cross-assembly
+$(ARCH)$(SYS).base$(FMT): sysdefs arch/$(ARCH).l $(baseFiles) sys/$(ARCH)$(SYS).code.l
+	./mkAsm $(ARCH) "$(SYS)" $(FMT) $(OS) base $(lib)/map $(baseFiles) sys/$(ARCH)$(SYS).code.l $(MKASM-BASE)
+
+$(ARCH)$(SYS).ext$(FMT): sysdefs arch/$(ARCH).l ext.l $(ARCH)$(SYS).base$(FMT)
+	./mkAsm $(ARCH) "$(SYS)" $(FMT) $(OS) ext "" $(MKASM-LIB) ext.l
+
+$(ARCH)$(SYS).ht$(FMT): sysdefs arch/$(ARCH).l ht.l $(ARCH)$(SYS).base$(FMT)
+	./mkAsm $(ARCH) "$(SYS)" $(FMT) $(OS) ht "" $(MKASM-LIB) ht.l
+
+sysdefs: sysdefs.c
+	$(CC) -o sysdefs -D_FILE_OFFSET_BITS=64 sysdefs.c
+	$(STRIP) sysdefs
 
 .s.o:
 	$(AS) -o $*.o $*.s
 
-
-# Explicit builds for cross-assembly
-$(ARCH).$(SYS).base.s: lib/asm.l arch/$(ARCH).l $(baseFiles) sys/$(ARCH).$(SYS).code.l
-	./mkAsm $(ARCH) $(SYS) $(OS) base $(lib)/map $(baseFiles) sys/$(ARCH).$(SYS).code.l $(MKASM-BASE)
-
-$(ARCH).$(SYS).ext.s: lib/asm.l arch/$(ARCH).l ext.l $(ARCH).$(SYS).base.s
-	./mkAsm $(ARCH) $(SYS) $(OS) ext "" $(MKASM-LIB) ext.l
-
-$(ARCH).$(SYS).ht.s: lib/asm.l arch/$(ARCH).l ht.l $(ARCH).$(SYS).base.s
-	./mkAsm $(ARCH) $(SYS) $(OS) ht "" $(MKASM-LIB) ht.l
-
+.c.o:
+	$(CC) -c -O \
+		-fomit-frame-pointer -Wunused -Wformat -Wuninitialized \
+		-D_FILE_OFFSET_BITS=64 \
+		$*.c
 
 # Clean up
 clean:
-	rm -f *.s *.o *.symtab
+	rm -f emu.*.c *.s *.o *.symtab
 
 # vi:noet:ts=4:sw=4

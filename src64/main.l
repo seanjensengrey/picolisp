@@ -1,4 +1,4 @@
-# 05sep12abu
+# 02oct12abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -216,8 +216,10 @@
 # Allocate cell heap
 (code 'heapAlloc 0)  # AEX
    ld A 0  # NULL pointer
-   ld E (+ HEAP I)  # Heap allocation size
+   ld E (+ HEAP I II)  # Heap size + link + space
    call allocAE_A
+   add A 15  # Align to cell boundary
+   off B 15
    ld E A  # Heap pointer
    ld (A HEAP) (Heaps)  # Set heap link
    ld (Heaps) A
@@ -2824,7 +2826,9 @@
       ld (X) E  # Set date
       pop (X CDR)  # and time
       call consX_E  # New cell
-      call s_isdirS_F  # Directory?
+      ld4 (S ST_MODE)  # Get 'st_mode' from 'stat'
+      and A S_IFMT
+      cmp A S_IFDIR  # Directory?
       if eq  # Yes
          ld (E) TSym  # CAR is T
       else

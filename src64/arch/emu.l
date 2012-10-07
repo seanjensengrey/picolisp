@@ -1,0 +1,1244 @@
+# 07oct12abu
+# (c) Software Lab. Alexander Burger
+
+# *AsmOpcodes *AsmCode *AsmPos *Labels *AsmData *SysFun
+
+# Byte order
+(in '("./sysdefs")
+   (case (read)
+      ("L" (on *LittleEndian))
+      ("B" (off *LittleEndian))
+      (T (quit "Bad endianess")) )
+   (case (read)
+      (32 (on *Bits32) (off *Bits64))
+      (64 (on *Bits64) (off *Bits32))
+      (T (quit "Bad wordsize")) ) )
+
+(zero *AsmPos)
+(off *AlignedCode)
+
+# Register assignments
+(de *Registers
+   (A . "A") (C . "C") (E . "E")
+   (B . "A.b[0]") (D "A" . "C")
+   (X . "X") (Y . "Y") (Z . "Z")
+   (L . "L") (S . "S")
+   (F . T) )
+
+# Direct address expressions
+(de directExpr (Str)
+   (let (Lst (str Str "_")  A (_aggr))
+      (or
+         (num? A)
+         (pack
+            "(uint8_t*)"
+            (if (cdr A)
+               (pack "(Code+" (car A) ")")
+               (pack "Data+" (car A)) ) ) ) ) )
+
+(de _aggr ()
+   (let X (_prod)
+      (while (member (car Lst) '("+" "-"))
+         (let (Op (intern (pop 'Lst))  Y (_prod))
+            (if2 (pair X) (pair Y)
+               (if (= '+ Op)
+                  (quit "Bad direct expression")
+                  (setq X (- (car X) (car Y))) )
+               (set X (Op (car X) Y))
+               (setq X (cons (Op X (car Y))))
+               (and (sym? X) (absCode X) (setq X @))
+               (and (sym? Y) (absCode Y) (setq Y @))
+               (setq X (Op X Y)) ) ) )
+      X ) )
+
+(de _prod ()
+   (let X (_term)
+      (while (member (car Lst) '("*" "/"))
+         (setq X ((intern (pop 'Lst)) X (_term))) )
+      X ) )
+
+(de _term ()
+   (let X (pop 'Lst)
+      (cond
+         ((num? X) X)
+         ((assoc X *AsmData) (cons (cadr @)))
+         ((absCode X) (cons @ T))
+         ((= "+" X) (_term))
+         ((= "-" X) (- (_term)))
+         ((= "(" X) (prog1 (_aggr) (pop 'Lst)))
+         (T (quit "Bad term" X)) ) ) )
+
+(de sysFun (S O)
+   (cond
+      ((=0 O) (pack "(void(*)())" S))
+      ((absCode S)
+         (push1 '*SysFun
+            (pack
+               "void fun"
+               @
+               "(int a, int c, int e, int x, int y, int z) {begin("
+               @
+               ", a, c, e, x, y, z);}" ) )
+         (pack "(void(*)())fun" @) )
+      (T (quit "Bad function address" S)) ) )
+
+# Addressing modes
+(de op.p (Arg M)
+   (cond
+      ((=0 M) (pack "(uint8_t*)" Arg)) # Immediate
+      ((not M) (pack Arg ".p"))        # Register
+      ((get Arg 'sys) @)
+      ((=T M)                          # Direct
+         (let E (directExpr Arg)
+            (if (num? E)
+               (pack "(uint8_t*)" E)
+               (pack "(" E ")") ) ) )
+      ((get Arg 1 'sys) @)
+      ((=T (cdr M))
+         (let E (directExpr (cdr Arg))
+            (pack
+               "(*(ptr)("
+               ((if (num? E) op.p op.n) (car Arg) (car M))
+               " + "
+               E
+               ")).p" ) ) )
+      ((cdr Arg)
+         (pack "(*(ptr)(" (op.p (car Arg) (car M)) " + " @ ")).p") )
+      (T (pack "(*(ptr)" (op.p (car Arg) (car M)) ").p")) ) )
+
+(de op.n (Arg M)
+   (cond
+      ((=0 M)                          # Immediate
+         (let N (format Arg)
+            (if (>= N `(** 2 31))
+               (pack "0x" (hex N) "LL")
+               Arg ) ) )
+      ((not M)                         # Register
+         (if (= "A.b[0]" Arg)
+            Arg
+            (pack Arg ".n") ) )
+      ((=T M)                          # Direct
+         (if (get Arg 'sys)
+            (pack "(uint64_t)(unsigned long)" (sysFun @ T))
+            (let E (directExpr Arg)
+               (if (num? E)
+                  (pack "(uint64_t)" E)
+                  (pack "((uint64_t)(unsigned long)(" E "))") ) ) ) )
+      ((=T (cdr M))
+         (let E (directExpr (cdr Arg))
+            (pack
+               "((ptr)("
+               ((if (num? E) op.p op.n) (car Arg) (car M))
+               " + "
+               E
+               "))->n" ) ) )
+      ((cdr Arg)
+         (pack "((ptr)(" (op.p (car Arg) (car M)) " + " @ "))->n") )
+      (T (pack "((ptr)" (op.p (car Arg) (car M)) ")->n")) ) )
+
+(de op.i (S O)
+   (if (and (format (setq S (op.n S O))) (>= 32767 (abs @)))
+      S
+      (pack "(int)" S) ) )
+
+(de op.b (Arg M)
+   (cond
+      ((=0 M) Arg)                     # Immediate
+      ((not M)                         # Register
+         (if (= "A.b[0]" Arg)
+            Arg
+            (pack Arg ".b[0]") ) )
+      ((=T M)                          # Direct
+         (let E (directExpr Arg)
+            (if (num? E)
+               (pack "(uint8_t)" E)
+               (pack "*(" E ")") ) ) )
+      ((=T (cdr M))
+         (let E (directExpr (cdr Arg))
+            (pack
+               "*("
+               ((if (num? E) op.p op.n) (car Arg) (car M))
+               " + "
+               E
+               ")" ) ) )
+      ((cdr Arg)
+         (pack "*(" (op.p (car Arg) (car M)) " + " @ ")") )
+      (T (pack "*" (op.p (car Arg) (car M)))) ) )
+
+(de op.a (Arg M)
+   (cond
+      ((atom M)                        # Immediate, Register or Direct
+         (quit "Can't take address" Arg) )
+      ((=T (cdr M))
+         (let E (directExpr (cdr Arg))
+            (pack
+               "("
+               ((if (num? E) op.p op.n) (car Arg) (car M))
+               " + "
+               E
+               ")" ) ) )
+      ((cdr Arg)
+         (pack "(" (op.p (car Arg) (car M)) " + " @ ")") )
+      (T (op.p (car Arg) (car M))) ) )
+
+(de highWord (Arg M)
+   (if (atom M)                        # Immediate, Register or Direct
+      0
+      (if (cdr Arg)
+         (pack "((ptr)(" (op.p (car Arg) (car M)) " + " @ " + 8))->n")
+         (pack "((ptr)(" (op.p (car Arg) (car M)) " + 8))->n") ) ) )
+
+### Instruction set ###
+(de fmtInstruction (Lst)
+   (replace (chop (str Lst)) "\"") )
+
+(de opcode ("X" "Args" "Body")
+   (cond
+      ((= "X" '(nop)) 0)
+      ((assoc "X" *AsmOpcodes) (index @ *AsmOpcodes))
+      (T
+         (queue '*AsmOpcodes
+            (cons "X"
+               ~(as *Dbg
+                  (pack
+                     "fprintf(stderr, \"%d: %s\\n\", PC-Code-1, \""
+                     (fmtInstruction "X")
+                     "\");" ) )
+               (mapcar '((S) (apply text "Args" S)) "Body") ) )
+         (length *AsmOpcodes) ) ) )
+
+(de addCode (C)
+   (if (and *AsmCode (not (caar @)))
+      (set (car *AsmCode) C)
+      (push '*AsmCode (cons C)) )
+   (inc '*AsmPos) )
+
+(de genCode Args
+   (addCode (cons (env (pop 'Args)) Args)) )
+
+(de absCode (Lbl)
+   (val (car (idx '*Labels Lbl))) )
+
+(de relCode (Adr)
+   (- (absCode Adr) 1 *AsmPos) )
+
+
+(asm nop ()
+   (addCode '(NIL '(nop))) )
+
+(asm align (N)
+   (if (== 'data *Section)
+      (when (gt0 (% (asmDataLength) N))
+         (conc (car *AsmData) (need (- N @) 0)) )
+      (setq N (/ N 2))
+      (while (gt0 (% *AsmPos N))
+         (addCode '(NIL '(nop))) ) ) )
+
+(asm skip (N)
+   (if (== 'data *Section)
+      (conc (car *AsmData) (need N 0))
+      (do (/ N 2) (addCode '(NIL '(nop)))) ) )
+
+# Move data
+(asm ld (Dst D Src S)
+   (cond
+      ((= "A.b[0]" Dst)
+         (genCode (Dst Src S) (list 'ld Dst Src) ((op.b Src S))
+            "A.b[0] = @1;" ) )
+      ((= "A.b[0]" Src)
+         (genCode (Dst Src D) (list 'ld Dst Src) ((op.b Dst D))
+            "@1 = A.b[0];" ) )
+      ((and (not D) (pair Dst))
+         (genCode (Src S) (list 'ld 'D Src) ((op.n Src S) (highWord Src S))
+            "A.n = @1,  C.n = @2;" ) )
+      ((and (not S) (pair Src))
+         (genCode (Dst D) (list 'ld Dst 'D) ((op.n Dst D) (highWord Dst D))
+            "@1 = A.n,  @2 = C.n;" ) )
+      (T
+         (genCode (Dst D Src S) (list 'ld Dst Src) ((op.n Dst D) (op.n Src S))
+            "@1 = @2;" ) ) ) )
+
+(asm ld2 (Src S)
+   (genCode (Src S) (list 'ld2 Src) ((op.a Src S))
+      "A.n = (uint64_t)*(uint16_t*)@1;" ) )
+
+(asm ld4 (Src S)
+   (genCode (Src S) (list 'ld4 Src) ((op.a Src S))
+      "A.n = (uint64_t)*(uint32_t*)@1;" ) )
+
+(asm ldc (Dst D Src S)
+   (genCode (Dst D Src S) (list 'ldc Dst Src) ((op.n Dst D) (op.n Src S))
+      "if (Carry())"
+      "   @1 = @2;" ) )
+
+(asm ldnc (Dst D Src S)
+   (genCode (Dst D Src S) (list 'ldnc Dst Src) ((op.n Dst D) (op.n Src S))
+      "if (!Carry())"
+      "   @1 = @2;" ) )
+
+(asm ldz (Dst D Src S)
+   (genCode (Dst D Src S) (list 'ldz Dst Src) ((op.n Dst D) (op.n Src S))
+      "if (!Result)"
+      "   @1 = @2;" ) )
+
+(asm ldnz (Dst D Src S)
+   (genCode (Dst D Src S) (list 'ldnz Dst Src) ((op.n Dst D) (op.n Src S))
+      "if (Result)"
+      "   @1 = @2;" ) )
+
+(asm lea (Dst D Src S)
+   (genCode (Dst D Src S) (list 'lea Dst Src) ((op.n Dst D) (op.a Src S))
+      "@1 = (uint64_t)(unsigned long)@2;" ) )
+
+(asm st2 (Dst D)
+   (genCode (Dst D) (list 'st2 Dst) ((op.a Dst D))
+      "*(uint16_t*)@1 = (uint16_t)A.l;" ) )
+
+(asm st4 (Dst D)
+   (genCode (Dst D) (list 'st4 Dst) ((op.a Dst D))
+      "*(uint32_t*)@1 = (uint32_t)A.l;" ) )
+
+(asm xchg (Dst D Dst2 D2)
+   (genCode (Dst D Dst2 D2) (list 'xchg Dst Dst2) ((op.n Dst D) (op.n Dst2 D2))
+      "tmp.n = @1,  @1 = @2,  @2 = tmp.n;" ) )
+
+(asm movn (Dst D Src S Cnt C)
+   (genCode (Dst D Src S Cnt C) (list 'movn Dst Src Cnt) ((op.a Dst D) (op.a Src S) (op.i Cnt C))
+      "memcpy(@1, @2, @3);" ) )
+
+(asm mset (Dst D Cnt C)
+   (genCode (Dst D Cnt C) (list 'mset Dst Cnt) ((op.a Dst D) (op.i Cnt C))
+      "memset(@1, (int)A.b[0], @2);" ) )
+
+(asm movm (Dst D Src S End E)
+   (genCode (Dst D Src S End E) (list 'movm Dst Src End) ((op.a Dst D) (op.a Src S) (op.a End E))
+      "memcpy(@1, @2, @3 - @2);" ) )
+
+(asm save (Src S End E Dst D)
+   (genCode (Dst D Src S End E) (list 'save Dst Src End) ((op.a Dst D) (op.a Src S) (op.a End E))
+      "memcpy(@1, @2, @3 - @2);" ) )
+
+(asm load (Dst D End E Src S)
+   (genCode (Dst D Src S End E) (list 'load Dst Src End) ((op.a Dst D) (op.a Src S) (op.a End E))
+      "memcpy(@1, @2, @3 - @1);" ) )
+
+# Arithmetics
+(asm add (Dst D Src S)
+   (if (or D (atom Dst))
+      (genCode (Dst D Src S) (list 'add Dst Src) ((op.n Dst D) (op.n Src S))
+         "Carry = cfAdd,  Result = @1 += Source = @2;" )
+      (genCode (Src S) (list 'add 'D Src) ((op.n Src S))
+         "Result = A.n += Source = @1;"
+         "Carry = Result < Source && ++C.n == 0? cfSet : cfClr;"
+         "Result = C.n;" ) ) )  # 'z' only for upper word
+
+(asm addc (Dst D Src S)
+   (if (or D (atom Dst))
+      (genCode (Dst D Src S) (list 'addc Dst Src) ((op.n Dst D) (op.n Src S))
+         "if ((tmp.n = (Source = @2) + Carry()) == 0)"
+         "   Carry = cfSet,  Result = Source;"
+         "else"
+         "   Carry = cfAdd,  Result = @1 += tmp.n;" )
+      (genCode (Src S) (list 'addc 'D Src) ((op.n Src S))
+         "if ((tmp.n = (Source = @1) + Carry()) == 0)"
+         "   ++C.n;"
+         "else if ((A.n += tmp.n) < tmp.n)"
+         "   ++C.n;"
+         "Result = C.n;" ) ) )  # 'z' only for upper word
+
+(asm sub (Dst D Src S)
+   (genCode (Dst D Src S) (list 'sub Dst Src) ((op.n Dst D) (op.n Src S))
+      "Carry = cfSub,  Result = @1 -= Source = @2;" ) )
+
+(asm subc (Dst D Src S)
+   (genCode (Dst D Src S) (list 'subc Dst Src) ((op.n Dst D) (op.n Src S))
+      "i = Carry();"
+      "if ((tmp.n = @1 - i) > MAX64 - i)"
+      "   Carry = cfSet,  Result = @1 = MAX64 - @2;"
+      "else"
+      "   Carry = cfSub,  Result = @1 = tmp.n - (Source = @2);" ) )
+
+(asm inc (Dst D)
+   (genCode (Dst D) (list 'inc Dst) ((op.n Dst D))
+      "Result = ++@1;" ) )
+
+(asm dec (Dst D)
+   (genCode (Dst D) (list 'dec Dst) ((op.n Dst D))
+      "Result = --@1;" ) )
+
+(asm not (Dst D)
+   (genCode (Dst D) (list 'not Dst) ((op.n Dst D))
+      "Result = @1 = ~@1;" ) )
+
+(asm neg (Dst D)
+   (genCode (Dst D) (list 'neg Dst) ((op.n Dst D))
+      "Result = @1 = -@1;" ) )
+
+(asm and (Dst D Src S)
+   (genCode (Dst D Src S) (list 'and Dst Src) ((op.n Dst D) (op.n Src S))
+      "Result = @1 &= @2;" ) )
+
+(asm or (Dst D Src S)
+   (genCode (Dst D Src S) (list 'or Dst Src) ((op.n Dst D) (op.n Src S))
+      "Result = @1 |= @2;" ) )
+
+(asm xor (Dst D Src S)
+   (genCode (Dst D Src S) (list 'xor Dst Src) ((op.n Dst D) (op.n Src S))
+      "Result = @1 \^= @2;" ) )
+
+(asm off (Dst D Src S)
+   (genCode (Dst D Src S) (list 'off Dst (pack (cdr (chop Src)))) ((op.n Dst D) (op.n Src S))
+      "Result = @1 &= @2;" ) )
+
+(asm test (Dst D Src S)
+   (genCode (Dst D Src S) (list 'test Dst Src) ((op.n Dst D) (op.n Src S))
+      "Result = @1 & @2;" ) )
+
+(asm shl (Dst D Src S)
+   (if (=0 S)
+      (genCode (Dst D Src) (list 'shl Dst Src) ((op.n Dst D) Src)
+         "Carry = cfMsb,  Result = @1 = (Source = @1 << @2-1) << 1;" )
+      (genCode (Dst D Src S) (list 'shl Dst Src) ((op.n Dst D) (op.i Src S))
+         "if (@2)"
+         "   Carry = cfMsb,  Result = @1 = (Source = @1 << @2-1) << 1;" ) ) )
+
+(asm shr (Dst D Src S)
+   (if (=0 S)
+      (genCode (Dst D Src) (list 'shr Dst Src) ((op.n Dst D) Src)
+         "Carry = cfLsb,  Result = @1 = (Source = @1 >> @2-1) >> 1;" )
+      (genCode (Dst D Src S) (list 'shr Dst Src) ((op.n Dst D) (op.i Src S))
+         "if (@2)"
+         "   Carry = cfLsb,  Result = @1 = (Source = @1 >> @2-1) >> 1;" ) ) )
+
+(asm rol (Dst D Src S)
+   (genCode (Dst D Src S) (list 'rol Dst Src) ((op.n Dst D) (op.i Src S))
+      "i = @2,  @1 = @1 << i | @1 >> (64 - i);" ) )
+
+(asm ror (Dst D Src S)
+   (genCode (Dst D Src S) (list 'ror Dst Src) ((op.n Dst D) (op.i Src S))
+      "i = @2,  @1 = @1 >> i | @1 << (64 - i);" ) )
+
+(asm rcl (Dst D Src S)
+   (if (=0 S)
+      (genCode (Dst D Src) (list 'rcl Dst Src) ((op.n Dst D) Src)
+         "Carry = cfMsb,  i = @2-1,  Result = @1 = (Source = @1 << i | @1 >> (64 - i)) << 1;" )
+      (genCode (Dst D Src S) (list 'rcl Dst Src) ((op.n Dst D) (op.i Src S))
+         "if (@2)"
+         "   Carry = cfMsb,  i = @2-1,  Result = @1 = (Source = @1 << i | @1 >> (64 - i)) << 1;" ) ) )
+
+(asm rcr (Dst D Src S)
+   (if (=0 S)
+      (genCode (Dst D Src) (list 'rcr Dst Src) ((op.n Dst D) Src)
+         "Carry = cfLsb,  i = @2-1,  Result = @1 = (Source = @1 >> i | @1 << (64 - i)) >> 1;" )
+      (genCode (Dst D Src S) (list 'rcr Dst Src) ((op.n Dst D) (op.i Src S))
+         "if (@2)"
+         "   Carry = cfLsb,  i = @2-1,  Result = @1 = (Source = @1 >> i | @1 << (64 - i)) >> 1;" ) ) )
+
+(asm mul (Src S)
+   (genCode (Src S) (list 'mul Src) ((op.n Src S))
+      "mul2(@1);" ) )
+
+(asm div (Src S)
+   (genCode (Src S) (list 'div Src) ((op.n Src S))
+      "div2(@1);" ) )
+
+(asm zxt ()  # 8 bit -> 64 bit
+   (genCode NIL '(zxt) NIL
+      "A.n &= 0xFF;" ) )
+
+(asm setz ()
+   (genCode NIL '(setz) NIL
+      "Carry = cfClr,  Result = 0;" ) )
+
+(asm clrz ()
+   (genCode NIL '(clrz) NIL
+      "Result = 1;" ) )
+
+(asm setc ()
+   (genCode NIL '(setc) NIL
+      "Carry = cfSet;" ) )
+
+(asm clrc ()
+   (genCode NIL '(clrc) NIL
+      "Carry = cfClr;" ) )
+
+# Comparisons
+(asm cmp (Dst D Src S)
+   (if (or (= Dst "A.b[0]") (= Src "A.b[0]"))
+      (genCode (Dst D Src S) (list 'cmp Dst Src) ((op.b Dst D) (op.b Src S))
+         "Carry = cfSub,  Result = @1 - (Source = @2);" )
+      (genCode (Dst D Src S) (list 'cmp Dst Src) ((op.n Dst D) (op.n Src S))
+         "Carry = cfSub,  Result = @1 - (Source = @2);" ) ) )
+
+(asm cmpn (Dst D Src S Cnt C)
+   (genCode (Dst D Src S Cnt C) (list 'cmpn Dst Src Cnt) ((op.a Dst D) (op.a Src S) (op.i Cnt C))
+      "Result = (uint64_t)memcmp(@1, @2, @3);" ) )
+
+(asm slen (Dst D Src S)
+   (genCode (Dst D Src S) (list 'slen Dst Src) ((op.n Dst D) (op.p Src S))
+      "@1 = (uint64_t)strlen(@2);" ) )
+
+(asm memb (Src S Cnt C)
+   (if S
+      (genCode (Src S Cnt C) (list 'memb Src Cnt) ((op.p Src S) (op.i Cnt C))
+         "Result = !(uint64_t)(unsigned long)memchr(@1, (int)A.b[0], @2);" )
+      (genCode (Src S Cnt C) (list 'memb Src Cnt) ((op.p Src S) (op.i Cnt C) Cnt)
+         "if (!(Result = !(tmp.p = (uint8_t*)memchr(@1, (int)A.b[0], @2))))"
+         "   @3.n -= tmp.p - @1 + 1,  @1 = tmp.p + 1;" ) ) )
+
+(asm null (Src S)
+   (genCode (Src S) (list 'null Src) ((op.n Src S))
+      "Carry = cfClr,  Result = @1;" ) )
+
+(asm nul4 ()
+   (genCode NIL '(nul4) NIL
+      "Carry = cfClr,  Result = A.n << 32;" ) )
+
+# Byte addressing
+(asm set (Dst D Src S)
+   (genCode (Dst D Src S) (list 'set Dst Src) ((op.b Dst D) (op.b Src S))
+      "@1 = @2;" ) )
+
+(asm nul (Src S)
+   (genCode (Src S) (list 'nul Src) ((op.b Src S))
+      "Carry = cfClr,  Result = @1;" ) )
+
+# Types
+(asm cnt (Src S)
+   (genCode (Src S) (list 'cnt Src) ((op.b Src S))
+      "Result = @1 & 2;" ) )
+
+(asm big (Src S)
+   (genCode (Src S) (list 'big Src) ((op.b Src S))
+      "Result = @1 & 4;" ) )
+
+(asm num (Src S)
+   (genCode (Src S) (list 'num Src) ((op.b Src S))
+      "Result = @1 & 6;" ) )
+
+(asm sym (Src S)
+   (genCode (Src S) (list 'sym Src) ((op.b Src S))
+      "Result = @1 & 8;" ) )
+
+(asm atom (Src S)
+   (genCode (Src S) (list 'atom Src) ((op.b Src S))
+      "Result = @1 & 14;" ) )
+
+# Flow Control
+(de localAddr (Adr)
+   (or
+      (pre? "." Adr)  # Local label ".1"
+      (and
+         (cdr (setq Adr (split (chop Adr) "_")))  # Local jump "foo_22"
+         (= *Label (pack (glue "_" (head -1 Adr))))
+         (format (last Adr)) ) ) )
+
+(asm call (Adr A)
+   (nond
+      (A  # Absolute
+         (genCode (Adr) (list 'call Adr) ((absCode Adr))
+            "S.p -= 8,  *(uint16_t**)S.p = PC;"
+            "PC = Code + @1;" ) )
+      ((=T A)  # Indexed: Ignore SUBR
+         (genCode (Adr A) (list 'call (list Adr)) (Adr)
+            "S.p -= 8,  *(uint16_t**)S.p = PC;"
+            "PC = (uint16_t*)@1.p;" ) )
+      (NIL  # Indirect
+         (genCode (Adr A) (list 'call (list Adr)) ((op.p Adr A))
+            "S.p -= 8,  *(uint16_t**)S.p = PC;"
+            "PC = *(uint16_t**)@1;" ) ) ) )
+
+(asm jmp (Adr A)
+   (nond
+      (A  # Absolute
+         (if (localAddr Adr)
+            (genCode (Adr) (list 'jmp (relCode Adr)) ((relCode Adr))
+               "PC += @1;" )
+            (genCode (Adr) (list 'jmp Adr) ((absCode Adr))
+               "PC = Code + @1;" ) ) )
+      ((=T A)  # Indexed: Ignore SUBR
+         (genCode (Adr A) (list 'jmp (list Adr)) (Adr)
+            "PC = (uint16_t*)@1.p;" ) )
+      (NIL  # Indirect
+         (genCode (Adr A) (list 'jmp (list Adr)) ((op.p Adr A))
+            "PC = *(uint16_t**)@1;" ) ) ) )
+
+(de _jmp (Opc Test)
+   (nond
+      (A  # Absolute
+         (if (localAddr Adr)
+            (genCode (Adr Opc Test) (list Opc (relCode Adr)) ((relCode Adr) Test)
+               "if (@2)"
+               "   PC += @1;" )
+            (genCode (Adr Opc Test) (list Opc Adr) ((absCode Adr) Test)
+               "if (@2)"
+               "   PC = Code + @1;") ) )
+      ((=T A)  # Indexed: Ignore SUBR
+         (genCode (Adr Opc Test) (list Opc Adr) (Adr Test)
+            "if (@2)"
+            "   PC = (uint16_t*)@1.p;" ) )
+      (NIL  # Indirect
+         (genCode (Adr A Opc Test) (list Opc (list Adr)) ((op.p Adr A) Test)
+            "if (@2)"
+            "   PC = (uint16_t**)@1;" ) ) ) )
+
+(asm jz (Adr A)
+   (_jmp "jz" "!Result") )
+
+(asm jeq (Adr A)
+   (_jmp "jz" "!Result") )
+
+(asm jnz (Adr A)
+   (_jmp "jnz" "Result") )
+
+(asm jne (Adr A)
+   (_jmp "jnz" "Result") )
+
+(asm js (Adr A)
+   (_jmp "js" "(int64_t)Result < 0") )
+
+(asm jns (Adr A)
+   (_jmp "jns" "(int64_t)Result >= 0") )
+
+(asm jsz (Adr A)
+   (_jmp "jsz" "(int64_t)Result <= 0") )
+
+(asm jnsz (Adr A)
+   (_jmp "jnsz" "(int64_t)Result > 0") )
+
+(asm jc (Adr A)
+   (_jmp "jc" "Carry()") )
+
+(asm jlt (Adr A)
+   (_jmp "jc" "Carry()") )
+
+(asm jnc (Adr A)
+   (_jmp "jnc" "!Carry()") )
+
+(asm jge (Adr A)
+   (_jmp "jnc" "!Carry()") )
+
+(asm jcz (Adr A)
+   (_jmp "jcz" "!Result || Carry()") )
+
+(asm jle (Adr A)
+   (_jmp "jcz" "!Result || Carry()") )
+
+(asm jncz (Adr A)
+   (_jmp "jncz" "Result && !Carry()") )
+
+(asm jgt (Adr A)
+   (_jmp "jncz" "Result && !Carry()") )
+
+(asm ret ()
+   (genCode NIL '(ret) NIL
+      "PC = *(uint16_t**)S.p,  S.p += 8;" ) )
+
+# Floating point
+(asm ldd ()
+   #{!}# )
+
+(asm ldf ()
+   #{!}# )
+
+(asm fixnum ()
+   #{!}# )
+
+(asm float ()
+   #{!}# )
+
+(asm std ()
+   #{!}# )
+
+(asm stf ()
+   #{!}# )
+
+# C-Calls
+(de *C-Params  # Function return value and parameters
+   (getpid           i)
+   (getenv           p  p)
+   (setenv           i  p p i)
+   (isatty           i  i)
+   (tcgetattr        i  i v)
+   (tcsetattr        i  i i v)
+   (tcsetpgrp        -  i i)
+   (signal           p  i f)
+   (sigfillset       -  v)
+   (sigemptyset      -  v)
+   (sigaddset        -  v i)
+   (sigprocmask      -  i v v)
+   (sigaction        -  i v v)
+   (gettimeofday     -  -2 v)
+   (malloc           p  i)
+   (realloc          p  p i)
+   (fork             i)
+   (getpgrp          i)
+   (setpgid          -  i i)
+   (execvp           i  p 0)
+   (kill             i  i i)
+   (raise            -  i)
+   (alarm            i  i)
+   (waitpid          i  i p i)
+   (free             -  p)
+   (stat             i  p v)
+   (fcntl            i  i)
+   (pipe             i  v)
+   (select           i  i v v v 2)
+   (open             i  p i i)
+   (dup              i  i)
+   (dup2             -  i i)
+   (read             n  i p i)
+   (write            n  i p i)
+   (lseek            n  i n i)
+   (pread            n  i p i n)
+   (pwrite           n  i p i n)
+   (close            i  i)
+   (fopen            p  p p)
+   (freopen          p  p p p)
+   (getc_unlocked    i  v)
+   (putc_unlocked    -  i v)
+   (fread            i  p i i v)
+   (fwrite           i  p i i v)
+   (fileno           i  v)
+   (fseek            i  v n i)
+   (ftruncate        i  i n)
+   (fflush           -  v)
+   (fsync            i i)
+   (feof             i  v)
+   (fclose           -  v)
+   (socket           i  i i i)
+   (setsockopt       i  i i i p i)
+   (htons            i  i)
+   (ntohs            i  i)
+   (inet_ntop        -  i p p i)
+   (bind             i  i v i)
+   (listen           i  i i)
+   (getsockname      i  i v v)
+   (getaddrinfo      i  p p v v)
+   (getnameinfo      i  v i p i p i i)
+   (freeaddrinfo     -  v)
+   (accept           i  i v v)
+   (connect          i  i v i)
+   (recv             i  i p i i)
+   (sendto           -  i p i i v i)
+   (strdup           p  p)
+   (dlopen           p  p i)
+   (dlsym            p  v p)
+   (getcwd           p  p)
+   (chdir            i  p)
+   (opendir          p  p)
+   (readdir          p  v)
+   (closedir         -  v)
+   (time             -  v)
+   (times            -  v)
+   (usleep           -  i)
+   (gmtime           p  v)
+   (localtime        p  v)
+   (printf           -  p)
+   (fprintf          -  v p)
+   (snprintf         -  p i p)
+   (strerror         p  i)
+   (dlerror          p)
+   (exit             -  i)
+   # src64/sys/emu.code.l
+   (errno_A          -)
+   (errnoC           -)
+   (wifstoppedS_F    -)
+   (wifsignaledS_F   -)
+   (wtermsigS_A      n) )
+
+(de ccArg (P S O)
+   (case P
+      (p (op.p S O))
+      (n (op.n S O))
+      (i (op.i S O))
+      (f (sysFun S O))
+      (a (pack "(void*)" (op.a S O)))
+      (v (pack "(void*)" (op.p S O)))
+      (T
+         (nond
+            (P (op.i S O))
+            ((num? P) (quit "Bad parameter type" P))
+            ((ge0 P) (pack "(void*)" (op.p S O)))
+            (NIL (pack "argv(" @ ", (ptr)" (op.p S O) ")")) ) ) ) )
+
+(de _genCC Body
+   (addCode
+      (cons
+         (env '(Adr A Arg M Par))
+         '(list 'cc Adr Arg)
+         (list
+            'Adr
+            (list 'glue ", " Args)
+            (list 'extract
+               ''((A P)
+                  (when (lt0 P)
+                     (pack " retv(" (abs @) ", " A ");") ) )
+               Args
+               '(cdr Par) ) )
+         Body ) ) )
+
+(asm cc (Adr A Arg M)
+   (if (lst? Arg)
+      (let
+         (Par (cdr (assoc Adr *C-Params))
+            Args
+            '(let (P (cdr Par)  Lea)
+               (mapcan
+                  '((S O)
+                     (cond
+                        ((== '& S) (on Lea))
+                        ((== 'pop S)
+                           (cons
+                              (pack
+                                 "(S.p += 8, "
+                                 (ccArg (pop 'P) '("S" . -8) '(NIL . 0))
+                                 ")" ) ) )
+                        (Lea
+                           (pop 'P)
+                           (off Lea)
+                           (cons (ccArg 'a S O)) )
+                        (T (cons (ccArg (pop 'P) S O))) ) )
+                  Arg
+                  M ) ) )
+         (case (car Par)
+            (- (_genCC "@1(@2);@3"))
+            (p (_genCC "A.p = (uint8_t*)@1(@2);@3"))
+            (n (_genCC "A.n = (uint64_t)@1(@2);@3"))
+            (i (_genCC "A.l = (uint32_t)@1(@2);@3"))
+            (T (quit "Unknown C function" Adr)) ) )
+      ) )
+
+(asm begin ())
+
+(asm return ()
+   (genCode NIL '(return) NIL
+      "return;" ) )  # Terminate 'run'
+
+# Stack Manipulations
+(asm push (Src S)
+   (cond
+      ((=T Src)
+         (genCode NIL '(push F) NIL
+            "S.p -= 8,  ((ptr)S.p)->n = (Result & ~3) | (Result != 0) << 1 | Carry();" ) )
+      ((= "S" Src)
+         (genCode (Src S) '(push S) NIL
+            "tmp.n = S.n,  S.p -= 8,  ((ptr)S.p)->n = tmp.n;" ) )
+      (T
+         (genCode (Src S) (list 'push Src) ((op.n Src S))
+            "S.p -= 8,  ((ptr)S.p)->n = @1;" ) ) ) )
+
+(asm pop (Dst D)
+   (if (=T Dst)
+      (genCode NIL '(pop F) NIL
+         "Carry = cfLsb,  Source = ((ptr)S.p)->n,  Result = Source & ~1,  S.p += 8;" )
+      (genCode (Dst D) (list 'pop Dst) ((op.n Dst D))
+         "@1 = ((ptr)S.p)->n,  S.p += 8;" ) ) )
+
+(asm link ()
+   (genCode NIL '(link) NIL
+      "S.p -= 8,  ((ptr)S.p)->n = L.n,  L.p = S.p;" ) )
+
+(asm tuck (Src S)
+   (genCode (Src S) (list 'tuck Src) ((op.n Src S))
+      "L.p = ((ptr)S.p)->p, ((ptr)S.p)->n = @1;" ) )
+
+(asm drop ()
+   (genCode NIL '(drop) NIL
+      "S.p = ((ptr)L.p)->p,  L.p = ((ptr)S.p)->p,  S.p += 8;" ) )
+
+# Evaluation
+(asm eval ()
+   (genCode NIL '(eval) ((absCode "evListE_E"))
+      "if (!(E.b[0] & 6))"
+      "   if (E.b[0] & 8)"
+      "      E = *(ptr)E.p;"
+      "   else {"
+      "      S.p -= 8,  *(uint16_t**)S.p = PC;"
+      "      PC = Code + @1;"
+      "   }" ) )
+
+(asm eval+ ()
+   (genCode NIL '(eval+) ((absCode "evListE_E"))
+      "if (!(E.b[0] & 6))"
+      "   if (E.b[0] & 8)"
+      "      E = *(ptr)E.p;"
+      "   else {"
+      "      S.p -= 8,  ((ptr)S.p)->n = L.n,  L.p = S.p;"
+      "      S.p -= 8,  *(uint16_t**)S.p = PC;"
+      "      S.p -= 8,  *(uint16_t**)S.p = Code + 0;"  # <eval+>
+      "      PC = Code + @1;"
+      "   }" ) )
+
+(asm eval/ret ()
+   (genCode NIL '(eval/ret) ((absCode "evListE_E"))
+      "if (E.b[0] & 14) {"
+      "   if (E.b[0] & 8)"
+      "      E = *(ptr)E.p;"
+      "   PC = *(uint16_t**)S.p,  S.p += 8;"
+      "}"
+      "else"
+      "   PC = Code + @1;" ) )
+
+(asm exec (Reg)
+   (let Ofs (case Reg (X 1) (Y 2) (Z 3))
+      (con
+         (cdddr (caar (tail (inc Ofs) *AsmCode)))
+         (cons (text "goto exec@1;" Reg)) )
+      (genCode (Reg Ofs) (list 'exec Reg) ((absCode "evListE_E") Reg Ofs)
+         "do {"
+         "   E = *(ptr)@2.p;"
+         "   if (!(E.b[0] & 14)) {"
+         "      S.p -= 8,  *(uint16_t**)S.p = PC;"
+         "      S.p -= 8,  *(uint16_t**)S.p = Code + 1;"  # <exec>
+         "      PC = Code + @1;"
+         "         break;"
+         "   }"
+         "exec@2:"
+         "   @2.p = ((ptr)(@2.p + 8))->p;"
+         "} while (!(@2.b[0] & 14));" ) ) )
+
+(asm prog (Reg)
+   (let Ofs (case Reg (X 4) (Y 5) (Z 6))
+      (con
+         (cdddr (caar (tail (inc Ofs) *AsmCode)))
+         (cons (text "goto prog@1;" Reg)) )
+      (genCode (Reg Ofs) (list 'prog Reg) ((absCode "evListE_E") Reg Ofs)
+         "do {"
+         "   E = *(ptr)@2.p;"
+         "   if (!(E.b[0] & 6)) {"
+         "      if (E.b[0] & 8)"
+         "         E = *(ptr)E.p;"
+         "      else {"
+         "         S.p -= 8,  *(uint16_t**)S.p = PC;"
+         "         S.p -= 8,  *(uint16_t**)S.p = Code + @3;"  # <progN>
+         "         PC = Code + @1;"
+         "         break;"
+         "      }"
+         "   }"
+         "prog@2:"
+         "   @2.p = ((ptr)(@2.p + 8))->p;"
+         "} while (!(@2.b[0] & 14));" ) ) )
+
+# System
+(asm initData ())
+
+(asm initCode ())
+
+(asm initMain ())  # Done explicitly in 'main'
+
+### Optimizer ###
+# Replace the the next 'cnt' elements with 'lst'
+(de optimize (Lst))  #> (cnt . lst)
+
+### Decoration ###
+(de prolog (File)
+   (genCode NIL '(<eval+>) NIL            # Code + 0
+      "PC = *(uint16_t**)S.p,  S.p += 8;"
+      "L.p = ((ptr)S.p)->p,  S.p += 8;" )
+   (genCode NIL '(<execX>) NIL            # Code + 1
+      "PC = *(uint16_t**)S.p,  S.p += 8;" )
+   (genCode NIL '(<execY>) NIL            # Code + 2
+      "PC = *(uint16_t**)S.p,  S.p += 8;" )
+   (genCode NIL '(<execZ>) NIL            # Code + 3
+      "PC = *(uint16_t**)S.p,  S.p += 8;" )
+   (genCode NIL '(<progX>) NIL            # Code + 4
+      "PC = *(uint16_t**)S.p,  S.p += 8;" )
+   (genCode NIL '(<progY>) NIL            # Code + 5
+      "PC = *(uint16_t**)S.p,  S.p += 8;" )
+   (genCode NIL '(<progZ>) NIL            # Code + 6
+      "PC = *(uint16_t**)S.p,  S.p += 8;" )
+   (mapc prinl
+      (quote
+         NIL
+         "#include <stdio.h>"
+         "#include <stdint.h>"
+         "#include <stdlib.h>"
+         "#include <unistd.h>"
+         "#include <limits.h>"
+         "#include <string.h>"
+         "#include <math.h>"
+         "#include <errno.h>"
+         "#include <fcntl.h>"
+         "#include <dirent.h>"
+         "#include <signal.h>"
+         "#include <dlfcn.h>"
+         "#include <time.h>"
+         "#include <sys/types.h>"
+         "#include <sys/time.h>"
+         "#include <sys/times.h>"
+         "#include <sys/stat.h>"
+         NIL
+         "#define MAX8 ((uint8_t)-1)"
+         "#define MAX64 ((uint64_t)-1)"
+         "#define STACK (16 * 1024 * 1024)"
+         NIL
+         "typedef union op {"
+         "   uint64_t n;" ) )
+   (if (or *LittleEndian *Bits64)
+      (prinl "   uint8_t *p;")
+      (mapc prinl
+         (quote
+            "   struct {"
+            "      uint32_t u;"
+            "      uint8_t *p;"
+            "   };" ) ) )
+   (prinl "   uint8_t b[8];")
+   (if *LittleEndian
+      (prinl "   struct {uint32_t l, h;};")
+      (prinl "   struct {uint32_t h, l;};") )
+   (mapc prinl
+      (quote
+         "} op, *ptr;"
+         NIL
+         ~(if *FPic
+            (quote
+               "extern uint16_t *PC;"
+               "extern uint8_t *Stack;"
+               "extern op A, C, E, X, Y, Z, L, S;"
+               "extern uint64_t Source, Result;"
+               "extern int cfClr(void);"
+               "extern int cfSet(void);"
+               "extern int cfAdd(void);"
+               "extern int cfSub(void);"
+               "extern int cfMsb(void);"
+               "extern int cfLsb(void);"
+               "extern int (*Carry)(void);"
+               "extern void mul2(uint64_t);"
+               "extern void div2(uint64_t);"
+               "extern void begin(int,int,int,int,int,int,int);"
+               "extern void *argv(int,ptr);"
+               "extern void retv(int,ptr);" )
+            (quote
+               "uint16_t *PC;"
+               "uint8_t *Stack;"
+               "op A, C, E, X, Y, Z, L, S;"
+               "uint64_t Source, Result;"
+               NIL
+               "static void run(int);"
+               "int cfClr(void) {return 0;}"
+               "int cfSet(void) {return 1;}"
+               "int cfAdd(void) {return Result < Source;}"
+               "int cfSub(void) {return Result > MAX64-Source;}"
+               "int cfMsb(void) {return (int64_t)Source < 0;}"
+               "int cfLsb(void) {return Source & 1;}"
+               NIL
+               "int (*Carry)(void) = cfClr;"
+               NIL
+               "void mul2(uint64_t src) {"
+               "   uint32_t h = src >> 32;"
+               "   uint32_t l = (uint32_t)src;"
+               "   op a, b;"
+               NIL
+               "   a.n = (uint64_t)A.l * l;"
+               "   b.n = (uint64_t)A.h * l;"
+               "   C.n = (uint64_t)b.h + ((a.h += b.l) < b.l);"
+               "   b.n = (uint64_t)A.l * h;"
+               "   C.n += (uint64_t)b.h + ((a.h += b.l) < b.l);"
+               "   C.n += (uint64_t)A.h * h;"
+               "   A.n = a.n;"
+               "}"
+               NIL
+               "void div2(uint64_t src) {"
+               "   uint64_t vn0, vn1, q1, q0, rhat;"
+               "   int s;"
+               NIL
+               "   if (C.n >= src)"
+               "      A.n = C.n = MAX64;"                         # Overflow
+               "   else {"
+               "      s = 0;"
+               "      while ((int64_t)src > 0) {"                 # Normalize
+               "         C.n = (C.n << 1) + ((int64_t)A.n < 0);"  # Shift dividend left
+               "         A.n <<= 1;"
+               "         src <<= 1;"                              # and divisor
+               "         ++s;"
+               "      }"
+               "      vn1 = src >> 32;"                           # Split divisor into high
+               "      vn0 = (uint32_t)src;"                       # and low 32 bits
+               "      q1 = C.n / vn1;"                            # First quotient digit
+               "      rhat = C.n - q1 * vn1;"
+               NIL
+               "      while (q1 >> 32  ||  q1 * vn0 > (rhat << 32) + A.h) {"
+               "         --q1;"
+               "         if ((rhat += vn1) >> 32)"
+               "            break;"
+               "      }"
+               "      C.n = (C.n << 32) + A.h - q1 * src;"
+               "      q0 = C.n / vn1;"                            # Second quotient digit
+               "      rhat = C.n - q0 * vn1;"
+               NIL
+               "      while (q0 >> 32  ||  q0 * vn0 > (rhat << 32) + A.l) {"
+               "         --q0;"
+               "         if ((rhat += vn1) >> 32)"
+               "            break;"
+               "      }"
+               "      C.n = ((C.n << 32) + A.l - q0 * src) >> s;" # Remainder
+               "      A.n = (q1 << 32) + q0;"                     # Quotient
+               "   }"
+               "}"
+               NIL
+               "void begin(int i, int a, int c, int e, int x, int y, int z) {"
+                  "   S.p -= 8,  *(uint16_t**)S.p = PC;"
+                  "   S.p -= 8,  ((ptr)S.p)->n = Source;"
+                  "   S.p -= 8,  ((ptr)S.p)->n = Result;"
+                  "   S.p -= 8,  *(ptr)S.p = Z,  Z.n = z;"
+                  "   S.p -= 8,  *(ptr)S.p = Y,  Y.n = y;"
+                  "   S.p -= 8,  *(ptr)S.p = X,  X.n = x;"
+                  "   S.p -= 8,  *(ptr)S.p = E,  E.n = e;"
+                  "   S.p -= 8,  *(ptr)S.p = C,  C.n = c;"
+                  "   S.p -= 8,  *(ptr)S.p = A,  A.n = a;"
+                  "   run(i);"
+                  "   A = *(ptr)S.p,  S.p += 8;"
+                  "   C = *(ptr)S.p,  S.p += 8;"
+                  "   E = *(ptr)S.p,  S.p += 8;"
+                  "   X = *(ptr)S.p,  S.p += 8;"
+                  "   Y = *(ptr)S.p,  S.p += 8;"
+                  "   Z = *(ptr)S.p,  S.p += 8;"
+                  "   Result = ((ptr)S.p)->n,  S.p += 8;"
+                  "   Source = ((ptr)S.p)->n,  S.p += 8;"
+                  "   PC = *(uint16_t**)S.p,  S.p += 8;"
+               "}"
+               NIL
+               "void *argv(int i, ptr p) {"
+               "   if (p) {"
+               "      if (i == 0)"
+               "         while (((uint8_t**)p)[i] = p[i].p)"
+               "            ++i;"
+               "      else"
+               "         while (--i >= 0)"
+               "            ((uint8_t**)p)[i] = p[i].p;"
+               "   }"
+               "   return p;"
+               "}"
+               NIL
+               "void retv(int i, ptr p) {"
+               "   if (p)"
+               "      while (--i >= 0)"
+               "         p[i].n = (uint64_t)(unsigned long)((uint8_t**)p)[i];"
+               "}"
+               NIL ) )
+         "uint16_t Code[];"
+         NIL
+         "op Data[] = {" ) ) )
+
+(de epilog (File)
+   (setq
+      *AsmData (flip *AsmData)
+      *AsmCode (flip *AsmCode) )
+   (let *AsmPos 0
+      (for X *AsmCode
+         (set X
+            (job (env (caar X))
+               (opcode
+                  (eval (cadar X))
+                  (mapcar eval (caddar X))
+                  (cdddar X) ) ) )
+         (inc '*AsmPos) ) )
+   (let Bytes NIL
+      (for D *AsmData
+         (prin
+            "   /* "
+            (align -10 (car D))
+            (align 5 (cadr D))
+            " */" )
+         (and Bytes (cddr D) (space 8))
+         (for (I . X) (cddr D)
+            (cond
+               ((pair X)
+                  (and Bytes (quit "Unaligned word" (car D)))
+                  (prin " {.n = " (car X) "},") )
+               ((sym? X)
+                  (and Bytes (quit "Unaligned word" (car D)))
+                  (cond
+                     ((pre? ".+" X)
+                        (let N (+ (cadr D) (format (cddr (chop X))))
+                           (for ((J . L) (cddr D)  (> I J)  (cdr L))
+                              (NIL (> I J))  # Temporary (03oct12abu)
+                              (inc 'N (if (num? (car L)) 1 8)) )
+                           (prin " {.p = (uint8_t*)Data+" N "},") ) )
+                     ((asoq X *AsmData)
+                        (prin " {.p = (uint8_t*)Data+" (cadr @) "},") )
+                     ((absCode X)
+                        (prin " {.p = (uint8_t*)(Code+" @ ")},") )
+                     (T (quit "No value" X)) ) )
+               (Bytes
+                  (prin (and (> I 1) ", ") X)
+                  (when (= 8 (inc 'Bytes))
+                     (prin "}},")
+                     (off Bytes) ) )
+               (T
+                  (prin " {.b = {" X)
+                  (one Bytes) ) ) )
+         (and Bytes (cddr D) (prin ","))
+         (prinl) )
+      (when Bytes
+         (space 26)
+         (prinl "}}") ) )
+   (prinl "};")
+   (prinl)
+   (mapc prinl (flip *SysFun))
+   (prinl)
+   (prinl "uint16_t Code[] = {")
+   (for (I . X) *AsmCode
+      (when (pair X)
+         (for C (cdr X)
+            (unless (pre? "." C)  # Omit local labels
+               (prinl "          // " C ":") ) )
+         (setq X (car X)) )
+      (prinl
+         (align 7 X)
+         ",  // "
+         (align 7 (dec I))
+         ": "
+         (if (=0 X)
+            "nop"
+            (fmtInstruction (get *AsmOpcodes X 1)) ) ) )
+   (mapc prinl
+      (quote
+         "};"
+         NIL ) )
+   (mapc prinl
+      (quote
+         NIL
+         "static void run(int i) {"
+         "   op tmp;"
+         NIL
+         "   PC = Code + i;"
+         "   for (;;) {"
+         "      switch (*PC++) {"
+         "      case 0: // nop"
+         "         break;" ) )
+   (for (C . L) *AsmOpcodes
+      (prinl "      case " C ":  // " (fmtInstruction (car L)))
+      (for S (cdr L)
+         (prinl "         " S) )
+      (prinl "         break;") )
+   (mapc prinl
+      (quote
+         "      default:"
+         "         fprintf(stderr, \"Illegal instruction\\n\");"
+         "         exit(112);"
+         "      }"
+         ~(as *Dbg
+            "      fprintf(stderr, \"   %llX %llX %llX  %llX %llX %llX  %d%d%d  %llX %llX\\n\","
+            "         A.n, C.n, E.n, X.n, Y.n, Z.n,"
+            "         !Result, (int64_t)Result<0, Carry(),"
+            "         L.n, S.n );" )
+         "   }"
+         "}"
+         NIL
+         "void main(int ac, char *av[]) {"
+         "   int i;"
+         NIL
+         "   S.p = (Stack = malloc(STACK)) + STACK;"
+         "   Y.p = malloc((ac + 1) * sizeof(op));"
+         "   i = 0; do"
+         "      ((ptr)Y.p)[i].n = (uint64_t)(unsigned long)av[i];"
+         "   while (++i < ac);"
+         "   ((ptr)Y.p)[i].n = 0;"
+         "   X.p = ((ptr)Y.p)->p,  Y.p += 8;"
+         "   Z.p = Y.p + (ac - 2) * sizeof(op);" ) )
+   (prinl (pack "   run(" (absCode "main") ");"))
+   (prinl "}") )
+
+# vi:et:ts=3:sw=3

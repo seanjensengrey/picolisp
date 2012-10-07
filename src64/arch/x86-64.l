@@ -1,4 +1,4 @@
-# 30apr12abu
+# 24sep12abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -63,12 +63,12 @@
    (if
       (or
          (not *FPic)
-         (= `(char ".") (char Adr))  # Local label ".1"
-         (use (@L @N)
+         (= `(char ".") (char Adr))     # Local label ".1"
+         (let A (split (chop Adr) "_")  # Local jump "foo_22"
             (and
-               (match '(@L "_" @N) (chop Adr))  # Local jump "foo_22"
-               (= @L (chop *Label))
-               (format @N) ) ) )
+               (cdr A)
+               (= *Label (pack (glue "_" (head -1 A))))
+               (format (last A)) ) ) )
       Adr
       (ifn F
          (pack Adr "@plt")
@@ -216,8 +216,8 @@
       ((= "%al" Src)
          (prinst "mov" "%al" (byteVal Dst)) )
       ((pair Dst)
-         (prinst "mov" (if (= "$0" Src) "%r12" Src) (car Dst))
-         (prinst "mov" (if (= "$0" Src) "%r12" (highWord Src)) (cdr Dst)) )
+         (prinst "mov" Src (car Dst))
+         (prinst "mov" (if (=0 S) "%r12" (highWord Src)) (cdr Dst)) )
       ((pair Src)
          (prinst "mov" (car Src) Dst)
          (prinst "mov" (cdr Src) (highWord Dst)) )
@@ -432,9 +432,6 @@
 (asm cmp (Dst D Src S)
    (dstSrc "cmp" (dst Dst D) (src Src S)) )
 
-(asm cmp4 (Src S)
-   (prinst "cmp" (src Src S) "%eax") )
-
 (asm cmpn (Dst D Src S Cnt C)
    (setq Dst (dst Dst D))
    (prinst (if (pre? "%" Dst) "mov" "lea") Dst "%rsi")
@@ -505,10 +502,11 @@
 # Flow Control
 (asm call (Adr A)
    (nond
-      (A (prinst "call" (target Adr)))
+      (A  # Absolute
+         (prinst "call" (target Adr)) )
       ((=T A)  # Ignore SUBR
          (prinst "call" (pack "*" Adr)) )
-      (NIL
+      (NIL  # Indirect
          (prinst "mov" (target Adr T) "%r10")
          (prinst "call" "*%r10") ) ) )
 
@@ -579,6 +577,15 @@
 (asm jgt (Adr A)
    (_jmp "ja" "jbe") )
 
+(asm ret ()
+   (unless
+      (and
+         (seek '((L) (== (cadr L) *Statement)) *Program)
+         (not (memq (caar @) '`(cons ': (cdr *Transfers)))) )
+      (prinst "rep") )
+   (prinst "ret") )
+
+# Floating point
 (asm ldd ()
    (prinst "movsd" "(%rdx)" "%xmm0") )
 
@@ -670,6 +677,7 @@
 (asm stf ()
    (prinst "movss" "%xmm0" "(%r15)") )
 
+# C-Calls
 (asm cc (Adr A Arg M)
    (unless (== 'cc (caar (seek '((L) (== (cadr L) *Statement)) *Program)))
       (prinst "mov" "%rdx" "%r12") )
@@ -813,14 +821,6 @@
       (prinst "mov" "%r12" "%rdx")
       (prinst "xor" "%r12" "%r12") ) )
 
-(asm ret ()
-   (unless
-      (and
-         (seek '((L) (== (cadr L) *Statement)) *Program)
-         (not (memq (caar @) '`(cons ': (cdr *Transfers)))) )
-      (prinst "rep") )
-   (prinst "ret") )
-
 (asm begin ()
    (prinst "call" "begin") )
 
@@ -963,5 +963,10 @@
 ### Optimizer ###
 # Replace the the next 'cnt' elements with 'lst'
 (de optimize (Lst))  #> (cnt . lst)
+
+### Decoration ###
+(de prolog (File))
+
+(de epilog (File))
 
 # vi:et:ts=3:sw=3
