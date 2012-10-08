@@ -421,11 +421,11 @@
 (asm rcl (Dst D Src S)
    (genCode (Dst D Src S) (list 'rcl Dst Src) ((op.n Dst D) (op.i Src S))
       "@1 = @1 << @2 | @1 >> (64 - @2);"
-      "i = @1 & 1,  @1 |= Carry,  Carry = i;" ) )
+      "i = @1 & 1,  @1 = @1 & ~1 | Carry,  Carry = i;" ) )
 
 (asm rcr (Dst D Src S)
    (genCode (Dst D Src S) (list 'rcr Dst Src) ((op.n Dst D) (op.i Src S))
-      "i = @1 & 1,  @1 |= Carry,  Carry = i;"
+      "i = @1 & 1,  @1 = @1 & ~1 | Carry,  Carry = i;"
       "@1 = @1 >> @2 | @1 << (64 - @2);" ) )
 
 (asm mul (Src S)
@@ -672,7 +672,7 @@
    (kill             i  i i)
    (raise            -  i)
    (alarm            i  i)
-   (waitpid          i  i p i)
+   (waitpid          i  i v i)
    (free             -  p)
    (stat             i  p v)
    (fcntl            i  i)
@@ -962,6 +962,7 @@
          "#include <sys/time.h>"
          "#include <sys/times.h>"
          "#include <sys/stat.h>"
+         "#include <sys/wait.h>"
          NIL
          "#define MAX8 ((uint8_t)-1)"
          "#define MAX64 ((uint64_t)-1)"
