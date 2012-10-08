@@ -1,4 +1,4 @@
-# 07oct12abu
+# 08oct12abu
 # (c) Software Lab. Alexander Burger
 
 # *AsmOpcodes *AsmCode *AsmPos *Labels *AsmData *SysFun
@@ -268,12 +268,12 @@
 
 (asm ldc (Dst D Src S)
    (genCode (Dst D Src S) (list 'ldc Dst Src) ((op.n Dst D) (op.n Src S))
-      "if (Carry())"
+      "if (Carry)"
       "   @1 = @2;" ) )
 
 (asm ldnc (Dst D Src S)
    (genCode (Dst D Src S) (list 'ldnc Dst Src) ((op.n Dst D) (op.n Src S))
-      "if (!Carry())"
+      "if (!Carry)"
       "   @1 = @2;" ) )
 
 (asm ldz (Dst D Src S)
@@ -326,37 +326,37 @@
 (asm add (Dst D Src S)
    (if (or D (atom Dst))
       (genCode (Dst D Src S) (list 'add Dst Src) ((op.n Dst D) (op.n Src S))
-         "Carry = cfAdd,  Result = @1 += Source = @2;" )
+         "Carry = (Result = @1 += @2) < @2;" )
       (genCode (Src S) (list 'add 'D Src) ((op.n Src S))
-         "Result = A.n += Source = @1;"
-         "Carry = Result < Source && ++C.n == 0? cfSet : cfClr;"
+         "Carry = (A.n += @1) < @1 && ++C.n == 0;"
          "Result = C.n;" ) ) )  # 'z' only for upper word
 
 (asm addc (Dst D Src S)
    (if (or D (atom Dst))
       (genCode (Dst D Src S) (list 'addc Dst Src) ((op.n Dst D) (op.n Src S))
-         "if ((tmp.n = (Source = @2) + Carry()) == 0)"
-         "   Carry = cfSet,  Result = Source;"
+         "if ((tmp.n = @2 + Carry) == 0)"
+         "   Result = @1;"
          "else"
-         "   Carry = cfAdd,  Result = @1 += tmp.n;" )
+         "   Carry = (Result = @1 += tmp.n) < tmp.n;" )
       (genCode (Src S) (list 'addc 'D Src) ((op.n Src S))
-         "if ((tmp.n = (Source = @1) + Carry()) == 0)"
-         "   ++C.n;"
+         "if ((tmp.n = @1 + Carry) == 0)"
+         "   Carry = ++C.n == 0;"
          "else if ((A.n += tmp.n) < tmp.n)"
-         "   ++C.n;"
+         "   Carry = ++C.n == 0;"
+         "else"
+         "   Carry = 0;"
          "Result = C.n;" ) ) )  # 'z' only for upper word
 
 (asm sub (Dst D Src S)
    (genCode (Dst D Src S) (list 'sub Dst Src) ((op.n Dst D) (op.n Src S))
-      "Carry = cfSub,  Result = @1 -= Source = @2;" ) )
+      "Carry = (Result = @1 -= @2) > MAX64 - @2;" ) )
 
 (asm subc (Dst D Src S)
    (genCode (Dst D Src S) (list 'subc Dst Src) ((op.n Dst D) (op.n Src S))
-      "i = Carry();"
-      "if ((tmp.n = @1 - i) > MAX64 - i)"
-      "   Carry = cfSet,  Result = @1 = MAX64 - @2;"
+      "if ((tmp.n = @1 - Carry) > MAX64 - Carry)"
+      "   Result = @1 = MAX64 - @2;"
       "else"
-      "   Carry = cfSub,  Result = @1 = tmp.n - (Source = @2);" ) )
+      "   Carry = (Result = @1 = tmp.n - @2) > MAX64 - @2;" ) )
 
 (asm inc (Dst D)
    (genCode (Dst D) (list 'inc Dst) ((op.n Dst D))
@@ -395,20 +395,14 @@
       "Result = @1 & @2;" ) )
 
 (asm shl (Dst D Src S)
-   (if (=0 S)
-      (genCode (Dst D Src) (list 'shl Dst Src) ((op.n Dst D) Src)
-         "Carry = cfMsb,  Result = @1 = (Source = @1 << @2-1) << 1;" )
-      (genCode (Dst D Src S) (list 'shl Dst Src) ((op.n Dst D) (op.i Src S))
-         "if (@2)"
-         "   Carry = cfMsb,  Result = @1 = (Source = @1 << @2-1) << 1;" ) ) )
+   (genCode (Dst D Src S) (list 'shl Dst Src) ((op.n Dst D) (op.n Src S))
+      "Carry = @1 >> 64 - @2 & 1;"
+      "Result = @1 <<= @2;" ) )
 
 (asm shr (Dst D Src S)
-   (if (=0 S)
-      (genCode (Dst D Src) (list 'shr Dst Src) ((op.n Dst D) Src)
-         "Carry = cfLsb,  Result = @1 = (Source = @1 >> @2-1) >> 1;" )
-      (genCode (Dst D Src S) (list 'shr Dst Src) ((op.n Dst D) (op.i Src S))
-         "if (@2)"
-         "   Carry = cfLsb,  Result = @1 = (Source = @1 >> @2-1) >> 1;" ) ) )
+   (genCode (Dst D Src S) (list 'shr Dst Src) ((op.n Dst D) (op.n Src S))
+      "Carry = @1 >> @2 - 1 & 1;"
+      "Result = @1 >>= @2;" ) )
 
 (asm rol (Dst D Src S)
    (if (=0 S)
@@ -425,30 +419,14 @@
          "i = @2,  @1 = @1 >> i | @1 << (64 - i);" ) ) )
 
 (asm rcl (Dst D Src S)
-   (nond
-      ((=0 S)
-         (genCode (Dst D Src S) (list 'rcl Dst Src) ((op.n Dst D) (op.i Src S))
-            "if (@2)"
-            "   i = Carry(),  Carry = cfMsb,  Result = @1 = (Source = @1 << (@2 - 1) | @1 >> (64 - (@2 - 1))) << 1 | i;" ) )
-      ((= "1" Src)
-         (genCode (Dst D Src) (list 'rcl Dst Src) ((op.n Dst D) Src)
-            "i = Carry(),  Carry = cfMsb,  Result = @1 = (Source = @1 << (@2 - 1) | @1 >> (64 - (@2 - 1))) << 1 | i;" ) )
-      (NIL
-         (genCode (Dst D Src) (list 'rcl Dst Src) ((op.n Dst D))
-            "i = Carry(),  Carry = cfMsb,  Result = @1 = (Source = @1) << 1 | i;" ) ) ) )
+   (genCode (Dst D Src S) (list 'rcl Dst Src) ((op.n Dst D) (op.i Src S))
+      "@1 = @1 << @2 | @1 >> (64 - @2);"
+      "i = @1 & 1,  @1 |= Carry,  Carry = i;" ) )
 
 (asm rcr (Dst D Src S)
-   (nond
-      ((=0 S)
-         (genCode (Dst D Src S) (list 'rcr Dst Src) ((op.n Dst D) (op.i Src S))
-            "if (@2)"
-            "   i = Carry(),  Carry = cfLsb,  Result = @1 = (Source = @1 >> (@2 - 1) | @1 << (64 - (@2 - 1))) >> 1 | (uint64_t)i << 63;" ) )
-      ((= "1" Src)
-         (genCode (Dst D Src) (list 'rcr Dst Src) ((op.n Dst D) Src)
-            "i = Carry(),  Carry = cfLsb,  Result = @1 = (Source = @1 >> (@2 - 1) | @1 << (64 - (@2 - 1))) >> 1 | (uint64_t)i << 63;" ) )
-      (NIL
-         (genCode (Dst D Src) (list 'rcr Dst Src) ((op.n Dst D))
-            "i = Carry(),  Carry = cfLsb,  Result = @1 = (Source = @1) >> 1 | (uint64_t)i << 63;" ) ) ) )
+   (genCode (Dst D Src S) (list 'rcr Dst Src) ((op.n Dst D) (op.i Src S))
+      "i = @1 & 1,  @1 |= Carry,  Carry = i;"
+      "@1 = @1 >> @2 | @1 << (64 - @2);" ) )
 
 (asm mul (Src S)
    (genCode (Src S) (list 'mul Src) ((op.n Src S))
@@ -464,7 +442,7 @@
 
 (asm setz ()
    (genCode NIL '(setz) NIL
-      "Carry = cfClr,  Result = 0;" ) )
+      "Carry = 0,  Result = 0;" ) )
 
 (asm clrz ()
    (genCode NIL '(clrz) NIL
@@ -472,19 +450,19 @@
 
 (asm setc ()
    (genCode NIL '(setc) NIL
-      "Carry = cfSet;" ) )
+      "Carry = 1;" ) )
 
 (asm clrc ()
    (genCode NIL '(clrc) NIL
-      "Carry = cfClr;" ) )
+      "Carry = 0;" ) )
 
 # Comparisons
 (asm cmp (Dst D Src S)
    (if (or (= Dst "A.b[0]") (= Src "A.b[0]"))
       (genCode (Dst D Src S) (list 'cmp Dst Src) ((op.b Dst D) (op.b Src S))
-         "Carry = cfSub,  Result = @1 - (Source = @2);" )
+         "Carry = (Result = @1 - @2) > MAX64 - @2;" )
       (genCode (Dst D Src S) (list 'cmp Dst Src) ((op.n Dst D) (op.n Src S))
-         "Carry = cfSub,  Result = @1 - (Source = @2);" ) ) )
+         "Carry = (Result = @1 - @2) > MAX64 - @2;" ) ) )
 
 (asm cmpn (Dst D Src S Cnt C)
    (genCode (Dst D Src S Cnt C) (list 'cmpn Dst Src Cnt) ((op.a Dst D) (op.a Src S) (op.i Cnt C))
@@ -504,11 +482,11 @@
 
 (asm null (Src S)
    (genCode (Src S) (list 'null Src) ((op.n Src S))
-      "Carry = cfClr,  Result = @1;" ) )
+      "Carry = 0,  Result = @1;" ) )
 
 (asm nul4 ()
    (genCode NIL '(nul4) NIL
-      "Carry = cfClr,  Result = (int32_t)A.l;" ) )
+      "Carry = 0,  Result = (int32_t)A.l;" ) )
 
 # Byte addressing
 (asm set (Dst D Src S)
@@ -517,7 +495,7 @@
 
 (asm nul (Src S)
    (genCode (Src S) (list 'nul Src) ((op.b Src S))
-      "Carry = cfClr,  Result = @1;" ) )
+      "Carry = 0,  Result = @1;" ) )
 
 # Types
 (asm cnt (Src S)
@@ -623,28 +601,28 @@
    (_jmp "jnsz" "(int64_t)Result > 0") )
 
 (asm jc (Adr A)
-   (_jmp "jc" "Carry()") )
+   (_jmp "jc" "Carry") )
 
 (asm jlt (Adr A)
-   (_jmp "jc" "Carry()") )
+   (_jmp "jc" "Carry") )
 
 (asm jnc (Adr A)
-   (_jmp "jnc" "!Carry()") )
+   (_jmp "jnc" "!Carry") )
 
 (asm jge (Adr A)
-   (_jmp "jnc" "!Carry()") )
+   (_jmp "jnc" "!Carry") )
 
 (asm jcz (Adr A)
-   (_jmp "jcz" "!Result || Carry()") )
+   (_jmp "jcz" "!Result || Carry") )
 
 (asm jle (Adr A)
-   (_jmp "jcz" "!Result || Carry()") )
+   (_jmp "jcz" "!Result || Carry") )
 
 (asm jncz (Adr A)
-   (_jmp "jncz" "Result && !Carry()") )
+   (_jmp "jncz" "Result && !Carry") )
 
 (asm jgt (Adr A)
-   (_jmp "jncz" "Result && !Carry()") )
+   (_jmp "jncz" "Result && !Carry") )
 
 (asm ret ()
    (genCode NIL '(ret) NIL
@@ -836,7 +814,7 @@
    (cond
       ((=T Src)
          (genCode NIL '(push F) NIL
-            "S.p -= 8,  ((ptr)S.p)->n = (Result & ~3) | (Result != 0) << 1 | Carry();" ) )
+            "S.p -= 8,  ((ptr)S.p)->n = (Result & ~1) | (Result & 0xFFFFFFFF) << 1 | Carry;" ) )
       ((= "S" Src)
          (genCode (Src S) '(push S) NIL
             "tmp.n = S.n,  S.p -= 8,  ((ptr)S.p)->n = tmp.n;" ) )
@@ -847,7 +825,7 @@
 (asm pop (Dst D)
    (if (=T Dst)
       (genCode NIL '(pop F) NIL
-         "Carry = cfLsb,  Source = ((ptr)S.p)->n,  Result = Source & ~1,  S.p += 8;" )
+         "Carry = ((ptr)S.p)->n & 1,  Result = ((ptr)S.p)->n & ~1,  S.p += 8;" )
       (genCode (Dst D) (list 'pop Dst) ((op.n Dst D))
          "@1 = ((ptr)S.p)->n,  S.p += 8;" ) ) )
 
@@ -1012,14 +990,8 @@
                "extern uint16_t *PC;"
                "extern uint8_t *Stack;"
                "extern op A, C, E, X, Y, Z, L, S;"
-               "extern uint64_t Source, Result;"
-               "extern int cfClr(void);"
-               "extern int cfSet(void);"
-               "extern int cfAdd(void);"
-               "extern int cfSub(void);"
-               "extern int cfMsb(void);"
-               "extern int cfLsb(void);"
-               "extern int (*Carry)(void);"
+               "extern uint64_t Result;"
+               "extern int Carry;"
                "extern void mul2(uint64_t);"
                "extern void div2(uint64_t);"
                "extern void begin(int,int,int,int,int,int,int);"
@@ -1029,17 +1001,10 @@
                "uint16_t *PC;"
                "uint8_t *Stack;"
                "op A, C, E, X, Y, Z, L, S;"
-               "uint64_t Source, Result;"
+               "uint64_t Result;"
+               "int Carry;"
                NIL
                "static void run(int);"
-               "int cfClr(void) {return 0;}"
-               "int cfSet(void) {return 1;}"
-               "int cfAdd(void) {return Result < Source;}"
-               "int cfSub(void) {return Result > MAX64-Source;}"
-               "int cfMsb(void) {return (int64_t)Source < 0;}"
-               "int cfLsb(void) {return Source & 1;}"
-               NIL
-               "int (*Carry)(void) = cfClr;"
                NIL
                "void mul2(uint64_t src) {"
                "   uint32_t h = src >> 32;"
@@ -1095,7 +1060,7 @@
                NIL
                "void begin(int i, int a, int c, int e, int x, int y, int z) {"
                   "   S.p -= 8,  *(uint16_t**)S.p = PC;"
-                  "   S.p -= 8,  ((ptr)S.p)->n = Source;"
+                  "   S.p -= 8,  ((ptr)S.p)->l = Carry;"
                   "   S.p -= 8,  ((ptr)S.p)->n = Result;"
                   "   S.p -= 8,  *(ptr)S.p = Z,  Z.n = z;"
                   "   S.p -= 8,  *(ptr)S.p = Y,  Y.n = y;"
@@ -1111,7 +1076,7 @@
                   "   Y = *(ptr)S.p,  S.p += 8;"
                   "   Z = *(ptr)S.p,  S.p += 8;"
                   "   Result = ((ptr)S.p)->n,  S.p += 8;"
-                  "   Source = ((ptr)S.p)->n,  S.p += 8;"
+                  "   Carry = ((ptr)S.p)->l,  S.p += 8;"
                   "   PC = *(uint16_t**)S.p,  S.p += 8;"
                "}"
                NIL
@@ -1238,7 +1203,7 @@
          ~(as *Dbg
             "      fprintf(stderr, \"   %llX %llX %llX  %llX %llX %llX  %d%d%d  %llX %llX\\n\","
             "         A.n, C.n, E.n, X.n, Y.n, Z.n,"
-            "         !Result, (int64_t)Result<0, Carry(),"
+            "         !Result, (int64_t)Result<0, Carry,"
             "         L.n, S.n );" )
          "   }"
          "}"
