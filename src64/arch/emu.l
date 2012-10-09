@@ -1,4 +1,4 @@
-# 08oct12abu
+# 09oct12abu
 # (c) Software Lab. Alexander Burger
 
 # *AsmOpcodes *AsmCode *AsmPos *Labels *AsmData *SysFun
@@ -867,7 +867,7 @@
 (asm eval/ret ()
    (genCode NIL '(eval/ret) ((absCode "evListE_E"))
       "if (E.b[0] & 14) {"
-      "   if (E.b[0] & 8)"
+      "   if (!(E.b[0] & 6))"
       "      E = *(ptr)E.p;"
       "   PC = *(uint16_t**)S.p,  S.p += 8;"
       "}"
