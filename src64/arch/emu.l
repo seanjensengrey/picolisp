@@ -469,7 +469,7 @@
       "Result = (uint64_t)memcmp(@1, @2, @3);" ) )
 
 (asm slen (Dst D Src S)
-   (genCode (Dst D Src S) (list 'slen Dst Src) ((op.n Dst D) (op.p Src S))
+   (genCode (Dst D Src S) (list 'slen Dst Src) ((op.n Dst D) (op.a Src S))
       "@1 = (uint64_t)strlen(@2);" ) )
 
 (asm memb (Src S Cnt C)
