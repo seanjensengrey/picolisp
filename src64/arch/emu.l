@@ -167,8 +167,8 @@
 
 (de op.a (Arg M)
    (cond
-      ((atom M)                        # Immediate, Register or Direct
-         (quit "Can't take address" Arg) )
+      ((=0 M) (quit "Can't take address" Arg))  # Immediate
+      ((flg? M) (op.p Arg M))                   # Register or Direct
       ((=T (cdr M))
          (let E (directExpr (cdr Arg))
             (pack
@@ -474,9 +474,9 @@
 
 (asm memb (Src S Cnt C)
    (if S
-      (genCode (Src S Cnt C) (list 'memb Src Cnt) ((op.p Src S) (op.i Cnt C))
+      (genCode (Src S Cnt C) (list 'memb Src Cnt) ((op.a Src S) (op.i Cnt C))
          "Result = !(uint64_t)(unsigned long)memchr(@1, (int)A.b[0], @2);" )
-      (genCode (Src S Cnt C) (list 'memb Src Cnt) ((op.p Src S) (op.i Cnt C) Cnt)
+      (genCode (Src S Cnt C) (list 'memb Src Cnt) ((op.a Src S) (op.i Cnt C) Cnt)
          "if (!(Result = !(tmp.p = (uint8_t*)memchr(@1, (int)A.b[0], @2))))"
          "   @3.n -= tmp.p - @1 + 1,  @1 = tmp.p + 1;" ) ) )
 
