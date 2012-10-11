@@ -1,4 +1,4 @@
-# 07oct12abu
+# 10oct12abu
 # (c) Software Lab. Alexander Burger
 
 .SILENT:
@@ -38,16 +38,12 @@ ifeq ($(UNAME), Linux)
 		SYS = .linux
 		FMT = .s
 		ARCH = x86-64
-		MKASM-BASE =
-		MKASM-LIB = -fpic
 		AS = as
 	else
 		ifeq ($(MACHINE), ppc64)
 			SYS = .linux
 			FMT = .s
 			ARCH = ppc64
-			MKASM-BASE = -'prSym "ppc64.symtab"'
-			MKASM-LIB = -fpic -'rdSym "ppc64.symtab"'
 			AS = as -mppc64 -a64
 		endif
 	endif
@@ -60,8 +56,6 @@ else
 		SYS = .sunOs
 		FMT = .s
 		ARCH = x86-64
-		MKASM-BASE =
-		MKASM-LIB = -fpic
 		AS = gas --64
 		LD-MAIN = -m64 -lc -lm -ldl -lsocket -lnsl
 		LD-SHARED = -m64 -shared
@@ -100,13 +94,13 @@ $(lib)/ht: $(ARCH)$(SYS).ht.o
 
 # Explicit builds for cross-assembly
 $(ARCH)$(SYS).base$(FMT): sysdefs arch/$(ARCH).l $(baseFiles) sys/$(ARCH)$(SYS).code.l
-	./mkAsm $(ARCH) "$(SYS)" $(FMT) $(OS) base $(lib)/map $(baseFiles) sys/$(ARCH)$(SYS).code.l $(MKASM-BASE)
+	./mkAsm $(ARCH) "$(SYS)" $(FMT) $(OS) base $(lib)/map  $(baseFiles) sys/$(ARCH)$(SYS).code.l
 
 $(ARCH)$(SYS).ext$(FMT): sysdefs arch/$(ARCH).l ext.l $(ARCH)$(SYS).base$(FMT)
-	./mkAsm $(ARCH) "$(SYS)" $(FMT) $(OS) ext "" $(MKASM-LIB) ext.l
+	./mkAsm $(ARCH) "$(SYS)" $(FMT) $(OS) ext "" -fpic  ext.l
 
 $(ARCH)$(SYS).ht$(FMT): sysdefs arch/$(ARCH).l ht.l $(ARCH)$(SYS).base$(FMT)
-	./mkAsm $(ARCH) "$(SYS)" $(FMT) $(OS) ht "" $(MKASM-LIB) ht.l
+	./mkAsm $(ARCH) "$(SYS)" $(FMT) $(OS) ht "" -fpic  ht.l
 
 sysdefs: sysdefs.c
 	$(CC) -o sysdefs -D_FILE_OFFSET_BITS=64 sysdefs.c

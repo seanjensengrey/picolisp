@@ -1,4 +1,4 @@
-# 04oct12abu
+# 10oct12abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -37,6 +37,10 @@
 # Machine specific
 (zero *DataPos *CodePos)
 (off *DataLabels *CodeLabels *DataIndex *CodeIndex)
+
+(redef fpic ()
+   (fpic)
+   (rdSym "ppc64.symtab") )
 
 (redef label (Lbl Flg)
    (ifn *FPic
@@ -1566,6 +1570,8 @@
 ### Decoration ###
 (de prolog (File))
 
-(de epilog (File))
+(de epilog (File)
+   (unless *FPic
+      (prSym "ppc64.symtab") ) )
 
 # vi:et:ts=3:sw=3

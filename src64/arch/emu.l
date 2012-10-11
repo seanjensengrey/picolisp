@@ -1,4 +1,4 @@
-# 09oct12abu
+# 10oct12abu
 # (c) Software Lab. Alexander Burger
 
 # *AsmOpcodes *AsmCode *AsmPos *Labels *AsmData *SysFun
@@ -982,128 +982,129 @@
    (if *LittleEndian
       (prinl "   struct {uint32_t l, h;};")
       (prinl "   struct {uint32_t h, l;};") )
-   (mapc prinl
-      (quote
-         "} op, *ptr;"
-         NIL
-         ~(if *FPic
-            (quote
-               "extern uint16_t *PC;"
-               "extern uint8_t *Stack;"
-               "extern op A, C, E, X, Y, Z, L, S;"
-               "extern uint64_t Result;"
-               "extern int Carry;"
-               "extern void mul2(uint64_t);"
-               "extern void div2(uint64_t);"
-               "extern void begin(int,int,int,int,int,int,int);"
-               "extern void *argv(int,ptr);"
-               "extern void retv(int,ptr);" )
-            (quote
-               "uint16_t *PC;"
-               "uint8_t *Stack;"
-               "op A, C, E, X, Y, Z, L, S;"
-               "uint64_t Result;"
-               "int Carry;"
-               NIL
-               "static void run(int);"
-               NIL
-               "void mul2(uint64_t src) {"
-               "   uint32_t h = src >> 32;"
-               "   uint32_t l = (uint32_t)src;"
-               "   op a, b;"
-               NIL
-               "   a.n = (uint64_t)A.l * l;"
-               "   b.n = (uint64_t)A.h * l;"
-               "   C.n = (uint64_t)b.h + ((a.h += b.l) < b.l);"
-               "   b.n = (uint64_t)A.l * h;"
-               "   C.n += (uint64_t)b.h + ((a.h += b.l) < b.l);"
-               "   C.n += (uint64_t)A.h * h;"
-               "   A.n = a.n;"
-               "}"
-               NIL
-               "void div2(uint64_t src) {"
-               "   uint64_t vn0, vn1, q1, q0, rhat;"
-               "   int s;"
-               NIL
-               "   if (C.n >= src)"
-               "      A.n = C.n = MAX64;"                         # Overflow
-               "   else {"
-               "      s = 0;"
-               "      while ((int64_t)src > 0) {"                 # Normalize
-               "         C.n = (C.n << 1) + ((int64_t)A.n < 0);"  # Shift dividend left
-               "         A.n <<= 1;"
-               "         src <<= 1;"                              # and divisor
-               "         ++s;"
-               "      }"
-               "      vn1 = src >> 32;"                           # Split divisor into high
-               "      vn0 = (uint32_t)src;"                       # and low 32 bits
-               "      q1 = C.n / vn1;"                            # First quotient digit
-               "      rhat = C.n - q1 * vn1;"
-               NIL
-               "      while (q1 >> 32  ||  q1 * vn0 > (rhat << 32) + A.h) {"
-               "         --q1;"
-               "         if ((rhat += vn1) >> 32)"
-               "            break;"
-               "      }"
-               "      C.n = (C.n << 32) + A.h - q1 * src;"
-               "      q0 = C.n / vn1;"                            # Second quotient digit
-               "      rhat = C.n - q0 * vn1;"
-               NIL
-               "      while (q0 >> 32  ||  q0 * vn0 > (rhat << 32) + A.l) {"
-               "         --q0;"
-               "         if ((rhat += vn1) >> 32)"
-               "            break;"
-               "      }"
-               "      C.n = ((C.n << 32) + A.l - q0 * src) >> s;" # Remainder
-               "      A.n = (q1 << 32) + q0;"                     # Quotient
-               "   }"
-               "}"
-               NIL
-               "void begin(int i, int a, int c, int e, int x, int y, int z) {"
-                  "   S.p -= 8,  *(uint16_t**)S.p = PC;"
-                  "   S.p -= 8,  ((ptr)S.p)->l = Carry;"
-                  "   S.p -= 8,  ((ptr)S.p)->n = Result;"
-                  "   S.p -= 8,  *(ptr)S.p = Z,  Z.n = z;"
-                  "   S.p -= 8,  *(ptr)S.p = Y,  Y.n = y;"
-                  "   S.p -= 8,  *(ptr)S.p = X,  X.n = x;"
-                  "   S.p -= 8,  *(ptr)S.p = E,  E.n = e;"
-                  "   S.p -= 8,  *(ptr)S.p = C,  C.n = c;"
-                  "   S.p -= 8,  *(ptr)S.p = A,  A.n = a;"
-                  "   run(i);"
-                  "   A = *(ptr)S.p,  S.p += 8;"
-                  "   C = *(ptr)S.p,  S.p += 8;"
-                  "   E = *(ptr)S.p,  S.p += 8;"
-                  "   X = *(ptr)S.p,  S.p += 8;"
-                  "   Y = *(ptr)S.p,  S.p += 8;"
-                  "   Z = *(ptr)S.p,  S.p += 8;"
-                  "   Result = ((ptr)S.p)->n,  S.p += 8;"
-                  "   Carry = ((ptr)S.p)->l,  S.p += 8;"
-                  "   PC = *(uint16_t**)S.p,  S.p += 8;"
-               "}"
-               NIL
-               "void *argv(int i, ptr p) {"
-               "   if (p) {"
-               "      if (i == 0)"
-               "         while (((uint8_t**)p)[i] = p[i].p)"
-               "            ++i;"
-               "      else"
-               "         while (--i >= 0)"
-               "            ((uint8_t**)p)[i] = p[i].p;"
-               "   }"
-               "   return p;"
-               "}"
-               NIL
-               "void retv(int i, ptr p) {"
-               "   if (p)"
-               "      while (--i >= 0)"
-               "         p[i].n = (uint64_t)(unsigned long)((uint8_t**)p)[i];"
-               "}"
-               NIL ) )
-         "uint16_t Code[];"
-         NIL
-         "op Data[] = {" ) ) )
+   (prinl "} op, *ptr;")
+   (prinl) )
 
 (de epilog (File)
+   (mapc prinl
+      (if *FPic
+         (quote
+            "extern uint16_t *PC;"
+            "extern uint8_t *Stack;"
+            "extern op A, C, E, X, Y, Z, L, S;"
+            "extern uint64_t Result;"
+            "extern int Carry;"
+            "extern void mul2(uint64_t);"
+            "extern void div2(uint64_t);"
+            "extern void begin(int,int,int,int,int,int,int);"
+            "extern void *argv(int,ptr);"
+            "extern void retv(int,ptr);" )
+         (quote
+            "uint16_t *PC;"
+            "uint8_t *Stack;"
+            "op A, C, E, X, Y, Z, L, S;"
+            "uint64_t Result;"
+            "int Carry;"
+            NIL
+            "static void run(int);"
+            NIL
+            "void mul2(uint64_t src) {"
+            "   uint32_t h = src >> 32;"
+            "   uint32_t l = (uint32_t)src;"
+            "   op a, b;"
+            NIL
+            "   a.n = (uint64_t)A.l * l;"
+            "   b.n = (uint64_t)A.h * l;"
+            "   C.n = (uint64_t)b.h + ((a.h += b.l) < b.l);"
+            "   b.n = (uint64_t)A.l * h;"
+            "   C.n += (uint64_t)b.h + ((a.h += b.l) < b.l);"
+            "   C.n += (uint64_t)A.h * h;"
+            "   A.n = a.n;"
+            "}"
+            NIL
+            "void div2(uint64_t src) {"
+            "   uint64_t vn0, vn1, q1, q0, rhat;"
+            "   int s;"
+            NIL
+            "   if (C.n >= src)"
+            "      A.n = C.n = MAX64;"                         # Overflow
+            "   else {"
+            "      s = 0;"
+            "      while ((int64_t)src > 0) {"                 # Normalize
+            "         C.n = (C.n << 1) + ((int64_t)A.n < 0);"  # Shift dividend left
+            "         A.n <<= 1;"
+            "         src <<= 1;"                              # and divisor
+            "         ++s;"
+            "      }"
+            "      vn1 = src >> 32;"                           # Split divisor into high
+            "      vn0 = (uint32_t)src;"                       # and low 32 bits
+            "      q1 = C.n / vn1;"                            # First quotient digit
+            "      rhat = C.n - q1 * vn1;"
+            NIL
+            "      while (q1 >> 32  ||  q1 * vn0 > (rhat << 32) + A.h) {"
+            "         --q1;"
+            "         if ((rhat += vn1) >> 32)"
+            "            break;"
+            "      }"
+            "      C.n = (C.n << 32) + A.h - q1 * src;"
+            "      q0 = C.n / vn1;"                            # Second quotient digit
+            "      rhat = C.n - q0 * vn1;"
+            NIL
+            "      while (q0 >> 32  ||  q0 * vn0 > (rhat << 32) + A.l) {"
+            "         --q0;"
+            "         if ((rhat += vn1) >> 32)"
+            "            break;"
+            "      }"
+            "      C.n = ((C.n << 32) + A.l - q0 * src) >> s;" # Remainder
+            "      A.n = (q1 << 32) + q0;"                     # Quotient
+            "   }"
+            "}"
+            NIL
+            "void begin(int i, int a, int c, int e, int x, int y, int z) {"
+               "   S.p -= 8,  *(uint16_t**)S.p = PC;"
+               "   S.p -= 8,  ((ptr)S.p)->l = Carry;"
+               "   S.p -= 8,  ((ptr)S.p)->n = Result;"
+               "   S.p -= 8,  *(ptr)S.p = Z,  Z.n = z;"
+               "   S.p -= 8,  *(ptr)S.p = Y,  Y.n = y;"
+               "   S.p -= 8,  *(ptr)S.p = X,  X.n = x;"
+               "   S.p -= 8,  *(ptr)S.p = E,  E.n = e;"
+               "   S.p -= 8,  *(ptr)S.p = C,  C.n = c;"
+               "   S.p -= 8,  *(ptr)S.p = A,  A.n = a;"
+               "   run(i);"
+               "   A = *(ptr)S.p,  S.p += 8;"
+               "   C = *(ptr)S.p,  S.p += 8;"
+               "   E = *(ptr)S.p,  S.p += 8;"
+               "   X = *(ptr)S.p,  S.p += 8;"
+               "   Y = *(ptr)S.p,  S.p += 8;"
+               "   Z = *(ptr)S.p,  S.p += 8;"
+               "   Result = ((ptr)S.p)->n,  S.p += 8;"
+               "   Carry = ((ptr)S.p)->l,  S.p += 8;"
+               "   PC = *(uint16_t**)S.p,  S.p += 8;"
+            "}"
+            NIL
+            "void *argv(int i, ptr p) {"
+            "   if (p) {"
+            "      if (i == 0)"
+            "         while (((uint8_t**)p)[i] = p[i].p)"
+            "            ++i;"
+            "      else"
+            "         while (--i >= 0)"
+            "            ((uint8_t**)p)[i] = p[i].p;"
+            "   }"
+            "   return p;"
+            "}"
+            NIL
+            "void retv(int i, ptr p) {"
+            "   if (p)"
+            "      while (--i >= 0)"
+            "         p[i].n = (uint64_t)(unsigned long)((uint8_t**)p)[i];"
+            "}"
+            NIL ) ) )
+   (mapc prinl
+      (quote
+         "uint16_t Code[];"
+         NIL
+         "op Data[] = {" ) )
    (setq
       *AsmData (flip *AsmData)
       *AsmCode (flip *AsmCode) )
