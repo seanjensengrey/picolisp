@@ -1,4 +1,4 @@
-# 10oct12abu
+# 12oct12abu
 # (c) Software Lab. Alexander Burger
 
 .SILENT:
@@ -31,6 +31,7 @@ endif
 SYS =
 FMT = .c
 ARCH = emu
+STRIP = :
 
 ifeq ($(UNAME), Linux)
 	OS = Linux
@@ -60,6 +61,13 @@ else
 		LD-MAIN = -m64 -lc -lm -ldl -lsocket -lnsl
 		LD-SHARED = -m64 -shared
 		STRIP = strip
+	else
+		ifeq ($(UNAME), Darwin)
+			OS = Darwin
+			LD-MAIN = -lc -lm -ldl
+			LD-SHARED = -dynamiclib -undefined dynamic_lookup
+			STRIP = strip
+		endif
 	endif
 endif
 
