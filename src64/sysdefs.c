@@ -3,6 +3,7 @@
  */
 
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <limits.h>
@@ -11,7 +12,6 @@
 #include <dirent.h>
 #include <signal.h>
 #include <dlfcn.h>
-#include <termios.h>
 #include <time.h>
 #include <poll.h>
 #include <termios.h>
