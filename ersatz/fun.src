@@ -1,4 +1,4 @@
-# 03oct12abu
+# 12oct12abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -2480,8 +2480,10 @@ delq (w x y z)
 replace (i j w x y z v)
    if (!((y = (x = ex.Cdr).Car.eval()) instanceof Cell))
       return y;
-   for (v = new Any[6], i = 0;  (x = x.Cdr) instanceof Cell;  ++i)
+   for (v = new Any[6], i = 0;  (x = x.Cdr) instanceof Cell;  ++i) {
       v = append(v, i, x.Car.eval());
+      v = append(v, ++i, (x = x.Cdr).Car.eval());
+   }
    for (x = y.Car, j = 0;  j < i;  j += 2)
       if (x.equal(v[j])) {
          x = v[j+1];

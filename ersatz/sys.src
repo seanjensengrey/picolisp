@@ -1,4 +1,4 @@
-// 17jul12abu
+// 12oct12abu
 // (c) Software Lab. Alexander Burger
 
 import java.util.*;
@@ -468,7 +468,7 @@ public class PicoLisp {
       x = Nil;
       for (;;) {
          Any y;
-         if (InFile.Name != null)
+         if (InFile != StdIn)
             y = InFile.read('\0');
          else {
             if (pr != '\0'  &&  InFile.Chr == 0) {
@@ -486,7 +486,7 @@ public class PicoLisp {
             Transient.clear();
             return x;
          }
-         if (InFile.Name != null || InFile.Chr != 0 || pr == '\0')
+         if (InFile != StdIn || InFile.Chr != 0 || pr == '\0')
             x = y.eval();
          else {
             Any at = At.Car;
@@ -1737,8 +1737,7 @@ public class PicoLisp {
             InFile.close();
             if (InFrames.Pid > 1) {
                try {
-                  if (Pids[InFrames.Pid].waitFor() != 0)
-                     err(null, null, "Pipe read close error");
+                  Pids[InFrames.Pid].waitFor();
                   Pids[InFrames.Pid] = null;
                }
                catch (InterruptedException e) {}  //#! sighandler()
@@ -1757,8 +1756,7 @@ public class PicoLisp {
             OutFile.close();
             if (OutFrames.Pid > 1) {
                try {
-                  if (Pids[OutFrames.Pid].waitFor() != 0)
-                     err(null, null, "Pipe write close error");
+                  Pids[OutFrames.Pid].waitFor();
                   Pids[OutFrames.Pid] = null;
                }
                catch (InterruptedException e) {}  //#! sighandler()
