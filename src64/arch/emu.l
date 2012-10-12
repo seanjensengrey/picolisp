@@ -1,4 +1,4 @@
-# 10oct12abu
+# 12oct12abu
 # (c) Software Lab. Alexander Burger
 
 # *AsmOpcodes *AsmCode *AsmPos *Labels *AsmData *SysFun
@@ -1176,10 +1176,7 @@
          (if (=0 X)
             "nop"
             (fmtInstruction (get *AsmOpcodes X 1)) ) ) )
-   (mapc prinl
-      (quote
-         "};"
-         NIL ) )
+   (prinl "};")
    (mapc prinl
       (quote
          NIL
