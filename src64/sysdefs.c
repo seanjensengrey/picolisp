@@ -1,4 +1,4 @@
-/* 08aug12abu
+/* 12oct12abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -11,7 +11,7 @@
 #include <dirent.h>
 #include <signal.h>
 #include <dlfcn.h>
-#include <termio.h>
+#include <termios.h>
 #include <time.h>
 #include <poll.h>
 #include <termios.h>
