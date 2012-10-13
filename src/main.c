@@ -1,4 +1,4 @@
-/* 01aug12abu
+/* 13oct12abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -501,11 +501,14 @@ void err(any ex, any x, char *fmt, ...) {
    va_list ap;
    char msg[240];
    outFrame f;
+   cell c1;
 
    va_start(ap,fmt);
    vsnprintf(msg, sizeof(msg), fmt, ap);
    va_end(ap);
    val(Up) = ex ?: Nil;
+   if (x)
+      Push(c1, x);
    if (msg[0]) {
       any y;
       catchFrame *p;
