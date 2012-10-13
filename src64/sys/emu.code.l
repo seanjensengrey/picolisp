@@ -1,4 +1,4 @@
-# 05oct12abu
+# 13oct12abu
 # (c) Software Lab. Alexander Burger
 
 # System macros
@@ -27,7 +27,7 @@
 
 
 (push '*SysFun
-   '"void wifsignaledS_F(void) {Result = !WIFSIGNALED(*(int*)(S.p + 8));}" )
+   '"void wifsignaledS_F(void) {Result = WIFSIGNALED(*(int*)(S.p + 8));}" )
 
 (code 'wifsignaledS_F 0)  # WIFSIGNALED
    cc wifsignaledS_F()
