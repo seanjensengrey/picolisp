@@ -1,4 +1,4 @@
-# 12oct12abu
+# 13oct12abu
 # (c) Software Lab. Alexander Burger
 
 # *AsmOpcodes *AsmCode *AsmPos *Labels *AsmData *SysFun
@@ -16,6 +16,7 @@
 
 (zero *AsmPos)
 (off *AlignedCode)
+(on *AlignedLabel)
 
 # Register assignments
 (de *Registers
@@ -189,6 +190,14 @@
          (pack "((ptr)(" (op.p (car Arg) (car M)) " + 8))->n") ) ) )
 
 ### Instruction set ###
+(de alignSection (Align)
+   (if (== 'data *Section)
+      (when (gt0 (% (asmDataLength) 16))
+         (conc (car *AsmData) (need (- 16 @) 0)) )
+      (setq Align (/ Align 2))
+      (until (= Align (& *AsmPos 7))
+         (addCode '(NIL '(nop))) ) ) )
+
 (de fmtInstruction (Lst)
    (replace (chop (str Lst)) "\"") )
 

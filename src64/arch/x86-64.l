@@ -1,9 +1,9 @@
-# 24sep12abu
+# 13oct12abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
 (on *LittleEndian)
-(off *AlignedCode)
+(off *AlignedCode *AlignedLabel)
 
 # Register assignments
 (de *Registers
@@ -196,6 +196,10 @@
       (prinst (pack Cmd (unless (pre? "%" Dst) "q")) "%cl" Dst) ) )
 
 ### Instruction set ###
+(de alignSection (Align)
+   (prinst ".balign" 16)
+   ((; 'skip asm) Align) )
+
 (asm nop ()
    (prinst "nop") )
 

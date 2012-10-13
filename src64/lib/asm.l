@@ -1,4 +1,4 @@
-# 29sep12abu
+# 13oct12abu
 # (c) Software Lab. Alexander Burger
 
 # *LittleEndian *AlignedCode *Registers optimize
@@ -80,12 +80,9 @@
    (def Fun
       (curry (@Sym) (Lbl Align)
          (newSection '@Sym)
-         (when Align
-            ((; 'align asm) 16)
-            ((; 'skip asm) Align) )
-         (when (reg Lbl)
-            (quit "Register" Lbl) )
+         (and Align (alignSection @))
          (when Lbl
+            (and (reg Lbl) (quit "Register" Lbl))
             (let Src (file)
                (idxTags Lbl Src)
                (def Lbl 'tag (cdr Src)) )

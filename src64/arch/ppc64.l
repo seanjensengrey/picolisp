@@ -1,9 +1,9 @@
-# 10oct12abu
+# 13oct12abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
 (off *LittleEndian)
-(on *AlignedCode)
+(on *AlignedCode *AlignedLabel)
 
 # Register assignments
 (de *Registers
@@ -370,16 +370,22 @@
          (memory2 "std" (cadr RegRef) (cddr RegRef)) ) ) )
 
 ### Instruction set ###
+(de alignSection (Align)
+   (if (== *Section 'text)
+      (prinst ".balign" 8)
+      (prinst ".balign" 16)
+      (or (=0 Align) (prinst ".space" Align)) ) )
+
 (asm nop ()
    (prinst "nop") )
 
 (asm align (N)
-   (prinst ".balign"
-      (if (and (== *Section 'text) (= N 16)) 8 N) ) )
+   (prinst ".balign" N) )
 
 (asm skip (N)
-   (when (== 'data *Section)
-      (or (=0 N) (prinst ".space" N)) ) )
+   (if (== 'data *Section)
+      (or (=0 N) (prinst ".space" N))
+      (do (/ N 2) (prinst "nop")) ) )
 
 (asm ld (Dst D Src S)
    (cond
