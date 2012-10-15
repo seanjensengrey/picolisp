@@ -1,4 +1,4 @@
-# 13oct12abu
+# 15oct12abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -40,7 +40,9 @@
 
 (redef fpic ()
    (fpic)
-   (rdSym "ppc64.symtab") )
+   (in "ppc64.symtab"
+      (balance '*DataIndex (read))
+      (balance '*CodeIndex (read)) ) )
 
 (redef label (Lbl Flg)
    (ifn *FPic
@@ -93,16 +95,6 @@
                      (- (arg) @)
                      0 ) )
                (T 4) ) ) ) ) )
-
-(de prSym (File)
-   (out File
-      (println (sort *DataLabels))
-      (println (sort *CodeLabels)) ) )
-
-(de rdSym (File)
-   (in File
-      (balance '*DataIndex (read))
-      (balance '*CodeIndex (read)) ) )
 
 (de dataOffset (Sym)
    (if (lup *DataIndex Sym)
@@ -1578,6 +1570,9 @@
 
 (de epilog (File)
    (unless *FPic
-      (prSym "ppc64.symtab") ) )
+      (out "ppc64.symtab"
+         (println (sort *DataLabels))
+         (println (sort *CodeLabels)) ) ) )
+
 
 # vi:et:ts=3:sw=3
