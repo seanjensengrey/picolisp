@@ -750,13 +750,21 @@
    (wifsignaledS_F   -)
    (wtermsigS_A      n) )
 
-(de ccArg (P S O)
+(de ccArg (P S O P2)
    (case P
       (p (op.p S O))
       (n (op.n S O))
       (i (op.i S O))
       (f (sysFun S O))
-      (a (pack "(void*)" (op.a S O)))
+      (lea
+         (pack
+            (and
+               P2
+               (n== 'p P2)
+               (if (num? P2)
+                  "(void*)"
+                  (pack "(" P2 "*)") ) )
+            (op.a S O) ) )
       (T
          (nond
             (P (op.i S O))
@@ -797,9 +805,8 @@
                                  (ccArg (pop 'P) '("S" . -8) '(NIL . 0))
                                  ")" ) ) )
                         (Lea
-                           (pop 'P)
                            (off Lea)
-                           (cons (ccArg 'a S O)) )
+                           (cons (ccArg 'lea S O (pop 'P))) )
                         (T (cons (ccArg (pop 'P) S O))) ) )
                   Arg
                   M ) ) )
