@@ -73,7 +73,7 @@
             (cons (cadr @) "Data+@1") )
          ((absCode X)
             (if *FPic
-               ()
+               (cons @ (pack "(" *Label "+@1)"))
                (cons @ "(Code+@1)") ) )
          ((and *FPic (assoc X *BaseCode))
             (cons @ "(Code+@1)") )
@@ -1027,7 +1027,10 @@
             "extern void div2(uint64_t);"
             "extern void begin(int,int,int,int,int,int,int);"
             "extern void *argv(int,ptr);"
-            "extern void retv(int,ptr);" )
+            "extern void retv(int,ptr);"
+            "extern uint16_t Code[];"
+            NIL
+            "op Local[] = {" )
          (quote
             "uint16_t *PC;"
             "uint8_t *Stack;"
@@ -1128,12 +1131,10 @@
             "      while (--i >= 0)"
             "         p[i].n = (uint64_t)(unsigned long)((uint8_t**)p)[i];"
             "}"
-            NIL ) ) )
-   (mapc prinl
-      (quote
-         "uint16_t Code[];"
-         NIL
-         "op Data[] = {" ) )
+            NIL
+            "uint16_t Code[];"
+            NIL
+            "op Data[] = {" ) ) )
    (setq
       *AsmData (flip *AsmData)
       *AsmCode (flip *AsmCode) )

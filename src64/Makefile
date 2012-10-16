@@ -1,4 +1,4 @@
-# 12oct12abu
+# 16oct12abu
 # (c) Software Lab. Alexander Burger
 
 .SILENT:
@@ -48,7 +48,7 @@ ifeq ($(UNAME), Linux)
 			AS = as -mppc64 -a64
 		endif
 	endif
-	LD-MAIN = -rdynamic -lc -lm -ldl
+	LD-MAIN = -Wl,--no-as-needed -rdynamic -lc -lm -ldl
 	LD-SHARED = -shared -export-dynamic
 	STRIP = strip
 else
@@ -89,7 +89,7 @@ emu: $(sFiles)
 picolisp: $(bin)/picolisp $(lib)/ext $(lib)/ht
 
 $(bin)/picolisp: $(ARCH)$(SYS).base.o
-	$(CC) -o $(bin)/picolisp $(ARCH)$(SYS).base.o -Wl,--no-as-needed $(LD-MAIN)
+	$(CC) -o $(bin)/picolisp $(ARCH)$(SYS).base.o $(LD-MAIN)
 	$(STRIP) $(bin)/picolisp
 
 $(lib)/ext: $(ARCH)$(SYS).ext.o
