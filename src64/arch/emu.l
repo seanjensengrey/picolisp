@@ -1236,7 +1236,7 @@
          "   }"
          "}"
          NIL
-         "void main(int ac, char *av[]) {"
+         "int main(int ac, char *av[]) {"
          "   int i;"
          NIL
          "   S.p = (Stack = malloc(STACK)) + STACK;"
@@ -1248,6 +1248,7 @@
          "   X.p = ((ptr)Y.p)->p,  Y.p += 8;"
          "   Z.p = Y.p + (ac - 2) * sizeof(op);" ) )
    (prinl (pack "   run(" (absCode "main") ");"))
+   (prinl "   return 0;")
    (prinl "}")
    (unless *FPic
       (out "emu.symtab"
