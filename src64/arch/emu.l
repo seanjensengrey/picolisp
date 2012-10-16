@@ -1,7 +1,5 @@
-# 15oct12abu
+# 16oct12abu
 # (c) Software Lab. Alexander Burger
-
-# *AsmOpcodes *AsmCode *AsmPos *Labels *AsmData *SysFun
 
 # Byte order
 (in '("./sysdefs")
@@ -14,7 +12,6 @@
       (64 (on *Bits64) (off *Bits32))
       (T (quit "Bad wordsize")) ) )
 
-(zero *AsmPos)
 (off *AlignedCode)
 (on *AlignedLabel)
 
@@ -26,16 +23,22 @@
    (L . "L") (S . "S")
    (F . T) )
 
+# Emulator specific
+(off *AsmOpcodes *AsmData *AsmCode *Labels *SysFun *BaseData *BaseCode)
+(zero *AsmPos)
+
+(redef fpic ()
+   (fpic)
+   (in "emu.symtab"
+      (setq '*BaseData (read))
+      (setq '*BaseCode (read)) ) )
+
 # Direct address expressions
 (de directExpr (Str)
    (let (Lst (str Str "_")  A (_aggr))
       (or
          (num? A)
-         (pack
-            "(uint8_t*)"
-            (if (cdr A)
-               (pack "(Code+" (car A) ")")
-               (pack "Data+" (car A)) ) ) ) ) )
+         (pack "(uint8_t*)" (text (cdr A) (car A))) ) ) )
 
 (de _aggr ()
    (let X (_prod)
@@ -62,8 +65,18 @@
    (let X (pop 'Lst)
       (cond
          ((num? X) X)
-         ((assoc X *AsmData) (cons (cadr @)))
-         ((absCode X) (cons @ T))
+         ((assoc X *AsmData)
+            (if *FPic
+               (cons (cadr @) "Local+@1")
+               (cons (cadr @) "Data+@1") ) )
+         ((and *FPic (assoc X *BaseData))
+            (cons (cadr @) "Data+@1") )
+         ((absCode X)
+            (if *FPic
+               ()
+               (cons @ "(Code+@1)") ) )
+         ((and *FPic (assoc X *BaseCode))
+            (cons @ "(Code+@1)") )
          ((= "+" X) (_term))
          ((= "-" X) (- (_term)))
          ((= "(" X) (prog1 (_aggr) (pop 'Lst)))
@@ -978,6 +991,7 @@
          "#include <sys/times.h>"
          "#include <sys/stat.h>"
          "#include <sys/wait.h>"
+         "#include <sys/socket.h>"
          NIL
          "#define MAX8 ((uint8_t)-1)"
          "#define MAX64 ((uint64_t)-1)"
@@ -1234,6 +1248,17 @@
          "   X.p = ((ptr)Y.p)->p,  Y.p += 8;"
          "   Z.p = Y.p + (ac - 2) * sizeof(op);" ) )
    (prinl (pack "   run(" (absCode "main") ");"))
-   (prinl "}") )
+   (prinl "}")
+   (unless *FPic
+      (out "emu.symtab"
+         (println
+            (mapcar '((D) (cons (car D) (cadr D)))
+               *AsmData ) )
+         (println
+            (make
+               (for (I . X) *AsmCode
+                  (for Lbl (cdr X)
+                     (unless (pre? "." Lbl)
+                        (link (cons Lbl (dec I))) ) ) ) ) ) ) ) )
 
 # vi:et:ts=3:sw=3
