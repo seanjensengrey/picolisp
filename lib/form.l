@@ -1,4 +1,4 @@
-# 09jul12abu
+# 19oct12abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -840,6 +840,13 @@
 (dm T (Exe . @)
    (=: lim Exe)
    (pass extra) )
+
+
+(class +Clr0)
+
+(dm val> ()
+   (let N (extra)
+      (unless (=0 N) N) ) )
 
 
 (class +Var)
