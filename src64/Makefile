@@ -1,4 +1,4 @@
-# 16oct12abu
+# 17oct12abu
 # (c) Software Lab. Alexander Burger
 
 .SILENT:
@@ -102,13 +102,13 @@ $(lib)/ht: $(ARCH)$(SYS).ht.o
 
 # Explicit builds for cross-assembly
 $(ARCH)$(SYS).base$(FMT): sysdefs arch/$(ARCH).l $(baseFiles) sys/$(ARCH)$(SYS).code.l
-	./mkAsm $(ARCH) "$(SYS)" $(FMT) $(OS) base $(lib)/map  $(baseFiles) sys/$(ARCH)$(SYS).code.l
+	./mkAsm $(ARCH) "$(SYS)" $(FMT) $(OS) base "" $(lib)/map  $(baseFiles) sys/$(ARCH)$(SYS).code.l
 
 $(ARCH)$(SYS).ext$(FMT): sysdefs arch/$(ARCH).l ext.l $(ARCH)$(SYS).base$(FMT)
-	./mkAsm $(ARCH) "$(SYS)" $(FMT) $(OS) ext "" -fpic  ext.l
+	./mkAsm $(ARCH) "$(SYS)" $(FMT) $(OS) ext T ""  ext.l
 
 $(ARCH)$(SYS).ht$(FMT): sysdefs arch/$(ARCH).l ht.l $(ARCH)$(SYS).base$(FMT)
-	./mkAsm $(ARCH) "$(SYS)" $(FMT) $(OS) ht "" -fpic  ht.l
+	./mkAsm $(ARCH) "$(SYS)" $(FMT) $(OS) ht T ""  ht.l
 
 sysdefs: sysdefs.c
 	$(CC) -o sysdefs -D_FILE_OFFSET_BITS=64 sysdefs.c

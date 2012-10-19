@@ -1,4 +1,4 @@
-# 16oct12abu
+# 19oct12abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -13,7 +13,6 @@
       (T (quit "Bad wordsize")) ) )
 
 (off *AlignedCode)
-(on *AlignedLabel)
 
 # Register assignments
 (de *Registers
@@ -26,12 +25,6 @@
 # Emulator specific
 (off *AsmOpcodes *AsmData *AsmCode *Labels *SysFun *BaseData *BaseCode)
 (zero *AsmPos)
-
-(redef fpic ()
-   (fpic)
-   (in "emu.symtab"
-      (setq '*BaseData (read))
-      (setq '*BaseCode (read)) ) )
 
 # Direct address expressions
 (de directExpr (Str)
@@ -65,17 +58,16 @@
    (let X (pop 'Lst)
       (cond
          ((num? X) X)
-         ((assoc X *AsmData)
-            (if *FPic
-               (cons (cadr @) "Local+@1")
-               (cons (cadr @) "Data+@1") ) )
-         ((and *FPic (assoc X *BaseData))
-            (cons (cadr @) "Data+@1") )
+         ((get *AsmData X)
+            (cons (car @) (if *FPic "Local+@1" "Data+@1")) )
+         ((and *FPic (get *BaseData X))
+            (cons @ "Data+@1") )
          ((absCode X)
-            (if *FPic
-               (cons @ (pack "(" *Label "+@1)"))
-               (cons @ "(Code+@1)") ) )
-         ((and *FPic (assoc X *BaseCode))
+            (cons @
+               (if *FPic
+                  (pack "(" *Label "+@1)")
+                  "(Code+@1)" ) ) )
+         ((and *FPic (get *BaseCode X))
             (cons @ "(Code+@1)") )
          ((= "+" X) (_term))
          ((= "-" X) (- (_term)))
@@ -955,21 +947,25 @@
 
 ### Decoration ###
 (de prolog (File)
-   (genCode NIL '(<eval+>) NIL            # Code + 0
-      "PC = *(uint16_t**)S.p,  S.p += 8;"
-      "L.p = ((ptr)S.p)->p,  S.p += 8;" )
-   (genCode NIL '(<execX>) NIL            # Code + 1
-      "PC = *(uint16_t**)S.p,  S.p += 8;" )
-   (genCode NIL '(<execY>) NIL            # Code + 2
-      "PC = *(uint16_t**)S.p,  S.p += 8;" )
-   (genCode NIL '(<execZ>) NIL            # Code + 3
-      "PC = *(uint16_t**)S.p,  S.p += 8;" )
-   (genCode NIL '(<progX>) NIL            # Code + 4
-      "PC = *(uint16_t**)S.p,  S.p += 8;" )
-   (genCode NIL '(<progY>) NIL            # Code + 5
-      "PC = *(uint16_t**)S.p,  S.p += 8;" )
-   (genCode NIL '(<progZ>) NIL            # Code + 6
-      "PC = *(uint16_t**)S.p,  S.p += 8;" )
+   (if *FPic
+      (in "emu.symtab"
+         (setq *BaseData (read))
+         (setq *BaseCode (read)) )
+      (genCode NIL '(<eval+>) NIL            # Code + 0
+         "PC = *(uint16_t**)S.p,  S.p += 8;"
+         "L.p = ((ptr)S.p)->p,  S.p += 8;" )
+      (genCode NIL '(<execX>) NIL            # Code + 1
+         "PC = *(uint16_t**)S.p,  S.p += 8;" )
+      (genCode NIL '(<execY>) NIL            # Code + 2
+         "PC = *(uint16_t**)S.p,  S.p += 8;" )
+      (genCode NIL '(<execZ>) NIL            # Code + 3
+         "PC = *(uint16_t**)S.p,  S.p += 8;" )
+      (genCode NIL '(<progX>) NIL            # Code + 4
+         "PC = *(uint16_t**)S.p,  S.p += 8;" )
+      (genCode NIL '(<progY>) NIL            # Code + 5
+         "PC = *(uint16_t**)S.p,  S.p += 8;" )
+      (genCode NIL '(<progZ>) NIL            # Code + 6
+         "PC = *(uint16_t**)S.p,  S.p += 8;" ) )
    (mapc prinl
       (quote
          NIL
@@ -1012,9 +1008,7 @@
       (prinl "   struct {uint32_t l, h;};")
       (prinl "   struct {uint32_t h, l;};") )
    (prinl "} op, *ptr;")
-   (prinl) )
-
-(de epilog (File)
+   (prinl)
    (mapc prinl
       (if *FPic
          (quote
@@ -1134,7 +1128,19 @@
             NIL
             "uint16_t Code[];"
             NIL
-            "op Data[] = {" ) ) )
+            "op Data[] = {" ) ) ) )
+
+(de prOpcode (I X)
+   (prinl
+      (align 7 X)
+      ",  // "
+      (align 7 (dec I))
+      ": "
+      (if (=0 X)
+         "nop"
+         (fmtInstruction (get *AsmOpcodes X 1)) ) ) )
+
+(de epilog (File)
    (setq
       *AsmData (flip *AsmData)
       *AsmCode (flip *AsmCode) )
@@ -1189,27 +1195,19 @@
          (prinl "}}") ) )
    (prinl "};")
    (prinl)
-   (mapc prinl (flip *SysFun))
-   (prinl)
+   (when *SysFun
+      (mapc prinl (flip @))
+      (prinl) )
    (prinl "uint16_t Code[] = {")
    (for (I . X) *AsmCode
-      (when (pair X)
-         (for C (cdr X)
-            (unless (pre? "." C)  # Omit local labels
-               (prinl "          // " C ":") ) )
-         (setq X (car X)) )
-      (prinl
-         (align 7 X)
-         ",  // "
-         (align 7 (dec I))
-         ": "
-         (if (=0 X)
-            "nop"
-            (fmtInstruction (get *AsmOpcodes X 1)) ) ) )
+      (for C (cdr X)
+         (unless (pre? "." C)  # Omit local labels
+            (prinl "          // " C ":") ) )
+      (prOpcode I (car X)) )
    (prinl "};")
+   (prinl)
    (mapc prinl
       (quote
-         NIL
          "static void run(int i) {"
          "   op tmp;"
          NIL
@@ -1235,23 +1233,25 @@
             "         !Result, (int64_t)Result<0, Carry,"
             "         L.n, S.n );" )
          "   }"
-         "}"
-         NIL
-         "int main(int ac, char *av[]) {"
-         "   int i;"
-         NIL
-         "   S.p = (Stack = malloc(STACK)) + STACK;"
-         "   Y.p = malloc((ac + 1) * sizeof(op));"
-         "   i = 0; do"
-         "      ((ptr)Y.p)[i].n = (uint64_t)(unsigned long)av[i];"
-         "   while (++i < ac);"
-         "   ((ptr)Y.p)[i].n = 0;"
-         "   X.p = ((ptr)Y.p)->p,  Y.p += 8;"
-         "   Z.p = Y.p + (ac - 2) * sizeof(op);" ) )
-   (prinl (pack "   run(" (absCode "main") ");"))
-   (prinl "   return 0;")
-   (prinl "}")
+         "}" ) )
    (unless *FPic
+      (mapc prinl
+         (quote
+            NIL
+            "int main(int ac, char *av[]) {"
+            "   int i;"
+            NIL
+            "   S.p = (Stack = malloc(STACK)) + STACK;"
+            "   Y.p = malloc((ac + 1) * sizeof(op));"
+            "   i = 0; do"
+            "      ((ptr)Y.p)[i].n = (uint64_t)(unsigned long)av[i];"
+            "   while (++i < ac);"
+            "   ((ptr)Y.p)[i].n = 0;"
+            "   X.p = ((ptr)Y.p)->p,  Y.p += 8;"
+            "   Z.p = Y.p + (ac - 2) * sizeof(op);" ) )
+      (prinl (pack "   run(" (absCode "main") ");"))
+      (prinl "   return 0;")
+      (prinl "}")
       (out "emu.symtab"
          (println
             (mapcar '((D) (cons (car D) (cadr D)))

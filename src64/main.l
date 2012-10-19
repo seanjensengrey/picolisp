@@ -1,4 +1,4 @@
-# 13oct12abu
+# 02oct12abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -1353,7 +1353,7 @@
       cc dlsym(A Y)  # Find dynamic symbol
       null A  # OK?
       if nz  # Yes
-         ? *AlignedLabel
+         ? *AlignedCode
             or A CNT  # Make short number
          =
          ld (E) A  # 'nz' - Set function definition

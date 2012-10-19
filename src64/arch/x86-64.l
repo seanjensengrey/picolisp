@@ -1,9 +1,9 @@
-# 13oct12abu
+# 19oct12abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
 (on *LittleEndian)
-(off *AlignedCode *AlignedLabel)
+(off *AlignedCode)
 
 # Register assignments
 (de *Registers

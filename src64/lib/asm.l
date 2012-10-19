@@ -1,4 +1,4 @@
-# 13oct12abu
+# 17oct12abu
 # (c) Software Lab. Alexander Burger
 
 # *LittleEndian *AlignedCode *Registers optimize
@@ -68,9 +68,6 @@
 
 (de asm Args
    (def (car Args) 'asm (cdr Args)) )
-
-(de fpic ()
-   (on *FPic) )
 
 (de idxTags (Lbl Src)
    (idx '*Tags (def Lbl 'src Src) T) )

@@ -1,4 +1,4 @@
-# 08aug12abu
+# 17oct12abu
 # (c) Software Lab. Alexander Burger
 
 (setq
@@ -6,7 +6,8 @@
    *System (opt)
    *Format (opt)
    *TargetOS (opt)
-   *Module (opt) )
+   *Module (opt)
+   *FPic (bool (opt)) )
 
 (load "lib/asm.l"
    (pack "lib/fmt" *Format ".l")

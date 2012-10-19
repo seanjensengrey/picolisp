@@ -1,9 +1,9 @@
-# 15oct12abu
+# 19oct12abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
 (off *LittleEndian)
-(on *AlignedCode *AlignedLabel)
+(on *AlignedCode)
 
 # Register assignments
 (de *Registers
@@ -37,12 +37,6 @@
 # Machine specific
 (zero *DataPos *CodePos)
 (off *DataLabels *CodeLabels *DataIndex *CodeIndex)
-
-(redef fpic ()
-   (fpic)
-   (in "ppc64.symtab"
-      (balance '*DataIndex (read))
-      (balance '*CodeIndex (read)) ) )
 
 (redef label (Lbl Flg)
    (ifn *FPic
@@ -1566,7 +1560,11 @@
       (cons 1 (cons (cons @ (cdar L)))) ) )
 
 ### Decoration ###
-(de prolog (File))
+(de prolog (File)
+   (when *FPic
+      (in "ppc64.symtab"
+         (balance '*DataIndex (read))
+         (balance '*CodeIndex (read)) ) ) )
 
 (de epilog (File)
    (unless *FPic
