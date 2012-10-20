@@ -1,4 +1,4 @@
-# 19oct12abu
+# 20oct12abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -735,7 +735,7 @@
                   (nth Arg 7)
                   (nth M 7) ) )
             # Don't use SSE registers in varargs for static calls
-            (when (member Adr '("printf" "fprintf" "sprintf" "open" "fcntl"))
+            (when (member Adr '("printf" "fprintf" "snprintf" "open" "fcntl"))
                (prinst "xor" "%al" "%al") ) )
          (prinst "mov" "%rsp" "%rax")     # A on arguments
          (prinst "push" "%rbp")           # Link
