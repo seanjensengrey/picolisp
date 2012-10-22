@@ -1,4 +1,4 @@
-# 19oct12abu
+# 22oct12abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -23,8 +23,9 @@
    (F . T) )
 
 # Emulator specific
-(off *AsmOpcodes *AsmData *AsmCode *Labels *SysFun *BaseData *BaseCode)
-(zero *AsmPos)
+(off *AsmData *AsmCode *AsmOpcodes *Labels *SysFun)
+(off *BaseData *BaseCode *BaseOpcodes)
+(zero *AsmPos *OpOffs)
 
 # Direct address expressions
 (de directExpr (Str)
@@ -43,8 +44,8 @@
                   (setq X (- (car X) (car Y))) )
                (set X (Op (car X) Y))
                (setq X (cons (Op X (car Y))))
-               (and (sym? X) (absCode X) (setq X @))
-               (and (sym? Y) (absCode Y) (setq Y @))
+               (and (sym? X) (or (baseCode X) (absCode X)) (setq X @))
+               (and (sym? Y) (or (baseCode Y) (absCode Y)) (setq Y @))
                (setq X (Op X Y)) ) ) )
       X ) )
 
@@ -58,17 +59,14 @@
    (let X (pop 'Lst)
       (cond
          ((num? X) X)
-         ((get *AsmData X)
-            (cons (car @) (if *FPic "Local+@1" "Data+@1")) )
          ((and *FPic (get *BaseData X))
             (cons @ "Data+@1") )
-         ((absCode X)
-            (cons @
-               (if *FPic
-                  (pack "(" *Label "+@1)")
-                  "(Code+@1)" ) ) )
-         ((and *FPic (get *BaseCode X))
+         ((get *AsmData X)
+            (cons (car @) (if *FPic "LibData+@1" "Data+@1")) )
+         ((baseCode X)
             (cons @ "(Code+@1)") )
+         ((absCode X)
+            (cons @ (if *FPic "(LibCode+@1)" "(Code+@1)")) )
          ((= "+" X) (_term))
          ((= "-" X) (- (_term)))
          ((= "(" X) (prog1 (_aggr) (pop 'Lst)))
@@ -209,17 +207,18 @@
 (de opcode ("X" "Args" "Body")
    (cond
       ((= "X" '(nop)) 0)
-      ((assoc "X" *AsmOpcodes) (index @ *AsmOpcodes))
+      ((index "X" *BaseOpcodes) @)
+      ((assoc "X" *AsmOpcodes) (+ *OpOffs (index @ *AsmOpcodes)))
       (T
          (queue '*AsmOpcodes
             (cons "X"
-               ~(as *Dbg
+               ~(as (and *Dbg (not *FPic))
                   (pack
                      "fprintf(stderr, \"%d: %s\\n\", PC-Code-1, \""
                      (fmtInstruction "X")
                      "\");" ) )
                (mapcar '((S) (apply text "Args" S)) "Body") ) )
-         (length *AsmOpcodes) ) ) )
+         (+ *OpOffs (length *AsmOpcodes)) ) ) )
 
 (de addCode (C)
    (if (and *AsmCode (not (caar @)))
@@ -229,6 +228,9 @@
 
 (de genCode Args
    (addCode (cons (env (pop 'Args)) Args)) )
+
+(de baseCode (Adr)
+   (and *FPic (get *BaseCode Adr)) )
 
 (de absCode (Lbl)
    (val (car (idx '*Labels Lbl))) )
@@ -544,9 +546,19 @@
 (asm call (Adr A)
    (nond
       (A  # Absolute
-         (genCode (Adr) (list 'call Adr) ((absCode Adr))
-            "S.p -= 8,  *(uint16_t**)S.p = PC;"
-            "PC = Code + @1;" ) )
+         (cond
+            ((baseCode Adr)
+               (genCode (Adr) (list 'call Adr) ((baseCode Adr))
+                  "S.p -= 8,  *(uint16_t**)S.p = PC;"
+                  "PC = Code + @1;" ) )
+            (*FPic
+               (genCode (Adr) (list 'call Adr) ((absCode Adr))
+                  "S.p -= 8,  *(uint16_t**)S.p = PC;"
+                  "PC = LibCode + @1;" ) )
+            (T
+               (genCode (Adr) (list 'call Adr) ((absCode Adr))
+                  "S.p -= 8,  *(uint16_t**)S.p = PC;"
+                  "PC = Code + @1;" ) ) ) )
       ((=T A)  # Indexed: Ignore SUBR
          (genCode (Adr A) (list 'call (list Adr)) (Adr)
             "S.p -= 8,  *(uint16_t**)S.p = PC;"
@@ -559,11 +571,19 @@
 (asm jmp (Adr A)
    (nond
       (A  # Absolute
-         (if (localAddr Adr)
-            (genCode (Adr) (list 'jmp (relCode Adr)) ((relCode Adr))
-               "PC += @1;" )
-            (genCode (Adr) (list 'jmp Adr) ((absCode Adr))
-               "PC = Code + @1;" ) ) )
+         (cond
+            ((localAddr Adr)
+               (genCode (Adr) (list 'jmp (relCode Adr)) ((relCode Adr))
+                  "PC += @1;" ) )
+            ((baseCode Adr)
+               (genCode (Adr) (list 'jmp Adr) ((baseCode Adr))
+                  "PC = Code + @1;" ) )
+            (*FPic
+               (genCode (Adr) (list 'jmp Adr) ((absCode Adr))
+                  "PC = LibCode + @1;" ) )
+            (T
+               (genCode (Adr) (list 'jmp Adr) ((absCode Adr))
+                  "PC = Code + @1;" ) ) ) )
       ((=T A)  # Indexed: Ignore SUBR
          (genCode (Adr A) (list 'jmp (list Adr)) (Adr)
             "PC = (uint16_t*)@1.p;" ) )
@@ -574,13 +594,23 @@
 (de _jmp (Opc Test)
    (nond
       (A  # Absolute
-         (if (localAddr Adr)
-            (genCode (Adr Opc Test) (list Opc (relCode Adr)) ((relCode Adr) Test)
-               "if (@2)"
-               "   PC += @1;" )
-            (genCode (Adr Opc Test) (list Opc Adr) ((absCode Adr) Test)
-               "if (@2)"
-               "   PC = Code + @1;") ) )
+         (cond
+            ((localAddr Adr)
+               (genCode (Adr Opc Test) (list Opc (relCode Adr)) ((relCode Adr) Test)
+                  "if (@2)"
+                  "   PC += @1;" ) )
+            ((baseCode Adr)
+               (genCode (Adr Opc Test) (list Opc Adr) ((baseCode Adr) Test)
+                  "if (@2)"
+                  "   PC = Code + @1;") )
+            (*FPic
+               (genCode (Adr Opc Test) (list Opc Adr) ((absCode Adr) Test)
+                  "if (@2)"
+                  "   PC = LibCode + @1;") )
+            (T
+               (genCode (Adr Opc Test) (list Opc Adr) ((absCode Adr) Test)
+                  "if (@2)"
+                  "   PC = Code + @1;") ) ) )
       ((=T A)  # Indexed: Ignore SUBR
          (genCode (Adr Opc Test) (list Opc Adr) (Adr Test)
             "if (@2)"
@@ -949,8 +979,11 @@
 (de prolog (File)
    (if *FPic
       (in "emu.symtab"
-         (setq *BaseData (read))
-         (setq *BaseCode (read)) )
+         (setq
+            *BaseData (read)
+            *BaseCode (read)
+            *BaseOpcodes (make (while (read) (chain @)))
+            *OpOffs (length *BaseOpcodes) ) )
       (genCode NIL '(<eval+>) NIL            # Code + 0
          "PC = *(uint16_t**)S.p,  S.p += 8;"
          "L.p = ((ptr)S.p)->p,  S.p += 8;" )
@@ -1012,6 +1045,9 @@
    (mapc prinl
       (if *FPic
          (quote
+            "extern uint16_t Code[];"
+            "uint16_t LibCode[];"
+            NIL
             "extern uint16_t *PC;"
             "extern uint8_t *Stack;"
             "extern op A, C, E, X, Y, Z, L, S;"
@@ -1022,10 +1058,13 @@
             "extern void begin(int,int,int,int,int,int,int);"
             "extern void *argv(int,ptr);"
             "extern void retv(int,ptr);"
-            "extern uint16_t Code[];"
             NIL
-            "op Local[] = {" )
+            "extern op Data[];"
+            NIL
+            "op LibData[] = {" )
          (quote
+            "uint16_t Code[];"
+            NIL
             "uint16_t *PC;"
             "uint8_t *Stack;"
             "op A, C, E, X, Y, Z, L, S;"
@@ -1126,8 +1165,6 @@
             "         p[i].n = (uint64_t)(unsigned long)((uint8_t**)p)[i];"
             "}"
             NIL
-            "uint16_t Code[];"
-            NIL
             "op Data[] = {" ) ) ) )
 
 (de prOpcode (I X)
@@ -1138,7 +1175,10 @@
       ": "
       (if (=0 X)
          "nop"
-         (fmtInstruction (get *AsmOpcodes X 1)) ) ) )
+         (fmtInstruction
+            (or
+               (get *BaseOpcodes X)
+               (get *AsmOpcodes (- X *OpOffs) 1) ) ) ) ) )
 
 (de epilog (File)
    (setq
@@ -1174,11 +1214,28 @@
                            (for ((J . L) (cddr D)  (> I J)  (cdr L))
                               (NIL (> I J))  # Temporary (03oct12abu)
                               (inc 'N (if (num? (car L)) 1 8)) )
-                           (prin " {.p = (uint8_t*)Data+" N "},") ) )
+                           (prin
+                              " {.p = (uint8_t*)"
+                              (and *FPic "Lib")
+                              "Data+"
+                              N
+                              "}," ) ) )
                      ((asoq X *AsmData)
-                        (prin " {.p = (uint8_t*)Data+" (cadr @) "},") )
+                        (let N @
+                           (prin
+                              " {.p = (uint8_t*)"
+                              (and *FPic "Lib")
+                              "Data+"
+                              (cadr N)
+                              "}," ) ) )
                      ((absCode X)
-                        (prin " {.p = (uint8_t*)(Code+" @ ")},") )
+                        (let N @
+                           (prin
+                              " {.p = (uint8_t*)("
+                              (and *FPic "Lib")
+                              "Code+"
+                              N
+                              ")}," ) ) )
                      (T (quit "No value" X)) ) )
                (Bytes
                   (prin (and (> I 1) ", ") X)
@@ -1198,7 +1255,7 @@
    (when *SysFun
       (mapc prinl (flip @))
       (prinl) )
-   (prinl "uint16_t Code[] = {")
+   (prinl "uint16_t " (and *FPic "Lib") "Code[] = {")
    (for (I . X) *AsmCode
       (for C (cdr X)
          (unless (pre? "." C)  # Omit local labels
@@ -1206,21 +1263,38 @@
       (prOpcode I (car X)) )
    (prinl "};")
    (prinl)
-   (mapc prinl
-      (quote
-         "static void run(int i) {"
-         "   op tmp;"
-         NIL
-         "   PC = Code + i;"
-         "   for (;;) {"
-         "      switch (*PC++) {"
-         "      case 0: // nop"
-         "         break;" ) )
+   (if *FPic
+      (mapc prinl
+         (quote
+            "static void opc() {"
+            "   op tmp;"
+            NIL
+            "   switch (PC[-1]) {" ) )
+      (mapc prinl
+         (quote
+            "static void run(int i) {"
+            "   op tmp;"
+            NIL
+            "   PC = Code + i;"
+            "   for (;;) {"
+            "      switch (*PC++) {"
+            "      case 0: // nop"
+            "         break;" ) ) )
    (for (C . L) *AsmOpcodes
-      (prinl "      case " C ":  // " (fmtInstruction (car L)))
+      (prinl
+         (unless *FPic "   ")
+         "   case "
+         (+ *OpOffs C)
+         ":  // "
+         (fmtInstruction (car L)) )
       (for S (cdr L)
-         (prinl "         " S) )
-      (prinl "         break;") )
+         (prinl
+            (unless *FPic "   ")
+            "      "
+            S ) )
+      (prinl
+         (unless *FPic "   ")
+         "      break;" ) )
    (mapc prinl
       (quote
          "      default:"
@@ -1231,9 +1305,9 @@
             "      fprintf(stderr, \"   %llX %llX %llX  %llX %llX %llX  %d%d%d  %llX %llX\\n\","
             "         A.n, C.n, E.n, X.n, Y.n, Z.n,"
             "         !Result, (int64_t)Result<0, Carry,"
-            "         L.n, S.n );" )
-         "   }"
-         "}" ) )
+            "         L.n, S.n );" ) ) )
+   (unless *FPic (prinl "   }"))
+   (prinl "}")
    (unless *FPic
       (mapc prinl
          (quote
@@ -1252,15 +1326,19 @@
       (prinl (pack "   run(" (absCode "main") ");"))
       (prinl "   return 0;")
       (prinl "}")
-      (out "emu.symtab"
-         (println
-            (mapcar '((D) (cons (car D) (cadr D)))
-               *AsmData ) )
-         (println
-            (make
-               (for (I . X) *AsmCode
-                  (for Lbl (cdr X)
-                     (unless (pre? "." Lbl)
-                        (link (cons Lbl (dec I))) ) ) ) ) ) ) ) )
+      (if *FPic
+         (out "+emu.symtab"
+            (println (mapcar car *AsmOpcodes)) )
+         (out "emu.symtab"
+            (println
+               (mapcar '((D) (cons (car D) (cadr D)))
+                  *AsmData ) )
+            (println
+               (make
+                  (for (I . X) *AsmCode
+                     (for Lbl (cdr X)
+                        (unless (pre? "." Lbl)
+                           (link (cons Lbl (dec I))) ) ) ) ) )
+            (println (mapcar car *AsmOpcodes)) ) ) ) )
 
 # vi:et:ts=3:sw=3
