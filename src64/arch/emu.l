@@ -1,4 +1,4 @@
-# 22oct12abu
+# 23oct12abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -212,9 +212,11 @@
       (T
          (queue '*AsmOpcodes
             (cons "X"
-               ~(as (and *Dbg (not *FPic))
+               ~(as *Dbg
                   (pack
-                     "fprintf(stderr, \"%d: %s\\n\", PC-Code-1, \""
+                     "fprintf(stderr, \"%d: %s\\n\", PC-"
+                     (if *FPic "LibCode" "Code")
+                     "-1, \""
                      (fmtInstruction "X")
                      "\");" ) )
                (mapcar '((S) (apply text "Args" S)) "Body") ) )
@@ -926,9 +928,10 @@
 
 (asm exec (Reg)
    (let Ofs (case Reg (X 1) (Y 2) (Z 3))
-      (con
-         (cdddr (caar (tail (inc Ofs) *AsmCode)))
-         (cons (text "goto exec@1;" Reg)) )
+      (unless *FPic
+         (con
+            (cdddr (caar (tail (inc Ofs) *AsmCode)))
+            (cons (text "goto exec@1;" Reg)) ) )
       (genCode (Reg Ofs) (list 'exec Reg) ((absCode "evListE_E") Reg Ofs)
          "do {"
          "   E = *(ptr)@2.p;"
@@ -944,9 +947,10 @@
 
 (asm prog (Reg)
    (let Ofs (case Reg (X 4) (Y 5) (Z 6))
-      (con
-         (cdddr (caar (tail (inc Ofs) *AsmCode)))
-         (cons (text "goto prog@1;" Reg)) )
+      (unless *FPic
+         (con
+            (cdddr (caar (tail (inc Ofs) *AsmCode)))
+            (cons (text "goto prog@1;" Reg)) ) )
       (genCode (Reg Ofs) (list 'prog Reg) ((absCode "evListE_E") Reg Ofs)
          "do {"
          "   E = *(ptr)@2.p;"
@@ -1266,12 +1270,17 @@
    (if *FPic
       (mapc prinl
          (quote
-            "static void opc() {"
-            "   op tmp;"
+            "extern void (*LoadedLibs)(void);"
+            "static void (*NextLib)(void);"
+            NIL
+            "static void opcodes(void) {"
+            "   op i, tmp;"
             NIL
             "   switch (PC[-1]) {" ) )
       (mapc prinl
          (quote
+            "void (*LoadedLibs)(void);"
+            NIL
             "static void run(int i) {"
             "   op tmp;"
             NIL
@@ -1308,6 +1317,13 @@
             "         L.n, S.n );" ) ) )
    (unless *FPic (prinl "   }"))
    (prinl "}")
+   (when *FPic
+      (mapc prinl
+         (quote
+            NIL
+            "void __attribute__((constructor)) linkOpcodes(void) {"
+            "   NextLib = LoadedLibs,  LoadedLibs = opcodes;"
+            "}" ) ) )
    (unless *FPic
       (mapc prinl
          (quote

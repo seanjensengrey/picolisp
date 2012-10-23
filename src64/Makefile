@@ -1,4 +1,4 @@
-# 17oct12abu
+# 23oct12abu
 # (c) Software Lab. Alexander Burger
 
 .SILENT:
@@ -118,10 +118,7 @@ sysdefs: sysdefs.c
 	$(AS) -o $*.o $*.s
 
 .c.o:
-	$(CC) -c -O \
-		-fomit-frame-pointer -Wunused -Wformat -Wuninitialized \
-		-D_FILE_OFFSET_BITS=64 \
-		$*.c
+	$(CC) -c -O -fomit-frame-pointer -D_FILE_OFFSET_BITS=64 $*.c
 
 # Clean up
 clean:
