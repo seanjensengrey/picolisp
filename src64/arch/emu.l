@@ -1280,6 +1280,7 @@
       (mapc prinl
          (quote
             "void (*LoadedLibs)(void);"
+            "static void (*NextLib)(void);"
             NIL
             "static void run(int i) {"
             "   op tmp;"
@@ -1304,17 +1305,24 @@
       (prinl
          (unless *FPic "   ")
          "      break;" ) )
-   (mapc prinl
+   (for S
       (quote
-         "      default:"
+         "   default:"
+         "      if (NextLib)"
+         "         (*NextLib)();"
+         "      else {"
          "         fprintf(stderr, \"Illegal instruction\\n\");"
          "         exit(112);"
          "      }"
+         "   }"
          ~(as *Dbg
-            "      fprintf(stderr, \"   %llX %llX %llX  %llX %llX %llX  %d%d%d  %llX %llX\\n\","
-            "         A.n, C.n, E.n, X.n, Y.n, Z.n,"
-            "         !Result, (int64_t)Result<0, Carry,"
-            "         L.n, S.n );" ) ) )
+            "   fprintf(stderr, \"   %llX %llX %llX  %llX %llX %llX  %d%d%d  %llX %llX\\n\","
+            "      A.n, C.n, E.n, X.n, Y.n, Z.n,"
+            "      !Result, (int64_t)Result<0, Carry,"
+            "      L.n, S.n );" ) )
+      (prinl
+         (unless *FPic "   ")
+         S ) )
    (unless *FPic (prinl "   }"))
    (prinl "}")
    (when *FPic
