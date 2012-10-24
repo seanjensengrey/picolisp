@@ -1,4 +1,4 @@
-# 23oct12abu
+# 24oct12abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -1267,6 +1267,11 @@
       (prOpcode I (car X)) )
    (prinl "};")
    (prinl)
+   (when *FPic
+      (for S (idx '*Labels)
+         (unless (pre? "." S)  # Omit local labels
+            (prinl "uint16_t *" S " = LibCode + " (val S) ";") ) )
+      (prinl) )
    (if *FPic
       (mapc prinl
          (quote
