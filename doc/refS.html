@@ -896,6 +896,8 @@ to <code>fun</code>. Returns the sum of all numeric values returned from
 -> 3
 : (sum val '(A B C))
 -> 6
+: (sum * (3 4 5) (5 6 7))        # Vector dot product
+-> 74
 : (sum                           # Total size of symbol list values
    '((X)
       (and (pair (val X)) (size @)) )
