@@ -214,7 +214,7 @@
             (cons "X"
                ~(as *Dbg
                   (pack
-                     "fprintf(stderr, \"%d: %s\\n\", Code<=PC && PC<Code+32767? PC-Code-1 : 0, \""
+                     "fprintf(stderr, \"%ld: %s\\n\", Code<=PC && PC<Code+32767? PC-Code-1 : 0, \""
                      (fmtInstruction "X")
                      "\");" ) )
                (mapcar '((S) (apply text "Args" S)) "Body") ) )
@@ -1277,7 +1277,7 @@
    (if *FPic
       (mapc prinl
          (quote
-            "extern void (*LoadedLibs)(void);"
+            "extern void (*FirstLib)(void);"
             "static void (*NextLib)(void);"
             NIL
             "static void opcodes(void) {"
@@ -1286,8 +1286,7 @@
             "   switch (PC[-1]) {" ) )
       (mapc prinl
          (quote
-            "void (*LoadedLibs)(void);"
-            "static void (*NextLib)(void);"
+            "void (*FirstLib)(void);"
             NIL
             "static void run(int i) {"
             "   op tmp;"
@@ -1312,13 +1311,22 @@
       (prinl
          (unless *FPic "   ")
          "      break;" ) )
+   (prinl
+      (unless *FPic "   ")
+      "   default:" )
+   (if *FPic
+      (mapc prinl
+         (quote
+            "      if (NextLib)"
+            "         (*NextLib)();" ) )
+      (mapc prinl
+         (quote
+            "         if (FirstLib)"
+            "            (*FirstLib)();" ) ) )
    (for S
       (quote
-         "   default:"
-         "      if (NextLib)"
-         "         (*NextLib)();"
          "      else {"
-         "         fprintf(stderr, \"Illegal instruction\\n\");"
+         "         fprintf(stderr, \"Bad instruction\\n\");"
          "         exit(112);"
          "      }"
          "   }"
@@ -1337,7 +1345,7 @@
          (quote
             NIL
             "void __attribute__((constructor)) linkOpcodes(void) {"
-            "   NextLib = LoadedLibs,  LoadedLibs = opcodes;"
+            "   NextLib = FirstLib,  FirstLib = opcodes;"
             "}" ) ) )
    (unless *FPic
       (mapc prinl
@@ -1356,20 +1364,20 @@
             "   Z.p = Y.p + (ac - 2) * sizeof(op);" ) )
       (prinl (pack "   run(" (absCode "main") ");"))
       (prinl "   return 0;")
-      (prinl "}")
-      (if *FPic
-         (out "+emu.symtab"
-            (println (mapcar car *AsmOpcodes)) )
-         (out "emu.symtab"
-            (println
-               (mapcar '((D) (cons (car D) (cadr D)))
-                  *AsmData ) )
-            (println
-               (make
-                  (for (I . X) *AsmCode
-                     (for Lbl (cdr X)
-                        (unless (pre? "." Lbl)
-                           (link (cons Lbl (dec I))) ) ) ) ) )
-            (println (mapcar car *AsmOpcodes)) ) ) ) )
+      (prinl "}") )
+   (if *FPic
+      (out "+emu.symtab"
+         (println (mapcar car *AsmOpcodes)) )
+      (out "emu.symtab"
+         (println
+            (mapcar '((D) (cons (car D) (cadr D)))
+               *AsmData ) )
+         (println
+            (make
+               (for (I . X) *AsmCode
+                  (for Lbl (cdr X)
+                     (unless (pre? "." Lbl)
+                        (link (cons Lbl (dec I))) ) ) ) ) )
+         (println (mapcar car *AsmOpcodes)) ) ) )
 
 # vi:et:ts=3:sw=3
