@@ -1,4 +1,4 @@
-# 02oct12abu
+# 24oct12abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -1353,6 +1353,7 @@
       cc dlsym(A Y)  # Find dynamic symbol
       null A  # OK?
       if nz  # Yes
+         initLib
          ? *AlignedCode
             or A CNT  # Make short number
          =

@@ -1,4 +1,4 @@
-# 17oct12abu
+# 24oct12abu
 # (c) Software Lab. Alexander Burger
 
 # *LittleEndian *AlignedCode *Registers optimize
@@ -427,6 +427,7 @@
       (initCode)
       (initData)
       (initFun (file) (read) (read) (operand (read)))
+      (initLib)
       (initMain)
       (initSym (file) (read) (read) (operand (read)))
       (jc (address) "*Mode")

@@ -1,4 +1,4 @@
-# 19oct12abu
+# 24oct12abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -1552,6 +1552,8 @@
    (prinst "subi" 3 3 1)              # and pointer to last argument in Z
    (prinst "sldi" 3 3 3)
    (prinst "add" 18 4 3) )
+
+(asm initLib ())
 
 ### Optimizer ###
 # Replace the the next 'cnt' elements with 'lst'

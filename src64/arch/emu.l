@@ -1,4 +1,4 @@
-# 24oct12abu
+# 25oct12abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -214,9 +214,7 @@
             (cons "X"
                ~(as *Dbg
                   (pack
-                     "fprintf(stderr, \"%d: %s\\n\", PC-"
-                     (if *FPic "LibCode" "Code")
-                     "-1, \""
+                     "fprintf(stderr, \"%d: %s\\n\", Code<=PC && PC<Code+32767? PC-Code-1 : 0, \""
                      (fmtInstruction "X")
                      "\");" ) )
                (mapcar '((S) (apply text "Args" S)) "Body") ) )
@@ -975,6 +973,10 @@
 
 (asm initMain ())  # Done explicitly in 'main'
 
+(asm initLib ()
+   (genCode NIL '(initLib) NIL
+      "A.p = *(uint8_t**)A.p;" ) )
+
 ### Optimizer ###
 # Replace the the next 'cnt' elements with 'lst'
 (de optimize (Lst))  #> (cnt . lst)
@@ -1268,7 +1270,7 @@
    (prinl "};")
    (prinl)
    (when *FPic
-      (for S (idx '*Labels)
+      (for S (by val sort (idx '*Labels))
          (unless (pre? "." S)  # Omit local labels
             (prinl "uint16_t *" S " = LibCode + " (val S) ";") ) )
       (prinl) )
