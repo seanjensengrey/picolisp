@@ -1,4 +1,4 @@
-# 25oct12abu
+# 26oct12abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -719,7 +719,7 @@
    (waitpid          i  i "int" i)
    (free             -  p)
    (stat             i  p "struct stat")
-   (fcntl            i  i)
+   (fcntl            i  i i)
    (pipe             i  "int")
    (select           i  i "fd_set" "fd_set" "fd_set" 2)
    (open             i  p i i)
@@ -975,7 +975,7 @@
 
 (asm initLib ()
    (genCode NIL '(initLib) NIL
-      "A.p = *(uint8_t**)A.p;" ) )
+      "A.n = (uint64_t)(unsigned long)*(uint8_t**)A.p;" ) )
 
 ### Optimizer ###
 # Replace the the next 'cnt' elements with 'lst'
@@ -1052,7 +1052,7 @@
       (if *FPic
          (quote
             "extern uint16_t Code[];"
-            "uint16_t LibCode[];"
+            "static uint16_t LibCode[];"
             NIL
             "extern uint16_t *PC;"
             "extern uint8_t *Stack;"
@@ -1067,7 +1067,7 @@
             NIL
             "extern op Data[];"
             NIL
-            "op LibData[] = {" )
+            "static op LibData[] = {" )
          (quote
             "uint16_t Code[];"
             NIL
@@ -1261,7 +1261,11 @@
    (when *SysFun
       (mapc prinl (flip @))
       (prinl) )
-   (prinl "uint16_t " (and *FPic "Lib") "Code[] = {")
+   (prinl
+      (and *FPic "static ")
+      "uint16_t "
+      (and *FPic "Lib")
+      "Code[] = {" )
    (for (I . X) *AsmCode
       (for C (cdr X)
          (unless (pre? "." C)  # Omit local labels
@@ -1330,7 +1334,7 @@
          "         exit(112);"
          "      }"
          "   }"
-         ~(as *Dbg
+         ~(as (and *Dbg (not *FPic))
             "   fprintf(stderr, \"   %llX %llX %llX  %llX %llX %llX  %d%d%d  %llX %llX\\n\","
             "      A.n, C.n, E.n, X.n, Y.n, Z.n,"
             "      !Result, (int64_t)Result<0, Carry,"
@@ -1344,7 +1348,7 @@
       (mapc prinl
          (quote
             NIL
-            "void __attribute__((constructor)) linkOpcodes(void) {"
+            "static void __attribute__((constructor)) linkOpcodes(void) {"
             "   NextLib = FirstLib,  FirstLib = opcodes;"
             "}" ) ) )
    (unless *FPic
