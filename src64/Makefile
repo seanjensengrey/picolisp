@@ -105,7 +105,7 @@ $(lib)/ht: $(ARCH)$(SYS).ht.o
 .s.o:
 	$(AS) -o $*.o $*.s
 
-# Compile ###
+### Compile ###
 sysdefs: sysdefs.c
 	$(CC) -o sysdefs -D_FILE_OFFSET_BITS=64 sysdefs.c
 	$(STRIP) sysdefs
