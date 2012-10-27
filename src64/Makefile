@@ -86,8 +86,9 @@ x86-64.sunOs: $(sFiles)
 ppc64.linux: $(sFiles)
 emu: picolisp
 
-picolisp: $(sFiles) $(bin)/picolisp $(lib)/ext $(lib)/ht
+picolisp: $(bin)/picolisp $(lib)/ext $(lib)/ht
 
+### Link ###
 $(bin)/picolisp: $(ARCH)$(SYS).base.o
 	$(CC) -o $(bin)/picolisp $(ARCH)$(SYS).base.o $(LD-MAIN)
 	$(STRIP) $(bin)/picolisp
@@ -100,7 +101,22 @@ $(lib)/ht: $(ARCH)$(SYS).ht.o
 	$(CC) -o $(lib)/ht $(ARCH)$(SYS).ht.o $(LD-SHARED)
 	$(STRIP) $(lib)/ht
 
-# Explicit builds for cross-assembly
+### Assemble ###
+.s.o:
+	$(AS) -o $*.o $*.s
+
+# Compile ###
+sysdefs: sysdefs.c
+	$(CC) -o sysdefs -D_FILE_OFFSET_BITS=64 sysdefs.c
+	$(STRIP) sysdefs
+
+emu.base.o: emu.base.c
+	$(CC) -c -O -fomit-frame-pointer -D_FILE_OFFSET_BITS=64 emu.base.c
+
+.c.o:
+	$(CC) -c -O -fpic -fomit-frame-pointer -D_FILE_OFFSET_BITS=64 $*.c
+
+### Translate ###
 $(ARCH)$(SYS).base$(FMT): sysdefs arch/$(ARCH).l $(baseFiles) sys/$(ARCH)$(SYS).code.l
 	./mkAsm $(ARCH) "$(SYS)" $(FMT) $(OS) base "" $(lib)/map  $(baseFiles) sys/$(ARCH)$(SYS).code.l
 
@@ -110,20 +126,7 @@ $(ARCH)$(SYS).ext$(FMT): sysdefs arch/$(ARCH).l ext.l $(ARCH)$(SYS).base$(FMT)
 $(ARCH)$(SYS).ht$(FMT): sysdefs arch/$(ARCH).l ht.l $(ARCH)$(SYS).base$(FMT)
 	./mkAsm $(ARCH) "$(SYS)" $(FMT) $(OS) ht T ""  ht.l
 
-sysdefs: sysdefs.c
-	$(CC) -o sysdefs -D_FILE_OFFSET_BITS=64 sysdefs.c
-	$(STRIP) sysdefs
-
-emu.base.o:
-	$(CC) -c -O -fomit-frame-pointer -D_FILE_OFFSET_BITS=64 $*.c
-
-emu.ext.o  emu.ht.o:
-	$(CC) -c -O -fpic -fomit-frame-pointer -D_FILE_OFFSET_BITS=64 $*.c
-
-.s.o:
-	$(AS) -o $*.o $*.s
-
-# Clean up
+### Clean up ###
 clean:
 	rm -f emu.*.c *.s *.o *.symtab sysdefs
 
