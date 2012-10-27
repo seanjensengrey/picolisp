@@ -1,4 +1,4 @@
-# 23oct12abu
+# 27oct12abu
 # (c) Software Lab. Alexander Burger
 
 .SILENT:
@@ -84,7 +84,7 @@ all: picolisp
 x86-64.linux: $(sFiles)
 x86-64.sunOs: $(sFiles)
 ppc64.linux: $(sFiles)
-emu: $(sFiles)
+emu: $(sFiles) picolisp
 
 picolisp: $(bin)/picolisp $(lib)/ext $(lib)/ht
 
@@ -114,14 +114,17 @@ sysdefs: sysdefs.c
 	$(CC) -o sysdefs -D_FILE_OFFSET_BITS=64 sysdefs.c
 	$(STRIP) sysdefs
 
+emu.base.o:
+	$(CC) -c -O -fomit-frame-pointer -D_FILE_OFFSET_BITS=64 $*.c
+
+emu.ext.o  emu.ht.o:
+	$(CC) -c -O -fpic -fomit-frame-pointer -D_FILE_OFFSET_BITS=64 $*.c
+
 .s.o:
 	$(AS) -o $*.o $*.s
 
-.c.o:
-	$(CC) -c -O -fomit-frame-pointer -D_FILE_OFFSET_BITS=64 $*.c
-
 # Clean up
 clean:
-	rm -f emu.*.c *.s *.o *.symtab
+	rm -f emu.*.c *.s *.o *.symtab sysdefs
 
 # vi:noet:ts=4:sw=4
