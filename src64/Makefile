@@ -84,9 +84,9 @@ all: picolisp
 x86-64.linux: $(sFiles)
 x86-64.sunOs: $(sFiles)
 ppc64.linux: $(sFiles)
-emu: $(sFiles) picolisp
+emu: picolisp
 
-picolisp: $(bin)/picolisp $(lib)/ext $(lib)/ht
+picolisp: $(sFiles) $(bin)/picolisp $(lib)/ext $(lib)/ht
 
 $(bin)/picolisp: $(ARCH)$(SYS).base.o
 	$(CC) -o $(bin)/picolisp $(ARCH)$(SYS).base.o $(LD-MAIN)
