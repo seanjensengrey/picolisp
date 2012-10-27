@@ -1,4 +1,4 @@
-# 02oct12abu
+# 27oct12abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -2594,6 +2594,9 @@
             ld X EnvOutFrames  # Pointer to output frames
             ld C (Z (pack III "+(EnvOutFrames-EnvCo)"))  # Local output frames
             call joinLocalCX  # Join locals
+            ld X EnvErrFrames  # Pointer to error frames
+            ld C (Z (pack III "+(EnvErrFrames-EnvCo)"))  # Local error frames
+            call joinLocalCX  # Join locals
             ld X EnvCtlFrames  # Pointer to control frames
             ld C (Z (pack III "+(EnvCtlFrames-EnvCo)"))  # Local control frames
             call joinLocalCX  # Join locals
@@ -2770,6 +2773,9 @@
    ld (X) 0  # Cut off
    ld X EnvCtlFrames  # Pointer to control frames
    ld C (Z (pack III "+(EnvCtlFrames-EnvCo)"))  # Local control frames
+   call cutLocalCX  # Cut off locals
+   ld X EnvErrFrames  # Pointer to error frames
+   ld C (Z (pack III "+(EnvErrFrames-EnvCo)"))  # Local error frames
    call cutLocalCX  # Cut off locals
    ld X EnvOutFrames  # Pointer to output frames
    ld C (Z (pack III "+(EnvOutFrames-EnvCo)"))  # Local output frames
