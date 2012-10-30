@@ -680,17 +680,19 @@
    #{!}# )
 
 (asm fixnum ()
-   (genCode NIL '(fixnum) ((directExpr "Nil") (directExpr "TSym"))
+   (genCode NIL '(fixnum) ((directExpr "TSym") (directExpr "Nil"))
       "if (E.b[0] & 8)"
-      "   tmp.n = (uint64_t)(A.f * (float)(E.n >> 4));"
+      "   A.d = A.f * (float)(E.n >> 4);"
       "else"
-      "   tmp.n = (uint64_t)(A.d * (double)(E.n >> 4));"
-      "if ((int64_t)tmp.n >= 0)"
-      "   E.n = tmp.n << 4 | 2;"
-      "else if ((tmp.n = -tmp.n) >= 0)"
-      "   E.n = tmp.n << 4 | 10;"
+      "   A.d = A.d * (double)(E.n >> 4);"
+      "if (isinf(A.d) == 1 || A.d > (double)0xFFFFFFFFFFFFFFF)"
+      "   E.p = @1;"
+      "else if (isnan(A.d) || isinf(A.d) == -1 || A.d < (double)-0xFFFFFFFFFFFFFFF)"
+      "   E.p = @2;"
+      "else if (A.d >= 0)"
+      "   E.n = (uint64_t)A.d << 4 | 2;"
       "else"
-      "   E.p = A.d < 0.0? @1 : @2;" ) )
+      "   E.n = (uint64_t)-A.d << 4 | 10;" ) )
 
 (asm float ()
    #{!}# )
@@ -870,7 +872,7 @@
                (link
                   "if ((tmp.p = S.p) == @2.p)"
                   "   A.n = (*(uint64_t (*)())@1.p)();" )
-               (for I 6
+               (for I 8
                   (let Args
                      (pack
                         (make
