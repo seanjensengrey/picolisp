@@ -1,4 +1,4 @@
-# 26oct12abu
+# 30oct12abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -680,7 +680,17 @@
    #{!}# )
 
 (asm fixnum ()
-   #{!}# )
+   (genCode NIL '(fixnum) ((directExpr "Nil") (directExpr "TSym"))
+      "if (E.b[0] & 8)"
+      "   tmp.n = (uint64_t)(A.f * (float)(E.n >> 4));"
+      "else"
+      "   tmp.n = (uint64_t)(A.d * (double)(E.n >> 4));"
+      "if ((int64_t)tmp.n >= 0)"
+      "   E.n = tmp.n << 4 | 2;"
+      "else if ((tmp.n = -tmp.n) >= 0)"
+      "   E.n = tmp.n << 4 | 10;"
+      "else"
+      "   E.p = A.d < 0.0? @1 : @2;" ) )
 
 (asm float ()
    #{!}# )
@@ -851,7 +861,51 @@
             (n (_genCC "A.n = (uint64_t)@1(@2);@3"))
             (i (_genCC "A.l = (uint32_t)@1(@2);@3"))
             (T (quit "Unknown C function" Adr)) ) )
-      ) )
+      (addCode
+         (cons
+            (env '(Adr Arg))
+            '(list 'cc (list Adr) Arg)
+            '(Adr Arg)
+            (make
+               (link
+                  "if ((tmp.p = S.p) == @2.p)"
+                  "   A.n = (*(uint64_t (*)())@1.p)();" )
+               (for I 6
+                  (let Args
+                     (pack
+                        (make
+                           (for J (dec I)
+                              (link 
+                                 ", "
+                                 "((ptr)(S.p + "
+                                 (* J 16)
+                                 "))->n == 0? (long)((ptr)(S.p + "
+                                 (+ 8 (* J 16))
+                                 "))->n : ((ptr)(S.p + "
+                                 (* J 16)
+                                 "))->n & 8? (float)dbl("
+                                 (* J 16)
+                                 ") : dbl("
+                                 (* J 16)
+                                 ")" ) ) ) )
+                     (link
+                        "else if ((tmp.p += 16) == @2.p) {"
+                        "   if (((ptr)(S.p + 0))->n == 0)"
+                        (pack
+                           "      A.n = (*(uint64_t (*)(long,...))@1.p)((long)((ptr)(S.p + 8))->n"
+                           Args
+                           ");" )
+                        "   else if (((ptr)(S.p + 0))->n & 8)"
+                        (pack
+                           "      A.f = (*(float (*)(float,...))@1.p)((float)dbl(0)"
+                           Args
+                           ");" )
+                        "   else"
+                        (pack
+                           "      A.d = (*(double (*)(double,...))@1.p)(dbl(0)"
+                           Args
+                           ");" )
+                        "}" ) ) ) ) ) ) ) )
 
 (asm begin ())
 
@@ -1046,6 +1100,8 @@
    (if *LittleEndian
       (prinl "   struct {uint32_t l, h;};")
       (prinl "   struct {uint32_t h, l;};") )
+   (prinl "   float f;")
+   (prinl "   double d;")
    (prinl "} op, *ptr;")
    (prinl)
    (mapc prinl
@@ -1290,6 +1346,22 @@
             "   switch (PC[-1]) {" ) )
       (mapc prinl
          (quote
+            "double dbl(int i) {"
+            "   uint64_t s = ((ptr)(S.p + i))->n;"
+            NIL
+            "   if (s & 2) {"
+            "      uint64_t m =  ((ptr)(S.p + i + 8))->n;"
+            "      double d = (double)(m >> 4) / (double)(s >> 4);"
+            "      return m & 8? -d : d;"
+            "   }" ) )
+      (prinl
+            "   return ((ptr)(S.p + i))->p == "
+            (directExpr "Nil")
+            "? -INFINITY : INFINITY;" )
+      (mapc prinl
+         (quote
+            "}"
+            NIL
             "void (*FirstLib)(void);"
             NIL
             "static void run(int i) {"
