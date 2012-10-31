@@ -1,4 +1,4 @@
-# 30oct12abu
+# 31oct12abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -674,10 +674,12 @@
 
 # Floating point
 (asm ldd ()
-   #{!}# )
+   (genCode NIL '(ldd) NIL
+      "A.d = *(double*)C.p;" ) )
 
 (asm ldf ()
-   #{!}# )
+   (genCode NIL '(ldf) NIL
+      "A.f = *(float*)C.p;" ) )
 
 (asm fixnum ()
    (genCode NIL '(fixnum) ((directExpr "TSym") (directExpr "Nil"))
@@ -695,13 +697,16 @@
       "   E.n = (uint64_t)-A.d << 4 | 10;" ) )
 
 (asm float ()
-   #{!}# )
+   (genCode NIL '(float) ((directExpr "TSym") (directExpr "Nil"))
+      #{!}# ) )
 
 (asm std ()
-   #{!}# )
+   (genCode NIL '(std) NIL
+      "*(double*)Z.p = A.d;" ) )
 
 (asm stf ()
-   #{!}# )
+   (genCode NIL '(stf) NIL
+      "*(float*)Z.p = A.f;" ) )
 
 # C-Calls
 (de *C-Params  # Function return value and parameters
@@ -835,6 +840,50 @@
                '(cdr Par) ) )
          Body ) ) )
 
+(de _natCC (I N Typ Arg)
+   (if (=0 N)
+      (link
+         (pack
+            (need (inc I) "   ")
+            (case (car (setq Typ (reverse Typ)))
+               (float "A.f = (*(float")
+               (double "A.d = (*(double")
+               (T "A.n = (*(uint64_t") )
+            " (*)("
+            (glue "," Typ)
+            "))@1.p)("
+            (glue ", " (reverse Arg))
+            ");" ) )
+      (let N (dec N)
+         (link
+            (pack
+               (need (inc I) "   ")
+               "if (((ptr)(S.p + "
+               (* 16 I)
+               "))->n == 0)" ) )
+         (_natCC (inc I) N
+            (cons 'long Typ)
+            (cons
+               (pack "((ptr)(S.p + " (+ 8 (* 16 I)) "))->n")
+               Arg ) )
+         (link
+            (pack
+               (need (inc I) "   ")
+               "else if (((ptr)(S.p + "
+               (* 16 I)
+               "))->n & 8)" ) )
+         (_natCC (inc I) N
+            (cons 'float Typ)
+            (cons
+               (pack "(float)dbl(" (* 16 I) ")")
+               Arg ) )
+         (link (pack (need (inc I) "   ") "else"))
+         (_natCC (inc I) N
+            (cons 'double Typ)
+            (cons
+               (pack "dbl(" (* 16 I) ")")
+               Arg ) ) ) ) )
+
 (asm cc (Adr A Arg M)
    (if (lst? Arg)
       (let
@@ -869,45 +918,12 @@
             '(list 'cc (list Adr) Arg)
             '(Adr Arg)
             (make
-               (link
-                  "if ((tmp.p = S.p) == @2.p)"
-                  "   A.n = (*(uint64_t (*)())@1.p)();" )
-               (for I 8
-                  (let Args
-                     (pack
-                        (make
-                           (for J (dec I)
-                              (link 
-                                 ", "
-                                 "((ptr)(S.p + "
-                                 (* J 16)
-                                 "))->n == 0? (long)((ptr)(S.p + "
-                                 (+ 8 (* J 16))
-                                 "))->n : ((ptr)(S.p + "
-                                 (* J 16)
-                                 "))->n & 8? (float)dbl("
-                                 (* J 16)
-                                 ") : dbl("
-                                 (* J 16)
-                                 ")" ) ) ) )
-                     (link
-                        "else if ((tmp.p += 16) == @2.p) {"
-                        "   if (((ptr)(S.p + 0))->n == 0)"
-                        (pack
-                           "      A.n = (*(uint64_t (*)(long,...))@1.p)((long)((ptr)(S.p + 8))->n"
-                           Args
-                           ");" )
-                        "   else if (((ptr)(S.p + 0))->n & 8)"
-                        (pack
-                           "      A.f = (*(float (*)(float,...))@1.p)((float)dbl(0)"
-                           Args
-                           ");" )
-                        "   else"
-                        (pack
-                           "      A.d = (*(double (*)(double,...))@1.p)(dbl(0)"
-                           Args
-                           ");" )
-                        "}" ) ) ) ) ) ) ) )
+               (link "if ((tmp.p = S.p) == @2.p)")
+               (_natCC 0 0)
+               (for N 6
+                  (link "else if ((tmp.p += 16) == @2.p) {")
+                  (_natCC 0 N)
+                  (link "}") ) ) ) ) ) )
 
 (asm begin ())
 
