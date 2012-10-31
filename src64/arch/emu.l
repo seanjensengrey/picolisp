@@ -692,21 +692,38 @@
       "else if (isnan(A.d) || isinf(A.d) == -1 || A.d < (double)-0xFFFFFFFFFFFFFFF)"
       "   E.p = @2;"
       "else if (A.d >= 0)"
-      "   E.n = (uint64_t)A.d << 4 | 2;"
+      "   E.n = (uint64_t)(A.d + 0.5) << 4 | 2;"
       "else"
-      "   E.n = (uint64_t)-A.d << 4 | 10;" ) )
+      "   E.n = (uint64_t)(0.5 - A.d) << 4 | 10;" ) )
 
 (asm float ()
-   (genCode NIL '(float) ((directExpr "TSym") (directExpr "Nil"))
-      #{!}# ) )
+   (genCode NIL '(float) ((directExpr "Nil"))
+      "if (A.b[0] & 8) {"
+      "   if (((ptr)X.p)->n & 2) {"
+      "      tmp.f = (float)(((ptr)X.p)->n >> 4) / (float)(A.n >> 4);"
+      "      if (((ptr)X.p)->n & 8)"
+      "         tmp.f = -tmp.f;"
+      "   }"
+      "   else"
+      "      tmp.f = X.p == @1? -INFINITY : INFINITY;"
+      "}"
+      "else {"
+      "   if (((ptr)X.p)->n & 2) {"
+      "      tmp.d = (double)(((ptr)X.p)->n >> 4) / (double)(A.n >> 4);"
+      "      if (((ptr)X.p)->n & 8)"
+      "         tmp.d = -tmp.d;"
+      "   }"
+      "   else"
+      "      tmp.d = X.p == @1? -INFINITY : INFINITY;"
+      "}" ) )
 
 (asm std ()
    (genCode NIL '(std) NIL
-      "*(double*)Z.p = A.d;" ) )
+      "*(double*)Z.p = tmp.d;" ) )
 
 (asm stf ()
    (genCode NIL '(stf) NIL
-      "*(float*)Z.p = A.f;" ) )
+      "*(float*)Z.p = tmp.f;" ) )
 
 # C-Calls
 (de *C-Params  # Function return value and parameters
@@ -923,7 +940,10 @@
                (for N 6
                   (link "else if ((tmp.p += 16) == @2.p) {")
                   (_natCC 0 N)
-                  (link "}") ) ) ) ) ) )
+                  (link "}") )
+               (link
+                  "else"
+                  "   A.n = (*(uint64_t (*)(long,long,long,long,long,long,long,long))Y.p)(((ptr)(S.p + 8))->n, ((ptr)(S.p + 24))->n, ((ptr)(S.p + 40))->n, ((ptr)(S.p + 56))->n, ((ptr)(S.p + 72))->n, ((ptr)(S.p + 88))->n, ((ptr)(S.p + 104))->n, ((ptr)(S.p + 120))->n);" ) ) ) ) ) )
 
 (asm begin ())
 
