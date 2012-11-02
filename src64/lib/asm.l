@@ -1,4 +1,4 @@
-# 24oct12abu
+# 02nov12abu
 # (c) Software Lab. Alexander Burger
 
 # *LittleEndian *AlignedCode *Registers optimize
@@ -422,6 +422,7 @@
       (exec (reg (read)))
       (fixnum)
       (float)
+      (func)
       (hx2 (read))
       (inc (destination) "*Mode")
       (initCode)

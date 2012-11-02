@@ -1,4 +1,4 @@
-# 24oct12abu
+# 02nov12abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -1146,6 +1146,8 @@
       (lst? Arg)
       (gt0 (- (length Arg) 8))
       (prinst "addi" 1 1 (* @ 8)) ) )
+
+(asm func ())
 
 (asm begin ()
    (prinst ".quad" ".+24" ".TOC.@tocbase" 0)

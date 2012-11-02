@@ -1,4 +1,4 @@
-# 24oct12abu
+# 02nov12abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -2065,6 +2065,7 @@
          pop A
          ld (A I) E  # Store in slot
          pop E  # Get function pointer
+         func
          pop Y
          pop X
          test E (hex "F000000000000000")  # Fit in short number?

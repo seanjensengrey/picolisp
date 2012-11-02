@@ -1,4 +1,4 @@
-# 31oct12abu
+# 02nov12abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -687,9 +687,9 @@
       "   A.d = A.f * (float)(E.n >> 4);"
       "else"
       "   A.d = A.d * (double)(E.n >> 4);"
-      "if (isinf(A.d) == 1 || A.d > (double)0xFFFFFFFFFFFFFFF)"
+      "if (isinf(A.d) == 1 || A.d > (double)0xFFFFFFFFFFFFFFFLL)"
       "   E.p = @1;"
-      "else if (isnan(A.d) || isinf(A.d) == -1 || A.d < (double)-0xFFFFFFFFFFFFFFF)"
+      "else if (isnan(A.d) || isinf(A.d) == -1 || A.d < (double)-0xFFFFFFFFFFFFFFFLL)"
       "   E.p = @2;"
       "else if (A.d >= 0)"
       "   E.n = (uint64_t)(A.d + 0.5) << 4 | 2;"
@@ -944,6 +944,10 @@
                (link
                   "else"
                   "   A.n = (*(uint64_t (*)(long,long,long,long,long,long,long,long))Y.p)(((ptr)(S.p + 8))->n, ((ptr)(S.p + 24))->n, ((ptr)(S.p + 40))->n, ((ptr)(S.p + 56))->n, ((ptr)(S.p + 72))->n, ((ptr)(S.p + 88))->n, ((ptr)(S.p + 104))->n, ((ptr)(S.p + 120))->n);" ) ) ) ) ) )
+
+(asm func ()
+   (genCode NIL '(func) ((directExpr "cbl1"))
+      "E.n = (uint64_t)(unsigned long)(void(*)())cbl[(E.p-@1)/2];" ) )
 
 (asm begin ())
 
@@ -1352,8 +1356,20 @@
          (prinl "}}") ) )
    (prinl "};")
    (prinl)
+   (unless *FPic
+      (for I 24
+         (sysFun (pack "cbl" I) T) ) )
    (when *SysFun
       (mapc prinl (flip @))
+      (prinl) )
+   (unless *FPic
+      (prinl
+         "static void (*cbl[])() = {"
+         (glue ","
+            (make
+               (for I 24
+                  (link (pack "fun" (absCode (pack "cbl" I)))) ) ) )
+         "};" )
       (prinl) )
    (prinl
       (and *FPic "static ")

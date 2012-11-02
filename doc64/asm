@@ -1,4 +1,4 @@
-# 24oct12abu
+# 02nov12abu
 # (c) Software Lab. Alexander Burger
 
 
@@ -171,6 +171,7 @@
       stf               # Store float value at address 'Z'
 
       ret               # Return [---]
+      func              # Convert 'E' to function pointer
       begin             # Called from foreign function
       return            # Return to foreign function
 

@@ -1,4 +1,4 @@
-# 24oct12abu
+# 02nov12abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -824,6 +824,8 @@
    (unless (== 'cc (caadr (memq *Statement *Program)))
       (prinst "mov" "%r12" "%rdx")
       (prinst "xor" "%r12" "%r12") ) )
+
+(asm func ())
 
 (asm begin ()
    (prinst "call" "begin") )
