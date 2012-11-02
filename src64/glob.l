@@ -1,4 +1,4 @@
-# 07jun12abu
+# 02nov12abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Data)
@@ -140,6 +140,7 @@
 
    # Protected symbols
    initSym pico      "pico"      Pico
+   initSym CPU       "*CPU"      TgCPU
    initSym OS        "*OS"       TgOS
    initSym DB        "*DB"       Db1
    initFun Meth      "meth"      doMeth
@@ -557,7 +558,8 @@
 : SymTabEnd
 
 # Transient symbols
-   initSym TgOS      `*TargetOS  TgOS
+   initSym TgCPU     `*Architecture TgCPU
+   initSym TgOS      `*TargetOS     TgOS
 
 # Database root symbol '{1}'
    word DB1  # Name

@@ -1,4 +1,5 @@
 * DDmmm12 picoLisp-3.1.1
+   '*CPU' global variable (64-bit)
    Bug in 'collect' for 'fold'ed keys
    File descriptor leak in 'dir' (64-bit)
    Namespace support also in Ersatz PicoLisp
