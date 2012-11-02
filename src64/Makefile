@@ -1,4 +1,4 @@
-# 27oct12abu
+# 02nov12abu
 # (c) Software Lab. Alexander Burger
 
 .SILENT:
@@ -95,11 +95,9 @@ $(bin)/picolisp: $(ARCH)$(SYS).base.o
 
 $(lib)/ext: $(ARCH)$(SYS).ext.o
 	$(CC) -o $(lib)/ext $(ARCH)$(SYS).ext.o $(LD-SHARED)
-	$(STRIP) $(lib)/ext
 
 $(lib)/ht: $(ARCH)$(SYS).ht.o
 	$(CC) -o $(lib)/ht $(ARCH)$(SYS).ht.o $(LD-SHARED)
-	$(STRIP) $(lib)/ht
 
 ### Assemble ###
 .s.o:

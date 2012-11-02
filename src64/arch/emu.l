@@ -753,7 +753,7 @@
    (waitpid          i  i "int" i)
    (free             -  p)
    (stat             i  p "struct stat")
-   (fcntl            i  i i)
+   (fcntl            i  i i p)
    (pipe             i  "int")
    (select           i  i "fd_set" "fd_set" "fd_set" 2)
    (open             i  p i i)
