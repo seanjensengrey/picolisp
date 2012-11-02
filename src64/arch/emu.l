@@ -808,7 +808,7 @@
    (localtime        p  "time_t")
    (printf           -  p)
    (fprintf          -  "FILE" p)
-   (snprintf         -  p i p)
+   (snprintf         -  p i p p)
    (strerror         p  i)
    (dlerror          p)
    (exit             -  i)
@@ -927,7 +927,7 @@
             (- (_genCC "@1(@2);@3"))
             (p (_genCC "A.p = (uint8_t*)@1(@2);@3"))
             (n (_genCC "A.n = (uint64_t)@1(@2);@3"))
-            (i (_genCC "A.l = (uint32_t)@1(@2);@3"))
+            (i (_genCC "A.n = (uint64_t)(uint32_t)@1(@2);@3"))
             (T (quit "Unknown C function" Adr)) ) )
       (addCode
          (cons
