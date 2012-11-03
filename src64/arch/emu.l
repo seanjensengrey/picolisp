@@ -356,7 +356,7 @@
          "   Carry = (Result = @1 += tmp.n) < tmp.n;" )
       (genCode (Src S) (list 'addc 'D Src) ((op.n Src S))
          "if ((tmp.n = @1 + Carry) == 0)"
-         "   Carry = ++C.n == 0;"
+         "   Carry = (C.n += Carry) == 0;"
          "else if ((A.n += tmp.n) < tmp.n)"
          "   Carry = ++C.n == 0;"
          "else"
