@@ -1,4 +1,4 @@
-# 02nov12abu
+# 03nov12abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -474,11 +474,20 @@
 
 # Comparisons
 (asm cmp (Dst D Src S)
-   (if (or (= Dst "A.b[0]") (= Src "A.b[0]"))
-      (genCode (Dst D Src S) (list 'cmp Dst Src) ((op.b Dst D) (op.b Src S))
-         "Carry = (Result = @1 - @2) > MAX64 - @2;" )
-      (genCode (Dst D Src S) (list 'cmp Dst Src) ((op.n Dst D) (op.n Src S))
-         "Carry = (Result = @1 - @2) > MAX64 - @2;" ) ) )
+   (cond
+      ((or (= Dst "A.b[0]") (= Src "A.b[0]"))
+         (genCode (Dst D Src S) (list 'cmp Dst Src) ((op.b Dst D) (op.b Src S))
+            "Carry = (Result = @1 - @2) > MAX64 - @2;" ) )
+      ((and (= Dst "S") (= Src '(StkLimit)))
+         (genCode (Dst D Src S) (list 'cmp Dst Src) ((op.n Dst D) (op.n Src S))
+            "if (S.p < Stack + 4064) {"
+            "   fprintf(stderr, \"Emulator stack overflow\\n\");"
+            "   exit(-99);"
+            "}"
+            "Carry = (Result = @1 - @2) > MAX64 - @2;" ) )
+      (T
+         (genCode (Dst D Src S) (list 'cmp Dst Src) ((op.n Dst D) (op.n Src S))
+            "Carry = (Result = @1 - @2) > MAX64 - @2;" ) ) ) )
 
 (asm cmpn (Dst D Src S Cnt C)
    (genCode (Dst D Src S Cnt C) (list 'cmpn Dst Src Cnt) ((op.a Dst D) (op.a Src S) (op.i Cnt C))
