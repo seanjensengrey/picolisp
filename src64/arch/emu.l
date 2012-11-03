@@ -1135,7 +1135,7 @@
          NIL
          "#define MAX8 ((uint8_t)-1)"
          "#define MAX64 ((uint64_t)-1)"
-         "#define STACK (16 * 1024 * 1024)"
+         "#define STACK (8 * 1024 * 1024)"
          NIL
          "typedef union op {"
          "   uint64_t n;" ) )
