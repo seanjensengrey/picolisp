@@ -1,4 +1,4 @@
-# 24sep12abu
+# 04nov12abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -13,7 +13,7 @@
 
 # Lock/unlock file
 (code 'unLockFileAC)
-   st2 (Flock)  # 'l_type'
+   st2 (Flock L_TYPE)  # 'l_type'
    ld (Flock L_START) 0  # Start position ('l_whence' is SEEK_SET)
    shr A 16  # Get length
    ld (Flock L_LEN) A  # Length
@@ -26,7 +26,7 @@
 (code 'rdLockFileC)
    ld A F_RDLCK  # Read lock, length 0
 (code 'lockFileAC)
-   st2 (Flock)  # 'l_type'
+   st2 (Flock L_TYPE)  # 'l_type'
    ld (Flock L_START) 0  # Start position ('l_whence' is SEEK_SET)
    shr A 16  # Get length
    ld (Flock L_LEN) A  # Length
