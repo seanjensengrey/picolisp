@@ -1,4 +1,4 @@
-# 18mar12abu
+# 04nov12abu
 # (c) Software Lab. Alexander Burger
 
 ### Evaluation ###
@@ -83,8 +83,8 @@
 
 
 ### cd ###
-(chdir "/tmp"
-   (test "/tmp" (pwd)) )
+(chdir "/"
+   (test "/" (pwd)) )
 
 
 ### info ###
