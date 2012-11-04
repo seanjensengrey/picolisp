@@ -1186,6 +1186,7 @@
             ld (Z) B  # Store "+"
             inc Z
             call symByteCX_FACX  # Second byte
+            jz 90
          end
          cmp B (char "@")  # Home path?
          if ne  # No
@@ -1235,7 +1236,7 @@
          end
       end
    end
-   set (Z) 0  # Null byte
+90 set (Z) 0  # Null byte
    add Z 8  # Round up
    off Z 7
    pop X
