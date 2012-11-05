@@ -1,4 +1,4 @@
-# 02nov12abu
+# 05nov12abu
 # (c) Software Lab. Alexander Burger
 
 .SILENT:
@@ -66,7 +66,7 @@ else
 			OS = Darwin
 			LD-MAIN = -lc -lm -ldl
 			LD-SHARED = -dynamiclib -undefined dynamic_lookup
-			STRIP = strip
+			STRIP = strip -x
 		endif
 	endif
 endif
@@ -95,9 +95,11 @@ $(bin)/picolisp: $(ARCH)$(SYS).base.o
 
 $(lib)/ext: $(ARCH)$(SYS).ext.o
 	$(CC) -o $(lib)/ext $(ARCH)$(SYS).ext.o $(LD-SHARED)
+	$(STRIP) $(lib)/ext
 
 $(lib)/ht: $(ARCH)$(SYS).ht.o
 	$(CC) -o $(lib)/ht $(ARCH)$(SYS).ht.o $(LD-SHARED)
+	$(STRIP) $(lib)/ht
 
 ### Assemble ###
 .s.o:
