@@ -1,4 +1,4 @@
-# 12jun11abu
+# 05nov12abu
 # 27jul10jk
 # (c) Software Lab. Alexander Burger
 
@@ -6,8 +6,8 @@
 (load "@lib/math.l")
 
 (default
-   *GluLib "/usr/lib/libGLU.so"
-   *GlutLib "/usr/lib/libglut.so" )
+   *GluLib "libGLU.so"
+   *GlutLib "libglut.so" )
 
 # Pre-consed fixpoint arguments
 (setq
