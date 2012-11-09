@@ -1,4 +1,4 @@
-# 24may12abu
+# 09nov12abu
 # (c) Software Lab. Alexander Burger
 
 # *Home *Gate *Host *Port *Port1 *Port% *Http1 *Chunked
@@ -77,6 +77,9 @@
       (quit) ) )
 
 ### HTTP-Server ###
+(de -server ()
+   (server (format (opt)) (opt)) )
+
 (de server (P H)
    (setq
       *Port P

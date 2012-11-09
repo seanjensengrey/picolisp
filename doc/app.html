@@ -156,7 +156,7 @@ browser to view the effects)
 <p>Open a second terminal window, and start a PicoLisp application server
 
 <pre><code>
-$ pil @lib/http.l @lib/xhtml.l @lib/form.l -'server 8080 "project.l"' +
+$ pil @lib/http.l @lib/xhtml.l @lib/form.l  --server 8080 project.l  +
 </code></pre>
 
 <p>No prompt appears. The server just sits, and waits for connections. You can
@@ -776,7 +776,7 @@ your browser and then look at the terminal window where you started the
 application server, you'll notice a colon, the PicoLisp prompt
 
 <pre><code>
-$ pil @lib/http.l @lib/xhtml.l @lib/form.l -'server 8080 "project.l"' +
+$ pil @lib/http.l @lib/xhtml.l @lib/form.l  --server 8080 project.l  +
 :
 </code></pre>
 
@@ -804,7 +804,7 @@ no other browser requests arrive within a default timeout period of 5 minutes.
 without the '+' flag, and with <code>-wait</code>
 
 <pre><code>
-$ pil @lib/http.l @lib/xhtml.l @lib/form.l -'server 8080 "project.l"' -wait
+$ pil @lib/http.l @lib/xhtml.l @lib/form.l  --server 8080 project.l  -wait
 </code></pre>
 
 <p>In that way, no command line prompt appears when a client connects.
