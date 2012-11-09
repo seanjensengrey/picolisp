@@ -1,4 +1,4 @@
-# 08nov12abu
+# 09nov12abu
 # 27jul10jk
 # (c) Software Lab. Alexander Burger
 
@@ -7,8 +7,8 @@
 
 (if (= *OS "Darwin")
    (default
-      *GluLib "Frameworks/OpenGL.framework/OpenGL"
-      *GlutLib "Frameworks/GLUT.framework/GLUT" )
+      *GluLib "OpenGL.framework/OpenGL"
+      *GlutLib "GLUT.framework/GLUT" )
    (default
       *GluLib "libGLU.so"
       *GlutLib "libglut.so" ) )
