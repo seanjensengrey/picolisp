@@ -1,4 +1,4 @@
-# 07jul12abu
+# 11nov12abu
 # (c) Software Lab. Alexander Burger
 
 # *Allow *Tmp
@@ -195,6 +195,20 @@
                (idx "Var" (car "L") T)
                (recurse "Lst" (dec "N"))
                (recurse (cdr "L") (- "Len" "N")) ) ) ) ) )
+
+(de depth (Idx)  #> (max . average)
+   (let (C 0  D 0  N 0)
+      (cons
+         (recur (Idx N)
+            (ifn Idx
+               0
+               (inc 'C)
+               (inc 'D (inc 'N))
+               (inc
+                  (max
+                     (recurse (cadr Idx) N)
+                     (recurse (cddr Idx) N) ) ) ) )
+         (or (=0 C) (*/ D C)) ) ) )
 
 ### Allow ###
 (de allowed Lst

@@ -1,4 +1,4 @@
-# 14jul12abu
+# 11nov12abu
 # (c) Software Lab. Alexander Burger
 
 # Prompt
@@ -39,20 +39,6 @@
          (T (atom "M") (prinl))
          (T (line) T)
          ("Fun" (pop '"M")) ) ) )
-
-(de depth (Idx)  #> (max . average)
-   (let (C 0  D 0  N 0)
-      (cons
-         (recur (Idx N)
-            (ifn Idx
-               0
-               (inc 'C)
-               (inc 'D (inc 'N))
-               (inc
-                  (max
-                     (recurse (cadr Idx) N)
-                     (recurse (cddr Idx) N) ) ) ) )
-         (or (=0 C) (*/ D C)) ) ) )
 
 (de what (S)
    (let *Dbg NIL

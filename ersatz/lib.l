@@ -1,4 +1,4 @@
-# 16jul12abu
+# 11nov12abu
 # (c) Software Lab. Alexander Burger
 
 (setq *OS (java (java "java.lang.System" "getProperty" "os.name")))
@@ -564,6 +564,20 @@
                (idx "Var" (car "L") T)
                (recurse "Lst" (dec "N"))
                (recurse (cdr "L") (- "Len" "N")) ) ) ) ) )
+
+(de depth (Idx)  #> (max . average)
+   (let (C 0  D 0  N 0)
+      (cons
+         (recur (Idx N)
+            (ifn Idx
+               0
+               (inc 'C)
+               (inc 'D (inc 'N))
+               (inc
+                  (max
+                     (recurse (cadr Idx) N)
+                     (recurse (cddr Idx) N) ) ) ) )
+         (or (=0 C) (*/ D C)) ) ) )
 
 ### Allow ###
 (de allowed Lst
@@ -1351,20 +1365,6 @@
          (T (atom "M") (prinl))
          (T (line) T)
          ("Fun" (pop '"M")) ) ) )
-
-(de depth (Idx)  #> (max . average)
-   (let (C 0  D 0  N 0)
-      (cons
-         (recur (Idx N)
-            (ifn Idx
-               0
-               (inc 'C)
-               (inc 'D (inc 'N))
-               (inc
-                  (max
-                     (recurse (cadr Idx) N)
-                     (recurse (cddr Idx) N) ) ) ) )
-         (or (=0 C) (*/ D C)) ) ) )
 
 (de what (S)
    (let *Dbg NIL
