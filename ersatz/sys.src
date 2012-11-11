@@ -1,4 +1,4 @@
-// 12oct12abu
+// 09nov12abu
 // (c) Software Lab. Alexander Burger
 
 import java.util.*;
@@ -1611,12 +1611,11 @@ public class PicoLisp {
             }
             if (!testEsc())
                return Nil;
-            StringBuilder sb = new StringBuilder();
-            sb.append((char)Chr);
+            Any y = x = new Cell(mkChar(Chr), Nil);
             while (get() != '"' && testEsc())
-               sb.append((char)Chr);
+               y = y.Cdr = new Cell(mkChar(Chr), Nil);
             get();
-            return mkStr(sb);
+            return x;
          }
          if (Chr >= '0' && Chr <= '9') {
             StringBuilder sb = new StringBuilder();

@@ -1,4 +1,4 @@
-# 04nov12abu
+# 09nov12abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -2539,13 +2539,14 @@
       end
       call testEscA_F
       jnc retNil
+      call mkCharA_A  # Make single character
+      call consA_X  # Cons it
+      ld (X) A
+      ld (X CDR) Nil  # with NIL
       link
-      push ZERO  # <L I> Result
-      ld C 4  # Build name
-      ld X S
+      push X  # <L I> Result
       link
       do
-         call byteSymBCX_CX  # Pack char
          call (Get_A)  # Get next
          cmp B (char "\"")  # Done?
          if eq  # Yes
@@ -2553,10 +2554,17 @@
             break T
          end
          call testEscA_F
-      until nc
-      ld X (L I)  # Get name
+      while c
+         call mkCharA_A  # Make char
+         call consA_C  # Cons it
+         ld (C) A
+         ld (C CDR) Nil  # with NIL
+         ld (X CDR) C  # Append to result
+         ld X C
+      loop
+      ld E (L I)  # Get result
       drop
-      jmp consSymX_E  # Make transient symbol
+      ret
    end
    cmp B (char "0")  # Digit?
    if ge

@@ -1,4 +1,4 @@
-/* 11mar12abu
+/* 09nov12abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -1287,11 +1287,11 @@ any token(any x, int c) {
       }
       if (!testEsc())
          return Nil;
-      i = 0,  Push(c1, y = box(Chr));
+      Push(c1, y =  cons(mkChar(Chr), Nil));
       while (Env.get(), Chr != '"' && testEsc())
-         byteSym(Chr, &i, &y);
+         y = cdr(y) = cons(mkChar(Chr), Nil);
       Env.get();
-      return consStr(Pop(c1));
+      return Pop(c1);
    }
    if (Chr >= '0' && Chr <= '9') {
       i = 0,  Push(c1, y = box(Chr));
