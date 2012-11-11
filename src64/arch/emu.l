@@ -1,4 +1,4 @@
-# 03nov12abu
+# 11nov12abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -340,12 +340,17 @@
 
 # Arithmetics
 (asm add (Dst D Src S)
-   (if (or D (atom Dst))
-      (genCode (Dst D Src S) (list 'add Dst Src) ((op.n Dst D) (op.n Src S))
-         "Carry = (Result = @1 += @2) < @2;" )
-      (genCode (Src S) (list 'add 'D Src) ((op.n Src S))
-         "Carry = (A.n += @1) < @1 && ++C.n == 0;"
-         "Result = C.n;" ) ) )  # 'z' only for upper word
+   (cond
+      ((= Dst "S")
+         (genCode (Dst D Src S) (list 'add Dst Src) ((op.n Dst D) (op.n Src S))
+            "@1 += @2;" ) )
+      ((or D (atom Dst))
+         (genCode (Dst D Src S) (list 'add Dst Src) ((op.n Dst D) (op.n Src S))
+            "Carry = (Result = @1 += @2) < @2;" ) )
+      (T
+         (genCode (Src S) (list 'add 'D Src) ((op.n Src S))
+            "Carry = (A.n += @1) < @1 && ++C.n == 0;"
+            "Result = C.n;" ) ) ) )  # 'z' only for upper word
 
 (asm addc (Dst D Src S)
    (if (or D (atom Dst))
@@ -364,8 +369,11 @@
          "Result = C.n;" ) ) )  # 'z' only for upper word
 
 (asm sub (Dst D Src S)
-   (genCode (Dst D Src S) (list 'sub Dst Src) ((op.n Dst D) (op.n Src S))
-      "Carry = (Result = @1 -= @2) > MAX64 - @2;" ) )
+   (if (= Dst "S")
+      (genCode (Dst D Src S) (list 'sub Dst Src) ((op.n Dst D) (op.n Src S))
+         "@1 -= @2;" )
+      (genCode (Dst D Src S) (list 'sub Dst Src) ((op.n Dst D) (op.n Src S))
+         "Carry = (Result = @1 -= @2) > MAX64 - @2;" ) ) )
 
 (asm subc (Dst D Src S)
    (genCode (Dst D Src S) (list 'subc Dst Src) ((op.n Dst D) (op.n Src S))
