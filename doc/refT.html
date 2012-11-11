@@ -452,12 +452,12 @@ modified.
 <dt><a name="trace"><code>(trace 'sym) -> sym</code></a>
 <dt><code>(trace 'sym 'cls) -> sym</code>
 <dt><code>(trace '(sym . cls)) -> sym</code>
-<dd>Inserts a <code><a href="ref_.html#$">$</a></code> trace function call at
-the beginning of the function or method body of <code>sym</code>, so that trace
-information will be printed before and after execution. Built-in functions
-(C-function pointer) are automatically converted to Lisp expressions (see
-<code><a href="refE.html#expr">expr</a></code>). See also <code><a
-href="refD.html#*Dbg">*Dbg</a></code>, <code><a
+<dd>(Debug mode only) Inserts a <code><a href="ref_.html#$">$</a></code> trace
+function call at the beginning of the function or method body of
+<code>sym</code>, so that trace information will be printed before and after
+execution. Built-in functions (C-function pointer) are automatically converted
+to Lisp expressions (see <code><a href="refE.html#expr">expr</a></code>). See
+also <code><a href="refD.html#*Dbg">*Dbg</a></code>, <code><a
 href="refT.html#traceAll">traceAll</a></code> and <code><a
 href="refU.html#untrace">untrace</a></code>, <code><a
 href="refD.html#debug">debug</a></code> and <code><a
@@ -473,7 +473,7 @@ href="refL.html#lint">lint</a></code>.
 </code></pre>
 
 <dt><a name="traceAll"><code>(traceAll ['lst]) -> sym</code></a>
-<dd>Traces all Lisp level functions by inserting a <code><a
+<dd>(Debug mode only) Traces all Lisp level functions by inserting a <code><a
 href="ref_.html#$">$</a></code> function call at the beginning. <code>lst</code>
 may contain symbols which are to be excluded from that process. In addition, all
 symbols in the global variable <code>*NoTrace</code> are excluded. See also

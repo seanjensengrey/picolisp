@@ -349,11 +349,12 @@ href="refN.html#not/1">not/1</a></code>.
 
 <dt><a name="noLint"><code>(noLint 'sym)</code></a>
 <dt><code>(noLint 'sym|(sym . cls) 'sym2)</code>
-<dd>Excludes the check for a function definition of <code>sym</code> (in the
-first form), or for variable binding and usage of <code>sym2</code> in the
-function definition, file contents or method body of <code>sym</code> (second
-form), during calls to <code><a href="refL.html#lint">lint</a></code>. See also
-<code><a href="refL.html#lintAll">lintAll</a></code>.
+<dd>(Debug mode only) Excludes the check for a function definition of
+<code>sym</code> (in the first form), or for variable binding and usage of
+<code>sym2</code> in the function definition, file contents or method body of
+<code>sym</code> (second form), during calls to <code><a
+href="refL.html#lint">lint</a></code>. See also <code><a
+href="refL.html#lintAll">lintAll</a></code>.
 
 <pre><code>
 : (de foo ()

@@ -82,10 +82,11 @@ access to multidimensional data. Only numeric keys are supported. See also
 </code></pre>
 
 <dt><a name="u"><code>(u) -> T</code></a>
-<dd>Removes <code><a href="ref_.html#!">!</a></code> all breakpoints in all
-subexpressions of the current breakpoint. Typically used when single-stepping a
-function or method with <code><a href="refD.html#debug">debug</a></code>. See
-also <code><a href="refD.html#d">d</a></code> and <code><a
+<dd>(Debug mode only) Removes <code><a href="ref_.html#!">!</a></code> all
+breakpoints in all subexpressions of the current breakpoint. Typically used when
+single-stepping a function or method with <code><a
+href="refD.html#debug">debug</a></code>. See also <code><a
+href="refD.html#d">d</a></code> and <code><a
 href="refU.html#unbug">unbug</a></code>.
 
 <pre><code>
@@ -139,8 +140,8 @@ href="refW.html#week">week</a></code>.
 <dt><a name="unbug"><code>(unbug 'sym) -> T</code></a>
 <dt><code>(unbug 'sym 'cls) -> T</code>
 <dt><code>(unbug '(sym . cls)) -> T</code>
-<dd>Removes all <code><a href="ref_.html#!">!</a></code> breakpoints in the
-function or method body of sym, as inserted with <code><a
+<dd>(Debug mode only) Removes all <code><a href="ref_.html#!">!</a></code>
+breakpoints in the function or method body of sym, as inserted with <code><a
 href="refD.html#debug">debug</a></code> or <code><a
 href="refD.html#d">d</a></code>, or directly with <code><a
 href="refE.html#edit">edit</a></code>. See also <code><a
@@ -253,11 +254,12 @@ T
 <dt><a name="untrace"><code>(untrace 'sym) -> sym</code></a>
 <dt><code>(untrace 'sym 'cls) -> sym</code>
 <dt><code>(untrace '(sym . cls)) -> sym</code>
-<dd>Removes the <code><a href="ref_.html#$">$</a></code> trace function call at
-the beginning of the function or method body of <code>sym</code>, so that no
-more trace information will be printed before and after execution. Built-in
-functions (C-function pointer) are automatically converted to their original
-form (see <code><a href="refS.html#subr">subr</a></code>). See also <code><a
+<dd>(Debug mode only) Removes the <code><a href="ref_.html#$">$</a></code> trace
+function call at the beginning of the function or method body of
+<code>sym</code>, so that no more trace information will be printed before and
+after execution. Built-in functions (C-function pointer) are automatically
+converted to their original form (see <code><a
+href="refS.html#subr">subr</a></code>). See also <code><a
 href="refT.html#trace">trace</a></code> and <code><a
 href="refT.html#traceAll">traceAll</a></code>.
 
@@ -300,12 +302,12 @@ during database <code><a href="ref.html#trans">transactions</a></code>.
 </code></pre>
 
 <dt><a name="update"><code>(update 'obj ['var]) -> obj</code></a>
-<dd>Interactive database function for modifying external symbols. When called
-only with an <code>obj</code> argument, <code>update</code> steps through the
-value and all properties of that object (and recursively also through
-substructures) and allows to edit them with the console line editor. When the
-<code>var</code> argument is given, only that single property is handed to the
-editor. To delete a propery, <code>NIL</code> must be explicitly entered.
+<dd>(Debug mode only) Interactive database function for modifying external
+symbols. When called only with an <code>obj</code> argument, <code>update</code>
+steps through the value and all properties of that object (and recursively also
+through substructures) and allows to edit them with the console line editor.
+When the <code>var</code> argument is given, only that single property is handed
+to the editor. To delete a propery, <code>NIL</code> must be explicitly entered.
 <code>update</code> will correctly handle all <a
 href="ref.html#er">entity/relation</a> mechanisms. See also <code><a
 href="refS.html#select">select</a></code>, <code><a

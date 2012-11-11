@@ -142,15 +142,15 @@ successfully completed. See also <code><a href="refF.html#from">from</a></code>.
 </code></pre>
 
 <dt><a name="edit"><code>(edit 'sym ..) -> NIL</code></a>
-<dd>Edits the value and property list of the argument symbol(s) by calling the
-<code>vim</code> editor on a temporary file with these data. When closing the
-editor, the modified data are read and stored into the symbol(s). During the
-edit session, individual symbols are separated by the pattern
-<code>(********)</code>. These separators should not be modified. When moving
-the cursor to the beginning of a symbol (no matter if internal, transient or
-external), and hitting '<code>K</code>', that symbol is added to the currently
-edited symbols. Hitting '<code>Q</code>' will go back one step and return to the
-previously edited list of symbols.
+<dd>(Debug mode only) Edits the value and property list of the argument
+symbol(s) by calling the <code>vim</code> editor on a temporary file with these
+data. When closing the editor, the modified data are read and stored into the
+symbol(s). During the edit session, individual symbols are separated by the
+pattern <code>(********)</code>. These separators should not be modified. When
+moving the cursor to the beginning of a symbol (no matter if internal, transient
+or external), and hitting '<code>K</code>', that symbol is added to the
+currently edited symbols. Hitting '<code>Q</code>' will go back one step and
+return to the previously edited list of symbols.
 
 <p><code>edit</code> is especially useful for browsing through the database
 (with '<code>K</code>' and '<code>Q</code>'), inspecting external symbols, but
