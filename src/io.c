@@ -1,4 +1,4 @@
-/* 09nov12abu
+/* 13nov12abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -1224,8 +1224,7 @@ static any read0(bool top) {
       if (x = findHash(y, h = Transient + ihash(y)))
          return x;
       x = consStr(y);
-      if (Env.get == getStdin)
-         *h = cons(x,*h);
+      *h = cons(x,*h);
       return x;
    }
    if (Chr == '{') {
