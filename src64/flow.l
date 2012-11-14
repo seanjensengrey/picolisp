@@ -1,4 +1,4 @@
-# 27oct12abu
+# 13nov12abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -642,14 +642,15 @@
    ret
 
 # Apply METH in C to X, with object A
-(code 'evMethodACXYZ_E 0)
-   push Z  # <(L) III> 'cls'
-   push Y  # <(L) II> 'key'
-   ld Y (C)  # Parameter list in Y
-   ld Z (C CDR)  # Body in Z
-   push (EnvBind)  # Build bind frame
+(code 'evMethodACEXYZ_E 0)
    cmp S (StkLimit)  # Stack check
    jlt stkErr
+   push Z  # <(L) IV> 'cls'
+   push Y  # <(L) III> 'key'
+   ld Y (C)  # Parameter list in Y
+   ld Z (C CDR)  # Body in Z
+   push E  # Save 'exe'
+   push (EnvBind)  # Build bind frame
    link
    push (At)  # Bind At
    push At
@@ -680,8 +681,8 @@
       link
       ld (EnvBind) L  # Close bind frame
       push 0  # Init env swap
-      xchg (EnvCls) ((L) III)  # 'cls'
-      xchg (EnvKey) ((L) II)  # 'key'
+      xchg (EnvCls) ((L) IV)  # 'cls'
+      xchg (EnvKey) ((L) III)  # 'key'
       prog Z  # Run body
       add S I  # Drop env swap
       pop L  # Get link
@@ -692,6 +693,7 @@
       until eq  # No
       pop L  # Restore link
       pop (EnvBind)  # Restore bind link
+      add S I  # Drop 'exe'
       pop (EnvKey)  # 'key'
       pop (EnvCls)  # and 'cls'
       ret
@@ -715,8 +717,8 @@
       link
       ld (EnvBind) L  # Close bind frame
       push 0  # Init env swap
-      xchg (EnvCls) ((L) III)  # 'cls'
-      xchg (EnvKey) ((L) II)  # 'key'
+      xchg (EnvCls) ((L) IV)  # 'cls'
+      xchg (EnvKey) ((L) III)  # 'key'
       prog Z  # Run body
       add S I  # Drop env swap
       pop L  # Get link
@@ -727,6 +729,7 @@
       until eq  # No
       pop L  # Restore link
       pop (EnvBind)  # Restore bind link
+      add S I  # Drop 'exe'
       pop (EnvKey)  # 'key'
       pop (EnvCls)  # and 'cls'
       ret
@@ -755,8 +758,8 @@
       link  # Close varArgs frame
    end
    ld (EnvBind) Y  # Close bind frame
-   xchg (EnvCls) ((Y) III)  # 'cls'
-   xchg (EnvKey) ((Y) II)  # 'key'
+   xchg (EnvCls) ((Y) IV)  # 'cls'
+   xchg (EnvKey) ((Y) III)  # 'key'
    ld C (Y)  # End of bindings in C
    add Y I
    do
@@ -784,6 +787,7 @@
    until eq  # No
    pop L  # Restore link
    pop (EnvBind)  # Restore bind link
+   add S I  # Drop 'exe'
    pop (EnvKey)  # 'key'
    pop (EnvCls)  # and 'cls'
    ret
@@ -836,7 +840,7 @@
    push X
    push Y
    push Z
-   ld X E
+   ld Z E  # Save 'exe' in Z
    ld Y (E CDR)  # Y on args
    ld E (Y)  # Eval first
    eval
@@ -879,14 +883,16 @@
       ld A (L II)  # Object in A
       ld (A) E  #  Set value in 'obj'
    end
+   push Z  # <S> 'exe'
    ld X (Y CDR)  # Keep args in X
    ld E A  # Object
    ld Y TSym  # Search for initial method
    ld Z 0  # No classes
    call methodEY_FCYZ  # Found?
    if eq  # Yes
-      ld A (L II)  # 'obj'
-      call evMethodACXYZ_E
+      ld A (L II)  # Get 'obj'
+      ld E (S)  # and 'exe'
+      call evMethodACEXYZ_E
    else
       do
          atom X  # More args?
@@ -1115,8 +1121,9 @@
    call methodEY_FCYZ  # Found?
    jne msgErrYX  # No
    ld A (L I)  # Get 'obj'
+   ld E X  # 'exe'
    pop X  # and args
-   call evMethodACXYZ_E
+   call evMethodACEXYZ_E
    drop
    pop Z
    pop Y
@@ -1151,13 +1158,15 @@
    if nz  # Yes
       call dbFetchEX  # Fetch it
    end
-   ld X (Y CDR)  # Keep args in X
+   push (Y CDR)  # Save args
    ld Y (L II)  # Get 'msg'
    ld Z 0  # No classes
    call methodEY_FCYZ  # Found?
    jne msgErrYX  # No
    ld A (L I)  # Get 'obj'
-   call evMethodACXYZ_E
+   ld E X  # 'exe'
+   pop X  # and args
+   call evMethodACEXYZ_E
    drop
    pop Z
    pop Y
@@ -1194,13 +1203,15 @@
       jnz 90  # No
       call dbFetchEX  # Fetch it
    end
-   ld X (Y CDR)  # Keep args in X
+   push (Y CDR)  # Save args
    ld Y (L II)  # Get 'msg'
    ld Z 0  # No classes
    call methodEY_FCYZ  # Found?
    if eq  # Yes
       ld A (L I)  # Get 'obj'
-      call evMethodACXYZ_E
+      ld E X  # 'exe'
+      ld X (S)  # and args
+      call evMethodACEXYZ_E
    else
 90    ld E Nil
    end

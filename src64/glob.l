@@ -1,4 +1,4 @@
-# 02nov12abu
+# 13nov12abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Data)
@@ -189,6 +189,7 @@
    initFun NIL       "stack"     doStack
    initFun NIL       "adr"       doAdr
    initFun NIL       "env"       doEnv
+   initFun NIL       "trail"     doTrail
    initFun NIL       "up"        doUp
    initFun NIL       "quit"      doQuit
    initFun NIL       "errno"     doErrno

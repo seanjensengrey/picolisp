@@ -1,4 +1,4 @@
-# 07jun12abu
+# 13nov12abu
 # (c) Software Lab. Alexander Burger
 
 (code 'applyXYZ_E 0)
@@ -43,7 +43,7 @@
       atom C  # Pair?
       if z  # Yes
          # Apply EXPR
-         push X
+         push X  # Save 'exe'
          ld X (C)  # Parameter list in X
          push (EnvBind)  # Build bind frame
          link
@@ -80,7 +80,7 @@
             until eq  # No
             pop L  # Restore link
             pop (EnvBind)  # Restore bind link
-            pop X
+            pop X  # 'exe'
             ret
          end
          # Non-NIL parameter
@@ -133,7 +133,7 @@
             until eq  # No
             pop L  # Restore link
             pop (EnvBind)  # Restore bind link
-            pop X
+            pop X  # 'exe'
             ret
          end
          # Evaluated argument list
@@ -176,7 +176,7 @@
          until eq  # No
          pop L  # Restore link
          pop (EnvBind)  # Restore bind link
-         pop X
+         pop X  # 'exe'
          ret
       end
       ld A (C)  # Else symbolic, get value
@@ -192,7 +192,6 @@
          if nz  # Yes
             call dbFetchEX  # Fetch it
          end
-         push X
          push Z  # Save arg pointers
          push Y
          ld Y C  # 'msg'
@@ -203,6 +202,7 @@
          xchg (S I) (EnvCls)
          xchg Y (S)  # 'key'
          xchg (S) (EnvKey)  # 'key'
+         push X  # 'exe'
          ld X (C)  # Parameter list in X
          push (EnvBind)  # Build bind frame
          link
@@ -242,9 +242,9 @@
             until eq  # No
             pop L  # Restore link
             pop (EnvBind)  # Restore bind link
+            pop X  # 'exe'
             pop (EnvKey)  # 'key'
             pop (EnvCls)  # and 'cls'
-            pop X
             ret
          end
          # Non-NIL parameter
@@ -297,9 +297,9 @@
             until eq  # No
             pop L  # Restore link
             pop (EnvBind)  # Restore bind link
+            pop X  # 'exe'
             pop (EnvKey)  # 'key'
             pop (EnvCls)  # and 'cls'
-            pop X
             ret
          end
          # Evaluated argument list
@@ -342,9 +342,9 @@
          until eq  # No
          pop L  # Restore link
          pop (EnvBind)  # Restore bind link
+         pop X  # 'exe'
          pop (EnvKey)  # 'key'
          pop (EnvCls)  # and 'cls'
-         pop X
          ret
       end
       cmp A (A)  # Auto-symbol?
@@ -397,7 +397,7 @@
       atom C  # Pair?
       if z  # Yes
          # Apply EXPR
-         push X
+         push X  # Save 'exe'
          ld X (C)  # Parameter list in X
          push (EnvBind)  # Build bind frame
          link
@@ -434,7 +434,7 @@
             until eq  # No
             pop L  # Restore link
             pop (EnvBind)  # Restore bind link
-            pop X
+            pop X  # 'exe'
             ret
          end
          # Non-NIL parameter
@@ -487,7 +487,7 @@
             until eq  # No
             pop L  # Restore link
             pop (EnvBind)  # Restore bind link
-            pop X
+            pop X  # 'exe'
             ret
          end
          # Evaluated argument list
@@ -530,7 +530,7 @@
          until eq  # No
          pop L  # Restore link
          pop (EnvBind)  # Restore bind link
-         pop X
+         pop X  # 'exe'
          ret
       end
       ld A (C)  # Else symbolic, get value
@@ -546,7 +546,6 @@
          if nz  # Yes
             call dbFetchEX  # Fetch it
          end
-         push X
          push Z  # Save arg pointers
          push Y
          ld Y C  # 'msg'
@@ -557,6 +556,7 @@
          xchg (S I) (EnvCls)
          xchg Y (S)  # 'key'
          xchg (S) (EnvKey)  # 'key'
+         push X  # 'exe'
          ld X (C)  # Parameter list in X
          push (EnvBind)  # Build bind frame
          link
@@ -596,9 +596,9 @@
             until eq  # No
             pop L  # Restore link
             pop (EnvBind)  # Restore bind link
+            pop X  # 'exe'
             pop (EnvKey)  # 'key'
             pop (EnvCls)  # and 'cls'
-            pop X
             ret
          end
          # Non-NIL parameter
@@ -651,9 +651,9 @@
             until eq  # No
             pop L  # Restore link
             pop (EnvBind)  # Restore bind link
+            pop X  # 'exe'
             pop (EnvKey)  # 'key'
             pop (EnvCls)  # and 'cls'
-            pop X
             ret
          end
          # Evaluated argument list
@@ -696,9 +696,9 @@
          until eq  # No
          pop L  # Restore link
          pop (EnvBind)  # Restore bind link
+         pop X  # 'exe'
          pop (EnvKey)  # 'key'
          pop (EnvCls)  # and 'cls'
-         pop X
          ret
       end
       cmp A (A)  # Auto-symbol?

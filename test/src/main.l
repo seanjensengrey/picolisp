@@ -1,4 +1,4 @@
-# 04nov12abu
+# 14nov12abu
 # (c) Software Lab. Alexander Burger
 
 ### Evaluation ###
@@ -52,6 +52,14 @@
    (let (A 1 B 2)
       (env 'X 7 '(A B (C . 3)) 'Y 8) ) )
 
+
+### trail ###
+(when trail
+   (let
+      (F '((A B) (G (inc A) (dec B)))
+         G '((X Y) (trail)) )
+      (test '(@X (F 3 4) A 3 B 4 (G (inc A) (dec B)) X 4 Y 3)
+         (F 3 4) ) ) )
 
 ### up ###
 (test 1

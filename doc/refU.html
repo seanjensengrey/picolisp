@@ -277,9 +277,11 @@ href="refT.html#traceAll">traceAll</a></code>.
 <dt><a name="up"><code>(up [cnt] sym ['val]) -> any</code></a>
 <dd>Looks up (or modifies) the <code>cnt</code>'th previously saved value of
 <code>sym</code> in the corresponding enclosing environment. If <code>cnt</code>
-is not given, 1 is used. See also <code><a
-href="refE.html#eval">eval</a></code>, <code><a
-href="refR.html#run">run</a></code> and <code><a
+is not given, 1 is used. The 64-bit version also allows to omit the
+<code>sym</code> argument, then the corresponding expression (function or method
+call) is returned. See also <code><a href="refE.html#eval">eval</a></code>,
+<code><a href="refR.html#run">run</a></code>, <code><a
+href="refT.html#trail">trail</a></code> and <code><a
 href="refE.html#env">env</a></code>.
 
 <pre><code>
@@ -289,6 +291,14 @@ href="refE.html#env">env</a></code>.
 : (let N 1 ((quote (N) (println N (up N) (up N 7))) 2) N)
 2 1 7
 -> 7
+
+: (de foo (N)
+   (println (up))  # 64-bits only
+   (inc N) )
+-> foo
+: (foo 7)
+(foo 7)
+-> 8
 </code></pre>
 
 <dt><a name="upd"><code>(upd sym ..) -> lst</code></a>

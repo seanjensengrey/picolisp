@@ -1,4 +1,4 @@
-# 02nov12abu
+# 14nov12abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -689,11 +689,61 @@
    pop X
    ret
 
+# (trail) -> lst
+(code 'doTrail 2)
+   ld E Nil  # Result
+   push X
+   push Y
+   ld X (EnvBind)  # Bindings
+   do
+      null X  # Bindings?
+   while nz  # Yes
+      ld C (X)  # End of bindings
+      null (X -I)  # Env swap zero?
+      if z  # Yes
+         add X I  # X on bindings
+         do
+            ld Y (X)  # Next symbol
+            cmp Y At  # Lambda frame?
+            if eq  # Yes
+               call cons_A  # Cons 'exe'
+               ld (A) (C II)  # Cons 'exe'
+               ld (A CDR) E
+               ld E A
+               break T
+            end
+            call cons_A  # Cons value
+            ld (A) (Y)
+            ld (A CDR) E
+            call consA_E  # Cons symbol
+            ld (E) Y
+            ld (E CDR) A
+            ld (Y) (X I)  # Set old value
+            add X II  # Next entry
+            cmp X C  # More?
+         until eq  # No
+      end
+      ld X (C I)  # Bind link
+   loop
+   ld X E  # Restore values
+   do
+      atom X  # More?
+   while z  # Yes
+      ld Y (X)  # Next entry
+      ld X (X CDR)
+      atom Y # Symbol?
+      if nz  # Yes
+         ld (Y) (X)  # Set old value
+         ld X (X CDR)
+      end
+   loop
+   pop Y
+   pop X
+   ret
+
 # (up [cnt] sym ['val]) -> any
 (code 'doUp 2)
    push X
-   push Y
-   push Z
    ld C 1  # Count
    ld E (E CDR)  # First arg
    ld X (E)  # Get 'sym'
@@ -704,6 +754,27 @@
       ld E (E CDR)  # Skip arg
       ld X (E)  # 'sym'
    end
+   cmp X Nil  # NIL?
+   if eq  # Yes
+      ld X (EnvBind)  # Bindings
+      do
+         null X  # Bindings?
+      while nz  # Yes
+         ld A (X)  # End of bindings in A
+         dec C  # Done?
+         if z  # Yes
+            ld E (A II)  # Return 'exe'
+            pop X
+            ret
+         end
+         ld X (A I)  # Bind link
+      loop
+      ld E Nil  # Return NIL
+      pop X
+      ret
+   end
+   push Y
+   push Z
    ld E (E CDR)  # Last arg
    ld Y (EnvBind)  # Bindings
    ld Z X  # Value pointer
@@ -1109,6 +1180,7 @@
    ld X (E CDR)  # Get CDR
    ld Y (C)  # Parameter list in Y
    ld Z (C CDR)  # Body in Z
+   push E  # Save 'exe'
    push (EnvBind)  # Build bind frame
    link
    push (At)  # Bind At
@@ -1148,6 +1220,7 @@
       until eq  # No
       pop L  # Restore link
       pop (EnvBind)  # Restore bind link
+      add S I  # Drop 'exe'
       pop Z
       pop Y
       pop X
@@ -1182,6 +1255,7 @@
       until eq  # No
       pop L  # Restore link
       pop (EnvBind)  # Restore bind link
+      add S I  # Drop 'exe'
       pop Z
       pop Y
       pop X
@@ -1238,6 +1312,7 @@
    until eq  # No
    pop L  # Restore link
    pop (EnvBind)  # Restore bind link
+   add S I  # Drop 'exe'
    pop Z
    pop Y
    pop X
