@@ -1,4 +1,4 @@
-# 12oct12abu
+# 15nov12abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -8,7 +8,7 @@
 env (i x y)
    y = Nil;
    if (!((ex = ex.Cdr) instanceof Cell)) {
-      for (Bind p = Env.Bind;  p != null;  p = p.Link) {
+      for (Bind p = Break? Env.Bind.Link : Env.Bind;  p != null;  p = p.Link) {
          if (p.Eswp == 0) {
             for (i = p.Cnt; --i > 0; --i) {
                for (x = y; ; x = x.Cdr) {
@@ -50,7 +50,7 @@ up (i j k x)
    }
    j = 0;
    Bind q = null;
-   for (Bind p = Env.Bind;  p != null;  p = p.Link) {
+   for (Bind p = Break? Env.Bind.Link : Env.Bind;  p != null;  p = p.Link) {
       for (i = 0;  i < p.Cnt; i += 2) {
          if (p.Data[i+1] == x) {
             if (--k == 0) {

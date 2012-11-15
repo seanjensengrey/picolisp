@@ -1,4 +1,4 @@
-# 14nov12abu
+# 15nov12abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -607,6 +607,8 @@
    if nz  # No
       push Y
       ld Y (EnvBind)  # Bindings
+      null (Break)  # In breakpoint?
+      ldnz Y ((Y))  # Yes: Skip frame
       do
          null Y  # Bindings?
       while nz  # Yes
@@ -695,6 +697,8 @@
    push X
    push Y
    ld X (EnvBind)  # Bindings
+   null (Break)  # In breakpoint?
+   ldnz X ((X))  # Yes: Skip frame
    do
       null X  # Bindings?
    while nz  # Yes
@@ -704,13 +708,17 @@
          add X I  # X on bindings
          do
             ld Y (X)  # Next symbol
+            add X II  # Next entry
             cmp Y At  # Lambda frame?
             if eq  # Yes
-               call cons_A  # Cons 'exe'
-               ld (A) (C II)  # Cons 'exe'
-               ld (A CDR) E
-               ld E A
-               break T
+               cmp X C  # Last entry?
+               if eq  # Yes
+                  call cons_A  # Cons 'exe'
+                  ld (A) (C II)  # Cons 'exe'
+                  ld (A CDR) E
+                  ld E A
+                  break T
+               end
             end
             call cons_A  # Cons value
             ld (A) (Y)
@@ -718,8 +726,7 @@
             call consA_E  # Cons symbol
             ld (E) Y
             ld (E CDR) A
-            ld (Y) (X I)  # Set old value
-            add X II  # Next entry
+            ld (Y) (X -I)  # Set old value
             cmp X C  # More?
          until eq  # No
       end
@@ -757,15 +764,20 @@
    cmp X Nil  # NIL?
    if eq  # Yes
       ld X (EnvBind)  # Bindings
+      null (Break)  # In breakpoint?
+      ldnz X ((X))  # Yes: Skip frame
       do
          null X  # Bindings?
       while nz  # Yes
          ld A (X)  # End of bindings in A
-         dec C  # Done?
-         if z  # Yes
-            ld E (A II)  # Return 'exe'
-            pop X
-            ret
+         cmp (A -II) At  # Lambda frame?
+         if eq  # Yes
+            dec C  # Done?
+            if z  # Yes
+               ld E (A II)  # Return 'exe'
+               pop X
+               ret
+            end
          end
          ld X (A I)  # Bind link
       loop
@@ -777,6 +789,8 @@
    push Z
    ld E (E CDR)  # Last arg
    ld Y (EnvBind)  # Bindings
+   null (Break)  # In breakpoint?
+   ldnz Y ((Y))  # Yes: Skip frame
    ld Z X  # Value pointer
    do
       null Y  # Bindings?

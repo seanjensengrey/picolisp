@@ -1,4 +1,4 @@
-/* 13oct12abu
+/* 15nov12abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -277,7 +277,7 @@ any doEnv(any x) {
 
    Push(c1, Nil);
    if (!isCell(x = cdr(x))) {
-      for (p = Env.bind;  p;  p = p->link) {
+      for (p = Break? Env.bind->link : Env.bind;  p;  p = p->link) {
          if (p->i == 0) {
             for (i = p->cnt;  --i >= 0;) {
                for (x = data(c1); ; x = cdr(x)) {
@@ -326,7 +326,7 @@ any doUp(any x) {
       cnt = 1;
    else
       cnt = (int)unBox(y),  x = cdr(x),  y = car(x);
-   for (p = Env.bind, val = &val(y);  p;  p = p->link) {
+   for (p = Break? Env.bind->link : Env.bind, val = &val(y);  p;  p = p->link) {
       if (p->i <= 0) {
          for (i = 0;  i < p->cnt;  ++i)
             if (p->bnd[i].sym == y) {
