@@ -486,11 +486,13 @@ href="refD.html#*Dbg">*Dbg</a></code>.
 -> balance
 </code></pre>
 
-<dt><a name="trail"><code>(trail) -> lst</code></a>
+<dt><a name="trail"><code>(trail ['flg]) -> lst</code></a>
 <dd>(64-bit version only) Returns a stack backtrace for the current point of
 program execution, The list elements are either expressions (denoting function
-or method calls), or symbols followed by their corresponding values. See also
-<code><a href="refU.html#up">up</a></code> and <code><a
+or method calls), or symbols followed by their corresponding values. If
+<code>flg</code> is <code>NIL</code>, the symbol and their values are omitted,
+and only the expressions are returned. See also <code><a
+href="refU.html#up">up</a></code> and <code><a
 href="refE.html#env">env</a></code>.
 
 <pre><code>
@@ -498,7 +500,7 @@ href="refE.html#env">env</a></code>.
    (g (inc A) (dec B)) )
 -> f
 : (de g (X Y)
-   (trail) )
+   (trail T) )
 -> g
 : (f 3 4)
 -> ((f 3 4) A 3 B 4 (g (inc A) (dec B)) X 4 Y 3)

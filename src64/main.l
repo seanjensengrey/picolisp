@@ -1,4 +1,4 @@
-# 15nov12abu
+# 16nov12abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -691,14 +691,18 @@
    pop X
    ret
 
-# (trail) -> lst
+# (trail ['flg]) -> lst
 (code 'doTrail 2)
-   ld E Nil  # Result
    push X
    push Y
+   push Z
+   ld E ((E CDR))  # Evaluate arg
+   eval
+   ld Z E  # Keep 'flg' in Z
    ld X (EnvBind)  # Bindings
    null (Break)  # In breakpoint?
    ldnz X ((X))  # Yes: Skip frame
+   ld E Nil  # Result
    do
       null X  # Bindings?
    while nz  # Yes
@@ -720,13 +724,16 @@
                   break T
                end
             end
-            call cons_A  # Cons value
-            ld (A) (Y)
-            ld (A CDR) E
-            call consA_E  # Cons symbol
-            ld (E) Y
-            ld (E CDR) A
-            ld (Y) (X -I)  # Set old value
+            cmp Z Nil  # 'flg'?
+            if ne  # Yes
+               call cons_A  # Cons value
+               ld (A) (Y)
+               ld (A CDR) E
+               call consA_E  # Cons symbol
+               ld (E) Y
+               ld (E CDR) A
+               ld (Y) (X -I)  # Set old value
+            end
             cmp X C  # More?
          until eq  # No
       end
@@ -744,6 +751,7 @@
          ld X (X CDR)
       end
    loop
+   pop Z
    pop Y
    pop X
    ret
