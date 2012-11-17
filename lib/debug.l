@@ -164,26 +164,28 @@
                         (when (: *Dbg)
                            (cons (path (cdar @)) (caar @) This) ) )
                      (all) ) )
-               (let (Tmp (tmp (basename (car Lst)))  Line 1  Ofs 0)
-                  (out Tmp
-                     (in (car Lst)
-                        (for X (sort (cdr Lst))
-                           (do (- (car X) Line)
-                              (inc 'Ofs (inc (size (line T)))) )
-                           (prinl
-                              (char 127)
-                              (cdr X)
-                              (char 1)
-                              (setq Line (car X))
-                              ","
-                              Ofs ) ) ) )
-                  (prinl "^L")
+               (let Tags
+                  (in (car Lst)
+                     (let (Line 1  Ofs 0)
+                        (mapcar
+                           '((X)
+                              (do (- (car X) Line)
+                                 (inc 'Ofs (inc (size (line T)))) )
+                              (pack
+                                 `(pack "^J" (char 127))
+                                 (cdr X)
+                                 (char 1)
+                                 (setq Line (car X))
+                                 ","
+                                 Ofs ) )
+                           (sort (cdr Lst)) ) ) )
                   (prinl
+                     "^L^J"
                      (unless (= `(char "/") (char (car Lst))) D)
                      (car Lst)
                      ","
-                     (car (info Tmp)) )
-                  (in Tmp (echo)) ) ) ) )
+                     (sum size Tags)
+                     Tags ) ) ) ) )
       (call 'vim
          (pack "+set tags=" (tmp "tags") ",./tags")
          "+set isk=33-34,36-38,42-90,92,94-95,97-125"

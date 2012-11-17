@@ -50,30 +50,30 @@
    (when "Map"
       (out "tags"
          (for Lst
-            (group  # ((path . file) (line . sym) (line . sym) ..)
+            (group  # (file (line . sym) (line . sym) ..)
                (mapcar
                   '((This)
                      (cons
-                        (cons (: src 1) (: src 2))
+                        (pack (: src 1) (: src 2))
                         (: src -2)
                         This ) )
                   (idx '*Tags) ) )
-            (let (Tmp (tmp (cdar Lst))  Src (pack (car Lst))  Line 1  Ofs 0)
-               (out Tmp
-                  (in Src
-                     (for X (sort (cdr Lst))
-                        (do (- (car X) Line)
-                           (inc 'Ofs (inc (size (line T)))) )
-                        (prinl
-                           (char 127)
-                           (cdr X)
-                           (char 1)
-                           (setq Line (car X))
-                           ","
-                           Ofs ) ) ) )
-               (prinl "^L")
-               (prinl Src "," (car (info Tmp)))
-               (in Tmp (echo)) ) ) )
+            (let Tags
+               (in (car Lst)
+                  (let (Line 1  Ofs 0)
+                     (mapcar
+                        '((X)
+                           (do (- (car X) Line)
+                              (inc 'Ofs (inc (size (line T)))) )
+                           (pack
+                              `(pack "^J" (char 127))
+                              (cdr X)
+                              (char 1)
+                              (setq Line (car X))
+                              ","
+                              Ofs ) )
+                        (sort (cdr Lst)) ) ) )
+               (prinl "^L^J" (car Lst) "," (sum size Tags) Tags) ) ) )
       (out "Map"
          (for Sym (idx '*Map)
             (and
