@@ -1,4 +1,4 @@
-# 11nov12abu
+# 17nov12abu
 # (c) Software Lab. Alexander Burger
 
 # Prompt
@@ -157,15 +157,33 @@
          "*Vi" )
       (out (tmp "tags")
          (let D (pack (pwd) "/")
-            (for This (sort (all))
-               (let? P (path (: *Dbg 1 -1))
+            (for Lst
+               (group  # (file (line . sym) (line . sym) ..)
+                  (extract
+                     '((This)
+                        (when (: *Dbg)
+                           (cons (path (cdar @)) (caar @) This) ) )
+                     (all) ) )
+               (let (Tmp (tmp (basename (car Lst)))  Line 1  Ofs 0)
+                  (out Tmp
+                     (in (car Lst)
+                        (for X (sort (cdr Lst))
+                           (do (- (car X) Line)
+                              (inc 'Ofs (inc (size (line T)))) )
+                           (prinl
+                              (char 127)
+                              (cdr X)
+                              (char 1)
+                              (setq Line (car X))
+                              ","
+                              Ofs ) ) ) )
+                  (prinl "^L")
                   (prinl
-                     This
-                     "^I"
-                     (unless (= `(char "/") (char P)) D)
-                     P
-                     "^I"
-                     (: *Dbg 1 1) ) ) ) ) )
+                     (unless (= `(char "/") (char (car Lst))) D)
+                     (car Lst)
+                     ","
+                     (car (info Tmp)) )
+                  (in Tmp (echo)) ) ) ) )
       (call 'vim
          (pack "+set tags=" (tmp "tags") ",./tags")
          "+set isk=33-34,36-38,42-90,92,94-95,97-125"

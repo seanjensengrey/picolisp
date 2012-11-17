@@ -1,1229 +1,1259 @@
--I	defs.l	24
--II	defs.l	25
--III	defs.l	26
--IV	defs.l	27
--V	defs.l	28
--VI	defs.l	29
--VII	defs.l	30
--VIII	defs.l	31
-ADDRINFO	sys/x86-64.linux.defs.l	143
-AF_INET6	sys/x86-64.linux.defs.l	128
-AF_UNSPEC	sys/x86-64.linux.defs.l	127
-AI_ADDR	sys/x86-64.linux.defs.l	147
-AI_ADDRLEN	sys/x86-64.linux.defs.l	146
-AI_FAMILY	sys/x86-64.linux.defs.l	144
-AI_NEXT	sys/x86-64.linux.defs.l	148
-AI_SOCKTYPE	sys/x86-64.linux.defs.l	145
-AV	glob.l	7
-AV0	glob.l	8
-Addr	glob.l	620
-Adr	glob.l	179
-Alarm	glob.l	77
-AllocErr	glob.l	1163
-ArgErr	glob.l	1192
-Arrow	glob.l	1179
-At	glob.l	159
-At2	glob.l	160
-At3	glob.l	161
-AtomErr	glob.l	1198
-Avail	glob.l	11
-BEG	defs.l	44
-BIG	defs.l	35
-BLK	defs.l	53
-BLKSIZE	defs.l	54
-BLKTAG	defs.l	55
-BSym	glob.l	155
-BUFSIZ	sys/x86-64.linux.defs.l	26
-BadChain	glob.l	1184
-BadCount	glob.l	1185
-BadDot	glob.l	1218
-BadFdErr	glob.l	1213
-BadInput	glob.l	1217
-BlkIndex	glob.l	68
-BlkLink	glob.l	69
-Break	glob.l	50
-BrkErr	glob.l	1207
-Buf	glob.l	12
-BufEnd	glob.l	54
-Bye	glob.l	181
-CDR	defs.l	37
-CELLS	defs.l	6
-CHAR_DIGIT	defs.l	64
-CHAR_LETTER	defs.l	63
-CHAR_LOWERCASE	defs.l	62
-CHAR_UPPERCASE	defs.l	61
-CNT	defs.l	34
-CPU	glob.l	143
-CSym	glob.l	154
-C_CC	sys/x86-64.linux.defs.l	73
-C_IFLAG	sys/x86-64.linux.defs.l	71
-C_LFLAG	sys/x86-64.linux.defs.l	72
-CaseBlocks	glob.l	627
-CaseData	glob.l	757
-CaseLower	glob.l	1118
-CaseUpper	glob.l	1094
-Catch	glob.l	20
-CbErr	glob.l	1166
-Child	glob.l	44
-Children	glob.l	43
-Chr	glob.l	588
-CircFree	glob.l	1183
-Class	glob.l	168
-CloseErr	glob.l	1209
-CntErr	glob.l	1194
-Code	main.l	4
-DB	glob.l	145
-DB1	defs.l	11
-DBs	glob.l	63
-DIG	defs.l	36
-DOT	defs.l	45
-D_NAME	sys/x86-64.linux.defs.l	122
-Dashes	glob.l	1188
-Data	glob.l	4
-Db1	glob.l	567
-DbBlock	glob.l	66
-DbFile	glob.l	64
-DbFiles	glob.l	65
-DbJnl	glob.l	70
-DbLog	glob.l	71
-DbRdErr	glob.l	1232
-DbSizErr	glob.l	1234
-DbSyncErr	glob.l	1226
-DbWrErr	glob.l	1233
-DbfErr	glob.l	1229
-Dbg	glob.l	164
-Delim	glob.l	1177
-DelimEnd	glob.l	1178
-DivErr	glob.l	1201
-DlErr	glob.l	1244
-EACCES	sys/x86-64.linux.defs.l	9
-EAGAIN	sys/x86-64.linux.defs.l	8
-EBADF	sys/x86-64.linux.defs.l	7
-ECONNRESET	sys/x86-64.linux.defs.l	11
-EINTR	sys/x86-64.linux.defs.l	6
-END	defs.l	46
-ENOENT	sys/x86-64.linux.defs.l	5
-EPIPE	sys/x86-64.linux.defs.l	10
-EXTERN	defs.l	50
-Env	glob.l	593
-EnvApply	glob.l	604
-EnvArgs	glob.l	600
-EnvBind	glob.l	594
-EnvCls	glob.l	602
-EnvCo	glob.l	587
-EnvCo7	glob.l	611
-EnvCtlFrames	glob.l	598
-EnvEnd	glob.l	615
-EnvErrFrames	glob.l	597
-EnvInFrames	glob.l	595
-EnvIntern	glob.l	599
-EnvKey	glob.l	603
-EnvMake	glob.l	605
-EnvMid	glob.l	610
-EnvNext	glob.l	601
-EnvOutFrames	glob.l	596
-EnvParseC	glob.l	608
-EnvParseEOF	glob.l	609
-EnvParseX	glob.l	607
-EnvProtect	glob.l	613
-EnvTask	glob.l	612
-EnvTrace	glob.l	614
-EnvYoke	glob.l	606
-EofErr	glob.l	1215
-Err	glob.l	174
-ErrTok	glob.l	1187
-ExecErr	glob.l	1162
-Ext	glob.l	166
-ExtErr	glob.l	1196
-ExtN	glob.l	45
-Extern	glob.l	569
-Extn	glob.l	46
-ExtraErr	glob.l	1171
-FD_CLOEXEC	sys/x86-64.linux.defs.l	23
-FD_SET	sys/x86-64.linux.defs.l	111
-FLOCK	sys/x86-64.linux.defs.l	36
-F_GETFD	sys/x86-64.linux.defs.l	21
-F_GETFL	sys/x86-64.linux.defs.l	47
-F_GETLK	sys/x86-64.linux.defs.l	49
-F_RDLCK	sys/x86-64.linux.defs.l	44
-F_SETFD	sys/x86-64.linux.defs.l	22
-F_SETFL	sys/x86-64.linux.defs.l	48
-F_SETLK	sys/x86-64.linux.defs.l	50
-F_SETLKW	sys/x86-64.linux.defs.l	51
-F_SETOWN	sys/x86-64.linux.defs.l	52
-F_UNLCK	sys/x86-64.linux.defs.l	46
-F_WRLCK	sys/x86-64.linux.defs.l	45
-Flock	glob.l	618
-Fork	glob.l	180
-ForkErr	glob.l	1211
-GcCount	glob.l	51
-GcMark	glob.l	74
-GcMarkEnd	glob.l	129
-GcSymEnd	glob.l	573
-GetBinZ_FB	glob.l	30
-Get_A	glob.l	590
-Giveup	glob.l	1161
-HEAP	defs.l	5
-HashBlank	glob.l	1168
-Heaps	glob.l	10
-Hear	glob.l	39
-Home	glob.l	9
-Hup	glob.l	170
-I	defs.l	14
-II	defs.l	15
-III	defs.l	16
-INET6_ADDRSTRLEN	sys/x86-64.linux.defs.l	133
-INTERN	defs.l	48
-IPPROTO_IPV6	sys/x86-64.linux.defs.l	131
-IPV6_V6ONLY	sys/x86-64.linux.defs.l	132
-ISIG	sys/x86-64.linux.defs.l	74
-ISym	glob.l	151
-IV	defs.l	17
-IX	defs.l	22
-IdErr	glob.l	1231
-IgnLog	glob.l	1182
-InBye	glob.l	1148
-InFDs	glob.l	25
-InFile	glob.l	591
-InFiles	glob.l	26
-IpBindErr	glob.l	1240
-IpGetsocknameErr	glob.l	1237
-IpListenErr	glob.l	1241
-IpReuseaddrErr	glob.l	1239
-IpSocketErr	glob.l	1236
-IpV6onlyErr	glob.l	1238
-Jam	glob.l	1147
-JnlErr	glob.l	1230
-L_LEN	sys/x86-64.linux.defs.l	40
-L_PID	sys/x86-64.linux.defs.l	41
-L_START	sys/x86-64.linux.defs.l	39
-L_TYPE	sys/x86-64.linux.defs.l	37
-L_WHENCE	sys/x86-64.linux.defs.l	38
-Led	glob.l	177
-LineC	glob.l	49
-LineX	glob.l	79
-Link	glob.l	19
-Lisp	glob.l	80
-LispEnd	glob.l	128
-LockErr	glob.l	1228
-LstErr	glob.l	1199
-MAXPATHLEN	sys/x86-64.linux.defs.l	29
-MakeErr	glob.l	1203
-MaxBlkSize	glob.l	67
-Meth	glob.l	146
-Mic	glob.l	37
-Month	glob.l	1150
-Msg	glob.l	175
-MsgErr	glob.l	1206
-NIX	defs.l	43
-NI_MAXHOST	sys/x86-64.linux.defs.l	135
-NI_NAMEREQD	sys/x86-64.linux.defs.l	136
-NSym	glob.l	152
-NUMBER	defs.l	47
-Nil	glob.l	134
-NoFdErr	glob.l	1214
-NoMemory	main.l	211
-NumErr	glob.l	1193
-ONE	defs.l	9
-OS	glob.l	144
-O_APPEND	sys/x86-64.linux.defs.l	20
-O_ASYNC	sys/x86-64.linux.defs.l	54
-O_CREAT	sys/x86-64.linux.defs.l	17
-O_EXCL	sys/x86-64.linux.defs.l	18
-O_NONBLOCK	sys/x86-64.linux.defs.l	53
-O_RDONLY	sys/x86-64.linux.defs.l	14
-O_RDWR	sys/x86-64.linux.defs.l	16
-O_TRUNC	sys/x86-64.linux.defs.l	19
-O_WRONLY	sys/x86-64.linux.defs.l	15
-OpenErr	glob.l	1208
-OrgTermio	glob.l	617
-OutFDs	glob.l	27
-OutFile	glob.l	592
-OutFiles	glob.l	28
-PIPE_BUF	sys/x86-64.linux.defs.l	27
-PPid	glob.l	157
-PRepl	glob.l	1146
-PairErr	glob.l	1197
-Penv	glob.l	56
-Pico	glob.l	137
-Pid	glob.l	158
-PidSigMsg	glob.l	1164
-PipeErr	glob.l	1210
-Pnl	glob.l	57
-Prompt	glob.l	163
-ProtErr	glob.l	1189
-PutB	glob.l	589
-PutBinBZ	glob.l	29
-QuitMsg	glob.l	1165
-Quote	glob.l	147
-RTLD_GLOBAL	sys/x86-64.linux.defs.l	33
-RTLD_LAZY	sys/x86-64.linux.defs.l	32
-Redefined	glob.l	1169
-ReentErr	glob.l	1204
-RenErr	glob.l	1202
-Repl	glob.l	1145
-Ret	main.l	8
-RetE_E	main.l	28
-RetNil	main.l	22
-RetT	main.l	25
-Retc	main.l	10
-Retnc	main.l	13
-Retnz	main.l	19
-Retz	main.l	16
-RolbLog	glob.l	1181
-Run	glob.l	169
-SA_FLAGS	sys/x86-64.linux.defs.l	84
-SA_HANDLER	sys/x86-64.linux.defs.l	82
-SA_MASK	sys/x86-64.linux.defs.l	83
-SEEK_CUR	sys/x86-64.linux.defs.l	43
-SEEK_SET	sys/x86-64.linux.defs.l	42
-SIGACTION	sys/x86-64.linux.defs.l	80
-SIGALRM	sys/x86-64.linux.defs.l	95
-SIGCHLD	sys/x86-64.linux.defs.l	97
-SIGCONT	sys/x86-64.linux.defs.l	98
-SIGHUP	sys/x86-64.linux.defs.l	90
-SIGINT	sys/x86-64.linux.defs.l	91
-SIGIO	sys/x86-64.linux.defs.l	103
-SIGN	defs.l	38
-SIGNALS	sys/x86-64.linux.defs.l	104
-SIGPIPE	sys/x86-64.linux.defs.l	94
-SIGSET_T	sys/x86-64.linux.defs.l	81
-SIGSTOP	sys/x86-64.linux.defs.l	99
-SIGTERM	sys/x86-64.linux.defs.l	96
-SIGTSTP	sys/x86-64.linux.defs.l	100
-SIGTTIN	sys/x86-64.linux.defs.l	101
-SIGTTOU	sys/x86-64.linux.defs.l	102
-SIGUSR1	sys/x86-64.linux.defs.l	92
-SIGUSR2	sys/x86-64.linux.defs.l	93
-SIG_DFL	sys/x86-64.linux.defs.l	86
-SIG_IGN	sys/x86-64.linux.defs.l	87
-SIG_UNBLOCK	sys/x86-64.linux.defs.l	88
-SIN6_ADDR	sys/x86-64.linux.defs.l	141
-SIN6_FAMILY	sys/x86-64.linux.defs.l	139
-SIN6_PORT	sys/x86-64.linux.defs.l	140
-SOCKADDR_IN6	sys/x86-64.linux.defs.l	138
-SOCK_DGRAM	sys/x86-64.linux.defs.l	126
-SOCK_STREAM	sys/x86-64.linux.defs.l	125
-SOL_SOCKET	sys/x86-64.linux.defs.l	129
-SO_REUSEADDR	sys/x86-64.linux.defs.l	130
-SSym	glob.l	153
-STACK	defs.l	7
-STAT	sys/x86-64.linux.defs.l	57
-ST_MODE	sys/x86-64.linux.defs.l	58
-ST_MTIME	sys/x86-64.linux.defs.l	60
-ST_SIZE	sys/x86-64.linux.defs.l	59
-SYM	defs.l	39
-S_IFDIR	sys/x86-64.linux.defs.l	62
-S_IFMT	sys/x86-64.linux.defs.l	61
-Scl	glob.l	167
-Seed	glob.l	31
-SelectErr	glob.l	1219
-Sep0	glob.l	52
-Sep3	glob.l	53
-SetFD	glob.l	1176
-Sig1	glob.l	171
-Sig2	glob.l	172
-Sigio	glob.l	78
-Signal	glob.l	60
-Slot	glob.l	35
-Solo	glob.l	156
-SpMiPipe	glob.l	38
-Spkr	glob.l	36
-Stack0	glob.l	15
-Stacks	glob.l	16
-StkErr	glob.l	1191
-StkLimit	glob.l	18
-StkSize	glob.l	17
-StrC	glob.l	48
-StrX	glob.l	47
-SuparErr	glob.l	1216
-SuperErr	glob.l	1170
-SymErr	glob.l	1195
-SymNsErr	glob.l	1190
-SymTab	glob.l	133
-SymTabEnd	glob.l	559
-Sync	glob.l	1149
-TAIL	defs.l	40
-TBuf	glob.l	622
-TCSADRAIN	sys/x86-64.linux.defs.l	77
-TERMIOS	sys/x86-64.linux.defs.l	70
-TMS	sys/x86-64.linux.defs.l	65
-TMS_STIME	sys/x86-64.linux.defs.l	67
-TMS_UTIME	sys/x86-64.linux.defs.l	66
-TM_HOUR	sys/x86-64.linux.defs.l	116
-TM_MDAY	sys/x86-64.linux.defs.l	117
-TM_MIN	sys/x86-64.linux.defs.l	115
-TM_MON	sys/x86-64.linux.defs.l	118
-TM_SEC	sys/x86-64.linux.defs.l	114
-TM_YEAR	sys/x86-64.linux.defs.l	119
-TOP	defs.l	10
-TRANSIENT	defs.l	49
-TSym	glob.l	148
-Talking	glob.l	42
-Tell	glob.l	40
-TellBuf	glob.l	41
-TellErr	glob.l	1235
-Termio	glob.l	21
-TgCPU	glob.l	562
-TgOS	glob.l	563
-This	glob.l	162
-ThrowErr	glob.l	1172
-TickS	glob.l	34
-TickU	glob.l	33
-Time	glob.l	22
-Tio	glob.l	1143
-Tms	glob.l	619
-TrSyncErr	glob.l	1227
-Transient	glob.l	75
-Trc1	glob.l	1173
-Trc2	glob.l	1174
-TruncErr	glob.l	1225
-Tsm	glob.l	178
-TtyPid	glob.l	24
-UDPMAX	defs.l	58
-USec	glob.l	23
-UdpOvflErr	glob.l	1242
-UndefErr	glob.l	1243
-Uni	glob.l	176
-Up	glob.l	173
-V	defs.l	18
-VI	defs.l	19
-VII	defs.l	20
-VIII	defs.l	21
-VMIN	sys/x86-64.linux.defs.l	75
-VTIME	sys/x86-64.linux.defs.l	76
-VarErr	glob.l	1200
-Version	glob.l	576
-WNOHANG	sys/x86-64.linux.defs.l	107
-WUNTRACED	sys/x86-64.linux.defs.l	108
-WaitPidErr	glob.l	1212
-WrBytesErr	glob.l	1220
-WrChildErr	glob.l	1221
-WrJnlErr	glob.l	1223
-WrLogErr	glob.l	1224
-WrSyncErr	glob.l	1222
-YieldErr	glob.l	1205
-ZERO	defs.l	8
-Zap	glob.l	165
-_a_	glob.l	1155
-_ap_	glob.l	1156
-_dot_	glob.l	1157
-_r_	glob.l	1153
-_w_	glob.l	1154
-addAE_A	big.l	1517
-adduAE_A	big.l	540
-allocAE_A	main.l	207
-allocC_A	main.l	202
-anduAE_A	big.l	325
-anonymousX_FE	io.l	2086
-applyVarXYZ_E	apply.l	358
-applyXYZ_E	apply.l	4
-argErrAX	err.l	412
-argErrEX	err.l	414
-atomErrAX	err.l	450
-atomErrEX	err.l	452
-badDotErrE	err.l	559
-badFdErrEX	err.l	531
-badInputErrB	err.l	551
-balanceCEY	sym.l	910
-balanceXY	sym.l	892
-begString	main.l	2404
-binPrintEZ	io.l	731
-binReadZ_FE	io.l	520
-blkPeekCEZ	db.l	392
-blkPokeCEZ	db.l	403
-boxE_E	main.l	2372
-boxNumA_A	gc.l	872
-boxNumE_E	gc.l	886
-boxNum_A	gc.l	824
-boxNum_C	gc.l	836
-boxNum_E	gc.l	848
-boxNum_X	gc.l	860
-brkErrX	err.l	500
-brkLoadE_E	flow.l	2873
-bufAoAC_C	db.l	956
-bufStringE_SZ	io.l	1143
-byeE	flow.l	3456
-byteNumBCX_CX	io.l	464
-byteSymBCX_CX	io.l	1293
-caseDataA_AC	sym.l	3366
-caught	flow.l	2483
-cbl	main.l	2006
-cbl1	main.l	2039
-cbl10	main.l	2075
-cbl11	main.l	2079
-cbl12	main.l	2083
-cbl13	main.l	2087
-cbl14	main.l	2091
-cbl15	main.l	2095
-cbl16	main.l	2099
-cbl17	main.l	2103
-cbl18	main.l	2107
-cbl19	main.l	2111
-cbl2	main.l	2043
-cbl20	main.l	2115
-cbl21	main.l	2119
-cbl22	main.l	2123
-cbl23	main.l	2127
-cbl24	main.l	2131
-cbl3	main.l	2047
-cbl4	main.l	2051
-cbl5	main.l	2055
-cbl6	main.l	2059
-cbl7	main.l	2063
-cbl8	main.l	2067
-cbl9	main.l	2071
-charSymACX_CX	io.l	1258
-checkVarAX	err.l	371
-checkVarEX	err.l	387
-checkVarYX	err.l	379
-chopExtNmX_E	db.l	133
-circE_YF	main.l	833
-cleanUpY	db.l	570
-closeAX	io.l	5
-closeErrEX	err.l	512
-closeErrX	err.l	510
-closeInFileA	io.l	142
-closeOnExecAX	io.l	43
-closeOutFileA	io.l	164
-clsChildY	io.l	342
-cmpDfltA_F	subr.l	4120
-cmpLongAX_F	sym.l	5
-cmpNumAE_F	big.l	1567
-cmpUserAX_F	subr.l	4125
-cmpuAE_F	big.l	1587
-cntErrAX	err.l	424
-cntErrCX	err.l	426
-cntErrEX	err.l	428
-compareAE_F	main.l	998
-consAC_E	gc.l	786
-consA_A	gc.l	530
-consA_C	gc.l	594
-consA_E	gc.l	642
-consA_X	gc.l	706
-consA_Y	gc.l	754
-consA_Z	gc.l	770
-consC_A	gc.l	546
-consC_C	gc.l	610
-consC_E	gc.l	658
-consE_A	gc.l	562
-consE_C	gc.l	626
-consE_E	gc.l	674
-consE_X	gc.l	722
-consNumAC_A	gc.l	900
-consNumAE_A	gc.l	918
-consNumCA_C	gc.l	936
-consNumCE_A	gc.l	954
-consNumCE_C	gc.l	971
-consNumCE_E	gc.l	989
-consNumEA_A	gc.l	1006
-consNumEA_E	gc.l	1023
-consNumEC_E	gc.l	1041
-consSymX_E	gc.l	804
-consTreeXE_E	sym.l	832
-consX_A	gc.l	578
-consX_E	gc.l	690
-consY_X	gc.l	738
-cons_A	gc.l	458
-cons_C	gc.l	470
-cons_E	gc.l	482
-cons_X	gc.l	494
-cons_Y	gc.l	506
-cons_Z	gc.l	518
-ctOpenEXY	io.l	1672
-currFdX_C	io.l	1335
-currFd_C	io.l	1339
-cutLocalCX	flow.l	2841
-dateXYZ_E	main.l	2519
-dbAEX	db.l	1331
-dbFetchEX	db.l	1319
-dbFileBlkY_AC	db.l	246
-dbRdErr	err.l	634
-dbSizErr	err.l	646
-dbSizeX_A	db.l	1224
-dbSyncErrX	err.l	603
-dbTouchEX	db.l	1445
-dbWrErr	err.l	640
-dbZapE	db.l	1477
-dbfBuf_AF	db.l	51
-dbfErrX	err.l	619
-dbgS	err.l	5
-decE_A	big.l	1504
-divDone	big.l	1255
-divErrX	err.l	468
-divUnder	big.l	1261
-divuAE_A	big.l	1045
-dlErrX	err.l	703
-doAbs	big.l	2731
-doAccept	net.l	145
-doAdd	big.l	2171
-doAdr	main.l	587
-doAlarm	main.l	473
-doAll	sym.l	788
-doAnd	flow.l	1624
-doAny	io.l	3974
-doAppend	subr.l	1338
-doApply	apply.l	713
-doArg	main.l	2466
-doArgs	main.l	2442
-doArgv	main.l	3089
-doArrow	subr.l	3916
-doAs	flow.l	139
-doAsoq	subr.l	3008
-doAssoc	subr.l	2973
-doAt	flow.l	2109
-doAtom	subr.l	2385
-doBind	flow.l	1362
-doBitAnd	big.l	2807
-doBitOr	big.l	2847
-doBitQ	big.l	2748
-doBitXor	big.l	2887
-doBool	flow.l	1724
-doBox	flow.l	828
-doBoxQ	sym.l	1122
-doBreak	flow.l	2865
-doBy	apply.l	1669
-doBye	flow.l	3444
-doCaaaar	subr.l	271
-doCaaadr	subr.l	288
-doCaaar	subr.l	99
-doCaadar	subr.l	311
-doCaaddr	subr.l	334
-doCaadr	subr.l	116
-doCaar	subr.l	31
-doCadaar	subr.l	360
-doCadadr	subr.l	383
-doCadar	subr.l	136
-doCaddar	subr.l	409
-doCadddr	subr.l	435
-doCaddr	subr.l	156
-doCadr	subr.l	45
-doCall	flow.l	3096
-doCar	subr.l	5
-doCase	flow.l	1965
-doCatch	flow.l	2467
-doCd	main.l	2841
-doCdaaar	subr.l	464
-doCdaadr	subr.l	487
-doCdaar	subr.l	179
-doCdadar	subr.l	513
-doCdaddr	subr.l	539
-doCdadr	subr.l	199
-doCdar	subr.l	62
-doCddaar	subr.l	568
-doCddadr	subr.l	594
-doCddar	subr.l	222
-doCdddar	subr.l	623
-doCddddr	subr.l	652
-doCdddr	subr.l	245
-doCddr	subr.l	79
-doCdr	subr.l	17
-doChain	subr.l	1141
-doChar	io.l	3456
-doChop	sym.l	1219
-doCirc	subr.l	816
-doCircQ	subr.l	2402
-doClip	subr.l	1799
-doClose	io.l	4387
-doCmd	main.l	3071
-doCnt	apply.l	1413
-doCo	flow.l	2548
-doCol	sym.l	3051
-doCommit	db.l	1498
-doCon	subr.l	725
-doConc	subr.l	781
-doCond	flow.l	1919
-doConnect	net.l	224
-doCons	subr.l	747
-doCopy	subr.l	1225
-doCtl	io.l	4260
-doCtty	main.l	2866
-doCut	sym.l	1922
-doDate	main.l	2580
-doDbck	db.l	2113
-doDe	flow.l	532
-doDec	big.l	2323
-doDef	flow.l	448
-doDefault	sym.l	1786
-doDel	sym.l	1977
-doDelete	subr.l	1401
-doDelq	subr.l	1452
-doDiff	subr.l	2589
-doDir	main.l	3001
-doDiv	big.l	2513
-doDm	flow.l	545
-doDo	flow.l	2141
-doE	flow.l	2928
-doEcho	io.l	4418
-doEnv	main.l	599
-doEof	io.l	3533
-doEol	io.l	3524
-doEq	subr.l	2059
-doEq0	subr.l	2173
-doEqT	subr.l	2181
-doEqual	subr.l	2115
-doErr	io.l	4240
-doErrno	main.l	1468
-doEval	flow.l	175
-doExt	io.l	5152
-doExtQ	sym.l	1157
-doExtern	sym.l	1023
-doExtra	flow.l	1269
-doExtract	apply.l	1218
-doFifo	sym.l	2088
-doFile	main.l	2948
-doFill	subr.l	3243
-doFilter	apply.l	1161
-doFin	subr.l	2033
-doFinally	flow.l	2524
-doFind	apply.l	1322
-doFish	apply.l	1613
-doFlgQ	subr.l	2445
-doFlip	subr.l	1699
-doFlush	io.l	5127
-doFold	sym.l	3512
-doFor	flow.l	2230
-doFork	flow.l	3270
-doFormat	big.l	2089
-doFree	db.l	2055
-doFrom	io.l	3552
-doFull	subr.l	1075
-doFunQ	sym.l	750
-doGc	gc.l	435
-doGe	subr.l	2297
-doGe0	big.l	2707
-doGet	sym.l	2894
-doGetd	sym.l	758
-doGetl	sym.l	3195
-doGlue	sym.l	1360
-doGt	subr.l	2267
-doGt0	big.l	2718
-doHash	big.l	2976
-doHead	subr.l	1820
-doHeap	main.l	519
-doHear	io.l	3237
-doHide	sym.l	1090
-doHost	net.l	190
-doId	db.l	1028
-doIdx	sym.l	2162
-doIf	flow.l	1805
-doIf2	flow.l	1824
-doIfn	flow.l	1865
-doIn	io.l	4200
-doInc	big.l	2256
-doIndex	subr.l	2637
-doInfo	main.l	2903
-doIntern	sym.l	998
-doIpid	flow.l	3215
-doIsa	flow.l	967
-doJob	flow.l	1429
-doJournal	db.l	971
-doKey	io.l	3385
-doKill	flow.l	3247
-doLast	subr.l	2044
-doLe	subr.l	2237
-doLe0	big.l	2693
-doLength	subr.l	2741
-doLet	flow.l	1479
-doLetQ	flow.l	1540
-doLieu	db.l	1157
-doLine	io.l	3708
-doLines	io.l	3861
-doLink	subr.l	1172
-doLisp	main.l	2137
-doList	subr.l	887
-doListen	net.l	157
-doLit	flow.l	150
-doLoad	io.l	4177
-doLock	db.l	1185
-doLoop	flow.l	2173
-doLowQ	sym.l	3378
-doLowc	sym.l	3408
-doLstQ	subr.l	2415
-doLt	subr.l	2207
-doLt0	big.l	2682
-doLup	sym.l	2351
-doMade	subr.l	1107
-doMake	subr.l	1088
-doMap	apply.l	849
-doMapc	apply.l	891
-doMapcan	apply.l	1101
-doMapcar	apply.l	987
-doMapcon	apply.l	1041
-doMaplist	apply.l	933
-doMaps	apply.l	790
-doMark	db.l	1973
-doMatch	subr.l	3128
-doMax	subr.l	2327
-doMaxi	apply.l	1511
-doMember	subr.l	2455
-doMemq	subr.l	2477
-doMeta	sym.l	3298
-doMeth	flow.l	1095
-doMethod	flow.l	1059
-doMin	subr.l	2356
-doMini	apply.l	1562
-doMix	subr.l	1260
-doMmeq	subr.l	2505
-doMul	big.l	2389
-doMulDiv	big.l	2446
-doNEq	subr.l	2087
-doNEq0	subr.l	2189
-doNEqT	subr.l	2198
-doNEqual	subr.l	2144
-doName	sym.l	502
-doNand	flow.l	1659
-doNative	main.l	1476
-doNeed	subr.l	919
-doNew	flow.l	839
-doNext	main.l	2449
-doNil	flow.l	1742
-doNond	flow.l	1942
-doNor	flow.l	1680
-doNot	flow.l	1732
-doNth	subr.l	685
-doNumQ	subr.l	2426
-doOff	sym.l	1723
-doOffset	subr.l	2677
-doOn	sym.l	1708
-doOnOff	sym.l	1738
-doOne	sym.l	1771
-doOpen	io.l	4344
-doOpid	flow.l	3231
-doOpt	main.l	3192
-doOr	flow.l	1640
-doOut	io.l	4220
-doPack	sym.l	1270
-doPair	subr.l	2394
-doPass	apply.l	754
-doPatQ	sym.l	736
-doPath	io.l	1246
-doPeek	io.l	3440
-doPick	apply.l	1369
-doPipe	io.l	4281
-doPoll	io.l	3329
-doPool	db.l	651
-doPop	sym.l	1898
-doPort	net.l	5
-doPr	io.l	5235
-doPreQ	sym.l	1536
-doPrin	io.l	5051
-doPrinl	io.l	5065
-doPrint	io.l	5091
-doPrintln	io.l	5122
-doPrintsp	io.l	5107
-doPrior	subr.l	2713
-doProg	flow.l	1760
-doProg1	flow.l	1768
-doProg2	flow.l	1785
-doProp	sym.l	2925
-doPropCol	sym.l	3075
-doProtect	main.l	509
-doProve	subr.l	3530
-doPush	sym.l	1813
-doPush1	sym.l	1849
-doPut	sym.l	2835
-doPutl	sym.l	3113
-doPwd	main.l	2830
-doQueue	sym.l	2045
-doQuit	main.l	1178
-doQuote	flow.l	134
-doRand	big.l	3003
-doRange	subr.l	997
-doRank	subr.l	3036
-doRaw	main.l	451
-doRd	io.l	5169
-doRead	io.l	2665
-doRem	big.l	2572
-doReplace	subr.l	1499
-doRest	main.l	2495
-doReverse	subr.l	1678
-doRewind	io.l	5135
-doRollback	db.l	1898
-doRot	subr.l	848
-doRun	flow.l	306
-doSect	subr.l	2541
-doSeed	big.l	2961
-doSeek	apply.l	1275
-doSemicol	sym.l	2970
-doSend	flow.l	1134
-doSeq	db.l	1084
-doSet	sym.l	1607
-doSetCol	sym.l	2999
-doSetq	sym.l	1640
-doShift	big.l	2627
-doSigio	main.l	489
-doSize	subr.l	2809
-doSkip	io.l	3510
-doSort	subr.l	3965
-doSpQ	sym.l	727
-doSpace	io.l	5069
-doSplit	subr.l	1592
-doStack	main.l	548
-doState	flow.l	2009
-doStem	subr.l	1989
-doStr	io.l	4028
-doStrQ	sym.l	1136
-doStrip	subr.l	1576
-doStruct	main.l	1928
-doSub	big.l	2209
-doSubQ	sym.l	1569
-doSum	apply.l	1460
-doSuper	flow.l	1225
-doSym	io.l	4014
-doSymQ	subr.l	2434
-doSymbols	sym.l	942
-doSync	io.l	3197
-doSys	flow.l	3067
-doT	flow.l	1751
-doTail	subr.l	1911
-doTell	io.l	3269
-doText	sym.l	1398
-doThrow	flow.l	2493
-doTick	flow.l	3183
-doTill	io.l	3619
-doTime	main.l	2713
-doTouch	sym.l	1172
-doTrace	flow.l	2967
-doTrail	main.l	695
-doTrim	subr.l	1759
-doTry	flow.l	1177
-doType	flow.l	920
-doUdp	net.l	301
-doUnify	subr.l	3938
-doUnless	flow.l	1901
-doUntil	flow.l	2085
-doUp	main.l	760
-doUppQ	sym.l	3393
-doUppc	sym.l	3460
-doUse	flow.l	1573
-doUsec	main.l	2818
-doVal	sym.l	1588
-doVersion	main.l	3206
-doWait	io.l	3159
-doWhen	flow.l	1884
-doWhile	flow.l	2061
-doWipe	sym.l	3253
-doWith	flow.l	1332
-doWr	io.l	5252
-doXchg	sym.l	1663
-doXor	flow.l	1701
-doYield	flow.l	2720
-doYoke	subr.l	1196
-doZap	sym.l	1186
-doZero	sym.l	1756
-endString_E	main.l	2415
-eofErr	err.l	540
-eolA_F	io.l	3693
-equalAE_F	main.l	865
-erOpenEXY	io.l	1630
-errEXYZ	err.l	33
-errnoC	sys/x86-64.linux.code.l	10
-errnoEXY	err.l	24
-errno_A	sys/x86-64.linux.code.l	5
-evCntEX_FE	main.l	2343
-evCntXY_FE	main.l	2341
-evExprCE_E	main.l	1196
-evListE_E	main.l	1344
-evMethodACEXYZ_E	flow.l	645
-evSymE_E	main.l	2318
-evSymX_E	main.l	2313
-evSymY_E	main.l	2316
-execE	main.l	2227
-execErrS	main.l	187
-extErrEX	err.l	440
-extNmCE_X	db.l	64
-externX_E	sym.l	266
-extraXY_FCYZ	flow.l	1296
-fdRdSetCZL	io.l	2727
-fdSetCL_X	io.l	2715
-fdSetC_Y	io.l	3318
-fdWrSetCZL	io.l	2734
-fetchCharC_AC	main.l	1971
-fileObjE_AC	db.l	237
-fileObjX_AC	db.l	211
-fillE_FE	subr.l	3261
-findSymX_E	sym.l	257
-finishE	flow.l	3468
-firstByteA_B	sym.l	673
-firstCharE_A	sym.l	688
-fishAXY	apply.l	1640
-flushA_F	io.l	392
-flushAll	io.l	412
-fmtNum0AE_E	big.l	1794
-fmtNumAE_E	big.l	1797
-fmtScaleCX_CX	big.l	2061
-fmtWordACX_CX	big.l	2046
-forkErrX	err.l	521
-forkLispX_FE	flow.l	3283
-fsyncDB	db.l	932
-funqE_FE	main.l	2251
-gc	gc.l	65
-getAdrZ_A	db.l	6
-getBinaryZ_FB	io.l	448
-getBlockZ_FB	db.l	596
-getChar_A	io.l	1977
-getEC_E	sym.l	2675
-getParse_A	io.l	1797
-getStdin_A	io.l	1726
-getUdpZ_FB	net.l	370
-getnECX_E	sym.l	2634
-giveupX	main.l	180
-halfA_A	big.l	87
-heapAlloc	main.l	217
-iSignalCE	main.l	192
-idErrXL	err.l	629
-idxDelXY_E	sym.l	2292
-idxGetXY_E	sym.l	2205
-idxPutXY_E	sym.l	2222
-ignLog	db.l	924
-inReadyC_F	io.l	2703
-incE_A	big.l	1491
-initInFileAC_A	io.l	65
-initInFileA_A	io.l	63
-initInFileCA_A	io.l	67
-initOutFileA_A	io.l	106
-initSeedE_E	big.l	2927
-internEXY_FE	sym.l	75
-ipBindErrX	err.l	678
-ipGetsocknameErrX	err.l	663
-ipListenErrX	err.l	683
-ipReuseaddrErrX	err.l	673
-ipSocketErrX	err.l	658
-ipV6onlyErrX	err.l	668
-isBlankE_F	sym.l	704
-isInternEXY_F	sym.l	37
-isLetterOrDigitA_F	sym.l	3584
-isLifeE_F	db.l	525
-isaCE_F	flow.l	1018
-jnlErrX	err.l	624
-jnlFileno_A	db.l	344
-joinLocalCX	flow.l	2854
-lisp	main.l	2181
-loadAllX_E	main.l	162
-loadBEX_E	io.l	4081
-lockErr	err.l	613
-lockFileAC	io.l	28
-lockJnl	db.l	352
-logBlock	db.l	432
-logFileno_A	db.l	348
-lookupCE_E	subr.l	3872
-loopX	flow.l	2178
-loopY_FE	flow.l	2417
-lstErrAX	err.l	456
-lstErrEX	err.l	458
-lupCE_E	subr.l	3815
-main	main.l	33
-makeErrX	err.l	477
-markE	gc.l	5
-matchCE_F	subr.l	3147
-memberXY_FY	main.l	1160
-metaCX_E	sym.l	3340
-methodEY_FCYZ	flow.l	795
-mkCharA_A	sym.l	573
-mkStrEZ_A	sym.l	650
-mkStrE_E	sym.l	623
-msec_A	main.l	2429
-msgErrAX	err.l	494
-msgErrEX	err.l	496
-msgErrYX	err.l	492
-muluAE_A	big.l	859
-nameA_A	sym.l	469
-nameE_E	sym.l	477
-nameX_X	sym.l	485
-nameY_Y	sym.l	493
-natBufACZ_CZ	main.l	1680
-natRetACE_CE	main.l	1779
-needC	gc.l	54
-needSymAX	err.l	329
-needSymEX	err.l	341
-needVarAX	err.l	352
-needVarEX	err.l	362
-newBlock_X	db.l	449
-newIdEX_X	db.l	492
-newline	io.l	4674
-noFdErrX	err.l	535
-nonblockingA_A	io.l	51
-numErrAX	err.l	418
-numErrEX	err.l	420
-oct3C_CA	db.l	180
-openErrEX	err.l	506
-oruAE_A	big.l	394
-outAoA	io.l	4723
-outNameE	io.l	4747
-outNumE	io.l	4683
-outOctA	io.l	4710
-outStringC	io.l	4737
-outStringS	io.l	4735
-outWordA	io.l	4690
-packAoACX_CX	db.l	108
-packECX_CX	sym.l	1303
-packExtNmX_E	db.l	87
-packOctACX_CX	db.l	120
-pairErrAX	err.l	444
-pairErrEX	err.l	446
-parseBCE_E	io.l	3902
-pathStringE_SZ	io.l	1173
-pico	glob.l	142
-pipeErrX	err.l	516
-popCtlFiles	io.l	1963
-popErrFiles	io.l	1956
-popInFiles	io.l	1865
-popOutFiles	io.l	1916
-prByteCEXY	io.l	681
-prCntCE	io.l	704
-prE	io.l	729
-prExtNmX	io.l	4702
-prNameX	io.l	4755
-prTellEZ	io.l	723
-preCEXY_F	sym.l	1470
-prinE	io.l	4996
-prinE_E	io.l	4987
-printE	io.l	4774
-printE_E	io.l	4765
-propEC_E	sym.l	2745
-protErrEX	err.l	392
-pushCtlFilesY	io.l	1860
-pushErrFilesY	io.l	1855
-pushInFilesY	io.l	1820
-pushOutFilesY	io.l	1844
-putACE	sym.l	2491
-putBlockBZ	db.l	612
-putSrcEC_E	flow.l	25
-putStdoutB	io.l	4631
-putStringB	main.l	2392
-putTellBZ	io.l	997
-putUdpBZ	net.l	377
-rdAtomBY_E	io.l	2119
-rdBlockIndexAZ_Z	db.l	377
-rdBlockLinkZ_Z	db.l	375
-rdBlockZ_Z	db.l	380
-rdBytesCEX_F	io.l	247
-rdBytesNbCEX_F	io.l	268
-rdHear_FE	io.l	1076
-rdList_E	io.l	2171
-rdLockDb	db.l	255
-rdLockFileC	io.l	26
-rdOpenEXY	io.l	1356
-rdSetCL_F	io.l	2741
-rdSetRdyCL_F	io.l	2751
-readA_E	io.l	2309
-readC_E	io.l	2493
-redefMsgEC	flow.l	4
-redefineCE	flow.l	109
-reentErrEX	err.l	482
-remDone	big.l	1479
-remUnder	big.l	1485
-remuAE_A	big.l	1266
-renErrEX	err.l	473
-restart	main.l	154
-resumeCoroutine	flow.l	2574
-ret	err.l	711
-retE_E	err.l	734
-retNil	err.l	728
-retNull	err.l	725
-retT	err.l	731
-retc	err.l	713
-retnc	err.l	716
-retnz	err.l	722
-retz	err.l	719
-rewindLog	db.l	928
-runE_E	main.l	2239
-rwUnlockDbA	db.l	269
-selectErrX	err.l	564
-serverCEY_FE	net.l	273
-setAdrAS	db.l	36
-setAdrAZ	db.l	22
-setBlkAC_Z	db.l	366
-setBlockAC_Z	db.l	364
-setCooked	main.l	443
-setRaw	main.l	417
-sharedLibC_FA	main.l	1397
-shluA_A	big.l	201
-shruA_A	big.l	247
-sig	main.l	344
-sigChld	main.l	367
-sigTerm	main.l	356
-sigTermStop	main.l	401
-sighandler0	main.l	238
-sighandlerE	main.l	252
-sighandlerX	main.l	245
-sizeCE_C	subr.l	2929
-skipC_A	io.l	2009
-slowNbC_FA	io.l	207
-slowZ_F	io.l	185
-space	io.l	4678
-stdinByte_A	io.l	426
-stkErr	err.l	401
-stkErrE	err.l	403
-stkErrEX	err.l	407
-stkErrX	err.l	405
-subAE_A	big.l	1542
-subStrAE_F	sym.l	1485
-subuAE_A	big.l	682
-suparErrE	err.l	546
-symByteCX_FACX	io.l	1089
-symCharCX_FACX	io.l	1110
-symErrAX	err.l	432
-symErrEX	err.l	436
-symErrYX	err.l	434
-symNsErrEX	err.l	396
-symToNumXA_FE	big.l	1681
-tcSetC	main.l	388
-tcpAcceptA_FE	net.l	109
-tellBegZ_Z	io.l	1005
-tellEndAZ	io.l	1012
-tellErr	err.l	652
-tenfoldA_A	big.l	157
-testEscA_F	io.l	2052
-throwErrZX	flow.l	2518
-tmDateC_E	main.l	2509
-tmTimeY_E	main.l	2696
-tokenCE_E	io.l	2523
-trSyncErrX	err.l	608
-traceCY	flow.l	3039
-trimE_E	subr.l	1769
-truncErrX	err.l	598
-truncLog	db.l	947
-tryLockCE_FA	db.l	299
-twiceA_A	big.l	47
-twiceBigA_A	big.l	57
-udpOvflErr	err.l	688
-unLockFileAC	io.l	15
-unLockJnl	db.l	357
-undefinedCE	err.l	695
-undefinedCX	err.l	697
-undefinedEX	err.l	699
-uniFillE_E	subr.l	3886
-unifyCEYZ_F	subr.l	3364
-uninternEXY	sym.l	356
-unsync	io.l	1059
-unwindC_Z	err.l	171
-varErrAX	err.l	462
-varErrEX	err.l	464
-waitFdCEX_A	io.l	2773
-waitPidErrX	err.l	526
-wifsignaledS_F	sys/x86-64.linux.code.l	21
-wifstoppedS_F	sys/x86-64.linux.code.l	16
-wipeE	sym.l	3275
-wrBlockZ	db.l	398
-wrBytesCEX_F	io.l	317
-wrBytesErr	err.l	569
-wrChildCXY	io.l	353
-wrChildErr	err.l	575
-wrJnlErr	err.l	586
-wrLockDb	db.l	262
-wrLockFileC	io.l	23
-wrLogErr	err.l	592
-wrOpenEXY	io.l	1497
-wrSetCL_F	io.l	2746
-wrSyncErrX	err.l	581
-wtermsigS_A	sys/x86-64.linux.code.l	28
-xCntAX_FA	main.l	2363
-xCntCX_FC	main.l	2354
-xCntEX_FE	main.l	2345
-xSymE_E	main.l	2320
-xoruAE_A	big.l	465
-yieldErrEX	err.l	488
-yieldErrX	err.l	486
-zapZeroA_A	big.l	6
+
+./defs.l,638
+HEAP5,63
+CELLS6,114
+STACK7,187
+ZERO8,246
+ONE9,295
+TOP10,344
+DB111,390
+I14,455
+II15,465
+III16,477
+IV17,490
+V18,502
+VI19,513
+VII20,525
+VIII21,538
+IX22,552
+-I24,565
+-II25,579
+-III26,595
+-IV27,612
+-V28,628
+-VI29,643
+-VII30,659
+-VIII31,676
+CNT34,710
+BIG35,737
+DIG36,784
+CDR37,829
+SIGN38,870
+SYM39,908
+TAIL40,936
+NIX43,984
+BEG44,1008
+DOT45,1039
+END46,1071
+NUMBER47,1100
+INTERN48,1127
+TRANSIENT49,1163
+EXTERN50,1200
+BLK53,1246
+BLKSIZE54,1285
+BLKTAG55,1324
+UDPMAX58,1373
+CHAR_UPPERCASE61,1453
+CHAR_LOWERCASE62,1476
+CHAR_LETTER63,1499
+CHAR_DIGIT64,1520
+
+sys/x86-64.linux.defs.l,1959
+ENOENT5,59
+EINTR6,108
+EBADF7,155
+EAGAIN8,194
+EACCES9,227
+EPIPE10,268
+ECONNRESET11,303
+O_RDONLY14,365
+O_WRONLY15,382
+O_RDWR16,399
+O_CREAT17,414
+O_EXCL18,431
+O_TRUNC19,448
+O_APPEND20,466
+F_GETFD21,486
+F_SETFD22,502
+FD_CLOEXEC23,518
+BUFSIZ26,546
+PIPE_BUF27,564
+MAXPATHLEN29,585
+RTLD_LAZY32,613
+RTLD_GLOBAL33,631
+FLOCK36,662
+L_TYPE37,702
+L_WHENCE38,722
+L_START39,744
+L_LEN40,760
+L_PID41,775
+SEEK_SET42,790
+SEEK_CUR43,807
+F_RDLCK44,824
+F_WRLCK45,840
+F_UNLCK46,856
+F_GETFL47,872
+F_SETFL48,888
+F_GETLK49,904
+F_SETLK50,920
+F_SETLKW51,936
+F_SETOWN52,953
+O_NONBLOCK53,970
+O_ASYNC54,992
+STAT57,1019
+ST_MODE58,1061
+ST_SIZE59,1083
+ST_MTIME60,1100
+S_IFMT61,1118
+S_IFDIR62,1144
+TMS65,1180
+TMS_UTIME66,1214
+TMS_STIME67,1232
+TERMIOS70,1261
+C_IFLAG71,1304
+C_LFLAG72,1320
+C_CC73,1337
+ISIG74,1351
+VMIN75,1364
+VTIME76,1377
+TCSADRAIN77,1391
+SIGACTION80,1419
+SIGSET_T81,1462
+SA_HANDLER82,1481
+SA_MASK83,1500
+SA_FLAGS84,1516
+SIG_DFL86,1536
+SIG_IGN87,1552
+SIG_UNBLOCK88,1568
+SIGHUP90,1589
+SIGINT91,1615
+SIGUSR192,1630
+SIGUSR293,1647
+SIGPIPE94,1664
+SIGALRM95,1681
+SIGTERM96,1698
+SIGCHLD97,1715
+SIGCONT98,1732
+SIGSTOP99,1749
+SIGTSTP100,1766
+SIGTTIN101,1783
+SIGTTOU102,1800
+SIGIO103,1817
+SIGNALS104,1832
+WNOHANG107,1894
+WUNTRACED108,1910
+FD_SET111,1938
+TM_SEC114,1975
+TM_MIN115,1990
+TM_HOUR116,2005
+TM_MDAY117,2021
+TM_MON118,2038
+TM_YEAR119,2054
+D_NAME122,2078
+SOCK_STREAM125,2105
+SOCK_DGRAM126,2125
+AF_UNSPEC127,2144
+AF_INET6128,2162
+SOL_SOCKET129,2180
+SO_REUSEADDR130,2199
+IPPROTO_IPV6131,2220
+IPV6_V6ONLY132,2242
+INET6_ADDRSTRLEN133,2263
+NI_MAXHOST135,2290
+NI_NAMEREQD136,2312
+SOCKADDR_IN6138,2333
+SIN6_FAMILY139,2355
+SIN6_PORT140,2375
+SIN6_ADDR141,2393
+ADDRINFO143,2412
+AI_FAMILY144,2430
+AI_SOCKTYPE145,2448
+AI_ADDRLEN146,2468
+AI_ADDR147,2488
+AI_NEXT148,2505
+
+./glob.l,4297
+Data4,51
+AV7,77
+AV08,141
+Home9,189
+Heaps10,239
+Avail11,284
+Buf12,330
+Stack015,412
+Stacks16,469
+StkSize17,526
+StkLimit18,580
+Link19,648
+Catch20,703
+Termio21,751
+Time22,808
+USec23,869
+TtyPid24,925
+InFDs25,980
+InFiles26,1044
+OutFDs27,1091
+OutFiles28,1156
+PutBinBZ29,1204
+GetBinZ_FB30,1262
+Seed31,1319
+TickU33,1422
+TickS34,1476
+Slot35,1532
+Spkr36,1579
+Mic37,1630
+SpMiPipe38,1680
+Hear39,1739
+Tell40,1787
+TellBuf41,1838
+Talking42,1884
+Children43,1932
+Child44,1993
+ExtN45,2040
+Extn46,2098
+StrX47,2121
+StrC48,2170
+LineC49,2193
+Break50,2217
+GcCount51,2263
+Sep052,2314
+Sep353,2367
+BufEnd54,2421
+Penv56,2483
+Pnl57,2536
+Signal60,2572
+DBs63,2619
+DbFile64,2680
+DbFiles65,2723
+DbBlock66,2767
+MaxBlkSize67,2815
+BlkIndex68,2869
+BlkLink69,2916
+DbJnl70,2962
+DbLog71,3010
+GcMark74,3086
+Transient75,3095
+Alarm77,3208
+Sigio78,3257
+LineX79,3306
+Lisp80,3354
+LispEnd128,4879
+GcMarkEnd129,4889
+SymTab133,4918
+Nil134,4935
+Pico137,5092
+pico142,5234
+CPU143,5272
+OS144,5311
+DB145,5349
+Meth146,5386
+Quote147,5426
+TSym148,5467
+ISym151,5526
+NSym152,5563
+SSym153,5600
+CSym154,5637
+BSym155,5674
+Solo156,5711
+PPid157,5749
+Pid158,5786
+At159,5821
+At2160,5858
+At3161,5895
+This162,5932
+Prompt163,5969
+Dbg164,6006
+Zap165,6043
+Ext166,6080
+Scl167,6117
+Class168,6155
+Run169,6192
+Hup170,6229
+Sig1171,6266
+Sig2172,6303
+Up173,6340
+Err174,6377
+Msg175,6414
+Uni176,6451
+Led177,6488
+Tsm178,6525
+Adr179,6562
+Fork180,6599
+Bye181,6636
+SymTabEnd559,21157
+TgCPU562,21190
+TgOS563,21232
+Db1567,21323
+Extern569,21350
+GcSymEnd573,21421
+Version576,21450
+EnvCo587,21657
+Chr588,21690
+PutB589,21744
+Get_A590,21805
+InFile591,21865
+OutFile592,21911
+Env593,21958
+EnvBind594,21991
+EnvInFrames595,22064
+EnvOutFrames596,22117
+EnvErrFrames597,22170
+EnvCtlFrames598,22223
+EnvIntern599,22279
+EnvArgs600,22352
+EnvNext601,22401
+EnvCls602,22448
+EnvKey603,22496
+EnvApply604,22542
+EnvMake605,22590
+EnvYoke606,22636
+EnvParseX607,22659
+EnvParseC608,22708
+EnvParseEOF609,22731
+EnvMid610,22755
+EnvCo7611,22783
+EnvTask612,22829
+EnvProtect613,22874
+EnvTrace614,22927
+EnvEnd615,22974
+OrgTermio617,23003
+Flock618,23064
+Tms619,23119
+Addr620,23172
+TBuf622,23232
+CaseBlocks627,23369
+CaseData757,38752
+CaseUpper1094,78633
+CaseLower1118,80459
+Tio1143,82165
+Repl1145,82214
+PRepl1146,82259
+Jam1147,82306
+InBye1148,82351
+Sync1149,82398
+Month1150,82460
+_r_1153,82526
+_w_1154,82543
+_a_1155,82560
+_ap_1156,82577
+_dot_1157,82596
+Giveup1161,82649
+ExecErr1162,82675
+AllocErr1163,82711
+PidSigMsg1164,82740
+QuitMsg1165,82773
+CbErr1166,82794
+HashBlank1168,82838
+Redefined1169,82861
+SuperErr1170,82895
+ExtraErr1171,82924
+ThrowErr1172,82953
+Trc11173,82986
+Trc21174,83004
+SetFD1176,83030
+Delim1177,83055
+DelimEnd1178,83096
+Arrow1179,83107
+RolbLog1181,83134
+IgnLog1182,83195
+CircFree1183,83249
+BadChain1184,83287
+BadCount1185,83316
+ErrTok1187,83353
+Dashes1188,83374
+ProtErr1189,83396
+SymNsErr1190,83431
+StkErr1191,83471
+ArgErr1192,83503
+NumErr1193,83533
+CntErr1194,83566
+SymErr1195,83605
+ExtErr1196,83638
+PairErr1197,83680
+AtomErr1198,83717
+LstErr1199,83749
+VarErr1200,83780
+DivErr1201,83815
+RenErr1202,83838
+MakeErr1203,83868
+ReentErr1204,83897
+YieldErr1205,83936
+MsgErr1206,83968
+BrkErr1207,83997
+OpenErr1208,84023
+CloseErr1209,84056
+PipeErr1210,84091
+ForkErr1211,84124
+WaitPidErr1212,84153
+BadFdErr1213,84183
+NoFdErr1214,84209
+EofErr1215,84241
+SuparErr1216,84270
+BadInput1217,84316
+BadDot1218,84350
+SelectErr1219,84383
+WrBytesErr1220,84420
+WrChildErr1221,84457
+WrSyncErr1222,84494
+WrJnlErr1223,84529
+WrLogErr1224,84566
+TruncErr1225,84599
+DbSyncErr1226,84641
+TrSyncErr1227,84680
+LockErr1228,84728
+DbfErr1229,84760
+JnlErr1230,84789
+IdErr1231,84818
+DbRdErr1232,84841
+DbWrErr1233,84871
+DbSizErr1234,84902
+TellErr1235,84933
+IpSocketErr1236,84965
+IpGetsocknameErr1237,85007
+IpV6onlyErr1238,85059
+IpReuseaddrErr1239,85106
+IpBindErr1240,85157
+IpListenErr1241,85195
+UdpOvflErr1242,85237
+UndefErr1243,85271
+DlErr1244,85300
+
+./main.l,2220
+Code4,51
+Ret8,106
+Retc10,127
+Retnc13,157
+Retz16,188
+Retnz19,218
+RetNil22,249
+RetT25,285
+RetE_E28,320
+main33,402
+restart154,4016
+loadAllX_E162,4178
+giveupX180,4586
+execErrS187,4699
+iSignalCE192,4799
+allocC_A202,5082
+allocAE_A207,5191
+NoMemory211,5305
+heapAlloc217,5384
+sighandler0238,5888
+sighandlerX245,5965
+sighandlerE252,6042
+sig344,9337
+sigTerm356,9561
+sigChld367,9779
+tcSetC388,10287
+sigTermStop401,10554
+setRaw417,11047
+setCooked443,11846
+doRaw451,12013
+doAlarm473,12416
+doSigio489,12700
+doProtect509,13167
+doHeap519,13327
+doStack548,13951
+doAdr587,14794
+doEnv599,15012
+doTrail695,17664
+doUp760,19213
+circE_YF833,20794
+equalAE_F865,21534
+compareAE_F998,24743
+memberXY_FY1160,28245
+doQuit1178,28596
+evExprCE_E1196,29013
+evListE_E1344,32647
+sharedLibC_FA1397,33783
+doErrno1468,35427
+doNative1476,35591
+natBufACZ_CZ1680,41393
+natRetACE_CE1779,43878
+doStruct1928,49278
+fetchCharC_AC1971,50158
+cbl2006,51027
+cbl12039,51743
+cbl22043,51859
+cbl32047,51905
+cbl42051,51957
+cbl52055,52009
+cbl62059,52061
+cbl72063,52113
+cbl82067,52165
+cbl92071,52217
+cbl102075,52269
+cbl112079,52322
+cbl122083,52376
+cbl132087,52430
+cbl142091,52484
+cbl152095,52538
+cbl162099,52592
+cbl172103,52646
+cbl182107,52700
+cbl192111,52754
+cbl202115,52808
+cbl212119,52862
+cbl222123,52916
+cbl232127,52970
+cbl242131,53024
+doLisp2137,53107
+lisp2181,54133
+execE2227,55247
+runE_E2239,55402
+funqE_FE2251,55554
+evSymX_E2313,56977
+evSymY_E2316,57035
+evSymE_E2318,57077
+xSymE_E2320,57114
+evCntXY_FE2341,57479
+evCntEX_FE2343,57523
+xCntEX_FE2345,57562
+xCntCX_FC2354,57739
+xCntAX_FA2363,57916
+boxE_E2372,58093
+putStringB2392,58550
+begString2404,58764
+endString_E2415,58990
+msec_A2429,59313
+doArgs2442,59587
+doNext2449,59701
+doArg2466,60017
+doRest2495,60659
+tmDateC_E2509,60906
+dateXYZ_E2519,61083
+doDate2580,62444
+tmTimeY_E2696,66039
+doTime2713,66372
+doUsec2818,69351
+doPwd2830,69617
+doCd2841,69872
+doCtty2866,70488
+doInfo2903,71422
+doFile2948,72517
+doDir3001,73753
+doCmd3071,75371
+doArgv3089,75830
+doOpt3192,78376
+doVersion3206,78707
+
+./big.l,1059
+zapZeroA_A6,106
+twiceA_A47,1164
+twiceBigA_A57,1393
+halfA_A87,2066
+tenfoldA_A157,3756
+shluA_A201,4864
+shruA_A247,5895
+anduAE_A325,7804
+oruAE_A394,9408
+xoruAE_A465,11070
+adduAE_A540,12941
+subuAE_A682,16763
+muluAE_A859,21543
+divuAE_A1045,26266
+divDone1255,31620
+divUnder1261,31672
+remuAE_A1266,31804
+remDone1479,37197
+remUnder1485,37249
+incE_A1491,37390
+decE_A1504,37650
+addAE_A1517,37895
+subAE_A1542,38407
+cmpNumAE_F1567,38908
+cmpuAE_F1587,39290
+symToNumXA_FE1681,41108
+fmtNum0AE_E1794,43990
+fmtNumAE_E1797,44089
+fmtWordACX_CX2046,51011
+fmtScaleCX_CX2061,51371
+doFormat2089,52049
+doAdd2171,53693
+doSub2209,54427
+doInc2256,55443
+doDec2323,57032
+doMul2389,58600
+doMulDiv2446,59818
+doDiv2513,61363
+doRem2572,62620
+doShift2627,63761
+doLt02682,65020
+doLe02693,65221
+doGe02707,65473
+doGt02718,65675
+doAbs2731,65908
+doBitQ2748,66194
+doBitAnd2807,67355
+doBitOr2847,68167
+doBitXor2887,68977
+initSeedE_E2927,69793
+doSeed2961,70449
+doHash2976,70791
+doRand3003,71394
+
+./io.l,2919
+closeAX5,75
+unLockFileAC15,253
+wrLockFileC23,487
+rdLockFileC26,565
+lockFileAC28,624
+closeOnExecAX43,1010
+nonblockingA_A51,1179
+initInFileA_A63,1446
+initInFileAC_A65,1494
+initInFileCA_A67,1523
+initOutFileA_A106,2476
+closeInFileA142,3345
+closeOutFileA164,3830
+slowZ_F185,4281
+slowNbC_FA207,4748
+rdBytesCEX_F247,5696
+rdBytesNbCEX_F268,6160
+wrBytesCEX_F317,7454
+clsChildY342,8127
+wrChildCXY353,8379
+flushA_F392,9484
+flushAll412,9894
+stdinByte_A426,10205
+getBinaryZ_FB448,10561
+byteNumBCX_CX464,10931
+binReadZ_FE520,12460
+prByteCEXY681,16715
+prCntCE704,17241
+prTellEZ723,17608
+prE729,17763
+binPrintEZ731,17832
+putTellBZ997,25588
+tellBegZ_Z1005,25778
+tellEndAZ1012,25930
+unsync1059,27037
+rdHear_FE1076,27458
+symByteCX_FACX1089,27804
+symCharCX_FACX1110,28243
+bufStringE_SZ1143,29195
+pathStringE_SZ1173,29849
+doPath1246,31802
+charSymACX_CX1258,32072
+byteSymBCX_CX1293,32996
+currFdX_C1335,34112
+currFd_C1339,34224
+rdOpenEXY1356,34597
+wrOpenEXY1497,39003
+erOpenEXY1630,43178
+ctOpenEXY1672,44197
+getStdin_A1726,45611
+getParse_A1797,47451
+pushInFilesY1820,47921
+pushOutFilesY1844,48461
+pushErrFilesY1855,48756
+pushCtlFilesY1860,48860
+popInFiles1865,48964
+popOutFiles1916,50185
+popErrFiles1956,51210
+popCtlFiles1963,51413
+getChar_A1977,51804
+skipC_A2009,52675
+testEscA_F2052,53596
+anonymousX_FE2086,54349
+rdAtomBY_E2119,55212
+rdList_E2171,56639
+readA_E2309,60171
+readC_E2493,64488
+tokenCE_E2523,65079
+doRead2665,68540
+inReadyC_F2703,69380
+fdSetCL_X2715,69661
+fdRdSetCZL2727,69895
+fdWrSetCZL2734,70037
+rdSetCL_F2741,70186
+wrSetCL_F2746,70302
+rdSetRdyCL_F2751,70425
+waitFdCEX_A2773,70886
+doWait3159,83710
+doSync3197,84433
+doHear3237,85373
+doTell3269,86067
+fdSetC_Y3318,87155
+doPoll3329,87389
+doKey3385,88760
+doPeek3440,90199
+doChar3456,90477
+doSkip3510,91422
+doEol3524,91769
+doEof3533,91935
+doFrom3552,92292
+doTill3619,93961
+eolA_F3693,95910
+doLine3708,96214
+doLines3861,100254
+parseBCE_E3902,101155
+doAny3974,102810
+doSym4014,103748
+doStr4028,104007
+loadBEX_E4081,105133
+doLoad4177,107483
+doIn4200,107895
+doOut4220,108225
+doErr4240,108559
+doCtl4260,108894
+doPipe4281,109249
+doOpen4344,110795
+doClose4387,111775
+doEcho4418,112366
+putStdoutB4631,117890
+newline4674,118872
+space4678,118914
+outNumE4683,118978
+outWordA4690,119106
+prExtNmX4702,119344
+outOctA4710,119538
+outAoA4723,119806
+outStringS4735,120054
+outStringC4737,120124
+outNameE4747,120263
+prNameX4755,120380
+printE_E4765,120535
+printE4774,120671
+prinE_E4987,126287
+prinE4996,126423
+doPrin5051,127685
+doPrinl5065,127955
+doSpace5069,128023
+doPrint5091,128422
+doPrintsp5107,128717
+doPrintln5122,129006
+doFlush5127,129094
+doRewind5135,129231
+doExt5152,129621
+doRd5169,129960
+doPr5235,131740
+doWr5252,132072
+
+./apply.l,445
+applyXYZ_E4,51
+applyVarXYZ_E358,10999
+doApply713,22033
+doPass754,22785
+doMaps790,23436
+doMap849,24621
+doMapc891,25446
+doMaplist933,26278
+doMapcar987,27437
+doMapcon1041,28598
+doMapcan1101,29913
+doFilter1161,31231
+doExtract1218,32508
+doSeek1275,33750
+doFind1322,34688
+doPick1369,35638
+doCnt1413,36511
+doSum1460,37455
+doMaxi1511,38512
+doMini1562,39596
+doFish1613,40678
+fishAXY1640,41196
+doBy1669,41750
+
+./err.l,1921
+dbgS5,73
+errnoEXY24,572
+errEXYZ33,734
+unwindC_Z171,4381
+needSymAX329,8742
+needSymEX341,8941
+needVarAX352,9130
+needVarEX362,9307
+checkVarAX371,9474
+checkVarYX379,9610
+checkVarEX387,9746
+protErrEX392,9854
+symNsErrEX396,9904
+stkErr401,9979
+stkErrE403,10004
+stkErrX405,10030
+stkErrEX407,10056
+argErrAX412,10144
+argErrEX414,10171
+numErrAX418,10219
+numErrEX420,10246
+cntErrAX424,10294
+cntErrCX426,10321
+cntErrEX428,10348
+symErrAX432,10396
+symErrYX434,10423
+symErrEX436,10450
+extErrEX440,10498
+pairErrAX444,10546
+pairErrEX446,10574
+atomErrAX450,10624
+atomErrEX452,10652
+lstErrAX456,10702
+lstErrEX458,10729
+varErrAX462,10777
+varErrEX464,10804
+divErrX468,10852
+renErrEX473,10909
+makeErrX477,10957
+reentErrEX482,11016
+yieldErrX486,11068
+yieldErrEX488,11096
+msgErrYX492,11148
+msgErrAX494,11175
+msgErrEX496,11202
+brkErrX500,11250
+openErrEX506,11320
+closeErrX510,11371
+closeErrEX512,11399
+pipeErrX516,11452
+forkErrX521,11512
+waitPidErrX526,11571
+badFdErrEX531,11637
+noFdErrX535,11689
+eofErr540,11748
+suparErrE546,11814
+badInputErrB551,11875
+badDotErrE559,11966
+selectErrX564,12026
+wrBytesErr569,12090
+wrChildErr575,12165
+wrSyncErrX581,12240
+wrJnlErr586,12304
+wrLogErr592,12375
+truncErrX598,12446
+dbSyncErrX603,12508
+trSyncErrX608,12572
+lockErr613,12636
+dbfErrX619,12705
+jnlErrX624,12762
+idErrXL629,12819
+dbRdErr634,12893
+dbWrErr640,12962
+dbSizErr646,13031
+tellErr652,13101
+ipSocketErrX658,13169
+ipGetsocknameErrX663,13237
+ipV6onlyErrX668,13315
+ipReuseaddrErrX673,13383
+ipBindErrX678,13457
+ipListenErrX683,13521
+udpOvflErr688,13589
+undefinedCE695,13688
+undefinedCX697,13718
+undefinedEX699,13748
+dlErrX703,13801
+ret711,13947
+retc713,13968
+retnc716,13998
+retz719,14029
+retnz722,14059
+retNull725,14090
+retNil728,14125
+retT731,14161
+retE_E734,14196
+
+./sym.l,1775
+cmpLongAX_F5,78
+isInternEXY_F37,682
+internEXY_FE75,1602
+findSymX_E257,6713
+externX_E266,6898
+uninternEXY356,9588
+nameA_A469,12681
+nameE_E477,12824
+nameX_X485,12967
+nameY_Y493,13110
+doName502,13282
+mkCharA_A573,14812
+mkStrE_E623,16250
+mkStrEZ_A650,16718
+firstByteA_B673,17133
+firstCharE_A688,17398
+isBlankE_F704,17688
+doSpQ727,18092
+doPatQ736,18254
+doFunQ750,18528
+doGetd758,18689
+doAll788,19388
+consTreeXE_E832,20452
+balanceXY892,21928
+balanceCEY910,22261
+doSymbols942,23060
+doIntern998,24505
+doExtern1023,24920
+doHide1090,26444
+doBoxQ1122,27014
+doStrQ1136,27275
+doExtQ1157,27686
+doTouch1172,27974
+doZap1186,28224
+doChop1219,28875
+doPack1270,30234
+packECX_CX1303,30799
+doGlue1360,32102
+doText1398,32868
+preCEXY_F1470,34741
+subStrAE_F1485,35071
+doPreQ1536,36220
+doSubQ1569,36841
+doVal1588,37192
+doSet1607,37539
+doSetq1640,38171
+doXchg1663,38574
+doOn1708,39507
+doOff1723,39766
+doOnOff1738,40028
+doZero1756,40376
+doOne1771,40635
+doDefault1786,40902
+doPush1813,41408
+doPush11849,42069
+doPop1898,42999
+doCut1922,43462
+doDel1977,44690
+doQueue2045,46275
+doFifo2088,47049
+doIdx2162,48649
+idxGetXY_E2205,49526
+idxPutXY_E2222,49872
+idxDelXY_E2292,51908
+doLup2351,53428
+putACE2491,57730
+getnECX_E2634,61728
+getEC_E2675,62637
+propEC_E2745,64466
+doPut2835,66915
+doGet2894,68112
+doProp2925,68682
+doSemicol2970,69541
+doSetCol2999,70068
+doCol3051,71146
+doPropCol3075,71580
+doPutl3113,72343
+doGetl3195,74044
+doWipe3253,75148
+wipeE3275,75582
+doMeta3298,76089
+metaCX_E3340,76865
+caseDataA_AC3366,77464
+doLowQ3378,77767
+doUppQ3393,78126
+doLowc3408,78479
+doUppc3460,79987
+doFold3512,81502
+isLetterOrDigitA_F3584,83607
+
+./db.l,1175
+getAdrZ_A6,117
+setAdrAZ22,350
+setAdrAS36,545
+dbfBuf_AF51,839
+extNmCE_X64,1122
+packExtNmX_E87,1655
+packAoACX_CX108,2112
+packOctACX_CX120,2392
+chopExtNmX_E133,2698
+oct3C_CA180,3817
+fileObjX_AC211,4528
+fileObjE_AC237,5186
+dbFileBlkY_AC246,5356
+rdLockDb255,5505
+wrLockDb262,5711
+rwUnlockDbA269,5918
+tryLockCE_FA299,6718
+jnlFileno_A344,8025
+logFileno_A348,8085
+lockJnl352,8145
+unLockJnl357,8253
+setBlockAC_Z364,8453
+setBlkAC_Z366,8510
+rdBlockLinkZ_Z375,8724
+rdBlockIndexAZ_Z377,8779
+rdBlockZ_Z380,8881
+blkPeekCEZ392,9224
+wrBlockZ398,9361
+blkPokeCEZ403,9530
+logBlock432,10490
+newBlock_X449,11012
+newIdEX_X492,12181
+isLifeE_F525,13028
+cleanUpY570,14123
+getBlockZ_FB596,14825
+putBlockBZ612,15133
+doPool651,16232
+ignLog924,25817
+rewindLog928,25871
+fsyncDB932,25955
+truncLog947,26297
+bufAoAC_C956,26502
+doJournal971,26814
+doId1028,28419
+doSeq1084,29745
+doLieu1157,31621
+doLock1185,32219
+dbSizeX_A1224,33169
+dbFetchEX1319,35776
+dbAEX1331,36003
+dbTouchEX1445,39310
+dbZapE1477,39898
+doCommit1498,40333
+doRollback1898,53178
+doMark1973,55028
+doFree2055,57074
+doDbck2113,58540
+
+./gc.l,841
+markE5,63
+needC54,1336
+gc65,1529
+doGc435,11224
+cons_A458,11745
+cons_C470,12009
+cons_E482,12273
+cons_X494,12537
+cons_Y506,12801
+cons_Z518,13065
+consA_A530,13329
+consC_A546,13652
+consE_A562,13961
+consX_A578,14270
+consA_C594,14579
+consC_C610,14888
+consE_C626,15211
+consA_E642,15520
+consC_E658,15829
+consE_E674,16138
+consX_E690,16461
+consA_X706,16770
+consE_X722,17079
+consY_X738,17388
+consA_Y754,17697
+consA_Z770,18006
+consAC_E786,18315
+consSymX_E804,18668
+boxNum_A824,19118
+boxNum_C836,19403
+boxNum_E848,19688
+boxNum_X860,19973
+boxNumA_A872,20258
+boxNumE_E886,20587
+consNumAC_A900,20916
+consNumAE_A918,21292
+consNumCA_C936,21668
+consNumCE_A954,22044
+consNumCE_C971,22411
+consNumCE_E989,22787
+consNumEA_A1006,23137
+consNumEA_E1023,23487
+consNumEC_E1041,23863
+
+./flow.l,1650
+redefMsgEC4,51
+putSrcEC_E25,589
+redefineCE109,3406
+doQuote134,3997
+doAs139,4084
+doLit150,4297
+doEval175,4821
+doRun306,8448
+doDef448,12312
+doDe532,14353
+doDm545,14634
+evMethodACEXYZ_E645,16945
+methodEY_FCYZ795,20922
+doBox828,21769
+doNew839,21989
+doType920,23899
+doIsa967,25067
+isaCE_F1018,26119
+doMethod1059,27224
+doMeth1095,27829
+doSend1134,28537
+doTry1177,29312
+doSuper1225,30151
+doExtra1269,31081
+extraXY_FCYZ1296,31624
+doWith1332,32503
+doBind1362,33184
+doJob1429,34689
+doLet1479,35906
+doLetQ1540,37280
+doUse1573,37994
+doAnd1624,39113
+doOr1640,39378
+doNand1659,39685
+doNor1680,40048
+doXor1701,40414
+doBool1724,40821
+doNot1732,40956
+doNil1742,41114
+doT1751,41253
+doProg1760,41394
+doProg11768,41517
+doProg21785,41800
+doIf1805,42130
+doIf21824,42485
+doIfn1865,43342
+doWhen1884,43667
+doUnless1901,43952
+doCond1919,44291
+doNond1942,44711
+doCase1965,45127
+doState2009,46086
+doWhile2061,47126
+doUntil2085,47518
+doAt2109,47914
+doDo2141,48516
+doLoop2173,49174
+loopX2178,49245
+doFor2230,50819
+loopY_FE2417,56073
+doCatch2467,57446
+caught2483,57782
+doThrow2493,57939
+throwErrZX2518,58492
+doFinally2524,58583
+doCo2548,59123
+resumeCoroutine2574,59960
+doYield2720,64803
+cutLocalCX2841,68288
+joinLocalCX2854,68518
+doBreak2865,68700
+brkLoadE_E2873,68852
+doE2928,70452
+doTrace2967,71218
+traceCY3039,73133
+doSys3067,73624
+doCall3096,74307
+doTick3183,76499
+doIpid3215,77496
+doOpid3231,77784
+doKill3247,78079
+doFork3270,78514
+forkLispX_FE3283,78735
+doBye3444,83295
+byeE3456,83467
+finishE3468,83778
+
+./subr.l,2127
+doCar5,71
+doCdr17,247
+doCaar31,439
+doCadr45,662
+doCdar62,921
+doCddr79,1180
+doCaaar99,1475
+doCaadr116,1765
+doCadar136,2091
+doCaddr156,2417
+doCdaar179,2779
+doCdadr199,3105
+doCddar222,3467
+doCdddr245,3829
+doCaaaar271,4227
+doCaaadr288,4518
+doCaadar311,4911
+doCaaddr334,5304
+doCadaar360,5733
+doCadadr383,6126
+doCaddar409,6555
+doCadddr435,6984
+doCdaaar464,7449
+doCdaadr487,7842
+doCdadar513,8271
+doCdaddr539,8700
+doCddaar568,9165
+doCddadr594,9594
+doCdddar623,10059
+doCddddr652,10524
+doNth685,11053
+doCon725,11768
+doCons747,12119
+doConc781,12790
+doCirc816,13403
+doRot848,13990
+doList887,14732
+doNeed919,15326
+doRange997,17009
+doFull1075,18661
+doMake1088,18928
+doMade1107,19305
+doChain1141,19988
+doLink1172,20578
+doYoke1196,21037
+doCopy1225,21587
+doMix1260,22321
+doAppend1338,24137
+doDelete1401,25659
+doDelq1452,26820
+doReplace1499,27892
+doStrip1576,29807
+doSplit1592,30124
+doReverse1678,32369
+doFlip1699,32733
+doTrim1759,34204
+trimE_E1769,34343
+doClip1799,34999
+doHead1820,35349
+doTail1911,37600
+doStem1989,39439
+doFin2033,40356
+doLast2044,40539
+doEq2059,40811
+doNEq2087,41277
+doEqual2115,41742
+doNEqual2144,42249
+doEq02173,42758
+doEqT2181,42892
+doNEq02189,43023
+doNEqT2198,43168
+doLt2207,43312
+doLe2237,43884
+doGt2267,44455
+doGe2297,45027
+doMax2327,45600
+doMin2356,46141
+doAtom2385,46678
+doPair2394,46822
+doCircQ2402,46957
+doLstQ2415,47173
+doNumQ2426,47362
+doSymQ2434,47495
+doFlgQ2445,47681
+doMember2455,47862
+doMemq2477,48215
+doMmeq2505,48743
+doSect2541,49485
+doDiff2589,50525
+doIndex2637,51571
+doOffset2677,52325
+doPrior2713,52968
+doLength2741,53443
+doSize2809,54958
+sizeCE_C2929,58817
+doAssoc2973,59825
+doAsoq3008,60483
+doRank3036,61001
+doMatch3128,63290
+matchCE_F3147,63616
+doFill3243,66451
+fillE_FE3261,66745
+unifyCEYZ_F3364,69014
+doProve3530,73378
+lupCE_E3815,81848
+lookupCE_E3872,83239
+uniFillE_E3886,83492
+doArrow3916,84125
+doUnify3938,84535
+doSort3965,85023
+cmpDfltA_F4120,90204
+cmpUserAX_F4125,90355
+
+./net.l,191
+doPort5,96
+tcpAcceptA_FE109,2796
+doAccept145,4032
+doListen157,4268
+doHost190,4941
+doConnect224,5824
+serverCEY_FE273,7028
+doUdp301,7792
+getUdpZ_FB370,9724
+putUdpBZ377,9869
+
+sys/x86-64.linux.code.l,94
+errno_A5,67
+errnoC10,169
+wifstoppedS_F16,287
+wifsignaledS_F21,413
+wtermsigS_A28,568

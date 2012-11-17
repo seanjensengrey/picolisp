@@ -1,4 +1,4 @@
-# 02nov12abu
+# 17nov12abu
 # (c) Software Lab. Alexander Burger
 
 # *LittleEndian *AlignedCode *Registers optimize
@@ -49,16 +49,31 @@
       (epilog "File") )
    (when "Map"
       (out "tags"
-         (for Lbl (idx '*Tags)
-            (let S (; Lbl src)
-               (prinl
-                  Lbl
-                  "^I"
-                  (pack
-                     (unless (= "./" (car S)) (car S))
-                     (cadr S) )
-                  "^I"
-                  (cddr S) ) ) ) )
+         (for Lst
+            (group  # ((path . file) (line . sym) (line . sym) ..)
+               (mapcar
+                  '((This)
+                     (cons
+                        (cons (: src 1) (: src 2))
+                        (: src -2)
+                        This ) )
+                  (idx '*Tags) ) )
+            (let (Tmp (tmp (cdar Lst))  Src (pack (car Lst))  Line 1  Ofs 0)
+               (out Tmp
+                  (in Src
+                     (for X (sort (cdr Lst))
+                        (do (- (car X) Line)
+                           (inc 'Ofs (inc (size (line T)))) )
+                        (prinl
+                           (char 127)
+                           (cdr X)
+                           (char 1)
+                           (setq Line (car X))
+                           ","
+                           Ofs ) ) ) )
+               (prinl "^L")
+               (prinl Src "," (car (info Tmp)))
+               (in Tmp (echo)) ) ) )
       (out "Map"
          (for Sym (idx '*Map)
             (and
@@ -70,7 +85,8 @@
    (def (car Args) 'asm (cdr Args)) )
 
 (de idxTags (Lbl Src)
-   (idx '*Tags (def Lbl 'src Src) T) )
+   (when Src
+      (idx '*Tags (def Lbl 'src @) T) ) )
 
 # Sections
 (de section (Fun @Sym)

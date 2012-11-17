@@ -1,4 +1,5 @@
 * DDmmm12 picoLisp-3.1.1
+   Changed from CTags to ETags format
    Backtrace with 'trail' and 'up' (64-bit)
    Changed semantics of token 'read'
    -server function
