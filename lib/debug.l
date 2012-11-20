@@ -1,4 +1,4 @@
-# 17nov12abu
+# 20nov12abu
 # (c) Software Lab. Alexander Burger
 
 # Prompt
@@ -136,7 +136,7 @@
          (dep2 (+ 3 N) "X") ) ) )
 
 # Source code
-(off "*Vi")
+(off "*Ed")
 
 (in "@lib/map"
    (while (read)
@@ -145,56 +145,71 @@
             (set @ (read))
             (put Sym '*Dbg (cons (read))) ) ) ) )
 
-(de vi ("X" C)
-   (when (pair "X")
-      (setq C (cdr "X")  "X" (car "X")) )
-   (when
-      (if "X"
-         (setq "*Vi"
+(de _ed ("Ed" . "Prg")
+   (ifn "X"
+      (eval
+         (out (pil "editor")
+            (println (cons 'load "Ed")) ) )
+      (when (pair "X")
+         (setq C (cdr "X")  "X" (car "X")) )
+      (when
+         (setq "*Ed"
             (if C
                (get C '*Dbg -1 "X")
                (get "X" '*Dbg 1) ) )
-         "*Vi" )
-      (out (tmp "tags")
-         (let D (pack (pwd) "/")
-            (for Lst
-               (group  # (file (line . sym) (line . sym) ..)
-                  (extract
-                     '((This)
-                        (when (: *Dbg)
-                           (cons (path (cdar @)) (caar @) This) ) )
-                     (all) ) )
-               (let Tags
-                  (in (car Lst)
-                     (let (Line 1  Ofs 0)
-                        (mapcar
-                           '((X)
-                              (do (- (car X) Line)
-                                 (inc 'Ofs (inc (size (line T)))) )
-                              (pack
-                                 `(pack "^J" (char 127))
-                                 (cdr X)
-                                 (char 1)
-                                 (setq Line (car X))
-                                 ","
-                                 Ofs ) )
-                           (sort (cdr Lst)) ) ) )
-                  (prinl
-                     "^L^J"
-                     (unless (= `(char "/") (char (car Lst))) D)
-                     (car Lst)
-                     ","
-                     (sum size Tags)
-                     Tags ) ) ) ) )
-      (call 'vim
+         (out (tmp "tags")
+            (let D (pack (pwd) "/")
+               (for Lst
+                  (group  # (file (line . sym) (line . sym) ..)
+                     (extract
+                        '((This)
+                           (when (: *Dbg)
+                              (cons (path (cdar @)) (caar @) This) ) )
+                        (all) ) )
+                  (let Tags
+                     (in (car Lst)
+                        (let (Line 1  Ofs 0)
+                           (mapcar
+                              '((X)
+                                 (do (- (car X) Line)
+                                    (inc 'Ofs (inc (size (line T)))) )
+                                 (pack
+                                    `(pack "^J" (char 127))
+                                    (cdr X)
+                                    (char 1)
+                                    (setq Line (car X))
+                                    ","
+                                    Ofs ) )
+                              (sort (cdr Lst)) ) ) )
+                     (prinl
+                        "^L^J"
+                        (unless (= `(char "/") (char (car Lst))) D)
+                        (car Lst)
+                        ","
+                        (sum size Tags)
+                        Tags ) ) ) ) )
+         (run "Prg") ) )
+   "X" )
+
+(de vi ("X" C)
+   (_ed
+      '("@lib/led.l" "@lib/edit.l")
+      (call "vim"
          (pack "+set tags=" (tmp "tags") ",./tags")
          "+set isk=33-34,36-38,42-90,92,94-95,97-125"
-         (pack "+" (car "*Vi"))
-         (path (cdr "*Vi")) )
-      "X" ) )
+         (pack "+" (car "*Ed"))
+         (path (cdr "*Ed")) ) ) )
+
+(de em ("X" C)
+   (_ed
+      '("@lib/eled.l" "@lib/eedit.l")
+      (call "emacsclient"
+         "-c"
+         (pack "+" (car "*Ed"))
+         (path (cdr "*Ed")) ) ) )
 
 (de ld ()
-   (and "*Vi" (load (cdr "*Vi"))) )
+   (and "*Ed" (load (cdr "*Ed"))) )
 
 # Single-Stepping
 (de _dbg (Lst)

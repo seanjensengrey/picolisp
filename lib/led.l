@@ -1,10 +1,13 @@
-# 29dec11abu
+# 19nov12abu
 # (c) Software Lab. Alexander Burger
 
 # Line editor
 # vi-mode, just a subset:
 #  - Only single-key commands
 #  - No repeat count
+
+(mapc undef
+   '(*Led fkey revise) )
 
 (setq
    "Line"      NIL      # Holds current input line
@@ -37,20 +40,20 @@
             (and
                *Tsm
                (= "\"" (get "Line" P))
-               ("skipQ" "LPos" P "Line") )
+               (skipQ "LPos" P "Line") )
             (prin "^H") ) )
       (for (P . C) (setq "Line" L)  # Output new line
          (cond
             ((> " " C)
                (dec 'D)
                (prin "_") )
-            ((or (not *Tsm) (<> "\"" C) ("escQ" P L))
+            ((or (not *Tsm) (<> "\"" C) (escQ P L))
                (dec 'D)
                (prin C) )
             (T
                (prin
                   (and Tsm (cdr *Tsm))
-                  (unless ("skipQ" N P L)
+                  (unless (skipQ N P L)
                      (dec 'D)
                      C )
                   (and (onOff Tsm) (car *Tsm)) ) ) ) )
@@ -63,21 +66,21 @@
             (and
                *Tsm
                (= "\"" (get "Line" "LPos"))
-               ("skipQ" N "LPos" "Line") )
+               (skipQ N "LPos" "Line") )
             (prin "^H") )
          (dec '"LPos") ) )
    (flush) )
 
 # Skipped double quote
-(de "skipQ" (N P L)
+(de skipQ (N P L)
    (nor
       (>= (inc N) P (dec N))
       (= "\""  (get L (dec P)))
       (= "\"" (get L (inc P)))
-      ("escQ" P L) ) )
+      (escQ P L) ) )
 
 # Escaped double quote
-(de "escQ" ()
+(de escQ ()
    (let Esc NIL
       (for I (dec P)
          ((if (= "\\" (get L I)) onOff off) Esc) ) ) )
@@ -427,5 +430,11 @@
             (push '"History" L) )
          (and (nth "History" "HistMax") (con @))
          L ) ) )
+
+(mapc zap
+   (quote
+      chgLine delim? skipQ escQ lMove bMove rMove eMove xMove lWord rWord lPar rPar
+      clrEol insChar del1 delChar delWord rplChar doUndo doPaste
+      setHist ledSearch expandTab insMode cmdMode _getLine _led saveHistory ) )
 
 # vi:et:ts=3:sw=3
