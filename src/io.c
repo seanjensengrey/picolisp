@@ -1,4 +1,4 @@
-/* 13nov12abu
+/* 22nov12abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -183,8 +183,11 @@ bool wrBytes(int fd, byte *p, int cnt) {
       else {
          if (errno == EBADF || errno == EPIPE || errno == ECONNRESET)
             return NO;
-         if (errno != EINTR)
+         if (errno != EINTR) {
+            if (fd == STDERR_FILENO)
+               bye(2);
             writeErr("bytes");
+         }
          if (*Signal)
             sighandler(NULL);
       }

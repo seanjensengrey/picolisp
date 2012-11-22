@@ -1,4 +1,4 @@
-# 09nov12abu
+# 22nov12abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -331,7 +331,12 @@
          cmp A ECONNRESET  # Connection reset by peer?
          jeq retnz  # Return 'nz'
          cmp A EINTR  # Interrupted?
-         jne wrBytesErr  # No
+         if ne  # No
+            cmp C 2  # stderr?
+            jne wrBytesErr  # No
+            ld E 2  # Exit error code
+            jmp byeE
+         end
          null (Signal)  # Signal?
          if nz  # Yes
             call sighandler0
