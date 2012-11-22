@@ -29,7 +29,8 @@ href="refB.html#*Bye">*Bye</a></code>.
 <dd>A global variable which may hold a cons pair of two strings with escape
 sequences, to switch on and off an alternative transient symbol markup. If set,
 <code><a href="refP.html#print">print</a></code> will output these sequences to
-the console instead of the standard double quote markup characters.
+the console instead of the standard double quote markup characters. An easy way
+to switch on transient symbol markup is loading "@lib/tsm.l".
 
 <pre><code>
 : (de *Tsm "^[[4m" . "^[[24m")   # vt100 escape sequences for underline
