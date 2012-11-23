@@ -392,7 +392,7 @@
             (cons (cons Key Prg) (delete @ "FKey")) )
          (T (cons (cons Key Prg) "FKey")) ) ) )
 
-(when (= "xterm" (sys "TERM"))  # Hardcoded (because 'tput' gives wrong codes)
+(when (sys "TERM")
    (fkey "^[[A" (uMove))  # Is CSI portable enough?
    (fkey "^[[B" (dMove))
    (fkey "^[[C" (rMove))
