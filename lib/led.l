@@ -1,4 +1,4 @@
-# 19nov12abu
+# 23nov12abu
 # (c) Software Lab. Alexander Burger
 
 # Line editor
@@ -111,6 +111,16 @@
 # Move beyond end of line
 (de xMove ()
    (chgLine "Line" (inc (length "Line"))) )
+
+# Move up
+(de uMove ()
+   (when (< "HPos" (length "History"))
+      (setHist (inc "HPos")) ) )
+
+# Move down
+(de dMove ()
+   (unless (=0 "HPos")
+      (setHist (dec "HPos")) ) )
 
 # Move word left
 (de lWord ()
@@ -332,8 +342,8 @@
       ("h" (lMove))
       ("i" (doUndo) (on "Insert"))
       ("I" (doUndo) (bMove) (on "Insert"))
-      ("j" (unless (=0 "HPos") (setHist (dec "HPos"))))
-      ("k" (when (< "HPos" (length "History")) (setHist (inc "HPos"))))
+      ("j" (dMove))
+      ("k" (uMove))
       ("l" (rMove))
       ("n" (ledSearch "Line"))
       ("N" (if "Found" (setHist (pop '"Found")) (beep)))
@@ -381,6 +391,12 @@
          ((assoc Key "FKey")
             (cons (cons Key Prg) (delete @ "FKey")) )
          (T (cons (cons Key Prg) "FKey")) ) ) )
+
+(when (= "xterm" (sys "TERM"))  # Hardcoded (because 'tput' gives wrong codes)
+   (fkey "^[[A" (uMove))  # Is CSI portable enough?
+   (fkey "^[[B" (dMove))
+   (fkey "^[[C" (rMove))
+   (fkey "^[[D" (lMove)) )
 
 # Main editing functions
 (de _led ("Line1" "tabFun" "skipFun")
