@@ -1,4 +1,4 @@
-# 16nov12abu
+# 24nov12abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -607,8 +607,11 @@
    if nz  # No
       push Y
       ld Y (EnvBind)  # Bindings
-      null (Break)  # In breakpoint?
-      ldnz Y ((Y))  # Yes: Skip frame
+      null Y  # Any?
+      if nz  # Yes
+         null (Break)  # In breakpoint?
+         ldnz Y ((Y))  # Yes: Skip frame
+      end
       do
          null Y  # Bindings?
       while nz  # Yes
@@ -700,8 +703,11 @@
    eval
    ld Z E  # Keep 'flg' in Z
    ld X (EnvBind)  # Bindings
-   null (Break)  # In breakpoint?
-   ldnz X ((X))  # Yes: Skip frame
+   null X  # Any?
+   if nz  # Yes
+      null (Break)  # In breakpoint?
+      ldnz X ((X))  # Yes: Skip frame
+   end
    ld E Nil  # Result
    do
       null X  # Bindings?
@@ -772,8 +778,11 @@
    cmp X Nil  # NIL?
    if eq  # Yes
       ld X (EnvBind)  # Bindings
-      null (Break)  # In breakpoint?
-      ldnz X ((X))  # Yes: Skip frame
+      null X  # Any?
+      if nz  # Yes
+         null (Break)  # In breakpoint?
+         ldnz X ((X))  # Yes: Skip frame
+      end
       do
          null X  # Bindings?
       while nz  # Yes
@@ -797,8 +806,11 @@
    push Z
    ld E (E CDR)  # Last arg
    ld Y (EnvBind)  # Bindings
-   null (Break)  # In breakpoint?
-   ldnz Y ((Y))  # Yes: Skip frame
+   null Y  # Any?
+   if nz  # Yes
+      null (Break)  # In breakpoint?
+      ldnz Y ((Y))  # Yes: Skip frame
+   end
    ld Z X  # Value pointer
    do
       null Y  # Bindings?
