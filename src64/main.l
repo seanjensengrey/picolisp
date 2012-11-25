@@ -1,4 +1,4 @@
-# 24nov12abu
+# 25nov12abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -610,7 +610,7 @@
       null Y  # Any?
       if nz  # Yes
          null (Break)  # In breakpoint?
-         ldnz Y ((Y))  # Yes: Skip frame
+         ldnz Y ((Y) I)  # Yes: Skip frame
       end
       do
          null Y  # Bindings?
@@ -706,7 +706,7 @@
    null X  # Any?
    if nz  # Yes
       null (Break)  # In breakpoint?
-      ldnz X ((X))  # Yes: Skip frame
+      ldnz X ((X) I)  # Yes: Skip frame
    end
    ld E Nil  # Result
    do
@@ -781,7 +781,7 @@
       null X  # Any?
       if nz  # Yes
          null (Break)  # In breakpoint?
-         ldnz X ((X))  # Yes: Skip frame
+         ldnz X ((X) I)  # Yes: Skip frame
       end
       do
          null X  # Bindings?
@@ -809,7 +809,7 @@
    null Y  # Any?
    if nz  # Yes
       null (Break)  # In breakpoint?
-      ldnz Y ((Y))  # Yes: Skip frame
+      ldnz Y ((Y) I)  # Yes: Skip frame
    end
    ld Z X  # Value pointer
    do
