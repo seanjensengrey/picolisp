@@ -1,4 +1,4 @@
-# 11nov12abu
+# 25nov12abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -488,10 +488,8 @@
             "Carry = (Result = @1 - @2) > MAX64 - @2;" ) )
       ((and (= Dst "S") (= Src '(StkLimit)))
          (genCode (Dst D Src S) (list 'cmp Dst Src) ((op.n Dst D) (op.n Src S))
-            "if (S.p < Stack + 4064) {"
-            "   fprintf(stderr, \"Emulator stack overflow\\n\");"
-            "   exit(-99);"
-            "}"
+            "if (S.p < Stack + 4064)"
+            "   emuStkErr();"
             "Carry = (Result = @1 - @2) > MAX64 - @2;" ) )
       (T
          (genCode (Dst D Src S) (list 'cmp Dst Src) ((op.n Dst D) (op.n Src S))
@@ -1192,6 +1190,11 @@
             "uint64_t Result;"
             "int Carry;"
             NIL
+            "void emuStkErr(void) {"
+            "   fprintf(stderr, \"Emulator stack error\\n\");"
+            "   exit(-99);"
+            "}"
+            NIL
             "static void run(int);"
             NIL
             "void mul2(uint64_t src) {"
@@ -1499,16 +1502,20 @@
          (quote
             NIL
             "int main(int ac, char *av[]) {"
-            "   int i;"
+            "   int i, stk = STACK;"
             NIL
-            "   S.p = (Stack = malloc(STACK)) + STACK;"
             "   Y.p = malloc((ac + 1) * sizeof(op));"
-            "   i = 0; do"
+            "   i = 0; do {"
             "      ((ptr)Y.p)[i].n = (uint64_t)(unsigned long)av[i];"
-            "   while (++i < ac);"
+            "      if (strtol(av[i], (char**)&S.p, 10) < 0 && *S.p == '\\0')"
+            "         stk = atoi(av[i]+1) * 1024 * 1024;"
+            "   } while (++i < ac);"
             "   ((ptr)Y.p)[i].n = 0;"
             "   X.p = ((ptr)Y.p)->p,  Y.p += 8;"
-            "   Z.p = Y.p + (ac - 2) * sizeof(op);" ) )
+            "   Z.p = Y.p + (ac - 2) * sizeof(op);"
+            "   if ((Stack = malloc(stk)) == NULL)"
+            "      emuStkErr();"
+            "   S.p = Stack + stk;" ) )
       (prinl (pack "   run(" (absCode "main") ");"))
       (prinl "   return 0;")
       (prinl "}") )
