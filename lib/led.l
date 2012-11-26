@@ -298,7 +298,7 @@
             (loop
                (NIL
                   (make
-                     (while (and (setq "C" (key 50)) (<> "C" "^["))
+                     (while (and (setq "C" (key 100)) (<> "C" "^["))
                         (link "C") ) )
                   (off "Insert")
                   (lMove) )
