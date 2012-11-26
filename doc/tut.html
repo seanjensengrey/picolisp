@@ -67,6 +67,10 @@ just jump anywhere you are interested in.
 
 <p><ul>
 <li><a href="#ledit">Command Line Editing</a>
+   <ul>
+   <li><a href="#vi-style">'vi'-style</a>
+   <li><a href="#em-style">'emacs'-style</a>
+   </ul>
 <li><a href="#brw">Browsing</a>
 <li><a href="#fun">Defining Functions</a>
 <li><a href="#dbg">Debugging</a>
@@ -89,10 +93,15 @@ just jump anywhere you are interested in.
 console in interactive mode), evaluates it, and prints the result to the current
 output channel. This is called a "read-eval-print-loop" (REPL).
 
-<h3>VI-like editing</h3>
+<h3><a name="vi-style">'vi'-style</a></h3>
+
+<p>This is the default line editor, as it needs less system resources and works
+also on dumb terminals. It is similar to -- though simpler than -- the 'vi' edit
+modes of the 'korn' and 'bash' shells. For an analog 'emacs' style editor,
+please see <a href="#em-style">below</a>.
 
 <p>It is very helpful - though not absolutely necessary - when you know how to
-use the <code>vi</code> editor.
+use the <code>vi</code> text editor.
 
 <p>To alleviate the task of manual line input, a command line editor is provided
 which is similar to (though much simpler than) the <code>readline</code> feature
@@ -220,6 +229,25 @@ path names in the file system) matching the partial input are shown in sequence.
 <li>ESC terminates <i>Input Mode</i> and enters <i>Command Mode</i>
 
 </ul>
+
+<h3><a name="em-style">'emacs'-style</a></h3>
+
+<p>You can switch the command line editor to an 'emacs' style, if you call the
+function <code>(em)</code> (i.e. without arguments). A single call is enough.
+Alternatively, you could invoke PicoLisp at least once with the <code>-em</code>
+command line option
+
+<pre><code>
+$ pil -em +
+:
+</code></pre>
+
+<p>The style will be remembered in a file "~/.pil/editor", and used in all
+subsequent PicoLisp sessions.
+
+<p>To switch back to 'vi' style, call <code>(vi)</code>, use the
+<code>-vi</code> command line option, or simply remove "~/.pil/editor".
+
 
 <h3>Conclusion</h3>
 

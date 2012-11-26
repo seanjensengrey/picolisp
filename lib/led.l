@@ -98,11 +98,13 @@
    (chgLine "Line" 1) )
 
 # Move right
-(de rMove ()
+(de rMove (F)
    (chgLine "Line"
-      (if (>= "LPos" (length "Line"))
-         "LPos"
-         (inc "LPos") ) ) )
+      (min
+         (inc "LPos")
+         (if F
+            (inc (length "Line"))
+            (length "Line") ) ) ) )
 
 # Move to end of line
 (de eMove ()
@@ -393,9 +395,9 @@
          (T (cons (cons Key Prg) "FKey")) ) ) )
 
 (when (sys "TERM")
-   (fkey "^[[A" (uMove))  # Is CSI portable enough?
-   (fkey "^[[B" (dMove))
-   (fkey "^[[C" (rMove))
+   (fkey "^[[A" (uMove) (xMove))
+   (fkey "^[[B" (dMove) (xMove))
+   (fkey "^[[C" (rMove T))
    (fkey "^[[D" (lMove)) )
 
 # Main editing functions
