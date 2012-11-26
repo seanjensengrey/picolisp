@@ -1,4 +1,4 @@
-# 23nov12abu
+# 26nov12abu
 # (c) Software Lab. Alexander Burger
 
 # Line editor
@@ -449,8 +449,8 @@
 
 (mapc zap
    (quote
-      chgLine delim? skipQ escQ lMove bMove rMove eMove xMove lWord rWord lPar rPar
-      clrEol insChar del1 delChar delWord rplChar doUndo doPaste
+      chgLine skipQ escQ delim? lMove bMove rMove eMove xMove uMove dMove lWord
+      rWord lPar rPar clrEol insChar del1 delChar delWord rplChar doUndo doPaste
       setHist ledSearch expandTab insMode cmdMode _getLine _led saveHistory ) )
 
 # vi:et:ts=3:sw=3
