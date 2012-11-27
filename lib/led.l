@@ -1,4 +1,4 @@
-# 26nov12abu
+# 27nov12abu
 # (c) Software Lab. Alexander Burger
 
 # Line editor
@@ -298,7 +298,7 @@
             (loop
                (NIL
                   (make
-                     (while (and (setq "C" (key 100)) (<> "C" "^["))
+                     (while (and (setq "C" (key 40)) (<> "C" "^["))
                         (link "C") ) )
                   (off "Insert")
                   (lMove) )
