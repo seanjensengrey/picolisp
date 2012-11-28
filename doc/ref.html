@@ -600,8 +600,8 @@ $ pil myProject.l -main
 </code></pre>
 
 <p>For interactive development it is recommended to enable debugging mode, to
-get the vi-style command line editor, single-stepping, tracing and other
-debugging utilities.
+get the vi-style line editor, single-stepping, tracing and other debugging
+utilities.
 
 <pre><code>
 $ pil myProject.l -main +
@@ -624,6 +624,22 @@ the path to "lib.l" as called by 'pil' or 'dbg') is remembered internally as the
 <i>PicoLisp Home Directory</i>. This path is later automatically substituted for
 any leading "<code>@</code>" character in file name arguments to I/O functions
 (see <code><a href="refP.html#path">path</a></code>).
+
+<p>Instead of the default vi-style line editor, an emacs-style editor can be
+used. It can be switched on permanently by calling the function
+<code>(em)</code> (i.e. without arguments), or by passing <code>-em</code> on
+the command line:
+
+<pre><code>
+$ pil -em +
+:
+</code></pre>
+
+<p>A single call is enough, because the style will be remembered in a file
+"~/.pil/editor", and used in all subsequent PicoLisp sessions.
+
+<p>To switch back to 'vi' style, call <code>(vi)</code>, use the
+<code>-vi</code> command line option, or simply remove "~/.pil/editor".
 
 
 <p><hr>
