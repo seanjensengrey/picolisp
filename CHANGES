@@ -1,4 +1,5 @@
 * DDmmm12 picoLisp-3.1.1
+   Emacs-style editing with 'em'
    Line editor arrow-key support
    Changed from CTags to ETags format
    Backtrace with 'trail' and 'up' (64-bit)
