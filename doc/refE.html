@@ -164,8 +164,9 @@ href="ref_.html#!">!</a></code> breakpoints at arbitrary code locations, or
 doing other temporary changes to the code for debugging purposes.
 
 <p>See also <code><a href="refU.html#update">update</a></code>, <code><a
-href="refS.html#show">show</a></code> and <code><a
-href="refV.html#vi">vi</a></code>.
+href="refS.html#show">show</a></code>, <code><a
+href="refV.html#vi">vi</a></code> and <code><a
+href="refE.html#em">em</a></code>.
 
 <pre><code>
 : (edit (db 'nr '+Item 1))  # Edit a database symbol
@@ -203,6 +204,28 @@ href="refV.html#vi">vi</a></code>.
 (********)
 ### Entering ':q' in vim ###
 -> NIL
+</code></pre>
+
+<dt><a name="em"><code>(em 'sym) -> sym</code></a>
+<dt><code>(em 'sym 'cls) -> sym</code>
+<dt><code>(em '(sym . cls)) -> sym</code>
+<dt><code>(em) -> NIL</code>
+<dd>(Debug mode only) Opens the "emacs" editor on the function or method
+definition of <code>sym</code>. A call to <code><a
+href="refL.html#ld">ld</a></code> thereafter will <code><a
+href="refL.html#load">load</a></code> the modified file. A call without
+arguments permanently switches the REPL line editor and the <code><a
+href="refE.html#edit">edit</a></code> function to "emacs" mode. See also
+<code><a href="refD.html#doc">doc</a></code>, <code><a
+href="refE.html#edit">edit</a></code>, <code><a
+href="refV.html#vi">vi</a></code>, <code><a
+href="refD.html#*Dbg">*Dbg</a></code>, <code><a
+href="refD.html#debug">debug</a></code> and <code><a
+href="refP.html#pp">pp</a></code>.
+
+<pre><code>
+: (em 'url> '+CuSu)  # Edit the method's source code, then exit from 'emacs'
+-> T
 </code></pre>
 
 <dt><a name="env"><code>(env ['lst] | ['sym 'val] ..) -> lst</code></a>
