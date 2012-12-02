@@ -1,4 +1,4 @@
-# 27nov12abu
+# 02dec12abu
 # (c) Software Lab. Alexander Burger
 
 # Line editor
@@ -302,15 +302,15 @@
                         (link "C") ) )
                   (off "Insert")
                   (lMove) )
-               (and
-                  (assoc (pack "^[" @) "FKey")
-                  (let *Dbg "*Dbg"
-                     (run (cdr @)) ) )
+               (when (assoc (pack "^[" @) "FKey")
+                  (let *Dbg "*Dbg" (run (cdr @))) )
                (NIL "C") ) )
          (T
-            (when (= "C" ")")
-               (chgLine "Line" (prog1 "LPos" (lPar) (wait 200))) )
-            (insChar "C") ) ) ) )
+            (if (assoc "C" "FKey")
+               (let *Dbg "*Dbg" (run (cdr @)))
+               (when (= "C" ")")
+                  (chgLine "Line" (prog1 "LPos" (lPar) (wait 200))) )
+               (insChar "C") ) ) ) ) )
 
 # Command mode
 (de cmdMode ("C")
