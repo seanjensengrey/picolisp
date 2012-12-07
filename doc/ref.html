@@ -1898,7 +1898,7 @@ abbreviations:
 <a href="refZ.html">Z</a>
 <a href="ref_.html">Other</a>
 
-<p><dl>
+<p><span id="sortBtnHome"></span><dl>
 
 <dt>Symbol Functions
 <dd><code>
@@ -2649,6 +2649,37 @@ abbreviations:
 
 <p>The <code>PicoLisp</code> system can be downloaded from the <a
 href="http://software-lab.de/down.html">PicoLisp Download</a> page.
+
+<script type="text/javascript">
+var sortBtn;
+
+if (document.querySelectorAll) {
+	sortBtn = document.createElement("input");
+	sortBtn.setAttribute("type", "button");
+	sortBtn.setAttribute("onclick", "sortFunWords()");
+	sortBtn.value = "Sort Words Alphabetically";
+	document.getElementById("sortBtnHome").appendChild(sortBtn);
+};
+
+function sortFunWords() {
+	var dls = document.querySelectorAll("dl"), funDl = dls[dls.length-1];
+	var cats = funDl.querySelectorAll("dd code");
+	for (var c=0; c<cats.length; c++) {
+		var aElems = cats[c].querySelectorAll("a"), aArr = [];
+		for (var i=0; i<aElems.length; i++) { aArr.push(aElems[i]); }
+		aArr.sort(function(a,b) { return (a.innerHTML < b.innerHTML) ? -1 : 1; });
+		var dd = cats[c].parentNode;
+		dd.removeChild(cats[c]);
+		var newCode = document.createElement("code");
+		dd.appendChild(newCode);
+		for (var i=0; i<aArr.length; i++) {
+			newCode.appendChild(aArr[i]);
+			newCode.appendChild(document.createTextNode(" "));
+		}
+	}
+	sortBtn.setAttribute("disabled", "disabled");
+}
+</script>
 
 </body>
 </html>
