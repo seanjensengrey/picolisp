@@ -953,14 +953,16 @@ href="refE.html#ext?">ext?</a></code>.
 
 <dt><a name="symbols"><code>(symbols) -> sym</code></a>
 <dt><code>(symbols 'sym1) -> sym2</code>
-<dt><code>(symbols 'sym1 'sym2) -> sym3</code>
+<dt><code>(symbols 'sym1 'sym ..) -> sym2</code>
 <dd>(64-bit version only) Creates and manages namespaces of internal symbols: In
 the first form, the current namespace is returned. In the second form, the
 current namespace is set to <code>sym1</code>, and the previous namespace
 <code>sym2</code> is returned. In the third form, <code>sym1</code> is assigned
-a <code><a href="refB.html#balance">balance</a></code>d copy of an existing
-namespace <code>sym2</code> and becomes the new current namespace, returning the
-previous namespace <code>sym3</code>. See also <code><a
+a <code><a href="refB.html#balance">balance</a></code>d copy of the existing
+namespace(s) <code>sym</code>, and becomes the new current namespace, returning
+the previous namespace <code>sym2</code>. If in the third form more than one
+<code>sym</code> argument is given, possibly conflicting symbols in later
+namespaces are not interned into <code>sym2</code>. See also <code><a
 href="refP.html#pico">pico</a></code>, <code><a
 href="refL.html#local">local</a></code>, <code><a
 href="refI.html#import">import</a></code> and <code><a

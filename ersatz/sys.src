@@ -1,4 +1,4 @@
-// 09nov12abu
+// 08dec12abu
 // (c) Software Lab. Alexander Burger
 
 import java.util.*;
@@ -1795,7 +1795,15 @@ public class PicoLisp {
       }
    }
 
-   final static class Namespace extends HashMap<String,Symbol> {}
+   final static class Namespace extends HashMap<String,Symbol> {
+      final void copy(Namespace table) {
+         for (Iterator<Symbol> it = values().iterator(); it.hasNext();) {
+            Symbol sym = it.next();
+            if (table.get(sym.Name) == null)
+               table.put(sym.Name, sym);
+         }
+      }
+   }
 
    static abstract class Any {
       Any Car, Cdr;

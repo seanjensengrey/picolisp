@@ -1,4 +1,4 @@
-# 15nov12abu
+# 08dec12abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -1673,15 +1673,18 @@ all ()
 
 # (symbols) -> sym
 # (symbols 'sym1) -> sym2
-# (symbols 'sym1 'sym2) -> sym3
-symbols (s t)
+# (symbols 'sym1 'sym ..) -> sym2
+symbols (x s t)
    if (ex.Cdr instanceof Cell) {
       s = (Symbol)ex.Cdr.Car.eval();
-      if (ex.Cdr.Cdr instanceof Cell) {
-         t = (Symbol)ex.Cdr.Cdr.Car.eval();
-         if (!(t.Car instanceof Symbol) || !(((Symbol)t.Car).Obj instanceof Namespace))
-            symNsError(ex, t);
-         s.Car = new Symbol(((Namespace)(((Symbol)t.Car).Obj)).clone());
+      if ((x = ex.Cdr.Cdr) instanceof Cell) {
+         s.Car = new Symbol(new Namespace());
+         do {
+            t = (Symbol)x.Car.eval();
+            if (!(t.Car instanceof Symbol) || !(((Symbol)t.Car).Obj instanceof Namespace))
+               symNsError(ex, t);
+            ((Namespace)(((Symbol)t.Car).Obj)).copy((Namespace)(((Symbol)s.Car).Obj));
+         } while ((x = x.Cdr) instanceof Cell);
       }
       else if (!(s.Car instanceof Symbol) || !(((Symbol)s.Car).Obj instanceof Namespace))
          symNsError(ex, s);
