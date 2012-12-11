@@ -1,4 +1,4 @@
-# 25nov12abu
+# 11dec12abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -1046,11 +1046,11 @@
       call nameX_X  # Get A's name in X
       cmp X ZERO  # Any?
       if eq  # No
-         ld E (E TAIL)
-         call nameE_E  # Second name in E
-         cmp E ZERO  # Any?
+         ld X (E TAIL)
+         call nameX_X  # Second name in X
+         cmp X ZERO  # Any?
          if eq  # No
-            shr A 5  # Random bit from A (...x1000) into carry (non-zero)
+            cmp A E  # Compare symbol addresses
          else
             setc  # lt
          end
