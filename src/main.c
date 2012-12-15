@@ -1,4 +1,4 @@
-/* 15nov12abu
+/* 15dec12abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -459,7 +459,7 @@ int compare(any x, any y) {
       if (isCell(y) || y == T)
          return -1;
       if (!isNum(a = name(x)))
-         return !isNum(name(y))? 1664525*(int32_t)(long)x - 1664525*(int32_t)(long)y : -1;
+         return !isNum(name(y))? (long)x - (long)y : -1;
       if (!isNum(b = name(y)))
          return +1;
       n1 = unDig(a), n2 = unDig(b);
