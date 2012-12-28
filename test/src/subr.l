@@ -1,4 +1,4 @@
-# 25jan11abu
+# 28dec12abu
 # (c) Software Lab. Alexander Burger
 
 ### c[ad]*r ###
@@ -410,6 +410,18 @@
 (test 8 (size '((1 2 3) (4 5 6))))
 (test 6 (size '((1 2 .) (4 5 .))))
 (test 3 (size (1 . (2 3 .))))
+
+
+### bytes ###
+(test 4 (bytes "abc"))
+(test 5 (bytes "äbc"))
+(test 2 (bytes 127))
+(test 3 (bytes 128))
+(test 10 (bytes (101 (102) 103)))
+(test 9 (bytes (101 102 103 .)))
+(let (L (7 "abc" (1 2 3) 'a)  F (tmp "bytes"))
+   (out F (pr L))
+   (test (bytes L) (car (info F))) )
 
 
 ### assoc ###

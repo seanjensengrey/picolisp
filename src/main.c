@@ -1,4 +1,4 @@
-/* 15dec12abu
+/* 28dec12abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -493,6 +493,32 @@ int compare(any x, any y) {
          return y == T? -1 : +1;
       if (x == a && y == b)
          return 0;
+   }
+}
+
+int binSize(any x) {
+   if (isNum(x)) {
+      int n = numBytes(x);
+
+      if (n < 63)
+         return n + 1;
+      return n + 2 + (n - 63) / 255;
+   }
+   else if (isNil(x))
+      return 1;
+   else if (isSym(x))
+      return binSize(name(x));
+   else {
+      any y = x;
+      int n = 2;
+
+      while (n += binSize(car(x)), !isNil(x = cdr(x))) {
+         if (x == y)
+            return n + 1;
+         if (!isCell(x))
+            return n + binSize(x);
+      }
+      return n;
    }
 }
 

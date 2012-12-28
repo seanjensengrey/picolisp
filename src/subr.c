@@ -1,4 +1,4 @@
-/* 07jun12abu
+/* 28dec12abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -1261,6 +1261,11 @@ any doSize(any ex) {
    if (isExt(x))
       return boxCnt(dbSize(ex,x));
    return isNum(x = name(x))? boxCnt(numBytes(x)) : Zero;
+}
+
+// (bytes 'any) -> cnt
+any doBytes(any x) {
+   return boxCnt(binSize(EVAL(cadr(x))));
 }
 
 // (assoc 'any 'lst) -> lst

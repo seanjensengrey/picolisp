@@ -1,4 +1,4 @@
-/* 22nov12abu
+/* 28dec12abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -3224,32 +3224,6 @@ any doLock(any ex) {
       n = tryLock(blk * BlkSize[F], 1);
    }
    return n? boxCnt(n) : Nil;
-}
-
-static int binSize(any x) {
-   if (isNum(x)) {
-      int n = numBytes(x);
-
-      if (n < 63)
-         return n + 1;
-      return n + 2 + (n - 63) / 255;
-   }
-   else if (isNil(x))
-      return 1;
-   else if (isSym(x))
-      return binSize(name(x));
-   else {
-      any y = x;
-      int n = 2;
-
-      while (n += binSize(car(x)), !isNil(x = cdr(x))) {
-         if (x == y)
-            return n + 1;
-         if (!isCell(x))
-            return n + binSize(x);
-      }
-      return n;
-   }
 }
 
 int dbSize(any ex, any x) {

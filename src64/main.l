@@ -1,4 +1,4 @@
-# 11dec12abu
+# 28dec12abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -1168,6 +1168,101 @@
    pop Y
    pop X
    ret  # F
+
+(code 'binSizeX_A 0)
+   cnt X  # Short number?
+   if nz  # Yes
+      shr X 3  # Normalize short, keep sign bit
+      jmp 20
+   end
+   big X  # Big number?
+   if nz  # Yes
+      ld A 9  # Count 8 significant bytes plus 1
+      do
+         ld C (X DIG)  # Keep digit
+         ld X (X BIG)  # More cells?
+         cnt X
+      while z  # Yes
+         add A 8  # Increment count by 8
+      loop
+      shr X 4  # Normalize short
+      shl C 1  # Get most significant bit of last digit
+      addc X X  # Any significant bits in short number?
+      jmp 40
+   end
+   ld A 1  # Preload 1
+   cmp X Nil  # NIL?
+   if ne  # No
+      sym X  # Symbol?
+      if nz  # Yes
+         ld X (X TAIL)
+         call nameX_X  # Get name
+         cmp X ZERO  # Any?
+         if ne  # Yes
+            cnt X  # Short name?
+            if nz  # Yes
+               shl X 2  # Strip status bits
+               shr X 6  # Normalize
+20             ld A 2  # Count significant bytes plus 1
+               do
+                  shr X 8  # More bytes?
+               while nz  # Yes
+                  inc A  # Increment count
+               loop
+               ret
+            end
+            ld A 9  # Count significant bytes plus 1
+            do
+               ld X (X BIG)  # More cells?
+               cnt X
+            while z  # Yes
+               add A 8  # Increment count by 8
+            loop
+            shr X 4  # Any significant bits in short name/number?
+40          if nz  # Yes
+               do
+                  inc A  # Increment count
+                  shr X 8  # More bytes?
+               until z  # No
+            end
+            cmp A (+ 63 1)  # More than one chunk?
+            if ge  # Yes
+               ld X A  # Keep size+1 in X
+               sub A 64  # Size-63
+               ld C 0  # Divide by 255
+               div 255
+               setc  # Plus 1
+               addc A X  # Plus size+1
+            end
+         end
+         ret
+      end
+      push X  # <S I> List head
+      push 2  # <S> Count
+      do
+         push (X CDR)  # Save rest
+         ld X (X)  # Recurse on CAR
+         call binSizeX_A
+         pop X
+         add (S) A  # Add result to count
+         cmp X Nil  # CDR is NIL?
+      while ne  # No
+         cmp X (S I)  # Circular?
+         if eq  # Yes
+            inc (S)  # Increment count once more
+            break T
+         end
+         atom X  # Atomic CDR?
+         if nz  # Yes
+            call binSizeX_A  # Get size
+            add (S) A  # Add result to count
+            break T
+         end
+      loop
+      pop A  # Get result
+      add S I  # Drop list head
+   end
+   ret
 
 (code 'memberXY_FY 0)
    ld C Y  # Keep head in C

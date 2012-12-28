@@ -1,4 +1,4 @@
-# 13nov12abu
+# 28dec12abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Data)
@@ -458,6 +458,7 @@
    initFun NIL       "prior"     doPrior
    initFun NIL       "length"    doLength
    initFun NIL       "size"      doSize
+   initFun NIL       "bytes"     doBytes
    initFun NIL       "assoc"     doAssoc
    initFun NIL       "asoq"      doAsoq
    initFun NIL       "rank"      doRank
