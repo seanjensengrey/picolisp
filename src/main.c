@@ -1,4 +1,4 @@
-/* 28dec12abu
+/* 04jan13abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -940,16 +940,15 @@ any doDate(any ex) {
    any x, z;
    int y, m, d, n;
    cell c1;
-   time_t tim;
 
    if (!isCell(x = cdr(ex))) {
-      time(&tim);
-      TM = localtime(&tim);
+      gettimeofday(&Tv,NULL);
+      TM = localtime(&Tv.tv_sec);
       return mkDat(TM->tm_year+1900,  TM->tm_mon+1,  TM->tm_mday);
    }
    if ((z = EVAL(car(x))) == T) {
-      time(&tim);
-      TM = gmtime(&tim);
+      gettimeofday(&Tv,NULL);
+      TM = gmtime(&Tv.tv_sec);
       return mkDat(TM->tm_year+1900,  TM->tm_mon+1,  TM->tm_mday);
    }
    if (isNil(z))
@@ -992,12 +991,11 @@ any doTime(any ex) {
    any x, z;
    int h, m, s;
    cell c1;
-   time_t tim;
    struct tm *p;
 
    if (!isCell(x = cdr(ex))) {
-      time(&tim);
-      p = localtime(&tim);
+      gettimeofday(&Tv,NULL);
+      p = localtime(&Tv.tv_sec);
       return boxCnt(p->tm_hour * 3600 + p->tm_min * 60 + p->tm_sec);
    }
    if ((z = EVAL(car(x))) == T)
@@ -1018,8 +1016,10 @@ any doTime(any ex) {
    return mkTime(h, m, isCell(cdr(x))? evCnt(ex, cdr(x)) : 0);
 }
 
-// (usec) -> num
-any doUsec(any ex __attribute__((unused))) {
+// (usec ['flg]) -> num
+any doUsec(any ex) {
+   if (!isNil(EVAL(cadr(ex))))
+      return boxCnt(Tv.tv_usec);
    gettimeofday(&Tv,NULL);
    return boxWord2((word2)Tv.tv_sec*1000000 + Tv.tv_usec - USec);
 }

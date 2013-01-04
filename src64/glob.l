@@ -1,4 +1,4 @@
-# 28dec12abu
+# 04jan13abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Data)
@@ -19,6 +19,8 @@
 : Link         word  0           # Saved link register
 : Catch        word  0           # Catch frames
 : Termio       word  0           # Raw mode terminal I/O
+: Tv           word  0           # 'timeval' structure
+               word  0
 : Time         word  0           # Pointer to time structure
 : USec         word  0           # Startup microseconds
 : TtyPid       word  0           # Terminal process ID

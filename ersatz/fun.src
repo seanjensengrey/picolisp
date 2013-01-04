@@ -1,4 +1,4 @@
-# 08dec12abu
+# 04jan13abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -342,9 +342,11 @@ time (i j x z)
    j = evInt(x);
    return time(i, j, x.Cdr instanceof Cell? evInt(x.Cdr) : 0);
 
-# (usec) -> num
+# (usec ['flg]) -> num
 usec ()
-   return new Number(System.nanoTime()/1000 - USec);
+   return new Number(ex.Cdr.Car.eval() == Nil?
+      System.nanoTime()/1000 - USec :
+      Cal.get(Calendar.MILLISECOND) * 1000 );
 
 # (pwd) -> sym
 pwd T
@@ -1196,7 +1198,7 @@ xor (x y)
    return y == Nil ^ x == Nil? T : Nil;
 
 # (bool 'any) -> flg
-bool ()
+bool T
    return ex.Cdr.Car.eval() == Nil? Nil : T;
 
 # (not 'any) -> flg

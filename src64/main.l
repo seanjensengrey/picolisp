@@ -1,4 +1,4 @@
-# 28dec12abu
+# 04jan13abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -140,10 +140,10 @@
    cc signal(SIGPIPE SIG_IGN)  # Ignore signals
    cc signal(SIGTTIN SIG_IGN)
    cc signal(SIGTTOU SIG_IGN)
-   cc gettimeofday(Buf 0)  # Get time
-   ld A (Buf)  # tv_sec
+   cc gettimeofday(Tv 0)  # Get time
+   ld A (Tv)  # tv_sec
    mul 1000000  # Convert to microseconds
-   add A (Buf I)  # tv_usec
+   add A (Tv I)  # tv_usec
    ld (USec) A  # Store
    ld X 0  # Runtime expression
    call loadAllX_E  # Load arguments
@@ -2692,8 +2692,8 @@
    ld Y (E CDR)  # Y on args
    atom Y  # Any?
    if nz  # No
-      cc time(Buf)  # Get current time
-      cc localtime(Buf)  # Convert to local time
+      cc gettimeofday(Tv 0)  # Get current time
+      cc localtime(Tv)  # Convert to local time
       ld (Time) A  # Keep in 'Time'
       ld C A
       call tmDateC_E  # Extract date
@@ -2702,8 +2702,8 @@
       eval
       cmp E TSym  # T?
       if eq  # Yes
-         cc time(Buf)  # Get current time
-         cc gmtime(Buf)  # Convert to Greenwich Mean Time
+         cc gettimeofday(Tv 0)  # Get current time
+         cc gmtime(Tv)  # Convert to Greenwich Mean Time
          ld (Time) A  # Keep in 'Time'
          ld C A
          call tmDateC_E  # Extract date
@@ -2823,8 +2823,8 @@
    ld Y (E CDR)  # Y on args
    atom Y  # Any?
    if nz  # No
-      cc time(Buf)  # Get current time
-      cc localtime(Buf)  # Convert to local time
+      cc gettimeofday(Tv 0)  # Get current time
+      cc localtime(Tv)  # Convert to local time
       ld Y A
       call tmTimeY_E  # Extract time
    else
@@ -2921,14 +2921,20 @@
    pop X
    ret
 
-# (usec) -> num
+# (usec ['flg]) -> num
 (code 'doUsec 2)
-   cc gettimeofday(Buf 0)  # Get time
-   ld A (Buf)  # tv_sec
-   mul 1000000  # Convert to microseconds
-   add A (Buf I)  # tv_usec
-   sub A (USec)  # Diff to startup time
-   ld E A
+   ld E ((E CDR))  # Eval arg
+   eval
+   cmp E Nil  # NIL?
+   ldnz E (Tv I)  # No: tv_usec from last 'time' call
+   if eq  # Yes
+      cc gettimeofday(Tv 0)  # Get time
+      ld A (Tv)  # tv_sec
+      mul 1000000  # Convert to microseconds
+      add A (Tv I)  # tv_usec
+      sub A (USec)  # Diff to startup time
+      ld E A
+   end
    shl E 4  # Make short number
    or E CNT
    ret
