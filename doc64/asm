@@ -137,8 +137,8 @@
       cmpn dst src cnt  # Compare 'cnt' bytes 'dst' with 'src' [z..]
       slen dst src      # Set 'dst' to the string length of 'src' [...]
       memb src cnt      # Find B in 'cnt' bytes of 'src' memory [z..]
-      nulp src          # Check 'src' for null-pointer [z..]
       null src          # Compare 'src' with 0 [zs_]
+      nulp src          # Check 'src' for null-pointer [z..]
       nul4              # Compare four bytes in 'A' with 0 [zs_]
 
    Byte addressing:
