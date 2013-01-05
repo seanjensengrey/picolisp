@@ -1,4 +1,4 @@
-# 04jan13abu
+# 05jan13abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -2834,10 +2834,9 @@
       if eq  # Yes
          ld Y (Time)  # Get time from last call to 'date'
          null Y  # Any?
+         ldz E Nil
          if nz  # Yes
             call tmTimeY_E  # Extract time
-         else
-            ld E Nil
          end
       else
          cmp E Nil  # NIL?

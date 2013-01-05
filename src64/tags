@@ -517,17 +517,17 @@ sys/x86-64.linux.defs.l,1959
 doDate2687,65239
 tmTimeY_E2803,68850
 doTime2820,69183
-doUsec2925,72177
-doPwd2943,72594
-doCd2954,72849
-doCtty2979,73465
-doInfo3016,74399
-doFile3061,75494
-doDir3114,76730
-doCmd3184,78348
-doArgv3202,78807
-doOpt3305,81353
-doVersion3319,81684
+doUsec2924,72161
+doPwd2942,72578
+doCd2953,72833
+doCtty2978,73449
+doInfo3015,74383
+doFile3060,75478
+doDir3113,76714
+doCmd3183,78332
+doArgv3201,78791
+doOpt3304,81337
+doVersion3318,81668
 
 ./big.l,1059
 zapZeroA_A6,106
