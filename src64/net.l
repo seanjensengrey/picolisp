@@ -1,4 +1,4 @@
-# 20oct11abu
+# 05jan13abu
 # (c) Software Lab. Alexander Burger
 
 # (port ['T] 'cnt|(cnt . cnt) ['var]) -> cnt
@@ -202,7 +202,7 @@
       sub S (%% NI_MAXHOST)  # <S> Hostname buffer
       ld C Z  # Get 'lst'
       do
-         null C  # Any?
+         nulp C  # Any?
       while nz  # Yes
          ld4 (C AI_ADDRLEN)
          cc getnameinfo((C AI_ADDR) A S NI_MAXHOST 0 0 NI_NAMEREQD)
@@ -234,7 +234,7 @@
    if z  # Yes
       ld Z E  # Keep list in Z
       do
-         null E  # Any?
+         nulp E  # Any?
       while nz  # Yes
          ld4 (E AI_SOCKTYPE)  # Create socket
          ld C A
@@ -339,7 +339,7 @@
          call binPrintEZ  # Print item
          ld E X  # Get list
          do
-            null E  # Any?
+            nulp E  # Any?
          while nz  # Yes
             ld4 (E AI_SOCKTYPE)  # Create socket
             ld C A
