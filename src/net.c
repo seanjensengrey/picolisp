@@ -1,4 +1,4 @@
-/* 20oct11abu
+/* 07jan13abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -6,6 +6,8 @@
 
 #include <netdb.h>
 #include <arpa/inet.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
 
 static void ipErr(any ex, char *s) {
    err(ex, NULL, "IP %s error: %s", s, strerror(errno));

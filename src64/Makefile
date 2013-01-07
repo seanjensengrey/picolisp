@@ -1,4 +1,4 @@
-# 05nov12abu
+# 07jan13abu
 # (c) Software Lab. Alexander Burger
 
 .SILENT:
@@ -10,19 +10,24 @@ ifeq ($(MAKECMDGOALS), x86-64.linux)
 	UNAME = Linux
 	MACHINE = x86_64
 else
-	ifeq ($(MAKECMDGOALS), x86-64.sunOs)
-		UNAME = SunOS
+	ifeq ($(MAKECMDGOALS), x86-64.freeBsd)
+		UNAME = FreeBSD
 		MACHINE = x86_64
 	else
-		ifeq ($(MAKECMDGOALS), ppc64.linux)
-			UNAME = Linux
-			MACHINE = ppc64
+		ifeq ($(MAKECMDGOALS), x86-64.sunOs)
+			UNAME = SunOS
+			MACHINE = x86_64
 		else
-			UNAME = $(shell uname)
-			ifeq ($(MAKECMDGOALS), emu)
-				MACHINE = emu
+			ifeq ($(MAKECMDGOALS), ppc64.linux)
+				UNAME = Linux
+				MACHINE = ppc64
 			else
-				MACHINE = $(shell uname -m)
+				UNAME = $(shell uname)
+				ifeq ($(MAKECMDGOALS), emu)
+					MACHINE = emu
+				else
+					MACHINE = $(shell uname -m)
+				endif
 			endif
 		endif
 	endif
@@ -52,21 +57,32 @@ ifeq ($(UNAME), Linux)
 	LD-SHARED = -shared -export-dynamic
 	STRIP = strip
 else
-	ifeq ($(UNAME), SunOS)
-		OS = SunOS
-		SYS = .sunOs
+	ifeq ($(UNAME), FreeBSD)
+		OS = FreeBSD
+		SYS = .freeBsd
 		FMT = .s
 		ARCH = x86-64
-		AS = gas --64
-		LD-MAIN = -m64 -lc -lm -ldl -lsocket -lnsl
-		LD-SHARED = -m64 -shared
+		AS = as
+		LD-MAIN = -Wl,--no-as-needed -rdynamic -lc -lm
+		LD-SHARED = -shared -rdynamic
 		STRIP = strip
 	else
-		ifeq ($(UNAME), Darwin)
-			OS = Darwin
-			LD-MAIN = -lc -lm -ldl
-			LD-SHARED = -dynamiclib -undefined dynamic_lookup
-			STRIP = strip -x
+		ifeq ($(UNAME), SunOS)
+			OS = SunOS
+			SYS = .sunOs
+			FMT = .s
+			ARCH = x86-64
+			AS = gas --64
+			LD-MAIN = -m64 -lc -lm -ldl -lsocket -lnsl
+			LD-SHARED = -m64 -shared
+			STRIP = strip
+		else
+			ifeq ($(UNAME), Darwin)
+				OS = Darwin
+				LD-MAIN = -lc -lm -ldl
+				LD-SHARED = -dynamiclib -undefined dynamic_lookup
+				STRIP = strip -x
+			endif
 		endif
 	endif
 endif
@@ -82,6 +98,7 @@ sFiles = \
 all: picolisp
 
 x86-64.linux: $(sFiles)
+x86-64.freeBsd: $(sFiles)
 x86-64.sunOs: $(sFiles)
 ppc64.linux: $(sFiles)
 emu: picolisp
