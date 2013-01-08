@@ -1,4 +1,4 @@
-# 07jan13abu
+# 08jan13abu
 # (c) Software Lab. Alexander Burger
 
 .SILENT:
@@ -127,20 +127,20 @@ sysdefs: sysdefs.c
 	$(CC) -o sysdefs -D_FILE_OFFSET_BITS=64 sysdefs.c
 	$(STRIP) sysdefs
 
-emu.base.o: emu.base.c
+emu.base.o: sysdefs emu.base.c
 	$(CC) -c -O -fomit-frame-pointer -D_FILE_OFFSET_BITS=64 emu.base.c
 
 .c.o:
 	$(CC) -c -O -fpic -fomit-frame-pointer -D_FILE_OFFSET_BITS=64 $*.c
 
 ### Translate ###
-$(ARCH)$(SYS).base$(FMT): sysdefs arch/$(ARCH).l $(baseFiles) sys/$(ARCH)$(SYS).code.l
+$(ARCH)$(SYS).base$(FMT): arch/$(ARCH).l $(baseFiles) sys/$(ARCH)$(SYS).code.l
 	./mkAsm $(ARCH) "$(SYS)" $(FMT) $(OS) base "" $(lib)/map  $(baseFiles) sys/$(ARCH)$(SYS).code.l
 
-$(ARCH)$(SYS).ext$(FMT): sysdefs arch/$(ARCH).l ext.l $(ARCH)$(SYS).base$(FMT)
+$(ARCH)$(SYS).ext$(FMT): arch/$(ARCH).l ext.l $(ARCH)$(SYS).base$(FMT)
 	./mkAsm $(ARCH) "$(SYS)" $(FMT) $(OS) ext T ""  ext.l
 
-$(ARCH)$(SYS).ht$(FMT): sysdefs arch/$(ARCH).l ht.l $(ARCH)$(SYS).base$(FMT)
+$(ARCH)$(SYS).ht$(FMT): arch/$(ARCH).l ht.l $(ARCH)$(SYS).base$(FMT)
 	./mkAsm $(ARCH) "$(SYS)" $(FMT) $(OS) ht T ""  ht.l
 
 ### Clean up ###
