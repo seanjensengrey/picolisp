@@ -1,4 +1,4 @@
-07jan13abu
+08jan13abu
 (c) Software Lab. Alexander Burger
 
 
@@ -42,8 +42,8 @@ installation, and invoke them explicitly as desired.
 
       $ (cd src; make)
 
-   or - if you have an x86-64 system (under Linux or SunOS), or a ppc64 system
-   (under Linux) - build the 64-bit version
+   or - if you have an x86-64 system (under Linux, FreeBSD or SunOS), or a ppc64
+   system (under Linux) - build the 64-bit version
 
       $ (cd src64; make)
 
