@@ -1,4 +1,4 @@
-# 04jan13abu
+# 12jan13abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Data)
@@ -595,10 +595,10 @@
 :: OutFile     word  0           # Output file
 : Env  # <Catch III> environment
 : EnvBind      word  0           # <III> Bind frames (first item in Env)
-: EnvInFrames  word  0           # <IV> Input frames
-: EnvOutFrames word  0           # <V> Output frames
-: EnvErrFrames word  0           # <VI> Error frames
-: EnvCtlFrames word  0           # <VII> Control frames
+: EnvInFrames  word  0           # Input frames
+: EnvOutFrames word  0           # Output frames
+: EnvErrFrames word  0           # Error frames
+: EnvCtlFrames word  0           # Control frames
 :: EnvIntern   word  pico        # Current namespace of internal symbols
 : EnvArgs      word  0           # Varargs frame
 : EnvNext      word  0           # Next vararg
