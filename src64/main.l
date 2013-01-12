@@ -1,4 +1,4 @@
-# 05jan13abu
+# 12jan13abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -252,7 +252,7 @@
 (code 'sighandlerE)
    null (EnvProtect)  # Protected?
    if z  # No
-      ld (EnvProtect) 1
+      inc (EnvProtect)
       push A
       push C
       do
