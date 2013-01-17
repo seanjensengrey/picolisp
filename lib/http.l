@@ -1,4 +1,4 @@
-# 09nov12abu
+# 17jan13abu
 # (c) Software Lab. Alexander Burger
 
 # *Home *Gate *Host *Port *Port1 *Port% *Http1 *Chunked
@@ -161,7 +161,7 @@
                      ((=0 *ContLen))
                      ((if *ContLen (ht:Read @) (line))
                         (for L (split @ '&)
-                           (when (cdr (setq L (split L "=")))
+                           (when (setq L (split L "="))
                               (let? S (_htSet (car L) (ht:Pack (cadr L)))
                                  (and
                                     (cddr L)
@@ -195,15 +195,14 @@
                (setq
                   L (split @U "?")
                   @U (car L)
-                  L (extract
-                     '((L)
+                  L (mapcan
+                     '((A)
                         (cond
-                           ((cdr (setq L (split L "=")))
-                              (_htSet (car L) (htArg (cadr L)))
-                              NIL )
-                           ((tail '`(chop ".html") (car L))
-                              (pack (car L)) )
-                           (T (htArg (car L))) ) )
+                           ((cdr (setq A (split A "=")))
+                              (nil (_htSet (car A) (htArg (cadr A)))) )
+                           ((tail '`(chop ".html") (car A))
+                              (cons (pack (car A))) )
+                           (T (cons (htArg (car A)))) ) )
                      (split (cadr L) "&") ) )
                (unless (setq *Url (ht:Pack @U))
                   (setq  *Url (car *Home)  @U (cdr *Home)) )
