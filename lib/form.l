@@ -1,4 +1,4 @@
-# 19oct12abu
+# 17jan13abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -6,13 +6,17 @@
 
 (allow "@img/" T)
 (push1 '*JS (allow "@lib/form.js"))
-(mapc allow '(*Gui *Get *Got *Form *Evt *Drop "!jsForm" *JsHint "!jsHint"))
+(mapc allow
+   '(*Gui *Get *Got *Form *Evt *Drop "!jsForm" *JsHint "!jsHint" "!tzOffs") )
 
 (one "*Cnt")
-(off "*Lst" "*Post2" "*Cho")
+(off "*Lst" "*Post2" "*Cho" "*TZO")
 
 (de *Throbber
    ("+---" "-+--" "--+-" "---+" "--+-" "-+--" .) )
+
+(de tzOffs (Min)
+   (setq "*TZO" (* Min 60)) )
 
 # Define GUI form
 (de form ("Attr" . "Prg")
@@ -277,7 +281,14 @@
    (pack
       "TimeOut"
       " "
-      (tim$ (% (+ (time) (/ (cadr (assoc -1 *Run)) 1000)) 86400)) ) )
+      (let Tim (+ (time T) (/ (cadr (assoc -1 *Run)) 1000))
+         (if "*TZO"
+            (tim$ (% (- Tim -86400 @) 86400))
+            (javascript NIL
+               (text
+                  "lisp('@1!tzOffs', \"+\" + (new Date()).getTimezoneOffset());"
+                  *SesId ) )
+            (pack (tim$ (% Tim 86400)) " UTC") ) ) ) )
 
 # Return chart property
 (de chart @
