@@ -1,11 +1,41 @@
-# 26mar10abu
+# 21jan13abu
 # (c) Software Lab. Alexander Burger
 
-# *Login *Users *Perms
+# *Salt *Login *Users *Perms
+
+# 'crypt' algorithm, e.g. (16 . "$6$@1$")
+(default *Salt (2 . "@1"))
+
+(de salt ()
+   (text (cdr *Salt)
+      (make
+         (in "/dev/urandom"
+            (do (car *Salt)
+               (link
+                  (get
+                     '`(mapcar char
+                        (conc
+                           (range 46 57)
+                           (range 65 90)
+                           (range 97 122) ) )
+                     (& 63 (rd 1)) ) ) ) ) ) ) )
+
+(de passwd (Str Pw)
+   (if (and native *Salt)
+      (native "libcrypt.so" "crypt" 'S Str (or Pw (salt)))
+      Str ) )
+
+(de auth (Nm Pw)
+   (with (db 'nm '+User Nm)
+      (and
+         (or
+            (= (: pw) Pw)
+            (= (: pw) (passwd (: pw) Pw)) )
+         This ) ) )
 
 ### Login ###
 (de login (Nm Pw)
-   (ifn (setq *Login (db 'nm '+User Nm 'pw Pw))
+   (ifn (setq *Login (auth Nm Pw))
       (msg *Pid " ? " Nm)
       (msg *Pid " * " (stamp) " " Nm)
       (tell 'hi *Pid Nm *Adr)
