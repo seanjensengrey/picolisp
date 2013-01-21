@@ -30,7 +30,7 @@
       (and
          (or
             (= (: pw) Pw)
-            (= (: pw) (passwd (: pw) Pw)) )
+            (= (: pw) (passwd Pw (: pw))) )
          This ) ) )
 
 ### Login ###
