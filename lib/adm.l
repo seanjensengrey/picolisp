@@ -20,9 +20,9 @@
                            (range 97 122) ) )
                      (& 63 (rd 1)) ) ) ) ) ) ) )
 
-(de passwd (Str Pw)
+(de passwd (Str Salt)
    (if (and native *Salt)
-      (native "libcrypt.so" "crypt" 'S Str (or Pw (salt)))
+      (native "libcrypt.so" "crypt" 'S Str (or Salt (salt)))
       Str ) )
 
 (de auth (Nm Pw)
