@@ -1,9 +1,9 @@
-# 21jan13abu
+# 22jan13abu
 # (c) Software Lab. Alexander Burger
 
 # *Salt *Login *Users *Perms
 
-# 'crypt' algorithm, e.g. (16 . "$6$@1$")
+# crypt(3) algorithm, e.g. (16 . "$6$@1$")
 (default *Salt (2 . "@1"))
 
 (de salt ()
