@@ -1,4 +1,4 @@
-# 18jan13abu
+# 22jan13abu
 # (c) Software Lab. Alexander Burger
 
 # *Dbs *Jnl *Blob upd
@@ -398,6 +398,22 @@
          (rel> (meta Obj (cdr X)) Obj (car X) NIL (or Old *DB))
          (rel> (meta Obj (cdr X)) Obj NIL (car X) (or New *DB)) ) )
    (extra Obj Old New Hook) )
+
+
+# +Index prefix
+(class +Hook2)
+
+(dm rel> (Obj Old New Hook)
+   (extra Obj Old New *DB)
+   (extra Obj Old New Hook) )
+
+(dm lose> (Obj Val)
+   (extra Obj Val *DB)
+   (extra Obj Val Hook) )
+
+(dm keep> (Obj Val)
+   (extra Obj Val *DB)
+   (extra Obj Val Hook) )
 
 
 # (+Blob)
