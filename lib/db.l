@@ -1,4 +1,4 @@
-# 22jan13abu
+# 23jan13abu
 # (c) Software Lab. Alexander Burger
 
 # *Dbs *Jnl *Blob upd
@@ -407,11 +407,11 @@
    (extra Obj Old New *DB)
    (extra Obj Old New Hook) )
 
-(dm lose> (Obj Val)
+(dm lose> (Obj Val Hook)
    (extra Obj Val *DB)
    (extra Obj Val Hook) )
 
-(dm keep> (Obj Val)
+(dm keep> (Obj Val Hook)
    (extra Obj Val *DB)
    (extra Obj Val Hook) )
 
