@@ -405,15 +405,18 @@
 
 (dm rel> (Obj Old New Hook)
    (extra Obj Old New *DB)
-   (extra Obj Old New Hook) )
+   (when (or (and Hook (n== Hook *DB)) (get Obj (: hook)))
+      (extra Obj Old New Hook) ) )
 
 (dm lose> (Obj Val Hook)
    (extra Obj Val *DB)
-   (extra Obj Val Hook) )
+   (when (or (and Hook (n== Hook *DB)) (get Obj (: hook)))
+      (extra Obj Val Hook) ) )
 
 (dm keep> (Obj Val Hook)
    (extra Obj Val *DB)
-   (extra Obj Val Hook) )
+   (when (or (and Hook (n== Hook *DB)) (get Obj (: hook)))
+      (extra Obj Val Hook) ) )
 
 
 # (+Blob)
