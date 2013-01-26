@@ -1,4 +1,4 @@
-# 02jan12abu
+# 25jan13abu
 # (c) Software Lab. Alexander Burger
 
 ### DB Garbage Collection ###
@@ -410,7 +410,7 @@
             (_dmp Obj)
             (maps
                '((X)
-                  (unless (member X Lst)
+                  (unless (or (member X Lst) (= `(char "+") (char (fin X))))
                      (prinl)
                      (space 3)
                      (cond
@@ -449,9 +449,6 @@
                      (when (isa '+Key This)
                         (or Flg (push 'Lst X))
                         (printsp (type Obj) (: var))
-                        (when (: hook)
-                           (_dmp (: hook) T)
-                           (space) )
                         (_dmp (car X) T)
                         (throw) ) ) )
                Obj )
@@ -463,9 +460,6 @@
                         (space)
                         (or Flg (push 'Lst X))
                         (print (: var))
-                        (when (: hook)
-                           (space)
-                           (_dmp (: hook) T) )
                         (space)
                         (_dmp (car X) T) ) ) )
                Obj ) )
