@@ -1,4 +1,4 @@
-# 22nov12abu
+# 31jan13abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -2605,6 +2605,10 @@
    push A  # <S /III> String length
    slen (S) (S I)
    ld A Y  # Restore char
+   cmp B (char "+")  # Sign?
+   jeq 90
+   cmp B (char "-")
+   jeq 90  # Yes
    cmp B (char "a")  # Lower case letter?
    if ge
       cmp B (char "z")
@@ -2656,7 +2660,7 @@
       call findSymX_E  # Find or create symbol
       drop
    else
-      call getChar_A
+90    call getChar_A
       call mkCharA_A  # Return char
       ld E A
       call (Get_A)  # Skip it

@@ -1,4 +1,4 @@
-/* 28dec12abu
+/* 31jan13abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -1301,7 +1301,7 @@ any token(any x, int c) {
          byteSym(Chr, &i, &y);
       return symToNum(Pop(c1), (int)unDig(val(Scl)) / 2, '.', 0);
    }
-   {
+   if (Chr != '+' && Chr != '-') {
       char nm[bufSize(x)];
 
       bufString(x, nm);

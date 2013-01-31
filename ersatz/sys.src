@@ -1,4 +1,4 @@
-// 08dec12abu
+// 31jan13abu
 // (c) Software Lab. Alexander Burger
 
 import java.util.*;
@@ -1625,19 +1625,21 @@ public class PicoLisp {
             try {return strToNum(sb.toString(), ((Number)Scl.Car).Cnt);}
             catch (NumberFormatException e) {}
          }
-         String s = x.name();
-         if (Chr >= 'A' && Chr <= 'Z' || Chr == '\\' || Chr >= 'a' && Chr <= 'z' || s.indexOf(Chr) >= 0) {
-            if (Chr == '\\')
-               get();
-            StringBuilder sb = new StringBuilder();
-            sb.append((char)Chr);
-            while (get() >= '0' && Chr <= '9' || Chr >= 'A' && Chr <= 'Z' || Chr == '\\' || Chr >= 'a' && Chr <= 'z' || s.indexOf(Chr) >= 0) {
+         if (Chr != '+' && Chr != '-') {
+            String s = x.name();
+            if (Chr >= 'A' && Chr <= 'Z' || Chr == '\\' || Chr >= 'a' && Chr <= 'z' || s.indexOf(Chr) >= 0) {
                if (Chr == '\\')
                   get();
+               StringBuilder sb = new StringBuilder();
                sb.append((char)Chr);
+               while (get() >= '0' && Chr <= '9' || Chr >= 'A' && Chr <= 'Z' || Chr == '\\' || Chr >= 'a' && Chr <= 'z' || s.indexOf(Chr) >= 0) {
+                  if (Chr == '\\')
+                     get();
+                  sb.append((char)Chr);
+               }
+               s = sb.toString();
+               return s.equals("NIL")? Nil : mkSymbol(Nil, s, Env.intern());
             }
-            s = sb.toString();
-            return s.equals("NIL")? Nil : mkSymbol(Nil, s, Env.intern());
          }
          c = (char)Chr;
          get();
