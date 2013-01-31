@@ -1,4 +1,4 @@
-25jun11abu
+31jan13abu
 (c) Software Lab. Alexander Burger
 
 
@@ -7,6 +7,8 @@
 
 The PicoLisp RC Flight Simulator is a very simple toy simulator, allowing you to
 fly an airplane in a way similar to a radio controlled model plane.
+
+Currently, it is supported only in the 32-bit version of PicoLisp.
 
 It is all implemented within the PicoLisp system, so that no additional
 libraries like OpenGL or GL4Java are needed. It may be regarded as a proof of
