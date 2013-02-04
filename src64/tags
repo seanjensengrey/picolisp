@@ -1241,17 +1241,17 @@ sys/x86-64.linux.defs.l,1959
 cmpDfltA_F4132,90414
 cmpUserAX_F4137,90565
 
-./net.l,191
+./net.l,192
 doPort5,96
 tcpAcceptA_FE109,2796
-doAccept145,4032
-doListen157,4268
-doHost190,4941
-doConnect224,5824
-serverCEY_FE273,7028
-doUdp301,7792
-getUdpZ_FB370,9724
-putUdpBZ377,9869
+doAccept148,4180
+doListen160,4416
+doHost193,5089
+doConnect227,5972
+serverCEY_FE276,7176
+doUdp304,7940
+getUdpZ_FB373,9872
+putUdpBZ380,10017
 
 sys/x86-64.linux.code.l,94
 errno_A5,67

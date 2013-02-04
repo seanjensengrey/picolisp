@@ -1,4 +1,4 @@
-/* 07jan13abu
+/* 04feb13abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -74,6 +74,7 @@ static any tcpAccept(int sd) {
       socklen_t len = sizeof(addr);
       if ((sd2 = accept(sd, (struct sockaddr*)&addr, &len)) >= 0) {
          fcntl(sd, F_SETFL, f);
+         fcntl(sd2, F_SETFL, 0);
          inet_ntop(AF_INET6, &addr.sin6_addr, s, INET6_ADDRSTRLEN);
          val(Adr) = mkStr(s);
          initInFile(sd2,NULL), initOutFile(sd2);
