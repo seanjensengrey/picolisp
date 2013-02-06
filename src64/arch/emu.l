@@ -1,4 +1,4 @@
-# 05jan13abu
+# 06feb13abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -774,7 +774,7 @@
    (stat             i  p "struct stat")
    (fcntl            i  i i p)
    (pipe             i  "int")
-   (select           i  i "fd_set" "fd_set" "fd_set" 2)
+   (select           i  i "fd_set" "fd_set" "fd_set" (2 . -2))
    (open             i  p i i)
    (dup              i  i)
    (dup2             -  i i)
@@ -839,6 +839,8 @@
    (wtermsigS_A      n) )
 
 (de ccArg (P S O P2)
+   (and (pair P) (setq P (car @)))
+   (and (pair P2) (setq P2 (car @)))
    (case P
       (p (op.p S O))
       (n (op.n S O))
@@ -870,8 +872,15 @@
             (list 'glue ", " Args)
             (list 'extract
                ''((A P)
+                  (and (pair P) (setq P (cdr @)))
                   (when (lt0 P)
-                     (pack " retv(" (abs @) ", " A ");") ) )
+                     (use (@N @A)
+                        (pack
+                           " retv("
+                           (abs @)
+                           ", "
+                           (if (match '(~(chop "argv(") @N "," " " @A ")") (chop A)) @A A)
+                           ");" ) ) ) )
                Args
                '(cdr Par) ) )
          Body ) ) )
