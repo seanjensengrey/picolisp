@@ -1,4 +1,4 @@
-# 06feb13abu
+# 07feb13abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -872,15 +872,12 @@
             (list 'glue ", " Args)
             (list 'extract
                ''((A P)
-                  (and (pair P) (setq P (cdr @)))
-                  (when (lt0 P)
-                     (use (@N @A)
-                        (pack
-                           " retv("
-                           (abs @)
-                           ", "
-                           (if (match '(~(chop "argv(") @N "," " " @A ")") (chop A)) @A A)
-                           ");" ) ) ) )
+                  (when (lt0 (fin P))
+                     (pack " retv(" (abs @) ","
+                        (if (pre? "argv(" A)
+                           (member " " (chop A))
+                           (pack " " A ")") )
+                        ";" ) ) )
                Args
                '(cdr Par) ) )
          Body ) ) )
