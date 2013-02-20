@@ -1,4 +1,4 @@
-# 22jan13abu
+# 20feb13abu
 # (c) Software Lab. Alexander Burger
 
 # *Salt *Login *Users *Perms
@@ -97,5 +97,23 @@
          *Login )
       (msg *Pid " No permission: " (car Args))
       (forbidden) ) )
+
+### GUI ###
+(de loginForm ()
+   (form NIL
+      (<grid> 2
+         ,"Name" (gui 'nm '(+Focus +Able +TextField) '(not *Login) 20)
+         ,"Password" (gui 'pw '(+Able +PwField) '(not *Login) 20) )
+      (--)
+      (gui '(+Button) '(if *Login ,"logout" ,"login")
+         '(cond
+            (*Login (logout))
+            ((login (val> (: home nm)) (val> (: home pw)))
+               (clr> (: home pw)) )
+            (T (error ,"Permission denied")) ) )
+      (when *Login
+         (<nbsp> 4)
+         (<span> "bold green"
+            (<big> (ht:Prin "'" (; *Login nm) ,"' logged in")) ) ) ) )
 
 # vi:et:ts=3:sw=3
