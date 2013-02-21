@@ -1,4 +1,4 @@
-# 20feb13abu
+# 21feb13abu
 # (c) Software Lab. Alexander Burger
 
 # *Salt *Login *Users *Perms
@@ -99,8 +99,9 @@
       (forbidden) ) )
 
 ### GUI ###
-(de loginForm ()
+(de loginForm "Opt"
    (form NIL
+      (htPrin "Opt")
       (<grid> 2
          ,"Name" (gui 'nm '(+Focus +Able +TextField) '(not *Login) 20)
          ,"Password" (gui 'pw '(+Able +PwField) '(not *Login) 20) )
