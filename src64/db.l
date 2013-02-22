@@ -1,4 +1,4 @@
-# 28dec12abu
+# 22feb13abu
 # (c) Software Lab. Alexander Burger
 
 # 6 bytes in little endian format
@@ -2068,9 +2068,12 @@
          call mkStrE_E  # Return message
          jmp 90
       end
+      push (DbJnl)  # Disable Journal
+      ld (DbJnl) 0
       ld Z (DbBlock)  # Block buffer in Z again
       or (Z) BLKTAG  # Mark free list
       call wrBlockZ  # Write block
+      pop (DbJnl)  # Restore Journal
    loop
    ld X BLKSIZE  # 'p' in X
    do  # Check all chains
@@ -2135,8 +2138,11 @@
       ld B (Z)  # Get tag byte
       and B BLKTAG  # Block tag non-zero?
       if nz  # Nes
+         push (DbJnl)  # Disable Journal
+         ld (DbJnl) 0
          off (Z) BLKTAG  # Clear tag
          call wrBlockZ  # Write block
+         pop (DbJnl)  # Restore Journal
       end
       ld A (BlkLink)  # Get next block
    loop

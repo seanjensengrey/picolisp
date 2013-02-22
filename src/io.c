@@ -1,4 +1,4 @@
-/* 31jan13abu
+/* 22feb13abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -3564,6 +3564,7 @@ any doDbck(any ex) {
    any x, y;
    bool flg;
    int i;
+   FILE *jnl = Jnl;
    adr next, p, cnt;
    word2 blks, syms;
    byte buf[2*BLK];
@@ -3592,7 +3593,9 @@ any doDbck(any ex) {
          x = mkStr("Circular free list");
          goto done;
       }
+      Jnl = NULL;
       Block[0] |= TAGMASK,  wrBlock();  // Mark free list
+      Jnl = jnl;
    }
    for (p = BLKSIZE;  p != next;  p += BLKSIZE) {  // Check all chains
       if (rdBlock(p), (Block[0] & TAGMASK) == 0) {
@@ -3619,8 +3622,11 @@ any doDbck(any ex) {
    BlkLink = getAdr(buf);  // Unmark free list
    while (BlkLink) {
       rdBlock(BlkLink);
-      if (Block[0] & TAGMASK)
+      if (Block[0] & TAGMASK) {
+         Jnl = NULL;
          Block[0] &= BLKMASK,  wrBlock();
+         Jnl = jnl;
+      }
    }
    if (cnt != next)
       x = mkStr("Bad count");
