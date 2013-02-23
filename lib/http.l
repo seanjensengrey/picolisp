@@ -1,4 +1,4 @@
-# 17jan13abu
+# 23feb13abu
 # (c) Software Lab. Alexander Burger
 
 # *Home *Gate *Host *Port *Port1 *Port% *Http1 *Chunked
@@ -188,10 +188,7 @@
                   (off S)
                   (throw "http") ) )
             (if (or (<> *ConId *SesId) (and *SesAdr (<> @ *Adr)))
-               (if *ConId
-                  (out S (http404))
-                  (task (close S))
-                  (off S) )
+               (prog (task (close S)) (off S))
                (setq
                   L (split @U "?")
                   @U (car L)
