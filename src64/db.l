@@ -1,4 +1,4 @@
-# 22feb13abu
+# 23feb13abu
 # (c) Software Lab. Alexander Burger
 
 # 6 bytes in little endian format
@@ -2037,6 +2037,7 @@
       ld E (Y)
       eval  # Eval next arg
    end
+   push (DbJnl)  # <S IV> Journal
    push E  # <S III> 'flg'
    push ZERO  # <S II> 'syms'
    push ZERO  # <S I> 'blks'
@@ -2056,6 +2057,7 @@
    call getAdrZ_A  # Get 'next'
    push A  # <S> 'next'
    ld Y BLKSIZE  # 'cnt' in Y
+   ld (DbJnl) 0  # Disable Journal
    do  # Check free list
       ld A (BlkLink)  # Next block?
       null A
@@ -2068,13 +2070,11 @@
          call mkStrE_E  # Return message
          jmp 90
       end
-      push (DbJnl)  # Disable Journal
-      ld (DbJnl) 0
       ld Z (DbBlock)  # Block buffer in Z again
       or (Z) BLKTAG  # Mark free list
       call wrBlockZ  # Write block
-      pop (DbJnl)  # Restore Journal
    loop
+   ld (DbJnl) (S IV)  # Restore Journal
    ld X BLKSIZE  # 'p' in X
    do  # Check all chains
       cmp X (S)  # Reached 'next'?
@@ -2130,6 +2130,7 @@
    ld Z Buf  # Get 'free'
    call getAdrZ_A
    ld (BlkLink) A  # Store as next block
+   ld (DbJnl) 0  # Disable Journal
    do  # Unmark free list
       null A  # Any?
    while nz  # Yes
@@ -2138,11 +2139,8 @@
       ld B (Z)  # Get tag byte
       and B BLKTAG  # Block tag non-zero?
       if nz  # Nes
-         push (DbJnl)  # Disable Journal
-         ld (DbJnl) 0
          off (Z) BLKTAG  # Clear tag
          call wrBlockZ  # Write block
-         pop (DbJnl)  # Restore Journal
       end
       ld A (BlkLink)  # Get next block
    loop
@@ -2160,7 +2158,8 @@
       end
    end
 90 add S IV  # Drop 'next', 'blks', 'syms' and 'flg'
-   null (DbJnl)  # Journal?
+   pop (DbJnl)  # Restore Journal
+   null (DbJnl)  # Any?
    if nz  # Yes
       call unLockJnl  # Unlock journal
    end

@@ -1,4 +1,4 @@
-/* 22feb13abu
+/* 23feb13abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -3587,16 +3587,16 @@ any doDbck(any ex) {
    blkPeek(0, buf, 2*BLK);  // Get Free, Next
    BlkLink = getAdr(buf);
    next = getAdr(buf+BLK);
+   Jnl = NULL;
    while (BlkLink) {  // Check free list
       rdBlock(BlkLink);
       if ((cnt += BLKSIZE) > next) {
          x = mkStr("Circular free list");
          goto done;
       }
-      Jnl = NULL;
       Block[0] |= TAGMASK,  wrBlock();  // Mark free list
-      Jnl = jnl;
    }
+   Jnl = jnl;
    for (p = BLKSIZE;  p != next;  p += BLKSIZE) {  // Check all chains
       if (rdBlock(p), (Block[0] & TAGMASK) == 0) {
          cnt += BLKSIZE;
@@ -3620,13 +3620,11 @@ any doDbck(any ex) {
       }
    }
    BlkLink = getAdr(buf);  // Unmark free list
+   Jnl = NULL;
    while (BlkLink) {
       rdBlock(BlkLink);
-      if (Block[0] & TAGMASK) {
-         Jnl = NULL;
+      if (Block[0] & TAGMASK)
          Block[0] &= BLKMASK,  wrBlock();
-         Jnl = jnl;
-      }
    }
    if (cnt != next)
       x = mkStr("Bad count");
@@ -3638,7 +3636,7 @@ any doDbck(any ex) {
       x = Pop(c1);
    }
 done:
-   if (Jnl)
+   if (Jnl = jnl)
       fflush(Jnl),  lockFile(fileno(Jnl), F_SETLK, F_UNLCK);
    rwUnlock(1);
    --Env.protect;
