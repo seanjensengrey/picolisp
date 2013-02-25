@@ -1,4 +1,4 @@
-# 21feb13abu
+# 25feb13abu
 # (c) Software Lab. Alexander Burger
 
 # *Salt *Login *Users *Perms
@@ -7,18 +7,20 @@
 (default *Salt (2 . "@1"))
 
 (de salt ()
-   (text (cdr *Salt)
-      (make
-         (in "/dev/urandom"
-            (do (car *Salt)
-               (link
-                  (get
-                     '`(mapcar char
-                        (conc
-                           (range 46 57)
-                           (range 65 90)
-                           (range 97 122) ) )
-                     (& 63 (rd 1)) ) ) ) ) ) ) )
+   (text (cdr *Salt) (randpw (car *Salt))) )
+
+(de randpw (Len)
+   (make
+      (in "/dev/urandom"
+         (do Len
+            (link
+               (get
+                  '`(mapcar char
+                     (conc
+                        (range 46 57)
+                        (range 65 90)
+                        (range 97 122) ) )
+                  (inc (& 63 (rd 1))) ) ) ) ) ) )
 
 (de passwd (Str Salt)
    (if (and native *Salt)
