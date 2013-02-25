@@ -1,4 +1,4 @@
-# 23jan13abu
+# 25feb13abu
 # (c) Software Lab. Alexander Burger
 
 # *Dbs *Jnl *Blob upd
@@ -910,44 +910,50 @@
          (commit 'upd) ) ) )
 
 (dm inc> (Var Val)
-   (when (num? (get This Var))
-      (let Old (get This Var)
-         (rel> (meta This Var) This Old
-            (inc (prop This Var) (or Val 1)) )
-         (when (asoq Var (meta This 'Aux))
-            (relAux This Var Old (cdr @)) )
-         (upd> This Var Old) ) ) )
+   (let P (prop This Var)
+      (when (num? (car P))
+         (let Old @
+            (rel> (meta This Var) This Old
+               (inc P (or Val 1)) )
+            (when (asoq Var (meta This 'Aux))
+               (relAux This Var Old (cdr @)) )
+            (upd> This Var Old) )
+         (car P) ) ) )
 
 (dm inc!> (Var Val)
    (when (num? (get This Var))
       (dbSync)
-      (let Old (get This Var)
+      (let (P (prop This Var)  Old (car P))
          (rel> (meta This Var) This Old
-            (inc (prop This Var) (or Val 1)) )
+            (inc P (or Val 1)) )
          (when (asoq Var (meta This 'Aux))
             (relAux This Var Old (cdr @)) )
          (upd> This Var Old)
-         (commit 'upd) ) ) )
+         (commit 'upd)
+         (car P) ) ) )
 
 (dm dec> (Var Val)
-   (when (num? (get This Var))
-      (let Old (get This Var)
-         (rel> (meta This Var) This Old
-            (dec (prop This Var) (or Val 1)) )
-         (when (asoq Var (meta This 'Aux))
-            (relAux This Var Old (cdr @)) )
-         (upd> This Var Old) ) ) )
+   (let P (prop This Var)
+      (when (num? (car P))
+         (let Old @
+            (rel> (meta This Var) This Old
+               (dec P (or Val 1)) )
+            (when (asoq Var (meta This 'Aux))
+               (relAux This Var Old (cdr @)) )
+            (upd> This Var Old) )
+         (car P) ) ) )
 
 (dm dec!> (Var Val)
    (when (num? (get This Var))
       (dbSync)
-      (let Old (get This Var)
+      (let (P (prop This Var)  Old (car P))
          (rel> (meta This Var) This Old
-            (dec (prop This Var) (or Val 1)) )
+            (dec P (or Val 1)) )
          (when (asoq Var (meta This 'Aux))
             (relAux This Var Old (cdr @)) )
          (upd> This Var Old)
-         (commit 'upd) ) ) )
+         (commit 'upd)
+         (car P) ) ) )
 
 (dm mis> (Var Val)
    (mis> (meta This Var) Val This) )
