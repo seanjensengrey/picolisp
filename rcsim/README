@@ -1,4 +1,4 @@
-16feb13abu
+27feb13abu
 (c) Software Lab. Alexander Burger
 
 
@@ -32,7 +32,7 @@ once:
 
 Then start the PicoLisp server with
 
-   $ ./dbg rcsim/main.l -main -go
+   $ ./pil rcsim/main.l -main -go +
 
 and then the Z3d-Client from another X-terminal
 

@@ -1,4 +1,4 @@
-31jan13abu
+27feb13abu
 (c) Software Lab. Alexander Burger
 
 
@@ -139,16 +139,6 @@ or
 
    $ /home/app/pil  # Invoking a local installation from some other directory
 
-
-A shortcut for debug mode is the 'dbg' script:
-
-   $ ./dbg
-   :
-
-It is available only for local installaions, and is eqivalent to
-
-   $ ./pil +
-
 Note that 'pil' can also serve as a template for your own stand-alone scripts.
 
 
@@ -158,7 +148,7 @@ runtime system), use
    $ ersatz/pil +
    :
 
-instead of './dbg' or './pil +'.
+instead of './pil +'.
 
 
       Documentation

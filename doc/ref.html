@@ -610,17 +610,11 @@ $ pil myProject.l -main +
 <p>This is - in a local installation - equivalent to
 
 <pre><code>
-$ ./dbg myProject.l -main
-</code></pre>
-
-<p>or
-
-<pre><code>
 $ ./pil myProject.l -main +
 </code></pre>
 
 <p>In any case, the directory part of the first file name supplied (normally,
-the path to "lib.l" as called by 'pil' or 'dbg') is remembered internally as the
+the path to "lib.l" as called by 'pil') is remembered internally as the
 <i>PicoLisp Home Directory</i>. This path is later automatically substituted for
 any leading "<code>@</code>" character in file name arguments to I/O functions
 (see <code><a href="refP.html#path">path</a></code>).
