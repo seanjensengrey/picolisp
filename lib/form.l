@@ -1,4 +1,4 @@
-# 17jan13abu
+# 27feb13abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -702,31 +702,30 @@
 
 
 (class +Dflt)
-# cue
+# dflt
 
 (dm T (Exe . @)
-   (=: cue Exe)
+   (=: dflt Exe)
    (pass extra) )
 
 (dm set> (Val Dn)
-   (extra (or Val (eval (: cue))) Dn) )
+   (extra (or Val (eval (: dflt))) Dn) )
 
 (dm val> ()
    (let Val (extra)
-      (unless (= Val (eval (: cue))) Val) ) )
+      (unless (= Val (eval (: dflt))) Val) ) )
 
 
-(class +Cue +Dflt)
+(class +Cue)
+# cue
 
 (dm T (Str . @)
-   (pass super (pack "<" Str ">")) )
+   (=: cue (pack "<" Str ">"))
+   (pass extra) )
 
 (dm show> ("Var")
    (<js>
-      (let V (eval (: cue))
-         (list
-            (cons "onclick" (pack "if (this.value=='" V "') this.value=''"))
-            (cons "onblur" (pack "if (this.value=='') this.value='" V "'")) ) )
+      (cons (cons "placeholder" (: cue)))
       (extra "Var") ) )
 
 
