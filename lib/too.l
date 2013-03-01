@@ -1,4 +1,4 @@
-# 25jan13abu
+# 01mar13abu
 # (c) Software Lab. Alexander Burger
 
 ### DB Garbage Collection ###
@@ -230,22 +230,23 @@
                (recur (Lst Len)
                   (unless (=0 Len)
                      (let (N (>> 1 (inc Len))  L (nth Lst N))
-                        (re-index (car L) Var)
+                        (re-index (car L) Var Hook)
                         (recurse Lst (dec N))
                         (recurse (cdr L) (- Len N)) ) ) ) ) )
          ((atom X)
             (for Obj X
-               (re-index Obj Var) ) )
+               (re-index Obj Var Hook) ) )
          (NIL
             (for (Obj X Obj (seq Obj))
-               (and (isa Cls Obj) (re-index Obj Var)) ) ) )
+               (and (isa Cls Obj) (re-index Obj Var Hook)) ) ) )
       (commit) ) )
 
-(de re-index (Obj Var)
+(de re-index (Obj Var Hook)
    (unless (get Obj T)
       (when (get Obj Var)
          (rel> (meta Obj Var) Obj NIL
-            (put> (meta Obj Var) Obj NIL @) )
+            (put> (meta Obj Var) Obj NIL @)
+            Hook )
          (at (0 . 10000) (commit)) ) ) )
 
 ### Database file management ###
