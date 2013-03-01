@@ -1,4 +1,4 @@
-/* 11mar12abu
+/* 01mar13abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -2004,7 +2004,7 @@ any doFold(any ex) {
       if (!(c = symChar(NULL)))
          return Nil;
    Push(c1, x);
-   n = isCell(x = cddr(ex))? evCnt(ex,x) : 24;
+   n = isCell(x = cddr(ex))? evCnt(ex,x) : 0;
    Push(c2, boxChar(toLowerCase(c), &i, &nm));
    while (c = symChar(NULL))
       if (isLetterOrDigit(c)) {

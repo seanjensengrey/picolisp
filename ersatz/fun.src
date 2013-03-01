@@ -1,4 +1,4 @@
-# 10feb13abu
+# 01mar13abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -2152,7 +2152,7 @@ fold (i j k x str c sb)
    for (i = 0; !Character.isLetterOrDigit(c = str.charAt(i));)
       if (++i == j)
          return Nil;
-   k = (ex = ex.Cdr) instanceof Cell? evInt(ex) : 24;
+   k = (ex = ex.Cdr) instanceof Cell? evInt(ex) : 0;
    sb = new StringBuilder();
    sb.append(Character.toLowerCase(c));
    while (++i < j)

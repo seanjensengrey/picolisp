@@ -1,4 +1,4 @@
-# 07dec12abu
+# 01mar13abu
 # (c) Software Lab. Alexander Burger
 
 ### Compare long names ###
@@ -3542,7 +3542,7 @@
                ld Y (Y CDR)  # Next arg?
                atom Y
                if nz  # No
-                  push 24  # <S II> Default 'cnt' 24
+                  push 0  # <S II> Default 'cnt' zero
                else
                   call evCntXY_FE  # Eval 'cnt'
                   push E  # <S II> 'cnt'
