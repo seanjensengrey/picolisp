@@ -932,7 +932,7 @@ sys/x86-64.linux.defs.l,1959
 doLowc3417,78757
 doUppc3469,80265
 doFold3521,81780
-isLetterOrDigitA_F3593,83886
+isLetterOrDigitA_F3589,83813
 
 ./db.l,1153
 getAdrZ_A6,117

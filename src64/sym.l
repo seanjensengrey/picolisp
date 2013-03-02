@@ -1,4 +1,4 @@
-# 01mar13abu
+# 02mar13abu
 # (c) Software Lab. Alexander Burger
 
 ### Compare long names ###
@@ -3578,14 +3578,10 @@
                ld X (L I)  # Get result
                call consSymX_E  # Make transient symbol
                drop
-               pop Y
-               pop X
-               ret
             end
          end
       end
    end
-   ld E Nil
    pop Y
    pop X
    ret
