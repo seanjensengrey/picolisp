@@ -1,4 +1,4 @@
-* DDmmm13 picoLisp-3.1.2
+* DDmar13 picoLisp-3.1.2
    'fold' analog to 'lowc' / 'uppc'
    'fold' second arg default zero
    Removed 'dbg' startup script
