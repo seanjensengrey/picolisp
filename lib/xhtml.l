@@ -1,4 +1,4 @@
-# 24jul12abu
+# 06mar13abu
 # (c) Software Lab. Alexander Burger
 
 # *JS "*JS" *Style *Menu *Tab *ID
@@ -58,8 +58,9 @@
 (de <tag> (Nm Attr . Prg)
    (tag Nm Attr 2 Prg) )
 
-(de <js> ("*JS" . "Prg")
-   (run "Prg") )
+(de <js> ("JS" . "Prg")
+   (let "*JS" (append "*JS" "JS")
+      (run "Prg") ) )
 
 (de style (X Prg)
    (let *Style
