@@ -1,4 +1,4 @@
-# 27feb13abu
+# 05mar13abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -1481,19 +1481,32 @@
 
 
 (class +Img +gui)
-# img alt url
+# img alt url dx dy
 
-(dm T (Exe Alt)
-   (=: img Exe)
+(dm T (Alt Url DX DY)
    (=: alt Alt)
+   (=: url Url)
+   (=: dx DX)
+   (=: dy DY)
    (super) )
 
 (dm js> ()
-   (ht:Fmt (sesId (or (eval (: img)) "@img/no.png"))) )
+   (ht:Fmt (sesId (or (: img) "@img/no.png"))) )
 
 (dm show> ("Var")
    (showFld
-      (<img> (or (eval (: img)) "@img/no.png") (eval (: alt))) ) )
+      (<img>
+         (or (: img) "@img/no.png")
+         (eval (: alt))
+         (eval (: url))
+         (: dx)
+         (: dy) ) ) )
+
+(dm set> (Val Dn)
+   (=: img Val) )
+
+(dm val> ()
+   (: img) )
 
 
 (class +Icon)
