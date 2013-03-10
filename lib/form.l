@@ -1,4 +1,4 @@
-# 05mar13abu
+# 09mar13abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -1491,7 +1491,10 @@
    (super) )
 
 (dm js> ()
-   (ht:Fmt (sesId (or (: img) "@img/no.png"))) )
+   (pack
+      (ht:Fmt (sesId (or (: img) "@img/no.png"))) '&
+      (eval (: alt)) '&
+      (and (eval (: url)) (ht:Fmt (sesId @))) ) )
 
 (dm show> ("Var")
    (showFld
