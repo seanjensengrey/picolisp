@@ -1,4 +1,4 @@
-# 06mar13abu
+# 14mar13abu
 # (c) Software Lab. Alexander Burger
 
 # *JS "*JS" *Style *Menu *Tab *ID
@@ -315,6 +315,35 @@
 (de <tip> ("Str" . "Prg")
    (style (cons 'title "Str") "Prg") )
 
+# Layout
+(de <layout> "Lst"
+   (let ("X" 0  "Y" 0)
+      (recur ("Lst" "Y")
+         (for "L" "Lst"
+            (let
+               ("Args" (mapcar eval (cddar "L"))
+                  "DX" (eval (caar "L"))
+                  "DY" (eval (cadar "L"))
+                  "Cls" (unless (sub? ":" (car "Args")) (pop '"Args"))
+                  "Style"
+                  (cons 'style
+                     (glue "; "
+                        (cons
+                           "position:absolute"
+                           (pack "top:" "Y" "px")
+                           (pack "left:" "X" "px")
+                           (if "DX"
+                              (pack "width:" @ "px")
+                              "min-width:100%" )
+                           (if "DY"
+                              (pack "height:" @ "px")
+                              "min-height:100%" )
+                           "Args" ) ) ) )
+               (prog1 (if "Cls" (list "Cls" "Style") "Style")
+                  (eval (cadr "L")) )
+               (let "X" (+ "X" "DX")
+                  (recurse (cddr "L") "Y") )
+               (inc '"Y" "DY") ) ) ) ) )
 
 # Menus
 (de urlMT (Url Menu Tab Id Str)
@@ -473,7 +502,6 @@
 (de <-> (Str Obj Msg Tab)
    (<$> Str Obj Msg Tab)
    (<0> Str) )
-
 
 # Interactive tree
 (de <tree> ("Url" "Path" "Tree" "Able?" "Excl?" "Expand" "Print")
