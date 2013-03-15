@@ -1,4 +1,4 @@
-# 14mar13abu
+# 15mar13abu
 # (c) Software Lab. Alexander Burger
 
 # *JS "*JS" *Style *Menu *Tab *ID
@@ -200,7 +200,13 @@
    (prinl) )
 
 (de <href> (Str Url Tar)
-   (prin "<a href=\"" (sesId Url) "\"")
+   (prin "<a href=\""
+      (sesId
+         (ifn (pre? "+" Url)
+            Url
+            (setq Tar "_blank")
+            (pack (cdr (chop Url))) ) )
+      "\"" )
    (and Tar (prin " target=\"" Tar "\""))
    (and *Style (htStyle @))
    (prin '>)
@@ -208,7 +214,13 @@
    (prin "</a>") )
 
 (de <img> (Src Alt Url DX DY)
-   (and Url (prin "<a href=\"" (sesId Url) "\">"))
+   (when Url
+      (prin "<a href=\""
+         (sesId
+            (ifn (pre? "+" Url)
+               Url
+               (pack (cdr (chop Url)) "\" target=\"_blank") ) )
+         "\">" ) )
    (prin "<img src=\"" (sesId Src) "\"")
    (when Alt
       (prin " alt=\"")
