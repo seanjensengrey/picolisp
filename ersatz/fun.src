@@ -1,4 +1,4 @@
-# 01mar13abu
+# 17mar13abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -2381,12 +2381,12 @@ make (x y z)
    return z;
 
 # (made ['lst1 ['lst2]]) -> lst
-made (x)
+made (x y)
    if ((x = ex.Cdr) instanceof Cell) {
       Env.Yoke = x.Car.eval();
       x = x.Cdr;
       if (!((x = x.Car.eval()) instanceof Cell))
-         for (x = Env.Yoke; (x = x.Cdr).Cdr instanceof Cell;);
+         for (x = Env.Yoke; (y = x.Cdr) instanceof Cell; x = y);
       Env.Make = x;
    }
    return Env.Yoke;

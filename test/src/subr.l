@@ -1,4 +1,4 @@
-# 28dec12abu
+# 17mar13abu
 # (c) Software Lab. Alexander Burger
 
 ### c[ad]*r ###
@@ -93,11 +93,12 @@
       (make
          (link (for A '(x y z) (link A)))
          (link A) ) )
-   (test (0 1 x 2 y 3 z i a)
+   (test (-1 0 1 x 2 y 3 z i a)
       (make
+         (made (cons 0 (box)))
          (for (I . A) '(x y z) (link I A))
-         (test (1 x 2 y 3 z) (made))
-         (made (cons 0 (made)))
+         (test (0 1 x 2 y 3 z) (made))
+         (made (cons -1 (made)))
          (link I A) ) )
    (test (1 2 3 4 5 6 7 8 9)
       (make (chain (1 2 3)) (chain (4 5 6) (7 8 9))) )
