@@ -1,4 +1,4 @@
-# 20mar13abu
+# 29mar13abu
 # (c) Software Lab. Alexander Burger
 
 # *Pilot *Scene *Model
@@ -39,7 +39,7 @@
                   1.0 0.0 0.0  0.0 1.0 0.0  0.0 0.0 1.0
                   (mapcar
                      '((M)
-                        (if (and (car M) (sym? (car M)))
+                        (if (and (car M) (sym? @))
                            (model Obj M)
                            M ) )
                      Lst ) ) ) ) ) ) )
