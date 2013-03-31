@@ -1,4 +1,5 @@
 * DDjun13 picoLisp-3.1.3
+   Bug in 'conc' (64-bit)
 
 * 30mar13 picoLisp-3.1.2
    'lisp' calls from 'native' in emulator
