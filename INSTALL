@@ -1,4 +1,4 @@
-27feb13abu
+01apr13abu
 (c) Software Lab. Alexander Burger
 
 
@@ -164,8 +164,7 @@ For details about the 64-bit version, refer to "doc64/README", "doc64/asm" and
 
 As always, the most accurate and complete documentation is the source code ;-)
 Included in the distribution are many utilities and pet projects, including
-tests, demo databases and servers, games (chess, minesweeper), 3D animation
-(flight simulator, 32-bit version only), and more.
+tests, demo databases and servers, games (chess, minesweeper), and more.
 
 Any feedback is welcome!
 Hope you enjoy :-)
