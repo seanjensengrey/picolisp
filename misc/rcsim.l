@@ -465,7 +465,7 @@
 (de go ()
    (when (z3dWindow "RC Simulator" 800 600)
       (quit @) )
-   (task -20 0
+   (task (*/ -1000 *DT 1.0) 0  # -Milliseconds
       (sim> *Scene)
       (sim> *Model)
       (at (0 . 100)
