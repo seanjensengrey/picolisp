@@ -93,17 +93,6 @@ static edge *Edges;
 static XImage *Img;
 static XShmSegmentInfo Info;
 
-static void xrot(matrix *p, double ca, double sa) {
-   matrix m = *p;
-
-   p->b.x = ca * m.b.x - sa * m.c.x;
-   p->b.y = ca * m.b.y - sa * m.c.y;
-   p->b.z = ca * m.b.z - sa * m.c.z;
-   p->c.x = sa * m.b.x + ca * m.c.x;
-   p->c.y = sa * m.b.y + ca * m.c.y;
-   p->c.z = sa * m.b.z + ca * m.c.z;
-}
-
 // (z3dX 'model 'x)
 void z3dX(model *p, double x) {
    p->pos.x = x;
@@ -134,9 +123,15 @@ void z3dDZ(model *p, double dz) {
    p->pos.z += dz;
 }
 
-// (z3dXrot 'model 'angle)
-void z3dXrot(model *p, double a) {
-   xrot(&p->rot, cos(a), sin(a));
+static void xrot(matrix *p, double ca, double sa) {
+   matrix m = *p;
+
+   p->b.x = ca * m.b.x - sa * m.c.x;
+   p->b.y = ca * m.b.y - sa * m.c.y;
+   p->b.z = ca * m.b.z - sa * m.c.z;
+   p->c.x = sa * m.b.x + ca * m.c.x;
+   p->c.y = sa * m.b.y + ca * m.c.y;
+   p->c.z = sa * m.b.z + ca * m.c.z;
 }
 
 static void yrot(matrix *p, double ca, double sa) {
@@ -150,11 +145,6 @@ static void yrot(matrix *p, double ca, double sa) {
    p->c.z = ca * m.c.z - sa * m.a.z;
 }
 
-// (z3dYrot 'model 'angle)
-void z3dYrot(model *p, double a) {
-   yrot(&p->rot, cos(a), sin(a));
-}
-
 static void zrot(matrix *p, double ca, double sa) {
    matrix m = *p;
 
@@ -164,6 +154,16 @@ static void zrot(matrix *p, double ca, double sa) {
    p->b.x = ca * m.b.x - sa * m.a.x;
    p->b.y = ca * m.b.y - sa * m.a.y;
    p->b.z = ca * m.b.z - sa * m.a.z;
+}
+
+// (z3dXrot 'model 'angle)
+void z3dXrot(model *p, double a) {
+   xrot(&p->rot, cos(a), sin(a));
+}
+
+// (z3dYrot 'model 'angle)
+void z3dYrot(model *p, double a) {
+   yrot(&p->rot, cos(a), sin(a));
 }
 
 // (z3dZrot 'model 'angle)
