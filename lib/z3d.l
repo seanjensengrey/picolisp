@@ -1,4 +1,4 @@
-# 09apr13abu
+# 10apr13abu
 # (c) Software Lab. Alexander Burger
 
 (load "@lib/native.l")
@@ -87,7 +87,6 @@ static int PixSize;
 static GC Gc;
 static Window Win;
 
-/* 3D-Environment */
 static int SizX, SizY, OrgX, OrgY;
 static unsigned *Zbuff;
 static edge *Edges;
