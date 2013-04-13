@@ -1,4 +1,4 @@
-# 10apr13abu
+# 13apr13abu
 # (c) Software Lab. Alexander Burger
 
 (load "@lib/native.l")
@@ -41,7 +41,9 @@
       Sky
       Gnd )
    (z3dDraw (M) z3dDraw NIL M)
-   (z3dPaint () z3dPaint) )
+   (z3dPut () z3dPut)
+   (z3dText (X Y S) z3dText NIL X Y S)
+   (z3dSync () z3dSync) )
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -701,9 +703,18 @@ void z3dDraw(model *p) {
    doDraw(p, NULL, 0.0, 0.0, 0.0);
 }
 
-// (z3dPaint)
-void z3dPaint(void) {
+// (z3dPut)
+void z3dPut(void) {
    XShmPutImage(Disp, Win, Gc, Img, 0, 0, 0, 0, SizX, SizY, False);
+}
+
+// (z3dText 'x 'y 'str)
+void z3dText(int x, int y, char *str) {
+   XDrawString(Disp, Win, Gc, x, y, str, strlen(str));
+}
+
+// (z3dSync)
+void z3dSync(void) {
    XSync(Disp,False);
 }
 

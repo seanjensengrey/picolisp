@@ -1,10 +1,10 @@
-# 09apr13abu
+# 13apr13abu
 # (c) Software Lab. Alexander Burger
 
 ### RC Flight Simulator for 64-bit PicoLisp ###
 
-# *FocLen *Scene *Model *Panel
-# *DT *Thr *Speed *Climb *Alt
+# *FocLen *Scene *Model
+# *DT *Throttle *Speed *Altitude
 
 (scl 6)  # Keep in sync with `SCL' in C lib
 
@@ -68,11 +68,6 @@
       'N                                                 # Return structure pointer
       (cons 1.0 (head 3 Lst))                            # pos
       (1.0  1.0 0.0 0.0  0.0 1.0 0.0  0.0 0.0 1.0) ) )   # rot
-
-# Set instruments
-(de setPanel (N X)
-   (set (nth *Panel N) X)
-   (prinl *Panel) )
 
 # Simulation
 (de *DT . 0.020)
@@ -382,14 +377,10 @@
       (z3dDY (: body) `(MUL (: vy) *DT))
       (z3dDZ (: body) `(MUL (: vz) *DT))
       # Instruments
-      (unless (= *Thr (: thr))
-         (setPanel 1 (setq *Thr (: thr))) )
-      (unless (= *Speed (setq A (*/ VX 3.6 `(* 1.0 1.0))))
-         (setPanel 3 (setq *Speed A)) )
-      (unless (= *Climb (setq A (/ (: vz) 1.0)))
-         (setPanel 5 (setq *Climb A)) )
-      (unless (= *Alt (setq A (/ (caddr Body) 1.0)))
-         (setPanel 7 (setq *Alt A)) ) ) )
+      (setq
+         *Throttle (: thr)
+         *Speed (*/ VX 3.6 `(* 1.0 1.0))
+         *Altitude (/ (caddr Body) 1.0) ) ) )
 
 (dm draw> ()
    (z3dDraw (: body)) )
@@ -459,8 +450,7 @@
    (setq
       *FocLen 8000.0
       *Scene (new '(+Scene))
-      *Model (new '(+Model))
-      *Panel (list 0 " %  " 0 " km/h  " 0 " m/s  " 0 " m  " NIL) ) )
+      *Model (new '(+Model)) ) )
 
 (de go ()
    (when (z3dWindow "RC Simulator" 800 600)
@@ -468,16 +458,21 @@
    (task (*/ -1000 *DT 1.0) 0  # -Milliseconds
       (sim> *Scene)
       (sim> *Model)
-      (at (0 . 100)
-         (let N (time)
-            (setPanel 9 (pack (format (- N "Time") 2) " s"))
-            (setq "Time" N) ) )
       (use (Yaw Pitch)
          (dir> *Model 'Yaw 'Pitch)
          (z3dCamera *FocLen Yaw Pitch  0 0 *Tower  LightBlue DarkGreen) )
       (draw> *Scene)
       (draw> *Model)
-      (z3dPaint) )
-   (setq "Time" (time)) )
+      (z3dPut)
+      (z3dText 20 580 (pack *Throttle " %"))
+      (z3dText 120 580 (pack *Speed " km/h"))
+      (z3dText 240 580 (pack *Altitude " m"))
+      (z3dText 320 580
+         (case *FocLen
+            (2000.0 "(--)")
+            (4000.0 "(-)")
+            (16000.0 "(+)")
+            (32000.0 "(++)") ) )
+      (z3dSync) ) )
 
 # vi:et:ts=3:sw=3
