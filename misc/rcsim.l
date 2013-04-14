@@ -455,7 +455,7 @@
 (de go ()
    (when (z3dWindow "RC Simulator" 800 600)
       (quit @) )
-   (task (*/ -1000 *DT 1.0) 0  # -Milliseconds
+   (task `(*/ -1000 *DT 1.0) 0  # -Milliseconds
       (let (U (usec)  R (assoc @ *Run))
          (sim> *Scene)
          (sim> *Model)
@@ -478,7 +478,7 @@
          (set (cdr R)
             (min -2
                (+
-                  (*/ -1000 *DT 1.0)  # -Milliseconds
-                  (/ (- (usec) U) 1000) ) ) ) ) ) )
+                  `(*/ -1000 *DT 1.0)  # -Milliseconds
+                  (*/ (- (usec) U) 1000) ) ) ) ) ) )
 
 # vi:et:ts=3:sw=3
