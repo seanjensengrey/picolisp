@@ -1,4 +1,4 @@
-# 13apr13abu
+# 14apr13abu
 # (c) Software Lab. Alexander Burger
 
 ### RC Flight Simulator for 64-bit PicoLisp ###
@@ -456,23 +456,29 @@
    (when (z3dWindow "RC Simulator" 800 600)
       (quit @) )
    (task (*/ -1000 *DT 1.0) 0  # -Milliseconds
-      (sim> *Scene)
-      (sim> *Model)
-      (use (Yaw Pitch)
-         (dir> *Model 'Yaw 'Pitch)
-         (z3dCamera *FocLen Yaw Pitch  0 0 *Tower  LightBlue DarkGreen) )
-      (draw> *Scene)
-      (draw> *Model)
-      (z3dPut)
-      (z3dText 20 580 (pack *Throttle " %"))
-      (z3dText 120 580 (pack *Speed " km/h"))
-      (z3dText 240 580 (pack *Altitude " m"))
-      (z3dText 320 580
-         (case *FocLen
-            (2000.0 "(--)")
-            (4000.0 "(-)")
-            (16000.0 "(+)")
-            (32000.0 "(++)") ) )
-      (z3dSync) ) )
+      (let (U (usec)  R (assoc @ *Run))
+         (sim> *Scene)
+         (sim> *Model)
+         (use (Yaw Pitch)
+            (dir> *Model 'Yaw 'Pitch)
+            (z3dCamera *FocLen Yaw Pitch  0 0 *Tower  LightBlue DarkGreen) )
+         (draw> *Scene)
+         (draw> *Model)
+         (z3dPut)
+         (z3dText 20 580 (pack *Throttle " %"))
+         (z3dText 120 580 (pack *Speed " km/h"))
+         (z3dText 220 580 (pack *Altitude " m"))
+         (z3dText 320 580
+            (case *FocLen
+               (2000.0 "(--)")
+               (4000.0 "(-)")
+               (16000.0 "(+)")
+               (32000.0 "(++)") ) )
+         (z3dSync)
+         (set (cdr R)
+            (min -10
+               (+
+                  (*/ -1000 *DT 1.0)  # -Milliseconds
+                  (/ (- (usec) U) 1000) ) ) ) ) ) )
 
 # vi:et:ts=3:sw=3
