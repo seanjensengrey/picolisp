@@ -476,7 +476,7 @@
                (32000.0 "(++)") ) )
          (z3dSync)
          (set (cdr R)
-            (min -10
+            (min -2
                (+
                   (*/ -1000 *DT 1.0)  # -Milliseconds
                   (/ (- (usec) U) 1000) ) ) ) ) ) )
