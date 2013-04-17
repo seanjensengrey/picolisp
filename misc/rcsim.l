@@ -1,4 +1,4 @@
-# 14apr13abu
+# 15apr13abu
 # (c) Software Lab. Alexander Burger
 
 ### RC Flight Simulator for 64-bit PicoLisp ###
@@ -455,8 +455,9 @@
 (de go ()
    (when (z3dWindow "RC Simulator" 800 600)
       (quit @) )
+   (zero "MSec")
    (task `(*/ -1000 *DT 1.0) 0  # -Milliseconds
-      (let (U (usec)  R (assoc @ *Run))
+      (let R (assoc @ *Run)
          (sim> *Scene)
          (sim> *Model)
          (use (Yaw Pitch)
@@ -475,10 +476,10 @@
                (16000.0 "(+)")
                (32000.0 "(++)") ) )
          (z3dSync)
-         (set (cdr R)
-            (min -2
-               (+
-                  `(*/ -1000 *DT 1.0)  # -Milliseconds
-                  (*/ (- (usec) U) 1000) ) ) ) ) ) )
+         (let M (*/ (usec) 1000)
+            (setq "MSec"
+               (- M
+                  (set (cdr R)
+                     (min -2 (- M "MSec" `(*/ 1000 *DT 1.0))) ) ) ) ) ) ) )
 
 # vi:et:ts=3:sw=3
