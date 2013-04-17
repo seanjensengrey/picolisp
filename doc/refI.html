@@ -25,12 +25,26 @@ with the <code><a href="refS.html#+Sn">+Sn</a></code> soundex index, or the
 (rel nm (+Sn +Idx +String))  # Name
 </code></pre>
 
+<dt><a name="+IdxFold"><code>+IdxFold</code></a>
+<dd>Prefix class for maintaining non-unique indexes to subsequent substrings of
+the <code><a href="refF.html#fold">fold</a></code>ed individual words of
+<code><a href="refS.html#+String">+String</a></code> relations. Accepts optional
+arguments for the minimally indexed substring length (defaults to 3), and a
+<code><a href="refH.html#+Hook">+Hook</a></code> attribute. See also <code><a
+href="refI.html#+Idx">+Idx</a></code> and <code><a
+href="ref.html#dbase">Database</a></code>.
+
+<pre><code>
+(rel nm (+IdxFold +String))            # Item Description
+</code></pre>
+
 <dt><a name="+index"><code>+index</code></a>
 <dd>Abstract base class of all database B-Tree index relations (prefix classes
 for <code><a href="refR.html#+relation">+relation</a></code>s). The class
 hierarchy includes <code><a href="refK.html#+Key">+Key</a></code>, <code><a
-href="refR.html#+Ref">+Ref</a></code> and <code><a
-href="refI.html#+Idx">+Idx</a></code>. See also <code><a
+href="refR.html#+Ref">+Ref</a></code>, <code><a
+href="refI.html#+Idx">+Idx</a></code> and <code><a
+href="refI.html#+IdxFold">+IdxFold</a></code>. See also <code><a
 href="ref.html#dbase">Database</a></code>.
 
 <pre><code>
