@@ -72,7 +72,7 @@ argument. See also <code><a href="refZ.html#*Zap">*Zap</a></code>.
 algorithm, for tolerant name searches, to <code><a
 href="refS.html#+String">+String</a></code> relations. Typically used in
 combination with the <code><a href="refI.html#+Idx">+Idx</a></code> prefix
-class. See also <code><a href="ref.html#dbase">Database</a></code>.
+class. See also <a href="ref.html#dbase">Database</a>.
 
 <pre><code>
 (rel nm (+Sn +Idx +String))  # Name
@@ -81,8 +81,8 @@ class. See also <code><a href="ref.html#dbase">Database</a></code>.
 <dt><a name="+String"><code>+String</code></a>
 <dd>Class for string (transient symbol) relations, a subclass of <code><a
 href="refS.html#+Symbol">+Symbol</a></code>. Accepts an optional argument for
-the string length (currently not used). See also <code><a
-href="ref.html#dbase">Database</a></code>.
+the string length (currently not used). See also <a
+href="ref.html#dbase">Database</a>.
 
 <pre><code>
 (rel nm (+Sn +Idx +String))  # Name, indexed by soundex and substrings
@@ -92,8 +92,8 @@ href="ref.html#dbase">Database</a></code>.
 <dd>Class for symbolic relations, a subclass of <code><a
 href="refR.html#+relation">+relation</a></code>. Objects of that class typically
 maintain internal symbols, as opposed to the more often-used <code><a
-href="refS.html#+String">+String</a></code> for transient symbols. See also
-<code><a href="ref.html#dbase">Database</a></code>.
+href="refS.html#+String">+String</a></code> for transient symbols. See also <a
+href="ref.html#dbase">Database</a>.
 
 <pre><code>
 (rel perm (+List +Symbol))  # Permission list
@@ -264,9 +264,8 @@ values (this is analog to 'SELECT * from CLS where VAR = VAL'). If between the
 are supplied, only these attribute (instead of the full <code>show</code>) are
 printed. These attribute specifications may also be lists, then the <code><a
 href="refG.html#get">get</a></code> algorithm will be used to retrieve related
-data. See also <code><a href="refU.html#update">update</a></code>, <code><a
-href="ref.html#dbase">Database</a></code> and <a
-href="ref.html#pilog">Pilog</a>.
+data. See also <code><a href="refU.html#update">update</a></code>, <a
+href="ref.html#dbase">Database</a> and <a href="ref.html#pilog">Pilog</a>.
 
 <pre><code>
 : (select +Item)                       # Show all items
@@ -338,8 +337,8 @@ href="refR.html#remote/2">remote/2</a></code>.
 <dd>Sends the message <code>msg</code> to the object <code>obj</code>,
 optionally with arguments <code>any</code>. If the message cannot be located in
 <code>obj</code>, its classes and superclasses, an error <code>"Bad
-message"</code> is issued. See also <code><a href="ref.html#oop">OO
-Concepts</a></code>, <code><a href="refT.html#try">try</a></code>, <code><a
+message"</code> is issued. See also <a href="ref.html#oop">OO Concepts</a>,
+<code><a href="refT.html#try">try</a></code>, <code><a
 href="refM.html#method">method</a></code>, <code><a
 href="refM.html#meth">meth</a></code>, <code><a
 href="refS.html#super">super</a></code> and <code><a
@@ -909,8 +908,8 @@ to <code>fun</code>. Returns the sum of all numeric values returned from
 <dt><a name="super"><code>(super ['any ..]) -> any</code></a>
 <dd>Can only be used inside methods. Sends the current message to the current
 object <code>This</code>, this time starting the search for a method at the
-superclass(es) of the class where the current method was found. See also
-<code><a href="ref.html#oop">OO Concepts</a></code>, <code><a
+superclass(es) of the class where the current method was found. See also <a
+href="ref.html#oop">OO Concepts</a>, <code><a
 href="refE.html#extra">extra</a></code>, <code><a
 href="refM.html#method">method</a></code>, <code><a
 href="refM.html#meth">meth</a></code>, <code><a
