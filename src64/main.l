@@ -1,4 +1,4 @@
-# 06feb13abu
+# 25apr13abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -326,6 +326,7 @@
                                  ld E 0  # Exit OK
                                  jmp byeE
                               end
+                              break T
                            end
                         end
                      end
