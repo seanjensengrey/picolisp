@@ -1,4 +1,4 @@
-01apr13abu
+26apr13abu
 (c) Software Lab. Alexander Burger
 
 
@@ -91,13 +91,18 @@ installation, and invoke them explicitly as desired.
 The recommended way for a global installation is to use a picolisp package from
 the OS distribution.
 
-If that is not available, you can (as root) create four symbolic links from
-/usr/lib, /usr/share and /usr/bin to a local installation directory
+If that is not available, you can (as root) create symbolic links from /usr/lib
+and /usr/bin to a local installation directory
 
    # ln -s /<installdir> /usr/lib/picolisp
+   # ln -s /usr/lib/picolisp/bin/picolisp /usr/bin
+   # ln -s /usr/lib/picolisp/bin/pil /usr/bin
+
+For an additional acces to the the man pages and some examples do
+
+   # ln -s /<installdir>/man/man1/picolisp.1 /usr/share/man/man1
+   # ln -s /<installdir>/man/man1/pil.1 /usr/share/man/man1
    # ln -s /<installdir> /usr/share/picolisp
-   # ln -s /usr/lib/picolisp/bin/picolisp /usr/bin/picolisp
-   # ln -s /usr/lib/picolisp/bin/pil /usr/bin/pil
 
 
       Invocation
