@@ -537,7 +537,7 @@
                   (chgLine "UndoLine" "UndoPos")
                   (setq "UndoLine" "L" "UndoPos" "P") ) )
          # move-end-of-line
-         ("^e" (eMove))
+         ("^e" (xMove))
          # move-beginning-of-line
          ("^a" (bMove))
          # kill-line
