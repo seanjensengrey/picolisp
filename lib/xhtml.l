@@ -1,9 +1,9 @@
-# 15mar13abu
+# 03may13abu
 # (c) Software Lab. Alexander Burger
 
 # *JS "*JS" *Style *Menu *Tab *ID
 
-(mapc allow '(*Menu *Tab *ID))
+(mapc allow '(*JS *Menu *Tab *ID))
 (setq *Menu 0  *Tab 1)
 (off "*JS")
 
@@ -571,6 +571,7 @@
       (sesId Url)
       (and *JS "\" onkeydown=\"return formKey(event)\" onkeypress=\"return formKey(event)\" onsubmit=\"return doPost(this)")
       "\" method=\"post\">" )
+   (prin "<noscript><input type=\"hidden\" name=\"*JS\" value=\"\"/></noscript>")
    (tag 'fieldset Attr 2 Prg)
    (prinl "</form>") )
 
