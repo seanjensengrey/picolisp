@@ -1089,7 +1089,7 @@
    (pass extra) )
 
 (dm show> ("Var")
-   (<js> (list (cons 'onclick (pack (eval (: onclick)) "; return false;")))
+   (<js> (list (cons 'onclick (eval (: onclick))))
       (extra "Var") ) )
 
 
