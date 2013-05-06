@@ -1,4 +1,4 @@
-# 09mar13abu
+# 06may13abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -1079,6 +1079,18 @@
 
 (dm act> ()
    (and (able) (eval (: act))) )
+
+
+(class +OnClick)
+# onclick
+
+(dm T (Exe . @)
+   (=: onclick Exe)
+   (pass extra) )
+
+(dm show> ("Var")
+   (<js> (list (cons 'onclick (pack (eval (: onclick)) "; return false;")))
+      (extra "Var") ) )
 
 
 (class +Drop)
