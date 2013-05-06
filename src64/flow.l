@@ -1,4 +1,4 @@
-# 13nov12abu
+# 06may13abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -3061,35 +3061,6 @@
       call printE
    end
    pop E
-   ret
-
-# (sys 'any ['any]) -> sym
-(code 'doSys 2)
-   push X
-   push Z
-   ld X (E CDR)  # X on args
-   call evSymX_E  # Evaluate first symbol
-   call bufStringE_SZ  # Write to stack buffer
-   ld X (X CDR)  # Next arg?
-   atom X
-   if nz  # No
-      cc getenv(S)  # Get value from system
-      ld E A
-      call mkStrE_E  # Make transient symbol
-   else
-      push Z
-      call evSymX_E  # Evaluate second symbol
-      lea X (S I)  # Keep pointer to first buffer
-      call bufStringE_SZ  # Write to stack buffer
-      cc setenv(X S 1)  # Set system value
-      nul4  # OK?
-      ldnz E Nil  # No
-      ld S Z  # Drop buffer
-      pop Z
-   end
-   ld S Z  # Drop buffer
-   pop Z
-   pop X
    ret
 
 # (call 'any ..) -> flg

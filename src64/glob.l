@@ -1,4 +1,4 @@
-# 12jan13abu
+# 06may13abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Data)
@@ -193,6 +193,7 @@
    initFun NIL       "env"       doEnv
    initFun NIL       "trail"     doTrail
    initFun NIL       "up"        doUp
+   initFun NIL       "sys"       doSys
    initFun NIL       "quit"      doQuit
    initFun NIL       "errno"     doErrno
    initFun NIL       "native"    doNative
@@ -299,7 +300,6 @@
    initFun NIL       "!"         doBreak
    initFun NIL       "e"         doE
    initFun NIL       "$"         doTrace
-   initFun NIL       "sys"       doSys
    initFun NIL       "call"      doCall
    initFun NIL       "tick"      doTick
    initFun NIL       "ipid"      doIpid
