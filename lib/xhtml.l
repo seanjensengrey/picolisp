@@ -1,4 +1,4 @@
-# 03may13abu
+# 07may13abu
 # (c) Software Lab. Alexander Burger
 
 # *JS "*JS" *Style *Menu *Tab *ID
@@ -106,6 +106,7 @@
       (when Css
          (if (atom Css) ("css" Css) (mapc "css" Css)) )
       (mapc javascript *JS)
+      (and *SesId (javascript NIL "SesId = '" @ "';"))
       (prinl "</head>")
       (tag 'body Attr 2 Prg)
       (prinl "</html>") ) )
