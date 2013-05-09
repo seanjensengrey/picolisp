@@ -266,6 +266,28 @@ href="refG.html#glue">glue</a></code>.
 -> "a@bc.de"
 </code></pre>
 
+<dt><a name="throw"><code>(throw 'sym 'any)</code></a>
+<dd>Non-local jump into a previous <code><a
+href="refC.html#catch">catch</a></code> environment with the jump label
+<code>sym</code> (or <code>T</code> as a catch-all). Any pending <code><a
+href="refF.html#finally">finally</a></code> expressions are executed, local
+symbol bindings are restored, open files are closed and internal data structures
+are reset appropriately, as the environment was at the time when the
+corresponding <code>catch</code> was called. Then <code>any</code> is returned
+from that <code>catch</code>. See also <code><a
+href="refQ.html#quit">quit</a></code>.
+
+<pre><code>
+: (de foo (N)
+   (println N)
+   (throw 'OK) )
+-> foo
+: (let N 1  (catch 'OK (foo 7))  (println N))
+7
+1
+-> 1
+</code></pre>
+
 <dt><a name="tim$"><code>(tim$ 'tim ['flg]) -> sym</code></a>
 <dd>Formats a <code><a href="refT.html#time">time</a></code> <code>tim</code>.
 If <code>flg</code> is <code>NIL</code>, the format is HH:MM, otherwise it is
@@ -291,28 +313,6 @@ href="refT.html#task">task</a></code>.
 -> (-1 3600000 (bye))
 : *Run                        # Look after a few seconds
 -> ((-1 3574516 (bye)))
-</code></pre>
-
-<dt><a name="throw"><code>(throw 'sym 'any)</code></a>
-<dd>Non-local jump into a previous <code><a
-href="refC.html#catch">catch</a></code> environment with the jump label
-<code>sym</code> (or <code>T</code> as a catch-all). Any pending <code><a
-href="refF.html#finally">finally</a></code> expressions are executed, local
-symbol bindings are restored, open files are closed and internal data structures
-are reset appropriately, as the environment was at the time when the
-corresponding <code>catch</code> was called. Then <code>any</code> is returned
-from that <code>catch</code>. See also <code><a
-href="refQ.html#quit">quit</a></code>.
-
-<pre><code>
-: (de foo (N)
-   (println N)
-   (throw 'OK) )
--> foo
-: (let N 1  (catch 'OK (foo 7))  (println N))
-7
-1
--> 1
 </code></pre>
 
 <dt><a name="tick"><code>(tick (cnt1 . cnt2) . prg) -> any</code></a>
