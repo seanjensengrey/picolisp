@@ -288,33 +288,6 @@ href="refQ.html#quit">quit</a></code>.
 -> 1
 </code></pre>
 
-<dt><a name="tim$"><code>(tim$ 'tim ['flg]) -> sym</code></a>
-<dd>Formats a <code><a href="refT.html#time">time</a></code> <code>tim</code>.
-If <code>flg</code> is <code>NIL</code>, the format is HH:MM, otherwise it is
-HH:MM:SS. See also <code><a href="ref_.html#$tim">$tim</a></code> and <code><a
-href="refD.html#dat$">dat$</a></code>.
-
-<pre><code>
-: (tim$ (time))
--> "10:57"
-: (tim$ (time) T)
--> "10:57:56"
-</code></pre>
-
-<dt><a name="timeout"><code>(timeout ['num])</code></a>
-<dd>Sets or refreshes a timeout value in the <code><a
-href="refR.html#*Run">*Run</a></code> global, so that the current process
-executes <code><a href="refB.html#bye">bye</a></code> after the given period. If
-called without arguments, the timeout is removed. See also <code><a
-href="refT.html#task">task</a></code>.
-
-<pre><code>
-: (timeout 3600000)           # Timeout after one hour
--> (-1 3600000 (bye))
-: *Run                        # Look after a few seconds
--> ((-1 3574516 (bye)))
-</code></pre>
-
 <dt><a name="tick"><code>(tick (cnt1 . cnt2) . prg) -> any</code></a>
 <dd>Executes <code>prg</code>, then (destructively) adds the number of elapsed
 user ticks to the <code>cnt1</code> parameter, and the number of elapsed system
@@ -354,6 +327,19 @@ abc:def
 -> "abc"
 </code></pre>
 
+<dt><a name="tim$"><code>(tim$ 'tim ['flg]) -> sym</code></a>
+<dd>Formats a <code><a href="refT.html#time">time</a></code> <code>tim</code>.
+If <code>flg</code> is <code>NIL</code>, the format is HH:MM, otherwise it is
+HH:MM:SS. See also <code><a href="ref_.html#$tim">$tim</a></code> and <code><a
+href="refD.html#dat$">dat$</a></code>.
+
+<pre><code>
+: (tim$ (time))
+-> "10:57"
+: (tim$ (time) T)
+-> "10:57:56"
+</code></pre>
+
 <dt><a name="time"><code>(time ['T]) -> tim</code></a>
 <dt><code>(time 'tim) -> (h m s)</code>
 <dt><code>(time 'h 'm ['s]) -> tim | NIL</code>
@@ -380,6 +366,20 @@ href="ref_.html#$tim">$tim</a></code>.
 -> (8 58 54)
 : (time 25 30)                   # Illegal time
 -> NIL
+</code></pre>
+
+<dt><a name="timeout"><code>(timeout ['num])</code></a>
+<dd>Sets or refreshes a timeout value in the <code><a
+href="refR.html#*Run">*Run</a></code> global, so that the current process
+executes <code><a href="refB.html#bye">bye</a></code> after the given period. If
+called without arguments, the timeout is removed. See also <code><a
+href="refT.html#task">task</a></code>.
+
+<pre><code>
+: (timeout 3600000)           # Timeout after one hour
+-> (-1 3600000 (bye))
+: *Run                        # Look after a few seconds
+-> ((-1 3574516 (bye)))
 </code></pre>
 
 <dt><a name="tmp"><code>(tmp ['any ..]) -> sym</code></a>
