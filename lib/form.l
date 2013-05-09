@@ -1,4 +1,4 @@
-# 07may13abu
+# 09may13abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -7,7 +7,9 @@
 (allow "@img/" T)
 (push1 '*JS (allow "@lib/form.js"))
 (mapc allow
-   '(*Gui *Get *Got *Form *Evt *Drop "!jsForm" *JsHint "!jsHint" "!tzOffs") )
+   (quote
+      *Gui *Get *Got *Form "!jsForm" *Evt *Drop
+      *JsHint "!jsHint" *JsArgs "!tzOffs" ) )
 
 (one "*Cnt")
 (off "*Lst" "*Post2" "*Cho" "*TZO")
@@ -16,7 +18,7 @@
    ("+---" "-+--" "--+-" "---+" "--+-" "-+--" .) )
 
 (de tzOffs (Min)
-   (setq "*TZO" (* Min 60)) )
+   (setq "*TZO" (* 60 (format Min))) )
 
 # Define GUI form
 (de form ("Attr" . "Prg")
@@ -208,10 +210,12 @@
 (de postGui ()
    (if "*Post2"
       (off *Gui "*Post2")
-      (let *Btn NIL
+      (let (Fun NIL *Btn NIL)
          (for G *Gui
-            (and (lt0 (car G)) (setq *Btn (cdr G)))
-            (con (assoc (car G) (val *PRG)) (cdr G)) )
+            (if (=0 (car G))
+               (setq Fun (cdr G))
+               (and (lt0 (car G)) (setq *Btn (cdr G)))
+               (con (assoc (car G) (val *PRG)) (cdr G)) ) )
          (off *Gui)
          (job (: env)
             (for This (: gui)
@@ -234,6 +238,11 @@
                         (=: able (off *Lock))
                         (sync)
                         (tell) ) )
+                  (when Fun
+                     (when (and *Allow (not (idx *Allow Fun)))
+                        (notAllowed Fun)
+                        (throw "stop") )
+                     (apply (intern Fun) (mapcar cdr *JsArgs)) )
                   (for This (: gui)
                      (nond
                         ((: id) (setq "*Chart" This))
@@ -285,7 +294,7 @@
          (if "*TZO"
             (tim$ (% (- Tim -86400 @) 86400))
             (javascript NIL
-               "lisp(null, 'tzOffs', '+' + (new Date()).getTimezoneOffset());" )
+               "lisp(null, 'tzOffs', (new Date()).getTimezoneOffset());" )
             (pack (tim$ (% Tim 86400)) " UTC") ) ) ) )
 
 # Return chart property
