@@ -1,4 +1,4 @@
-# 09may13abu
+# 10may13abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -18,7 +18,7 @@
    ("+---" "-+--" "--+-" "---+" "--+-" "-+--" .) )
 
 (de tzOffs (Min)
-   (setq "*TZO" (* 60 (format Min))) )
+   (setq "*TZO" (* Min 60)) )
 
 # Define GUI form
 (de form ("Attr" . "Prg")
@@ -242,7 +242,12 @@
                      (when (and *Allow (not (idx *Allow Fun)))
                         (notAllowed Fun)
                         (throw "stop") )
-                     (apply (intern Fun) (mapcar cdr *JsArgs)) )
+                     (apply (intern Fun)
+                        (mapcar
+                           '((X)
+                              ((if (= "+" (car (setq X (chop (cdr X))))) format pack)
+                                 (cdr X) ) )
+                           *JsArgs ) ) )
                   (for This (: gui)
                      (nond
                         ((: id) (setq "*Chart" This))
