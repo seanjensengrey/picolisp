@@ -1,4 +1,4 @@
-# 01apr13abu
+# 13may13abu
 # 27feb08rdo
 # (c) Software Lab. Alexander Burger
 
@@ -101,7 +101,7 @@ endif
 
 
 $(lib)/ext$(dll): ext.o
-	gcc -o $(lib)/ext$(dll) $(DYNAMIC-LIB-FLAGS) ext.o $(DLL-DEFS)
+	gcc -o $(lib)/ext$(dll) $(DYNAMIC-LIB-FLAGS) ext.o $(DLL-DEFS) -lcrypt
 	$(STRIP) $(lib)/ext$(dll)
 
 $(lib)/ht$(dll): ht.o
