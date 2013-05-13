@@ -1,4 +1,4 @@
-# 10may13abu
+# 13may13abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -210,10 +210,10 @@
 (de postGui ()
    (if "*Post2"
       (off *Gui "*Post2")
-      (let (Fun NIL *Btn NIL)
+      (let ("Fun" NIL *Btn NIL)
          (for G *Gui
             (if (=0 (car G))
-               (setq Fun (cdr G))
+               (setq "Fun" (cdr G))
                (and (lt0 (car G)) (setq *Btn (cdr G)))
                (con (assoc (car G) (val *PRG)) (cdr G)) ) )
          (off *Gui)
@@ -238,11 +238,11 @@
                         (=: able (off *Lock))
                         (sync)
                         (tell) ) )
-                  (when Fun
-                     (when (and *Allow (not (idx *Allow Fun)))
-                        (notAllowed Fun)
+                  (when "Fun"
+                     (when (and *Allow (not (idx *Allow "Fun")))
+                        (notAllowed "Fun")
                         (throw "stop") )
-                     (apply (intern Fun)
+                     (apply (intern "Fun")
                         (mapcar
                            '((X)
                               ((if (= "+" (car (setq X (chop (cdr X))))) format pack)
