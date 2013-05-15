@@ -1,4 +1,5 @@
 * DDjun13 picoLisp-3.1.3
+   JavaScript canvas library
    '+OnClick' GUI prefix class
    Flight Simulator in "misc/rcsim.l" (64-bit)
    Removed z3d/rcsim flight simulator (32-bit)
