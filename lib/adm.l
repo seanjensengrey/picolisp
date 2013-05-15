@@ -1,4 +1,4 @@
-# 13may13abu
+# 15may13abu
 # (c) Software Lab. Alexander Burger
 
 # *Salt *Login *Users *Perms
@@ -25,7 +25,7 @@
 (de passwd (Str Salt)
    (nond
       (*Salt Str)
-      (native (ext:Crypt Str Salt))
+      (native (ext:Crypt Str (or Salt (salt))))
       (NIL (native "libcrypt.so" "crypt" 'S Str (or Salt (salt)))) ) )
 
 (de auth (Nm Pw)
