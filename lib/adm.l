@@ -1,4 +1,4 @@
-# 15may13abu
+# 18may13abu
 # (c) Software Lab. Alexander Burger
 
 # *Salt *Login *Users *Perms
@@ -23,10 +23,11 @@
                   (inc (& 63 (rd 1))) ) ) ) ) ) )
 
 (de passwd (Str Salt)
-   (nond
-      (*Salt Str)
-      (native (ext:Crypt Str (or Salt (salt))))
-      (NIL (native "libcrypt.so" "crypt" 'S Str (or Salt (salt)))) ) )
+   (if *Salt
+      `(if (== 64 64)
+         '(native "libcrypt.so" "crypt" 'S Str (or Salt (salt)))
+         '(ext:Crypt Str (or Salt (salt))) )
+      Str ) )
 
 (de auth (Nm Pw)
    (with (db 'nm '+User Nm)
