@@ -1,10 +1,13 @@
-# 27jan12abu
+# 18may13abu
 # (c) Software Lab. Alexander Burger
 
 (allowed ("app/")
    "!start" "!stop" "@lib.css" "!psh" )
 
-(load "@lib/http.l" "@lib/xhtml.l" "@lib/form.l" "@lib/ps.l" "@lib/adm.l")
+(load
+   "@lib/http.l" "@lib/xhtml.l" "@lib/form.l"
+   "@lib/ps.l" "@lib/adm.l"
+   "@lib/boss.l" )
 
 (setq
    *Scl 2
