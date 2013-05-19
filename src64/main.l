@@ -1,4 +1,4 @@
-# 06may13abu
+# 19may13abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -85,6 +85,9 @@
    or A CNT
    ld (Pid) A
    ld (Stack0) S  # Save top level stack pointer
+   ld A S  # Stack top in A
+   sub A (* 4 STACK)  # Decrement by main segment size
+   ld (Stack1) A  # Set coroutine stack base
    ld (StkLimit) 0  # Initially without stack limit
    ld L 0  # Init link register
    call heapAlloc  # Allocate initial heap
@@ -556,7 +559,11 @@
       if z  # No
          ld E (E)  # Eval 'cnt'
          call evCntEX_FE
-         shl E 20  # [MB]
+         shl E 22  # Main stack segment size [times 4 MB]
+         ld A (Stack0)  # Get stack top
+         sub A E  # Decrement by main segment size
+         ld (Stack1) A  # New coroutine stack base
+         shr E 2  # [to MB]
          ld (StkSize) E  # Set new stack size
          shr E 16  # Make short number [MB]
          or E CNT
@@ -567,19 +574,20 @@
    ld E (StkSize)  # Return current stack size
    shr E 16  # Make short number [MB]
    or E CNT
-   ld X (Stack0)  # Collect coroutines
+   ld X (Stack1)  # Collect coroutines
    ld C (Stacks)  # Segment bitmask
    do
-      sub X (StkSize)  # Next segment
       shr C 1  # In use?
       if c  # Yes
          call consE_A  # Cons 'tag'
          ld (A) (X -I)
          ld (A CDR) E
          ld E A
-         continue T
+         jmp 10
       end
-   until z
+   while nz
+10    sub X (StkSize)  # Next segment
+   loop
    pop X
    ret
 

@@ -1,4 +1,4 @@
-# 12jan13abu
+# 19may13abu
 # (c) Software Lab. Alexander Burger
 
 # Debug print routine
@@ -259,12 +259,12 @@
       do
          cmp Z (X (pack III "+(EnvCo7-Env)"))  # Skipped?
       while ne  # Yes
-         ld C (Stack0)  # Find stack segment
+         ld C (Stack1)  # Find stack segment
          ld A 1
          do
-            sub C (StkSize)  # Next segment
             cmp C (Z II)  # Found 'seg'?
          while ne  # No
+            sub C (StkSize)  # Next segment
             add A A
          loop
          xor (Stacks) A  # Clear in segment bitmask

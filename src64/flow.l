@@ -1,4 +1,4 @@
-# 06may13abu
+# 19may13abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -2555,105 +2555,107 @@
       push Z
       push L
       sub S "EnvMid-EnvCo"  # Space for env
-      ld Y (Stack0)  # Search through stack segments
+      ld Y (Stack1)  # Search through stack segments
       ld C (Stacks)  # Segment bitmask
       do
-         sub Y (StkSize)  # Next segment
          shr C 1  # In use?
          if c  # Yes
             cmp E (Y -I)  # Found tag?
-            continue ne  # No
-            null (Y -II)  # Already active?
-            jz reentErrEX  # Yes
-            push Y  # Resume coroutine: Save 'seg'
-            push (StkLimit)  # and 'lim'
-            push (EnvCo7)  # Link
-            ld (EnvCo7) S  # Close coroutine frame
-            ld Z S  # Point Z to main frame
-            save (EnvCo) (EnvMid) (Z III)  # Save environment
+            if eq  # Yes
+               null (Y -II)  # Already active?
+               jz reentErrEX  # Yes
+               push Y  # Resume coroutine: Save 'seg'
+               push (StkLimit)  # and 'lim'
+               push (EnvCo7)  # Link
+               ld (EnvCo7) S  # Close coroutine frame
+               ld Z S  # Point Z to main frame
+               save (EnvCo) (EnvMid) (Z III)  # Save environment
 : resumeCoroutine
-            ld S (Y -II)  # Restore stack pointer
-            ld (Y -II) 0  # Mark as active
-            lea A (Y 4096)  # Set stack limit
-            sub A (StkSize)
-            ld (StkLimit) A
-            load (EnvCo) (EnvMid) (Y (pack -II "-(EnvMid-EnvCo)"))  # Restore environment
-            ld X (EnvBind)  # Reversed bindings
-            ld C (Z (pack III "+(EnvBind-EnvCo)"))  # Main bindings
-            do
-               null X  # More reversed bindings?
-            while nz  # Yes
-               ld Y (X)  # Link address in Y
-               null (X -I)  # Env swap zero?
-               if z  # Yes
-                  lea A (Y -II)  # End of bindings in A
-                  do
-                     xchg ((A)) (A I)  # Exchange symbol value with saved value
-                     sub A II
-                     cmp A X  # More?
-                  until lt  # No
-               end
-               ld A (Y I)  # Get down link
-               ld (Y I) C  # Undo reversal
-               ld C X
-               ld X A
-            loop
-            ld (EnvBind) C  # Set local bindings
-            ld X EnvInFrames  # Pointer to input frames
-            ld C (Z (pack III "+(EnvInFrames-EnvCo)"))  # Local input frames
-            call joinLocalCX  # Join locals
-            ld X EnvOutFrames  # Pointer to output frames
-            ld C (Z (pack III "+(EnvOutFrames-EnvCo)"))  # Local output frames
-            call joinLocalCX  # Join locals
-            ld X EnvErrFrames  # Pointer to error frames
-            ld C (Z (pack III "+(EnvErrFrames-EnvCo)"))  # Local error frames
-            call joinLocalCX  # Join locals
-            ld X EnvCtlFrames  # Pointer to control frames
-            ld C (Z (pack III "+(EnvCtlFrames-EnvCo)"))  # Local control frames
-            call joinLocalCX  # Join locals
-            ld X EnvApply  # Local apply stack
-            do
-               null (X)  # Any?
-            while nz  # Yes
-               ld X ((X))  # Follow link
-            loop
-            ld (X) (Z (pack III "+(EnvApply-EnvCo)"))  # Join
-            pop X  # Get saved L
-            null X  # Any?
-            if nz  # Yes
-               ld Y (X)  # Pointer to link
+               ld S (Y -II)  # Restore stack pointer
+               ld (Y -II) 0  # Mark as active
+               lea A (Y 4096)  # Set stack limit
+               sub A (StkSize)
+               ld (StkLimit) A
+               load (EnvCo) (EnvMid) (Y (pack -II "-(EnvMid-EnvCo)"))  # Restore environment
+               ld X (EnvBind)  # Reversed bindings
+               ld C (Z (pack III "+(EnvBind-EnvCo)"))  # Main bindings
                do
-                  ld A (Y)  # Get link
-                  null A  # Found end?
-               while nz  # No
-                  ld Y (A)  # Next frame
+                  null X  # More reversed bindings?
+               while nz  # Yes
+                  ld Y (X)  # Link address in Y
+                  null (X -I)  # Env swap zero?
+                  if z  # Yes
+                     lea A (Y -II)  # End of bindings in A
+                     do
+                        xchg ((A)) (A I)  # Exchange symbol value with saved value
+                        sub A II
+                        cmp A X  # More?
+                     until lt  # No
+                  end
+                  ld A (Y I)  # Get down link
+                  ld (Y I) C  # Undo reversal
+                  ld C X
+                  ld X A
                loop
-               ld (Y) (Z (pack III "+(EnvMid-EnvCo)"))  # Link to main stack
-               ld L X
-            end
-            pop Z
-            pop Y
-            pop X
-            ret
+               ld (EnvBind) C  # Set local bindings
+               ld X EnvInFrames  # Pointer to input frames
+               ld C (Z (pack III "+(EnvInFrames-EnvCo)"))  # Local input frames
+               call joinLocalCX  # Join locals
+               ld X EnvOutFrames  # Pointer to output frames
+               ld C (Z (pack III "+(EnvOutFrames-EnvCo)"))  # Local output frames
+               call joinLocalCX  # Join locals
+               ld X EnvErrFrames  # Pointer to error frames
+               ld C (Z (pack III "+(EnvErrFrames-EnvCo)"))  # Local error frames
+               call joinLocalCX  # Join locals
+               ld X EnvCtlFrames  # Pointer to control frames
+               ld C (Z (pack III "+(EnvCtlFrames-EnvCo)"))  # Local control frames
+               call joinLocalCX  # Join locals
+               ld X EnvApply  # Local apply stack
+               do
+                  null (X)  # Any?
+               while nz  # Yes
+                  ld X ((X))  # Follow link
+               loop
+               ld (X) (Z (pack III "+(EnvApply-EnvCo)"))  # Join
+               pop X  # Get saved L
+               null X  # Any?
+               if nz  # Yes
+                  ld Y (X)  # Pointer to link
+                  do
+                     ld A (Y)  # Get link
+                     null A  # Found end?
+                  while nz  # No
+                     ld Y (A)  # Next frame
+                  loop
+                  ld (Y) (Z (pack III "+(EnvMid-EnvCo)"))  # Link to main stack
+                  ld L X
+               end
+               pop Z
+               pop Y
+               pop X
+               ret
+            end  # nz
          end
-      until z
-      ld Y (Stack0)  # Find unused stack segment
+      while nz
+         sub Y (StkSize)  # Next segment
+      loop
+      ld Y (Stack1)  # Find unused stack segment
       ld Z 1  # New mask
       ld C (Stacks)  # Segment bitmask
       null C  # Starting first coroutine?
       if z  # Yes
-         lea A ((Stack0) 4096)  # Set stack limit
-         sub A (StkSize)
+         ld A Y  # Set stack limit
+         add A 4096
          cmp S A  # Check it
          jlt stkErr
          ld (StkLimit) A
       end
       do
-         sub Y (StkSize)  # Next segment
          test C Z  # Free?
       while nz  # No
          add Z Z  # Next bit
          jc stkErrEX  # Overflow
+         sub Y (StkSize)  # Next segment
       loop
       or (Stacks) Z  # Mark segment as used
       push Y  # Save 'seg'
@@ -2687,11 +2689,10 @@
       pop X
       ret
    end
-   ld X (Stack0)  # Search through stack segments
+   ld X (Stack1)  # Search through stack segments
    ld C (Stacks)  # Segment bitmask
    ld A 1
    do
-      sub X (StkSize)  # Next segment
       shr C 1  # In use?
       if c  # Yes
          cmp E (X -I)  # Found tag?
@@ -2707,9 +2708,10 @@
             end
             pop X
             ret
-         end
+         end  # nz
       end
    while nz
+      sub X (StkSize)  # Next segment
       add A A
    loop
    ld E Nil  # Return NIL
@@ -2737,19 +2739,19 @@
    ld Y 0  # Preload "no target"
    cmp E Nil  # Any?
    if ne  # Yes
-      ld Y (Stack0)  # Search for target coroutine
+      ld Y (Stack1)  # Search for target coroutine
       ld C (Stacks)  # Segment bitmask
       do
-         sub Y (StkSize)  # Next segment
          shr C 1  # In use?
          if c  # Yes
             cmp E (Y -I)  # Found tag?
-            continue ne  # No
+            jne 10  # No
             null (Y -II)  # Already active?
             jz reentErrEX  # Yes
             break T
          end
          jz yieldErrEX
+10       sub Y (StkSize)  # Next segment
       loop
    end
    ld E (L I)  # Get result
@@ -2764,7 +2766,7 @@
          do
             ld A (X)  # Get link
             null A  # Any?
-            jz 10  # No
+            jz 20  # No
             cmp A C  # Reached main routine's link?
          while ne  # No
             ld X A  # Follow link
@@ -2772,7 +2774,7 @@
          ld (X) 0  # Clear link
       end
    end
-10 push L  # End of segment
+20 push L  # End of segment
    push Y  # Save taget coroutine
    ld X EnvApply  # Pointer to apply stack
    do

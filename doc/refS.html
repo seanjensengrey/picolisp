@@ -602,32 +602,27 @@ href="refS.html#stem">stem</a></code>.
 </code></pre>
 
 <dt><a name="stack"><code>(stack ['cnt]) -> cnt | (.. sym . cnt)</code></a>
-<dd>(64-bit version only) Maintains the stack segment size for coroutines. If
-called without a <code>cnt</code> argument, or if already one or more <a
-href="ref.html#coroutines">coroutines</a> are running, the current size in
-megabytes is returned. Otherwise, the stack segment size is set to the new value
-(default 4 MB). If there are running coroutines, their tags will be <code><a
-href="refC.html#cons">cons</a></code>ed in front of the size. See also <code><a
-href="refH.html#heap">heap</a></code>.
+<dd>(64-bit version only) Maintains the stack segment size for <a
+href="ref.html#coroutines">coroutines</a> (the main stack segment is limited -
+while at least one coroutine is running - to four times that size). If called
+without a <code>cnt</code> argument, or if already one or more coroutines are
+running, the current size in megabytes is returned. Otherwise, the stack segment
+size is set to the new value (default 1 MB). If there are running coroutines,
+their tags will be <code><a href="refC.html#cons">cons</a></code>ed in front of
+the size. See also <code><a href="refH.html#heap">heap</a></code>.
 
 <pre><code>
-: (stack)         # Get current stack segment size
+$ ulimit -s unlimited  &&  pil +  # Guarantee stack space
+: (stack)      # Current size
+-> 1
+: (stack 4)    # Set to 4 MB
 -> 4
-: (stack 10)      # Set to 10 MB
--> 10
-: (let N 0 (recur (N) (recurse (inc N))))
-!? (recurse (inc N))
-Stack overflow
-? N
--> 109181
-?
-
-: (co "routine" (yield 7))  # Create two coroutines
--> 7
-: (co "routine2" (yield 8))
--> 8
+: (co 'inc (let N 0 (loop (yield (inc 'N)))))  # Create two coroutines
+-> 1
+: (co 'dec (let N 0 (loop (yield (dec 'N)))))
+-> -1
 : (stack)
--> ("routine2" "routine" . 4)
+-> (dec inc . 4)
 </code></pre>
 
 <dt><a name="stamp"><code>(stamp ['dat 'tim]|['T]) -> sym</code></a>

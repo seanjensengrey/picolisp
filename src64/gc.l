@@ -1,4 +1,4 @@
-# 07jun12abu
+# 19may13abu
 # (c) Software Lab. Alexander Burger
 
 # Mark data
@@ -129,10 +129,9 @@
       call markE
       ld Y (Y)  # Next frame
    loop
-   ld Y (Stack0)  # Search through stack segments
+   ld Y (Stack1)  # Search through stack segments
    ld C (Stacks)  # Segment bitmask
    do
-      sub Y (StkSize)  # Next segment
       shr C 1  # In use?
       if c  # Yes
          push C
@@ -159,9 +158,11 @@
             pop Y
          end
          pop C
-         continue T
+         jmp 10
       end
-   until z
+   while nz
+10    sub Y (StkSize)  # Next segment
+   loop
    # Mark externals
    ld Y Extern
    ld Z 0  # Clear TOS
@@ -209,7 +210,7 @@
          do
             ld A Z  # TOS
             null A  # Empty?
-            jeq 10  # Done
+            jeq 20  # Done
             sym A  # Second visit?
             if z  # Yes
                ld C (A CDR)  # Nodes
@@ -226,7 +227,7 @@
          loop
       loop
    loop
-10 ld A Db1  # DB root object
+20 ld A Db1  # DB root object
    ld (DB) A  # Restore '*DB'
    test (A) 1  # Marked?
    if nz  # No
@@ -235,7 +236,7 @@
    end
    ld Y Extern  # Clean up
    ld Z 0  # Clear TOS
-20 do
+30 do
       do
          ld A (Y CDR)
          atom (A CDR)  # Right subtree?
@@ -253,19 +254,19 @@
             if nz  # No
                or (Y CDR) 1  # Set mark bit again
                ld Y A  # Use NIL
-               jmp 40  # Already traversed
+               jmp 50  # Already traversed
             end
             atom (A)  # Left branch?
             if nz  # No
                or (Y CDR) 1  # Set mark bit again
                ld Y (A CDR)  # Use right branch
-               jmp 40  # Already traversed
+               jmp 50  # Already traversed
             end
             atom (A CDR)  # Right branch?
             if nz  # No
                or (Y CDR) 1  # Set mark bit again
                ld Y (A)  # Use left branch
-               jmp 20
+               jmp 30
             end
             ld A (A CDR)  # A on right branch
             ld X (A CDR)  # X on sub-branches
@@ -273,7 +274,7 @@
             if nz  # No
                ld (Y) (A)  # Insert right sub-branch
                ld ((Y CDR) CDR) (X CDR)
-               jmp 30  # Traverse left branch
+               jmp 40  # Traverse left branch
             end
             ld X (X)  # Left sub-branch
             do
@@ -286,7 +287,7 @@
             ld (Y) (X)  # Insert left sub-branch
             ld ((A CDR)) (C CDR)
          end
-30       ld A (Y CDR)  # Left subtree?
+40       ld A (Y CDR)  # Left subtree?
          atom (A)
          if z  # Yes
             ld C Y  # Go left
@@ -296,10 +297,10 @@
             ld Z C
             break T
          end
-40       do
+50       do
             ld A Z  # TOS
             null A  # Empty?
-            jeq 50  # Done
+            jeq 60  # Done
             sym A  # Second visit?
             if z  # Yes
                ld C (A CDR)  # Nodes
@@ -316,12 +317,11 @@
          loop
       loop
    loop
-50 ### Clean up ###
-   ld Y (Stack0)  # Search through stack segments
+60 ### Clean up ###
+   ld Y (Stack1)  # Search through stack segments
    ld C (Stacks)  # Segment bitmask
    ld A 1
    do
-      sub Y (StkSize)  # Next segment
       shr C 1  # In use?
       if c  # Yes
          test ((Y -I)) 1  # 'tag' symbol gone?
@@ -348,10 +348,11 @@
                loop
             end
          end
-         jmp 60
+         jmp 70
       end
    while nz
-60    add A A
+70    sub Y (StkSize)  # Next segment
+      add A A
    loop
    ld Y (EnvApply)  # Apply stack
    do
