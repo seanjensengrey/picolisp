@@ -1,4 +1,4 @@
-# 19apr13abu
+# 20may13abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -1520,20 +1520,18 @@
          (quote
             NIL
             "int main(int ac, char *av[]) {"
-            "   int i, stk = STACK;"
+            "   int i;"
             NIL
             "   Y.p = malloc((ac + 1) * sizeof(op));"
-            "   i = 0; do {"
+            "   i = 0; do"
             "      ((ptr)Y.p)[i].n = (uint64_t)(unsigned long)av[i];"
-            "      if (strtol(av[i], (char**)&S.p, 10) < 0 && *S.p == '\\0')"
-            "         stk = atoi(av[i]+1) * 1024 * 1024;"
-            "   } while (++i < ac);"
+            "   while (++i < ac);"
             "   ((ptr)Y.p)[i].n = 0;"
             "   X.p = ((ptr)Y.p)->p,  Y.p += 8;"
             "   Z.p = Y.p + (ac - 2) * sizeof(op);"
-            "   if ((Stack = malloc(stk)) == NULL)"
+            "   if ((Stack = malloc(STACK)) == NULL)"
             "      emuStkErr();"
-            "   S.p = Stack + stk;" ) )
+            "   S.p = Stack + STACK;" ) )
       (prinl (pack "   run(" (absCode "main") ");"))
       (prinl "   return 0;")
       (prinl "}") )
