@@ -321,6 +321,25 @@
    while nz  # Yes
       call popCtlFiles  # Clean up
    loop
+   ld X (Stack1)  # Search through stack segments
+   ld C (Stacks)  # Segment bitmask
+   ld A 1
+   do
+      shr C 1  # In use?
+      if c  # Yes
+         null (X -II)  # Active?
+         if z  # Yes: Discard coroutine
+            xor (Stacks) A  # Clear in segment bitmask
+            if z  # Stopped last coroutine?
+               ld (StkLimit) 0  # Yes: Clear stack limit
+            end
+            ret
+         end  # nz
+      end
+   while nz
+      sub X (StkSize)  # Next segment
+      add A A
+   loop
    ret
 
 ### Checks ###
