@@ -1,10 +1,15 @@
-# 18may13abu
+# 23may13abu
 # (c) Software Lab. Alexander Burger
 
 # *Salt *Login *Users *Perms
 
-# crypt(3) algorithm, e.g. (16 . "$6$@1$")
-(default *Salt (2 . "@1"))
+# crypt(3) algorithm, e.g. (de *Salt 16 . "$6$@1$")
+(de passwd (Str Salt)
+   (if *Salt
+      `(if (== 64 64)
+         '(native "libcrypt.so" "crypt" 'S Str (or Salt (salt)))
+         '(ext:Crypt Str (or Salt (salt))) )
+      Str ) )
 
 (de salt ()
    (text (cdr *Salt) (randpw (car *Salt))) )
@@ -22,19 +27,9 @@
                         (range 97 122) ) )
                   (inc (& 63 (rd 1))) ) ) ) ) ) )
 
-(de passwd (Str Salt)
-   (if *Salt
-      `(if (== 64 64)
-         '(native "libcrypt.so" "crypt" 'S Str (or Salt (salt)))
-         '(ext:Crypt Str (or Salt (salt))) )
-      Str ) )
-
 (de auth (Nm Pw)
    (with (db 'nm '+User Nm)
-      (and
-         (or
-            (= (: pw) Pw)
-            (= (: pw) (passwd Pw (: pw))) )
+      (when (= (: pw) (passwd Pw (: pw)))
          This ) ) )
 
 ### Login ###
