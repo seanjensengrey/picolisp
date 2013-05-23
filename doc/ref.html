@@ -1240,9 +1240,8 @@ environment is executed
 
 </ul>
 
-<p>In the current implementation, not more than 64 coroutines can exist at the
-same time. Reentrant coroutines are not supported, a coroutine cannot resume
-itself directly or indirectly.
+<p>Reentrant coroutines are not supported: A coroutine cannot resume itself
+directly or indirectly.
 
 <p>Before using coroutines, make sure you have sufficient stack space, e.g. by
 calling
