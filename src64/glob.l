@@ -1,4 +1,4 @@
-# 19may13abu
+# 23may13abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Data)
@@ -17,8 +17,6 @@
 : Stacks       word  0           # Stack segment bitmask
 : StkSize      word  STACK       # Coroutine stack segment size
 : StkLimit     word  0           # Stack limit: StackN-Size+4096
-: Link         word  0           # Saved link register
-: Catch        word  0           # Catch frames
 : Termio       word  0           # Raw mode terminal I/O
 : Tv           word  0           # 'timeval' structure
                word  0
@@ -594,6 +592,8 @@
 :: Get_A       word  0           # Character input function
 :: InFile      word  0           # Input file
 :: OutFile     word  0           # Output file
+: Link         word  0           # Saved link register
+: Catch        word  0           # Catch frames
 : Env  # <Catch III> environment
 : EnvBind      word  0           # <III> Bind frames (first item in Env)
 : EnvInFrames  word  0           # Input frames
