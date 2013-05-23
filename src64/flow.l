@@ -1,4 +1,4 @@
-# 19may13abu
+# 23may13abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -2704,6 +2704,10 @@
                if z  # Stopped last coroutine?
                   ld (StkLimit) 0  # Yes: Clear stack limit
                end
+               ld C (X (pack -II "-(EnvMid-EnvInFrames)"))  # Open input frames
+               call closeCoFilesC
+               ld C (X (pack -II "-(EnvMid-EnvOutFrames)"))  # Open output frames
+               call closeCoFilesC
                ld E TSym  # Return T
             end
             pop X
@@ -2862,6 +2866,19 @@
       end
       ld X (X)  # Next frame
    loop
+
+(code 'closeCoFilesC 0)
+   do
+      null C
+   while nz
+      null (C II)  # 'pid'?
+      if nz  # Yes
+         cc close((C I))  # Close 'fd'
+         call waitFileC  # Wait for pipe process if necessary
+      end
+      ld C (C)
+   loop
+   ret
 
 # (! . exe) -> any
 (code 'doBreak 2)
