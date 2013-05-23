@@ -1,4 +1,4 @@
-# 20may13abu
+# 23may13abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -8,8 +8,8 @@
       ("B" (off *LittleEndian))
       (T (quit "Bad endianess")) )
    (case (read)
-      (32 (on *Bits32) (off *Bits64))
-      (64 (on *Bits64) (off *Bits32))
+      (32 (off *Bits64))
+      (64 (on *Bits64))
       (T (quit "Bad wordsize")) ) )
 
 (off *AlignedCode)
@@ -950,7 +950,7 @@
                   M ) ) )
          (case (car Par)
             (- (_genCC "@1(@2);@3"))
-            (p (_genCC "A.n = (uint64_t)(uint32_t)(uint8_t*)@1(@2);@3"))
+            (p (_genCC "A.n = (uint64_t)(uintptr_t)(uint8_t*)@1(@2);@3"))
             (n (_genCC "A.n = (uint64_t)@1(@2);@3"))
             (i (_genCC "A.n = (uint64_t)(uint32_t)@1(@2);@3"))
             (T (quit "Unknown C function" Adr)) ) )
