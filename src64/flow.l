@@ -2665,8 +2665,11 @@
       push E  # Save 'tag'
       push 0  # Mark 'stk' as active
       sub S "EnvMid-EnvCo"  # Space for 'env'
-      ld X (X CDR)  # Run 'prg'
-      prog X
+      ld X (X CDR)
+      link
+      push X  # Save 'prg'
+      link
+      prog X  # Run 'prg'
       ld (Y -I) 0  # Not yielded: Mark segment as unused
       ld S (EnvCo7)  # Restore stack pointer
       load (EnvCo) (EnvMid) (S III)  # Restore environment

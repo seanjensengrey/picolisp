@@ -145,8 +145,6 @@
             push Y
             ld Y ((Y -II))  # Else get saved L
             do
-               null Y  # End of stack?
-            while ne  # No
                ld Z (Y)  # Keep end of frame in Z
                do
                   add Y I  # End of frame?
@@ -156,7 +154,8 @@
                   call markE  # Mark it
                loop
                ld Y (Y)  # Next frame
-            loop
+               null Y  # End of stack?
+            until eq  # Yes
             pop Y
          end
          pop C
