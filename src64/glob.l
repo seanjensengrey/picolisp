@@ -1,4 +1,4 @@
-# 23may13abu
+# 24may13abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Data)
@@ -14,7 +14,7 @@
 
 : Stack0       word  0           # Initial stack pointer
 : Stack1       word  0           # Coroutine stack base
-: Stacks       word  0           # Stack segment bitmask
+: Stacks       word  0           # Coroutine stack segment count
 : StkSize      word  STACK       # Coroutine stack segment size
 : StkLimit     word  0           # Stack limit: StackN-Size+4096
 : Termio       word  0           # Raw mode terminal I/O

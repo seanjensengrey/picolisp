@@ -1,4 +1,4 @@
-# 21may13abu
+# 24may13abu
 # (c) Software Lab. Alexander Burger
 
 # Debug print routine
@@ -258,17 +258,12 @@
          cmp Z (X (pack III "+(EnvCo7-Env)"))  # Skipped?
       while ne  # Yes
          ld C (Stack1)  # Find stack segment
-         ld A 1
          do
             cmp C (Z II)  # Found 'seg'?
          while ne  # No
             sub C (StkSize)  # Next segment
-            add A A
          loop
-         xor (Stacks) A  # Clear in segment bitmask
-         if z  # Last coroutine?
-            ld (StkLimit) 0  # Yes: Clear stack limit
-         end
+         ld (C -I) 0  # Mark segment as unused
          ld Z (Z)  # Next coroutine
       loop
       load (Env) (EnvEnd) (X III)  # Restore environment
@@ -322,23 +317,18 @@
       call popCtlFiles  # Clean up
    loop
    ld X (Stack1)  # Search through stack segments
-   ld C (Stacks)  # Segment bitmask
-   ld A 1
+   ld C (Stacks)  # Segment count
    do
-      shr C 1  # In use?
-      if c  # Yes
+      dec C  # Any?
+   while ns  # Yes
+      null (X -I)  # In use?
+      if nz  # Yes
          null (X -II)  # Active?
-         if z  # Yes: Discard coroutine
-            xor (Stacks) A  # Clear in segment bitmask
-            if z  # Stopped last coroutine?
-               ld (StkLimit) 0  # Yes: Clear stack limit
-            end
-            ret
-         end  # nz
+         if z  # Yes
+            ld (X -I) 0  # Mark segment as unused
+         end
       end
-   while nz
       sub X (StkSize)  # Next segment
-      add A A
    loop
    ret
 

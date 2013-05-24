@@ -1,4 +1,4 @@
-# 19may13abu
+# 24may13abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -577,16 +577,16 @@
    ld X (Stack1)  # Collect coroutines
    ld C (Stacks)  # Segment bitmask
    do
-      shr C 1  # In use?
-      if c  # Yes
+      dec C  # Any?
+   while ns  # Yes
+      null (X -I)  # In use?
+      if nz  # Yes
          call consE_A  # Cons 'tag'
          ld (A) (X -I)
          ld (A CDR) E
          ld E A
-         jmp 10
       end
-   while nz
-10    sub X (StkSize)  # Next segment
+      sub X (StkSize)  # Next segment
    loop
    pop X
    ret
