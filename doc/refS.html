@@ -607,7 +607,8 @@ href="ref.html#coroutines">coroutines</a> (the main stack segment is limited -
 while at least one coroutine is running - to four times that size). If called
 without a <code>cnt</code> argument, or if already one or more coroutines are
 running, the current size in megabytes is returned. Otherwise, the stack segment
-size is set to the new value (default 1 MB). If there are running coroutines,
+size is set to the new value (default 1 MB). The main segment's size is always
+four times the size of coroutine segments. If there are running coroutines,
 their tags will be <code><a href="refC.html#cons">cons</a></code>ed in front of
 the size. See also <code><a href="refH.html#heap">heap</a></code>.
 
