@@ -1,4 +1,4 @@
-# 24may13abu
+# 25may13abu
 # (c) Software Lab. Alexander Burger
 
 # Debug print routine
@@ -164,6 +164,12 @@
    ld (EnvTrace) 0
    ld L 0  # Init link register
    ld S (Stack0)  # stack pointer
+   null (Stacks)  # Coroutines?
+   if nz  # Yes
+      lea A (S 4096)  # Set stack limit
+      sub A (StkSize)
+      ld (StkLimit) A
+   end
    jmp restart  # Restart interpreter
 
 (code 'unwindC_Z 0)
