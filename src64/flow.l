@@ -2572,6 +2572,7 @@
                ld (EnvCo7) S  # Close coroutine frame
                ld Z S  # Point Z to main frame
                save (EnvCo) (EnvMid) (Z III)  # Save environment
+               ld E Nil  # Final 'yield's return value
 : resumeCoroutine
                ld S (Y -II)  # Restore stack pointer
                ld (Y -II) 0  # Mark as active
