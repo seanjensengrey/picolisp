@@ -1,4 +1,4 @@
-# 24may13abu
+# 25may13abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -2635,8 +2635,7 @@
       ld C (Stacks)  # Segment count
       null C  # Starting first coroutine?
       if z  # Yes
-         ld A Y  # Set stack limit
-         add A 4096
+         lea A (Y 4096)  # Set stack limit
          cmp S A  # Check it
          jlt stkErr
          ld (StkLimit) A

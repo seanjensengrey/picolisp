@@ -1,4 +1,4 @@
-# 24may13abu
+# 25may13abu
 # (c) Software Lab. Alexander Burger
 
 # Mark data
@@ -130,7 +130,7 @@
       ld Y (Y)  # Next frame
    loop
    ld Y (Stack1)  # Search through stack segments
-   ld C (Stacks)  # Segment bitmask
+   ld C (Stacks)  # Segment count
    do
       dec C  # Any?
    while ns  # Yes
@@ -318,7 +318,7 @@
    loop
 50 ### Clean up ###
    ld Y (Stack1)  # Search through stack segments
-   ld C (Stacks)  # Segment bitmask
+   ld C (Stacks)  # Segment count
    do
       dec C  # Any?
    while ns  # Yes
