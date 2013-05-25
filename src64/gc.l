@@ -132,11 +132,11 @@
    ld Y (Stack1)  # Search through stack segments
    ld C (Stacks)  # Segment count
    do
-      dec C  # Any?
-   while ns  # Yes
+      null C  # Any?
+   while nz  # Yes
       null (Y -I)  # In use?
       if nz  # Yes
-         push C
+         push C  # Save count
          null (Y -II)  # Active?
          if z  # Yes
             ld E (Y -I)  # Mark 'tag'
@@ -172,6 +172,7 @@
             pop Y
          end
          pop C
+         dec C  # Decrement count
       end
       sub Y (StkSize)  # Next segment
    loop
@@ -333,13 +334,17 @@
    ld Y (Stack1)  # Search through stack segments
    ld C (Stacks)  # Segment count
    do
-      dec C  # Any?
-   while ns  # Yes
+      null C  # Any?
+   while nz  # Yes
       null (Y -I)  # In use?
       if nz  # Yes
          test ((Y -I)) 1  # 'tag' symbol gone?
          if nz  # Yes
             ld (Y -I) 0  # Mark segment as unused
+            dec (Stacks)  # Last coroutine?
+            if z  # Yes
+               ld (StkLimit) 0  # Clear stack limit
+            end
          else
             null (Y -II)  # Active?
             if nz  # No
@@ -358,6 +363,7 @@
                loop
             end
          end
+         dec C  # Decrement count
       end
       sub Y (StkSize)  # Next segment
    loop

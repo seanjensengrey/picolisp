@@ -270,6 +270,10 @@
             sub C (StkSize)  # Next segment
          loop
          ld (C -I) 0  # Mark segment as unused
+         dec (Stacks)  # Last coroutine?
+         if z  # Yes
+            ld (StkLimit) 0  # Clear stack limit
+         end
          ld Z (Z)  # Next coroutine
       loop
       load (Env) (EnvEnd) (X III)  # Restore environment
@@ -325,14 +329,19 @@
    ld X (Stack1)  # Search through stack segments
    ld C (Stacks)  # Segment count
    do
-      dec C  # Any?
-   while ns  # Yes
+      null C  # Any?
+   while nz  # Yes
       null (X -I)  # In use?
       if nz  # Yes
          null (X -II)  # Active?
          if z  # Yes
             ld (X -I) 0  # Mark segment as unused
+            dec (Stacks)  # Last coroutine?
+            if z  # Yes
+               ld (StkLimit) 0  # Clear stack limit
+            end
          end
+         dec C  # Decrement count
       end
       sub X (StkSize)  # Next segment
    loop
