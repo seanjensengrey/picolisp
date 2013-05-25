@@ -2577,6 +2577,9 @@
             sub A (StkSize)
             ld (StkLimit) A
             load (EnvCo) (EnvMid) (Y (pack -II "-(EnvMid-EnvCo)"))  # Restore environment
+            ld X Catch  # Pointer to catch frames
+            ld C (Z (pack III "+(Catch-EnvCo)"))  # Local catch frames
+            call joinLocalCX  # Join locals
             ld X (EnvBind)  # Reversed bindings
             ld C (Z (pack III "+(EnvBind-EnvCo)"))  # Main bindings
             do
@@ -2800,6 +2803,9 @@
       loop
    end
    ld (EnvBind) C  # Store back link in coroutine's env
+   ld X Catch  # Pointer to catch frames
+   ld C (Z (pack III "+(Catch-EnvCo)"))  # Local catch frames
+   call cutLocalCX  # Cut off locals
    pop Y  # Restore taget coroutine
    ld X (Z II)  # Get 'seg'
    ld (X -II) S  # Save stack pointer

@@ -142,7 +142,7 @@
             ld E (Y -I)  # Mark 'tag'
             call markE
          else
-            push Y
+            push Y  # <S>
             ld Y ((Y -II))  # Else get saved L
             do
                ld Z (Y)  # Keep end of frame in Z
@@ -156,6 +156,19 @@
                ld Y (Y)  # Next frame
                null Y  # End of stack?
             until eq  # Yes
+            ld Y ((S) (pack -II "-(EnvMid-Catch)"))  # Saved catch frames
+            do
+               null Y  # Any?
+            while ne  # Yes
+               ld E (Y I)  # Mark 'tag'
+               null E  # Any?
+               if ne
+                  call markE  # Yes
+               end
+               ld E (Y II)  # Mark 'fin'
+               call markE
+               ld Y (Y)  # Next frame
+            loop
             pop Y
          end
          pop C
