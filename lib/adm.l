@@ -28,10 +28,11 @@
                   (inc (& 63 (rd 1))) ) ) ) ) ) )
 
 (de auth (Nm Pw)
-   (and
-      (; (db 'nm '+User Nm) pw 0)
-      (= @ (passwd Pw @))
-      This ) )
+   (with (db 'nm '+User Nm)
+      (and
+         (: pw 0)
+         (= @ (passwd Pw @))
+         This ) ) )
 
 ### Login ###
 (de login (Nm Pw)
