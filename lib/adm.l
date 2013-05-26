@@ -1,4 +1,4 @@
-# 23may13abu
+# 26may13abu
 # (c) Software Lab. Alexander Burger
 
 # *Salt *Login *Users *Perms
@@ -28,9 +28,10 @@
                   (inc (& 63 (rd 1))) ) ) ) ) ) )
 
 (de auth (Nm Pw)
-   (with (db 'nm '+User Nm)
-      (when (= (: pw) (passwd Pw (: pw)))
-         This ) ) )
+   (and
+      (; (db 'nm '+User Nm) pw 0)
+      (= @ (passwd Pw @))
+      This ) )
 
 ### Login ###
 (de login (Nm Pw)
