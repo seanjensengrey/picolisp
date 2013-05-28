@@ -1,4 +1,4 @@
-# 13may13abu
+# 28may13abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -2274,9 +2274,8 @@
             (if (pair "Cho")
                (eval @)
                (choDlg NIL "Cho" (list "Var" "Cls")) ) ) )
-      (<h3> NIL "Entity")
       (form NIL
-         (<h2> NIL (idObj "Lst"))
+         (<h3> NIL "Entity" ": " (idObj "Lst"))
          (panel "Able" (pack "Entity" " '@1'") "Del"
             (or
                (pair "Cho")
