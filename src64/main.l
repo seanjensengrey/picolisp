@@ -1,4 +1,4 @@
-# 25may13abu
+# 28may13abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -1705,8 +1705,8 @@
    loop
    ld X S  # X on last argument
    link
-   push (Link)  # Save Link
-   ld (Link) L
+   push (CLink)  # Save Link
+   ld (CLink) L
    lea Y (Z -II)  # Limit
    do
       cmp X Y  # More args?
@@ -1785,7 +1785,7 @@
    lea X (L -I)  # Top of arguments
    ld Y (Z)  # Get function pointer
    cc (Y) X  # Call C-function
-   ld (Link) (L -I)  # Restore Link
+   ld (CLink) (L -I)  # Restore Link
    ld E (Z -II)  # Get result specification
    ld C 0  # No pointer yet
    call natRetACE_CE  # Extract return value
@@ -2151,7 +2151,7 @@
 
 : cbl
    push L  # Save C frame pointer
-   ld L (Link)  # Restore link register
+   ld L (CLink)  # Restore link register
    link  # Apply args
    push (Z I)  # 'fun'
    xchg A E  # First arg
@@ -2327,7 +2327,7 @@
 (code 'lisp 0)
    begin  # Function name in A, arguments in C, E, X, Y and Z
    push L  # Save C frame pointer
-   ld L (Link)  # Restore link register
+   ld L (CLink)  # Restore link register
    link  # Apply args
    push ZERO  # Space for 'fun'
    xchg C E  # First arg

@@ -1,4 +1,4 @@
-# 24may13abu
+# 28may13abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Data)
@@ -592,7 +592,6 @@
 :: Get_A       word  0           # Character input function
 :: InFile      word  0           # Input file
 :: OutFile     word  0           # Output file
-: Link         word  0           # Saved link register
 : Catch        word  0           # Catch frames
 : Env  # <Catch III> environment
 : EnvBind      word  0           # <III> Bind frames (first item in Env)
@@ -608,6 +607,7 @@
 : EnvApply     word  0           # Apply frames
 : EnvMake      word  0           # 'make' env
 : EnvYoke      word  0
+: CLink        word  0           # Saved C link register
 : EnvParseX    word  0           # Parser status
 : EnvParseC    word  0
 : EnvParseEOF  word  -1
