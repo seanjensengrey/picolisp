@@ -1,4 +1,4 @@
-# 26may13abu
+# 28may13abu
 # (c) Software Lab. Alexander Burger
 
 # *Salt *Login *Users *Perms
@@ -78,7 +78,7 @@
 (class +User +Entity)
 
 (rel nm (+Need +Key +String))          # User name
-(rel pw (+String))                     # Password
+(rel pw (+Symbol))                     # Password
 (rel role (+Joint) usr (+Role))        # User role
 
 
