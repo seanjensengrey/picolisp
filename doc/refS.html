@@ -88,6 +88,17 @@ href="ref.html#dbase">Database</a>.
 (rel nm (+Sn +Idx +String))  # Name, indexed by soundex and substrings
 </code></pre>
 
+<dt><a name="+Swap"><code>+Swap</code></a>
+<dd>Prefix class for <code><a href="refR.html#+relation">+relation</a></code>s
+where the data are to be stored in the value of a separate external symbol
+instead of the relation's object. Typically used for data which are relatively
+large and/or rarely accessed. See also <a href="ref.html#dbase">Database</a>.
+
+<pre><code>
+(rel pw (+Swap +String))               # Password
+(rel nr (+Swap +List +Number))         # List of bignums
+</code></pre>
+
 <dt><a name="+Symbol"><code>+Symbol</code></a>
 <dd>Class for symbolic relations, a subclass of <code><a
 href="refR.html#+relation">+relation</a></code>. Objects of that class typically

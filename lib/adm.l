@@ -1,9 +1,9 @@
-# 28may13abu
+# 30may13abu
 # (c) Software Lab. Alexander Burger
 
 # *Salt *Login *Users *Perms
 
-# crypt(3) algorithm, e.g. (de *Salt 16 . "$6$@1$")
+# crypt(3) algorithm, e.g. (setq *Salt (16 . "$6$@1$"))
 (de passwd (Str Salt)
    (if *Salt
       `(if (== 64 64)
@@ -78,7 +78,7 @@
 (class +User +Entity)
 
 (rel nm (+Need +Key +String))          # User name
-(rel pw (+Symbol))                     # Password
+(rel pw (+Swap +String))               # Password
 (rel role (+Joint) usr (+Role))        # User role
 
 
