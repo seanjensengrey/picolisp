@@ -1,4 +1,4 @@
-# 18may13abu
+# 01jun13abu
 # (c) Software Lab. Alexander Burger
 
 (allowed ("app/")
@@ -12,7 +12,8 @@
 (setq
    *Scl 2
    *Css "@lib.css"
-   *Blob "blob/app/" )
+   *Blob "blob/app/"
+   *Salt (16 . "$6$@1$") )
 
 (load "app/er.l" "app/lib.l" "app/gui.l")
 
