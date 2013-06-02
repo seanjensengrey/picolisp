@@ -1,4 +1,4 @@
-# 31may13abu
+# 02jun13abu
 # (c) Software Lab. Alexander Burger
 
 ### GUI ###
@@ -6,7 +6,7 @@
    (action
       (html 0 Ttl *Css NIL
          (<layout>
-            ((180 NIL 'menu)
+            ((180 0 'menu)
                (<div> @
                   (expires)
                   (<menu>
