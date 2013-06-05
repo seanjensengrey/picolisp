@@ -92,7 +92,10 @@ href="ref.html#dbase">Database</a>.
 <dd>Prefix class for <code><a href="refR.html#+relation">+relation</a></code>s
 where the data are to be stored in the value of a separate external symbol
 instead of the relation's object. Typically used for data which are relatively
-large and/or rarely accessed. See also <a href="ref.html#dbase">Database</a>.
+large and/or rarely accessed. Doesn't work with bidirectional relations
+(<code><a href="refJ.html#+Joint">+Joint</a></code> or <code><a
+href="refI.html#+index">+index</a></code>). See also <a
+href="ref.html#dbase">Database</a>.
 
 <pre><code>
 (rel pw (+Swap +String))               # Password
