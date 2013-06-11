@@ -1040,7 +1040,7 @@ sys/x86-64.linux.defs.l,1959
 consNumEA_E1037,24008
 consNumEC_E1055,24384
 
-./flow.l,1658
+./flow.l,1611
 redefMsgEC4,51
 putSrcEC_E25,589
 redefineCE109,3406
@@ -1108,25 +1108,23 @@ sys/x86-64.linux.defs.l,1959
 doFinally2524,58583
 doCo2548,59123
 resumeCoroutine2576,60042
-doYield2729,65274
-cutLocalCX2848,68623
-joinLocalCX2857,68777
-closeCoFilesC2866,68928
-doBreak2880,69191
-brkLoadE_E2888,69343
-doE2943,70943
-doTrace2982,71709
-traceCY3054,73624
-doCall3082,74112
-doTick3169,76304
-doIpid3201,77301
-doOpid3217,77589
-doKill3233,77884
-doFork3256,78319
-forkLispX_FE3269,78540
-doBye3430,83100
-byeE3442,83272
-finishE3454,83583
+doYield2744,65712
+closeCoFilesC2878,69327
+doBreak2892,69590
+brkLoadE_E2900,69742
+doE2955,71342
+doTrace2994,72108
+traceCY3066,74023
+doCall3094,74511
+doTick3181,76703
+doIpid3213,77700
+doOpid3229,77988
+doKill3245,78283
+doFork3268,78718
+forkLispX_FE3281,78939
+doBye3442,83499
+byeE3454,83671
+finishE3466,83982
 
 ./subr.l,2147
 doCar5,71

@@ -2582,7 +2582,12 @@
                load (EnvCo) (EnvMid) (Y (pack -II "-(EnvMid-EnvCo)"))  # Restore environment
                ld X Catch  # Pointer to catch frames
                ld C (Z (pack III "+(Catch-EnvCo)"))  # Local catch frames
-               call joinLocalCX  # Join locals
+               do
+                  null (X)  # More locals?
+               while nz  # Yes
+                  ld X (X)  # Next frame pointer
+               loop
+               ld (X) C  # Join
                ld X (EnvBind)  # Reversed bindings
                ld C (Z (pack III "+(EnvBind-EnvCo)"))  # Main bindings
                do
@@ -2606,10 +2611,20 @@
                ld (EnvBind) C  # Set local bindings
                ld X EnvInFrames  # Pointer to input frames
                ld C (Z (pack III "+(EnvInFrames-EnvCo)"))  # Local input frames
-               call joinLocalCX  # Join locals
+               do
+                  null (X)  # More locals?
+               while nz  # Yes
+                  ld X (X)  # Next frame pointer
+               loop
+               ld (X) C  # Join
                ld X EnvOutFrames  # Pointer to output frames
                ld C (Z (pack III "+(EnvOutFrames-EnvCo)"))  # Local output frames
-               call joinLocalCX  # Join locals
+               do
+                  null (X)  # More locals?
+               while nz  # Yes
+                  ld X (X)  # Next frame pointer
+               loop
+               ld (X) C  # Join
                ld X EnvApply  # Local apply stack
                do
                   null (X)  # Any?
@@ -2777,7 +2792,7 @@
             jz 10  # No
             cmp A C  # Reached main routine's link?
          while ne  # No
-            ld X A  # Follow link
+            ld X (A)  # Follow link
          loop
          ld (X) 0  # Clear link
       end
@@ -2794,10 +2809,20 @@
    ld (X) 0  # Cut off
    ld X EnvOutFrames  # Pointer to output frames
    ld C (Z (pack III "+(EnvOutFrames-EnvCo)"))  # Local output frames
-   call cutLocalCX  # Cut off locals
+   do
+      cmp C (X)  # More locals?
+   while ne  # Yes
+      ld X (X)  # Next frame pointer
+   loop
+   ld (X) 0  # Cut off
    ld X EnvInFrames  # Pointer to input frames
    ld C (Z (pack III "+(EnvInFrames-EnvCo)"))  # Local input frames
-   call cutLocalCX  # Cut off locals
+   do
+      cmp C (X)  # More locals?
+   while ne  # Yes
+      ld X (X)  # Next frame pointer
+   loop
+   ld (X) 0  # Cut off
    ld C 0  # Back link
    ld X (EnvBind)  # Reverse bindings
    null X  # Any?
@@ -2824,7 +2849,12 @@
    ld (EnvBind) C  # Store back link in coroutine's env
    ld X Catch  # Pointer to catch frames
    ld C (Z (pack III "+(Catch-EnvCo)"))  # Local catch frames
-   call cutLocalCX  # Cut off locals
+   do
+      cmp C (X)  # More locals?
+   while ne  # Yes
+      ld X (X)  # Next frame pointer
+   loop
+   ld (X) 0  # Cut off
    pop Y  # Restore taget coroutine
    ld X (Z II)  # Get 'seg'
    ld (X -II) S  # Save stack pointer
@@ -2844,24 +2874,6 @@
    end
    ld (Z II) Y  # Set new 'seg'
    jmp resumeCoroutine  # Resume
-
-(code 'cutLocalCX 0)
-   do
-      cmp C (X)  # More locals?
-   while ne  # Yes
-      ld X (X)  # Next frame pointer
-   loop
-   ld (X) 0  # Cut off
-   ret
-
-(code 'joinLocalCX 0)
-   do
-      null (X)  # More locals?
-   while nz  # Yes
-      ld X (X)  # Next frame pointer
-   loop
-   ld (X) C  # Join
-   ret
 
 (code 'closeCoFilesC 0)
    do
