@@ -2846,25 +2846,21 @@
    jmp resumeCoroutine  # Resume
 
 (code 'cutLocalCX 0)
-   cmp C (X)  # Any locals?
-   if ne  # Yes
-      do
-         ld X (X)  # Frame pointer
-         cmp C (X)  # More locals?
-      until eq  # No
-      ld (X) 0  # Cut off
-   end
+   do
+      cmp C (X)  # More locals?
+   while ne  # Yes
+      ld X (X)  # Next frame pointer
+   loop
+   ld (X) 0  # Cut off
    ret
 
 (code 'joinLocalCX 0)
-   cmp C (X)  # Any locals?
-   if ne  # Yes
-      do
-         ld X (X)  # Frame pointer
-         null (X)  # More locals?
-      until z  # No
-      ld (X) C  # Join
-   end
+   do
+      null (X)  # More locals?
+   while nz  # Yes
+      ld X (X)  # Next frame pointer
+   loop
+   ld (X) C  # Join
    ret
 
 (code 'closeCoFilesC 0)
