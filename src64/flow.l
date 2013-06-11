@@ -1,4 +1,4 @@
-# 25may13abu
+# 11jun13abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -2846,27 +2846,26 @@
    jmp resumeCoroutine  # Resume
 
 (code 'cutLocalCX 0)
-   do
-      ld A (X)  # Get link
-      null A  # Any?
-      jz ret  # No
-      cmp A C  # More locals?
-      if eq  # No
-         ld (X) 0  # Cut off
-         ret
-      end
-      ld X A  # Next frame
-   loop
+   cmp C (X)  # Any locals?
+   if ne  # Yes
+      do
+         ld X (X)  # Frame pointer
+         cmp C (X)  # More locals?
+      until eq  # No
+      ld (X) 0  # Cut off
+   end
+   ret
 
 (code 'joinLocalCX 0)
-   do
-      null (X)  # More locals?
-      if z  # No
-         ld (X) C  # Join
-         ret
-      end
-      ld X (X)  # Next frame
-   loop
+   cmp C (X)  # Any locals?
+   if ne  # Yes
+      do
+         ld X (X)  # Frame pointer
+         null (X)  # More locals?
+      until z  # No
+      ld (X) C  # Join
+   end
+   ret
 
 (code 'closeCoFilesC 0)
    do
