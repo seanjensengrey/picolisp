@@ -2581,13 +2581,12 @@
                ld (StkLimit) A
                load (EnvCo) (EnvMid) (Y (pack -II "-(EnvMid-EnvCo)"))  # Restore environment
                ld X Catch  # Pointer to catch frames
-               ld C (Z (pack III "+(Catch-EnvCo)"))  # Local catch frames
                do
                   null (X)  # More locals?
                while nz  # Yes
                   ld X (X)  # Next frame pointer
                loop
-               ld (X) C  # Join
+               ld (X) (Z (pack III "+(Catch-EnvCo)"))  # Join
                ld X (EnvBind)  # Reversed bindings
                ld C (Z (pack III "+(EnvBind-EnvCo)"))  # Main bindings
                do
@@ -2610,21 +2609,19 @@
                loop
                ld (EnvBind) C  # Set local bindings
                ld X EnvInFrames  # Pointer to input frames
-               ld C (Z (pack III "+(EnvInFrames-EnvCo)"))  # Local input frames
                do
                   null (X)  # More locals?
                while nz  # Yes
                   ld X (X)  # Next frame pointer
                loop
-               ld (X) C  # Join
+               ld (X) (Z (pack III "+(EnvInFrames-EnvCo)"))  # Join
                ld X EnvOutFrames  # Pointer to output frames
-               ld C (Z (pack III "+(EnvOutFrames-EnvCo)"))  # Local output frames
                do
                   null (X)  # More locals?
                while nz  # Yes
                   ld X (X)  # Next frame pointer
                loop
-               ld (X) C  # Join
+               ld (X) (Z (pack III "+(EnvOutFrames-EnvCo)"))  # Join
                ld X EnvApply  # Local apply stack
                do
                   null (X)  # Any?
@@ -2808,17 +2805,15 @@
    loop
    ld (X) 0  # Cut off
    ld X EnvOutFrames  # Pointer to output frames
-   ld C (Z (pack III "+(EnvOutFrames-EnvCo)"))  # Local output frames
    do
-      cmp C (X)  # More locals?
+      cmp (X) (Z (pack III "+(EnvOutFrames-EnvCo)"))  # More locals?
    while ne  # Yes
       ld X (X)  # Next frame pointer
    loop
    ld (X) 0  # Cut off
    ld X EnvInFrames  # Pointer to input frames
-   ld C (Z (pack III "+(EnvInFrames-EnvCo)"))  # Local input frames
    do
-      cmp C (X)  # More locals?
+      cmp (X) (Z (pack III "+(EnvInFrames-EnvCo)"))  # More locals?
    while ne  # Yes
       ld X (X)  # Next frame pointer
    loop
@@ -2848,9 +2843,8 @@
    end
    ld (EnvBind) C  # Store back link in coroutine's env
    ld X Catch  # Pointer to catch frames
-   ld C (Z (pack III "+(Catch-EnvCo)"))  # Local catch frames
    do
-      cmp C (X)  # More locals?
+      cmp (X) (Z (pack III "+(Catch-EnvCo)"))  # More locals?
    while ne  # Yes
       ld X (X)  # Next frame pointer
    loop
