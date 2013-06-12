@@ -1,4 +1,4 @@
-# 23may13abu
+# 12jun13abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -175,7 +175,7 @@
             ld (OutFile) 0  # Clear it
          end
          ld (A) 0  # Clear slot
-         cc free(X)  # And inFile
+         cc free(X)  # And outFile
       end
       pop X
    end
