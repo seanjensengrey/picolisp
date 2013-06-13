@@ -1,4 +1,4 @@
-# 11jun13abu
+# 13jun13abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -2609,18 +2609,29 @@
                loop
                ld (EnvBind) C  # Set local bindings
                ld X EnvInFrames  # Pointer to input frames
-               do
-                  null (X)  # More locals?
-               while nz  # Yes
-                  ld X (X)  # Next frame pointer
-               loop
+               null (X)  # Any locals?
+               if z  # No
+                  ld (Chr) (Z (pack III "+(Chr-EnvCo)"))  # Adapt In
+                  ld (Get_A) (Z (pack III "+(Get_A-EnvCo)"))
+                  ld (InFile) (Z (pack III "+(InFile-EnvCo)"))
+               else
+                  do
+                     ld X (X)  # Next frame pointer
+                     null (X)  # More locals?
+                  until z  # No
+               end
                ld (X) (Z (pack III "+(EnvInFrames-EnvCo)"))  # Join
                ld X EnvOutFrames  # Pointer to output frames
-               do
-                  null (X)  # More locals?
-               while nz  # Yes
-                  ld X (X)  # Next frame pointer
-               loop
+               null (X)  # Any locals?
+               if z  # No
+                  ld (PutB) (Z (pack III "+(PutB-EnvCo)"))  # Adapt Out
+                  ld (OutFile) (Z (pack III "+(OutFile-EnvCo)"))
+               else
+                  do
+                     ld X (X)  # Next frame pointer
+                     null (X)  # More locals?
+                  until z  # No
+               end
                ld (X) (Z (pack III "+(EnvOutFrames-EnvCo)"))  # Join
                ld X EnvApply  # Local apply stack
                do
@@ -2688,7 +2699,7 @@
       link
       prog X  # Run 'prg'
       ld S (EnvCo7)  # Not yielded: Restore stack pointer
-      load (EnvCo) (EnvMid) (S III)  # Restore environment
+      load (Env) (EnvMid) (S (pack III "+(Env-EnvCo)"))  # Restore environment
       pop (EnvCo7)  # Restore coroutine link
       pop (StkLimit)  # 'lim'
       ld (Y -I) 0  # Mark segment as unused
@@ -2855,8 +2866,19 @@
    save (EnvCo) (EnvMid) (X (pack -II "-(EnvMid-EnvCo)"))  # Save environment
    null Y  # Target coroutine?
    if z  # No
+      null (EnvInFrames)  # Adapt In?
+      if nz  # Yes
+         ld (Chr) (Z (pack III "+(Chr-EnvCo)"))
+         ld (Get_A) (Z (pack III "+(Get_A-EnvCo)"))
+         ld (InFile) (Z (pack III "+(InFile-EnvCo)"))
+      end
+      null (EnvOutFrames)  # Adapt Out?
+      if nz  # Yes
+         ld (PutB) (Z (pack III "+(PutB-EnvCo)"))
+         ld (OutFile) (Z (pack III "+(OutFile-EnvCo)"))
+      end
       ld S Z  # Set stack pointer
-      load (EnvCo) (EnvMid) (Z III)  # Restore environment
+      load (Env) (EnvMid) (Z (pack III "+(Env-EnvCo)"))  # Restore environment
       pop (EnvCo7)  # Restore coroutine link
       pop (StkLimit)  # 'lim'
       add S (pack I "+(EnvMid-EnvCo)")  # Clean up
