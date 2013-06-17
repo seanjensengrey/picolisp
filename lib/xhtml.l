@@ -1,4 +1,4 @@
-# 02jun13abu
+# 17jun13abu
 # (c) Software Lab. Alexander Burger
 
 # *JS "*JS" *Style *Menu *Tab *ID
@@ -352,7 +352,7 @@
                               ((=0 "DY") "min-height:100%")
                               ("DY" (pack "height:" @ "px")) )
                            "Args" ) ) ) )
-               (prog1 (if "Cls" (list "Cls" "Style") "Style")
+               (prog1 (if "Cls" (list "Cls" "Style") "Style")  # -> '@'
                   (eval (cadr "L")) )
                (let "X" (+ "X" "DX")
                   (recurse (cddr "L") "Y") )
