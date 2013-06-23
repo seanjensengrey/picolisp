@@ -1,4 +1,4 @@
-/* 06may13abu
+/* 23jun13abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -1092,18 +1092,20 @@ any doCtty(any ex) {
    return T;
 }
 
-// (info 'any) -> (cnt|T dat . tim)
+// (info 'any ['flg]) -> (cnt|T dat . tim)
 any doInfo(any x) {
+   any y;
    cell c1;
    struct tm *p;
    struct stat st;
 
-   x = evSym(cdr(x));
+   y = evSym(x = cdr(x));
    {
-      char nm[pathSize(x)];
+      char nm[pathSize(y)];
 
-      pathString(x, nm);
-      if (stat(nm, &st) < 0)
+      pathString(y, nm);
+      x = cdr(x);
+      if ((isNil(EVAL(car(x)))? stat(nm, &st) : lstat(nm, &st)) < 0)
          return Nil;
       p = gmtime(&st.st_mtime);
       Push(c1, boxCnt(p->tm_hour * 3600 + p->tm_min * 60 + p->tm_sec));

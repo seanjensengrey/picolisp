@@ -1,4 +1,4 @@
-# 28may13abu
+# 23jun13abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -3052,17 +3052,26 @@
    pop X
    ret
 
-# (info 'any) -> (cnt|T dat . tim)
+# (info 'any ['flg]) -> (cnt|T dat . tim)
 (code 'doInfo 2)
    push X
    push Y
    push Z
-   ld E ((E CDR))  # Get arg
+   ld X (E CDR)  # Args
+   ld E (X)  # Get 'any'
    call evSymE_E  # Evaluate to a symbol
    call pathStringE_SZ  # Write to stack buffer
-   ld E S  # path name pointer
+   ld Y S  # path name pointer
    sub S (%% STAT)  # 'stat' structure
-   cc stat(E S)  # Get status
+   ld X (X CDR)  # Eval 'flg'
+   ld E (X)
+   eval
+   cmp E Nil  # NIL?
+   if eq  # Yes
+      cc stat(Y S)  # Get status
+   else
+      cc lstat(Y S)  # or link status
+   end
    ld E Nil  # Preload return value
    nul4  # 'stat' OK?
    if ns
