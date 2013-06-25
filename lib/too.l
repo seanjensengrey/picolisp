@@ -1,4 +1,4 @@
-# 24jun13abu
+# 25jun13abu
 # (c) Software Lab. Alexander Burger
 
 ### Local Backup ###
@@ -34,7 +34,7 @@
                         `(if (== 64 64)
                            '(native "@" "link" 'I Old New)
                            '(call 'ln Old New) ) )
-                     (T (call 'cp "-dp" Src New)) ) )  # Changed or new
+                     (T (call 'cp "-a" Src New)) ) )  # Changed or new
                (call 'mkdir "-p" New)
                (recurse
                   (cdr Lst)
