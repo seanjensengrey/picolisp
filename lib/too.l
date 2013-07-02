@@ -1,4 +1,4 @@
-# 25jun13abu
+# 02jul13abu
 # (c) Software Lab. Alexander Burger
 
 ### Local Backup ###
@@ -6,7 +6,7 @@
    (let I -1
       (while (info (pack Dst "." (inc 'I))))
       (while (>= (dec 'I) Max)
-         (call 'rm "-r" (pack Dst "." I)) )
+         (call 'rm "-rf" (pack Dst "." I)) )
       (while (ge0 I)
          (call 'mv (pack Dst "." I) (pack Dst "." (inc I)))
          (dec 'I) ) )
