@@ -1,4 +1,4 @@
-# 01jul13abu
+# 04mar13abu
 # (c) Software Lab. Alexander Burger
 
 (setq *OS (java (java "java.lang.System" "getProperty" "os.name")))
@@ -1633,7 +1633,7 @@
 (de proc @
    (apply call
       (make (while (args) (link "-C" (next))))
-      'ps "-H" "-o" "pid,ppid,start_time,size,pcpu,wchan,cmd" ) )
+      'ps "-H" "-o" "pid,ppid,start,size,pcpu,wchan,cmd" ) )
 
 # Benchmarking
 (de bench Prg
