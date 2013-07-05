@@ -1,4 +1,4 @@
-# 12jun13abu
+# 05jul13abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -2004,6 +2004,59 @@
 # Skip White Space and Comments
 (code 'skipC_A 0)
    ld A (Chr)
+   null A  # EOF?
+   if ns  # No
+      do
+         do
+            cmp B 32  # White space?
+         while le  # Yes
+            call (Get_A)  # Get next
+            null A  # EOF?
+            js 90  # Yes
+         loop
+         cmp A C  # Comment char?
+      while eq  # Yes
+         call (Get_A)
+         do
+            cmp B 10  # Linefeed?
+         while ne  #No
+            null A  # EOF?
+            js 90  # Yes
+            call (Get_A)
+         loop
+      loop
+   end
+90 ret
+
+(code 'comment_A 0)
+   call (Get_A)
+   cmp B (char "{")
+   if ne  # No
+      do
+         cmp B 10  # Linefeed?
+      while ne  #No
+         null A  # EOF?
+         js 90  # Yes
+         call (Get_A)
+      loop
+   else  # Block comment
+      do
+         call (Get_A)
+         null A  # EOF?
+         js 90  # Yes
+         cmp B (char "}")  # End of block comment?
+         if eq
+            call (Get_A)
+            cmp B (char "#")
+            break eq  # Yes
+         end
+      loop
+      call (Get_A)
+   end
+90 ret
+
+(code 'skip_A 0)
+   ld A (Chr)
    do
       null A  # EOF?
    while ns  # No
@@ -2014,34 +2067,9 @@
          null A  # EOF?
          js ret  # Yes
       loop
-      cmp A C  # Comment char?
+      cmp B (char "#")  # Comment char?
    while eq  # Yes
-      call (Get_A)
-      cmp C (char "#")  # Block comment?
-      jne 10  # No
-      cmp B (char "{")
-      if ne  # No
-10       do
-            cmp B 10  # Linefeed?
-         while ne  #No
-            null A  # EOF?
-            js ret  # Yes
-            call (Get_A)
-         loop
-      else  # Block comment
-         do
-            call (Get_A)
-            null A  # EOF?
-            js ret  # Yes
-            cmp B (char "}")  # End of block comment?
-            if eq
-               call (Get_A)
-               cmp B (char "#")
-               break eq  # Yes
-            end
-         loop
-      end
-      call (Get_A)
+      call comment_A  # Skip comment
    loop
    ret
 
@@ -2169,8 +2197,7 @@
    jlt stkErr
    call (Get_A)  # Skip paren
    do
-      ld C (char "#")
-      call skipC_A  # and white space
+      call skip_A  # and white space
       cmp B (char ")")  # Empty list?
       if eq  # Yes
          call (Get_A)  # Skip paren
@@ -2212,8 +2239,7 @@
       drop  # Continue
    loop
 10 do
-      ld C (char "#")
-      call skipC_A  # Skip white space
+      call skip_A  # Skip white space
       cmp B (char ")")  # Done?
       if eq  # Yes
          call (Get_A)  # Skip paren
@@ -2226,8 +2252,7 @@
          call (Get_A)  # Skip dot
          memb Delim "(DelimEnd-Delim)"  # Delimiter?
          if eq  # Yes
-            ld C (char "#")
-            call skipC_A  # and white space
+            call skip_A  # and white space
             cmp B (char ")")  # Circular list?
             jz 20  # Yes
             cmp B (char "]")
@@ -2241,8 +2266,7 @@
                pop E
                ld (E CDR) A  # Store in CDR
             end
-            ld C (char "#")
-            call skipC_A  # Skip white space
+            call skip_A  # Skip white space
             cmp B (char ")")  # Done?
             if eq  # Yes
                call (Get_A)  # Skip paren
@@ -2302,12 +2326,23 @@
    drop
    ret
 
+(code 'readC_E)
+   null (Chr)  # Empty channel?
+   if z  # Yes
+      call (Get_A)  # Fill 'Chr'
+   end
+   cmp C (Chr)  # Terminator?
+   if eq  # Yes
+      ld E Nil  # Return 'NIL'
+      ret
+   end
+   ld A 1  # Read top level expression
+
 (code 'readA_E)
    push X
    push Y
    push A  # <S> Top flag
-   ld C (char "#")
-   call skipC_A
+   call skip_A
    null A  # EOF?
    if s  # Yes
       null (S)  # Top?
@@ -2484,36 +2519,6 @@
 99 pop A
    pop Y
    pop X
-   ret
-
-(code 'readC_E)
-   null (Chr)  # Empty channel?
-   if z  # Yes
-      call (Get_A)  # Fill 'Chr'
-   end
-   cmp C (Chr)  # Terminator?
-   if eq  # Yes
-      ld E Nil  # Return 'NIL'
-   else
-      ld A 1  # Top level
-      call readA_E  # Read expression
-      push E
-      ld A (Chr)
-      do
-         null A  # EOF?
-      while nsz  # No
-         cmp B 32  # Space?
-         jz 10
-         cmp B 9  # Tab?
-         jz 10
-         cmp B (char ")")  # or closing parens?
-         jz 10
-         cmp B (char "]")
-      while eq  # Yes
-10       call (Get_A)
-      loop
-      pop E
-   end
    ret
 
 (code 'tokenCE_E)  # X
@@ -4149,10 +4154,24 @@
          nul4  # on a tty?
          ldz C 0  # No
          call readC_E  # Read expression
-         cmp (Chr) 10  # Hit linefeed?
-         if eq  # Yes
-            ld (Chr) 0  # Clear it
-         end
+         ld A (Chr)
+         do
+            null A  # EOF?
+         while nsz  # No
+            cmp B 10  # Linefeed?
+            if eq  # Yes
+               ld (Chr) 0  # Clear it
+               break T
+            end
+            cmp B (char "#")  # Comment char?
+            if eq  # Yes
+               call comment_A  # Skip comment
+            else
+               cmp B 32  # White space?
+               break gt  # No
+               call (Get_A)
+            end
+         loop
       end
       cmp E Nil
    while ne

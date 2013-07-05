@@ -1,4 +1,4 @@
-// 31jan13abu
+// 05jul13abu
 // (c) Software Lab. Alexander Burger
 
 import java.util.*;
@@ -477,8 +477,19 @@ public class PicoLisp {
                OutFile.Wr.flush();
             }
             y = InFile.read('\n');
-            if (InFile.Chr == '\n')
-               InFile.Chr = 0;
+            while (InFile.Chr > 0) {
+               if (InFile.Chr == '\n') {
+                  InFile.Chr = 0;
+                  break;
+               }
+               if (InFile.Chr == '#')
+                  InFile.comment();
+               else {
+                  if (InFile.Chr > ' ')
+                     break;
+                  InFile.get();
+               }
+            }
          }
          if (y == Nil) {
             Env.Intern = ns;
@@ -1387,10 +1398,10 @@ public class PicoLisp {
          return false;
       }
 
-      final int skip(int c) {
+      final int skipc(int c) {
+         if (Chr < 0)
+            return Chr;
          for (;;) {
-            if (Chr < 0)
-               return Chr;
             while (Chr <= ' ') {
                get();
                if (Chr < 0)
@@ -1399,23 +1410,47 @@ public class PicoLisp {
             if (Chr != c)
                return Chr;
             get();
-            if (c != '#' || Chr != '{') {
-               while (Chr != '\n') {
-                  if (Chr < 0)
-                     return Chr;
-                  get();
-               }
+            while (Chr != '\n') {
+               if (Chr < 0)
+                  return Chr;
+               get();
             }
-            else {
-               for (;;) {
-                  get();
-                  if (Chr < 0)
-                     return Chr;
-                  if (Chr == '}' && (get() == '#'))
-                     break;
-               }
+         }
+      }
+
+      final void comment() {
+         get();
+         if (Chr != '{') {
+            while (Chr != '\n') {
+               if (Chr < 0)
+                  return;
+               get();
+            }
+         }
+         else {
+            for (;;) {
+               get();
+               if (Chr < 0)
+                  return;
+               if (Chr == '}' && (get() == '#'))
+                  break;
             }
             get();
+         }
+      }
+
+      final int skip() {
+         for (;;) {
+            if (Chr < 0)
+               return Chr;
+            while (Chr <= ' ') {
+               get();
+               if (Chr < 0)
+                  return Chr;
+            }
+            if (Chr != '#')
+               return Chr;
+            comment();
          }
       }
 
@@ -1475,7 +1510,7 @@ public class PicoLisp {
          Any x, res;
          get();
          for (;;) {
-            if (skip('#') == ')') {
+            if (skip() == ')') {
                get();
                return Nil;
             }
@@ -1493,7 +1528,7 @@ public class PicoLisp {
             }
          }
          for (;;) {
-            if (skip('#') == ')') {
+            if (skip() == ')') {
                get();
                break;
             }
@@ -1502,8 +1537,8 @@ public class PicoLisp {
             if (Chr == '.') {
                get();
                if (Delim.indexOf(Chr) >= 0) {
-                  x.Cdr = skip('#')==')' || Chr==']'? res : read0(false);
-                  if (skip('#') == ')')
+                  x.Cdr = skip()==')' || Chr==']'? res : read0(false);
+                  if (skip() == ')')
                      get();
                   else if (Chr != ']')
                      err(null, x, "Bad dotted pair");
@@ -1525,7 +1560,7 @@ public class PicoLisp {
 
       final Any read0(boolean top) {
          Any x, y;
-         if (skip('#') < 0) {
+         if (skip() < 0) {
             if (top)
                return Nil;
             eofErr();
@@ -1592,16 +1627,13 @@ public class PicoLisp {
             get();
          if (Chr == end)
             return Nil;
-         Any x = read0(true);
-         while (Chr != 0  &&  " \t)]".indexOf(Chr) >= 0)
-            get();
-         return x;
+         return read0(true);
       }
 
       final Any token(Any x, char c) {
          if (Chr == 0)
             get();
-         if (skip(c) < 0)
+         if (skipc(c) < 0)
             return null;
          if (Chr == '"') {
             get();

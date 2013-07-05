@@ -1,4 +1,4 @@
-# 06may13abu
+# 05jul13abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -3316,7 +3316,7 @@ char (x)
 
 # (skip ['any]) -> sym
 skip (c)
-   return InFile.skip(firstChar(ex.Cdr.Car.eval())) < 0? Nil : mkChar(InFile.Chr);
+   return InFile.skipc(firstChar(ex.Cdr.Car.eval())) < 0? Nil : mkChar(InFile.Chr);
 
 # (eol) -> flg
 eol ()

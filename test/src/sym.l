@@ -1,4 +1,4 @@
-# 14jul12abu
+# 05jul13abu
 # (c) Software Lab. Alexander Burger
 
 ### name ###
@@ -97,7 +97,7 @@
 
 
 ### chop ###
-(test '("c" "a" "r") (chop 'car)))
+(test '("c" "a" "r") (chop 'car))
 (test '("H" "e" "l" "l" "o") (chop "Hello"))
 (test '("1" "2" "3") (chop 123))
 (test (1 2 3) (chop (1 2 3)))
@@ -126,17 +126,17 @@
 
 
 ### pre? ###
-(test "abcdef" (pre? "" "abcdef")))
-(test NIL (pre? "abc" "")))
-(test "abcdef" (pre? "abc" "abcdef")))
+(test "abcdef" (pre? "" "abcdef"))
+(test NIL (pre? "abc" ""))
+(test "abcdef" (pre? "abc" "abcdef"))
 (test NIL (pre? "def" "abcdef"))
 (test "abcdef" (pre? "" "abcdef"))
 (test "7fach" (pre? (+ 3 4) "7fach"))
 
 
 ### sub? ###
-(test "abcdef" (sub? "" "abcdef")))
-(test NIL (sub? "abc" "")))
+(test "abcdef" (sub? "" "abcdef"))
+(test NIL (sub? "abc" ""))
 (test "abcdef" (sub? "cde" "abcdef"))
 (test "abcdef" (sub? "def" "abcdef"))
 (test NIL (sub? "abb" "abcdef"))
