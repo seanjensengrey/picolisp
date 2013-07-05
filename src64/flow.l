@@ -1,4 +1,4 @@
-# 13jun13abu
+# 05jul13abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -2548,7 +2548,8 @@
 (code 'doCo 2)
    push X
    ld X (E CDR)  # Get tag
-   call evSymX_E  # Evaluate to a symbol
+   ld E (X)  # Eval 'sym'
+   eval
    atom (X CDR)  # 'prg'?
    if z  # Yes
       push Y
@@ -2754,9 +2755,6 @@
    push Y
    push Z
    ld X E
-   ld Z (EnvCo7)  # Get main
-   null Z  # Any?
-   jz yieldErrX  # No
    ld Y (E CDR)
    ld E (Y)  # Eval 'any'
    eval
@@ -2787,6 +2785,21 @@
    end
    ld E (L I)  # Get result
    drop
+   ld Z (EnvCo7)  # Get main
+   null Z  # Any?
+   if z  # No
+      null Y  # Target coroutine?
+      jz yieldErrX  # No
+      push L  # Else resume with argument
+      sub S "EnvMid-EnvCo"  # Space for env
+      push Y  # Save 'seg'
+      push (StkLimit)  # and 'lim'
+      push Z  # Link (NULL)
+      ld (EnvCo7) S  # Close coroutine frame
+      ld Z S  # Point Z to main frame
+      save (EnvCo) (EnvMid) (Z III)  # Save environment
+      jmp resumeCoroutine  # Resume
+   end
    null L  # Stack?
    if nz  # Yes
       ld C (Z (pack III "+(EnvMid-EnvCo)"))  # Main routine's link
