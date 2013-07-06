@@ -1,4 +1,4 @@
-# 05jul13abu
+# 06jul13abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -2065,13 +2065,13 @@
       while le  # Yes
          call (Get_A)  # Get next
          null A  # EOF?
-         js ret  # Yes
+         js 90  # Yes
       loop
       cmp B (char "#")  # Comment char?
    while eq  # Yes
       call comment_A  # Skip comment
    loop
-   ret
+90 ret
 
 (code 'testEscA_F 0)
    do
