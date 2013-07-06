@@ -1,4 +1,5 @@
 * DDsep13 picoLisp-3.1.4
+   'read' preserves trailing white space
 
 * 29jun13 picoLisp-3.1.3
    'snapshot' in "lib/too.l"
