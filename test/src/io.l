@@ -1,4 +1,4 @@
-# 09nov12abu
+# 10jul13abu
 # (c) Software Lab. Alexander Burger
 
 ### path ###
@@ -11,6 +11,12 @@
 (test (1 3) (~(1 . 2) 3))
 (test (1 2 3 4) (1 ~(2 3) 4))
 (test (1 2 4) (1 ~(2 . 3) 4))
+(test (1 2 3) [1 2 3])
+(test (1 2 3) (1 2 3]
+(test (1 2 3) (1 2 3)]
+(test (1 (2 3)) (1 (2 3]
+(test (quote 1 (2 (3))) '(1 (2 (3]
+(test (quote 1 (2 (3))) '[1 (2 (3])
 (test (1 abc (d e f))
    (pipe (prinl "(1 abc (d e f))")
       (read) ) )
