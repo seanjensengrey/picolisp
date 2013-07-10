@@ -1,4 +1,4 @@
-/* 05jul13abu
+/* 10jul13abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -1213,11 +1213,11 @@ static any read0(bool top) {
    }
    if (Chr == '\'') {
       Env.get();
-      return cons(Quote, read0(NO));
+      return cons(Quote, read0(top));
    }
    if (Chr == ',') {
       Env.get();
-      x = read0(NO);
+      x = read0(top);
       if (val(Uni) != T) {
          Push(c1, x);
          if (isCell(y = idx(Uni, data(c1), 1)))
@@ -1228,7 +1228,7 @@ static any read0(bool top) {
    }
    if (Chr == '`') {
       Env.get();
-      Push(c1, read0(NO));
+      Push(c1, read0(top));
       x = EVAL(data(c1));
       drop(c1);
       return x;

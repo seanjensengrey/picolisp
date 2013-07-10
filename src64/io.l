@@ -1,4 +1,4 @@
-# 06jul13abu
+# 10jul13abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -2381,7 +2381,7 @@
    cmp B (char "'")  # Quote?
    if eq  # Yes
       call (Get_A)  # Skip "'"
-      ld A 0
+      ld A (S)
       call readA_E  # Read expression
       ld C E
       call consC_E  # Cons with 'quote'
@@ -2392,7 +2392,7 @@
    cmp B (char ",")  # Comma?
    if eq  # Yes
       call (Get_A)  # Skip ','
-      ld A 0
+      ld A (S)
       call readA_E  # Read expression
       ld X Uni  # Maintain '*Uni' index
       cmp (X) TSym  # Disabled?
@@ -2414,7 +2414,7 @@
    cmp B (char "`")  # Backquote?
    if eq  # Yes
       call (Get_A)  # Skip '`'
-      ld A 0
+      ld A (S)
       call readA_E  # Read expression
       link
       push E  # Save it
