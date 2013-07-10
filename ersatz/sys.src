@@ -1,4 +1,4 @@
-// 05jul13abu
+// 10jul13abu
 // (c) Software Lab. Alexander Burger
 
 import java.util.*;
@@ -1582,18 +1582,18 @@ public class PicoLisp {
          }
          if (Chr == '\'') {
             get();
-            return new Cell(Quote, read0(false));
+            return new Cell(Quote, read0(top));
          }
          if (Chr == ',') {
             get();
-            x = read0(false);
+            x = read0(top);
             if (Uni.Car != T)
                x = (y = idx(Uni, x, 1)) instanceof Cell? y.Car : x;
             return x;
          }
          if (Chr == '`') {
             get();
-            return read0(false).eval();
+            return read0(top).eval();
          }
          if (Chr == '"') {
             get();
