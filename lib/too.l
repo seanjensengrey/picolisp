@@ -2,11 +2,12 @@
 # (c) Software Lab. Alexander Burger
 
 ### Local Backup ###
-(de snapshot (Dst Max . @)
-   (for N (flip (sort (mapcar format (dir Dst))))
-      (if (> N Max)
-         (call 'rm "-rf" (pack Dst '/ N))
-         (call 'mv (pack Dst '/ N) (pack Dst '/ (inc N))) ) )
+(de snapshot (Dst . @)
+   (for (L (flip (sort (mapcar format (dir Dst))))  L)
+      (let N (pop 'L)
+         (call 'mv (pack Dst '/ N) (pack Dst '/ (inc N)))
+         (when (> (car L) (*/ N 9 10))
+            (call 'rm "-rf" (pack Dst '/ (pop 'L))) ) ) )
    (when (call 'mkdir (pack Dst "/1"))
       (while (args)
          (let
