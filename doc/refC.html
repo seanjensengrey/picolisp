@@ -82,11 +82,7 @@ term can be proven.
    (call @P @X @Y)                        # Call the given predicate
    (mapcar @P @L @M) )
 -> mapcar
-:  (? (mapcar change (you are a computer) @Z))
--> NIL
-:  (? (mapcar change (you are a computer) @Z) T)
--> NIL
-:  (? (mapcar permute ((a b c) (d e f)) @X))
+: (? (mapcar permute ((a b c) (d e f)) @X))
  @X=((a b c) (d e f))
  @X=((a b c) (d f e))
  @X=((a b c) (e d f))
