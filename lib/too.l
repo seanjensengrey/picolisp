@@ -3,20 +3,17 @@
 
 ### Local Backup ###
 (de snapshot (Dst Max . @)
-   (let I -1
-      (while (info (pack Dst '/ (inc 'I))))
-      (while (>= (dec 'I) Max)
-         (call 'rm "-rf" (pack Dst '/ I)) )
-      (while (ge0 I)
-         (call 'mv (pack Dst '/ I) (pack Dst '/ (inc I)))
-         (dec 'I) ) )
-   (when (call 'mkdir (pack Dst "/0"))
+   (for N (flip (sort (mapcar format (dir Dst))))
+      (if (> N Max)
+         (call 'rm "-rf" (pack Dst '/ N))
+         (call 'mv (pack Dst '/ N) (pack Dst '/ (inc N))) ) )
+   (when (call 'mkdir (pack Dst "/1"))
       (while (args)
          (let
             (Lst (filter bool (split (chop (next)) '/))
                Src (car Lst)
-               Old (pack Dst "/1/" Src)
-               New (pack Dst "/0/" Src) )
+               Old (pack Dst "/2/" Src)
+               New (pack Dst "/1/" Src) )
             (recur (Lst Src Old New)
                (ifn (cdr Lst)
                   (recur (Src Old New)
