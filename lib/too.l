@@ -1,22 +1,22 @@
-# 12jul13abu
+# 13jul13abu
 # (c) Software Lab. Alexander Burger
 
 ### Local Backup ###
 (de snapshot (Dst Max . @)
    (let I -1
-      (while (info (pack Dst (inc 'I))))
+      (while (info (pack Dst '/ (inc 'I))))
       (while (>= (dec 'I) Max)
-         (call 'rm "-rf" (pack Dst I)) )
+         (call 'rm "-rf" (pack Dst '/ I)) )
       (while (ge0 I)
-         (call 'mv (pack Dst I) (pack Dst (inc I)))
+         (call 'mv (pack Dst '/ I) (pack Dst '/ (inc I)))
          (dec 'I) ) )
-   (when (call 'mkdir (pack Dst 0))
+   (when (call 'mkdir (pack Dst "/0"))
       (while (args)
          (let
             (Lst (filter bool (split (chop (next)) '/))
                Src (car Lst)
-               Old (pack Dst "1/" Src)
-               New (pack Dst "0/" Src) )
+               Old (pack Dst "/1/" Src)
+               New (pack Dst "/0/" Src) )
             (recur (Lst Src Old New)
                (ifn (cdr Lst)
                   (recur (Src Old New)
