@@ -1,4 +1,4 @@
-/* 20jun13abu
+/* 16jul13abu
  * 17nov12jk
  * (c) Software Lab. Alexander Burger
  */
@@ -149,15 +149,15 @@ a:hover {
    background-color: #e0e0e0;
 }
 
-.chart td.T {
+.chart td.T, th.T {
    background-color: #d0d0d0;
 }
 
-.chart td.nil {
+.chart td.nil, th.nil {
    background-color: white;
 }
 
-.chart td.body {
+.chart td.body, th.body {
    background-color: #f0f0f0;
 }
 
