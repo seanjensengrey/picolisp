@@ -1,4 +1,4 @@
-/* 16jul13abu
+/* 17jul13abu
  * 17nov12jk
  * (c) Software Lab. Alexander Burger
  */
@@ -19,6 +19,8 @@
 .bold {font-weight: bold;}
 .mono {font-family: monospace;}
 
+.em1 {width: 1em;}
+.em2 {width: 2em;}
 .em3 {width: 3em;}
 .em5 {width: 5em;}
 .em7 {width: 7em;}
