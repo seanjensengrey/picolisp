@@ -1,4 +1,4 @@
-// 10jul13abu
+// 17jul13abu
 // (c) Software Lab. Alexander Burger
 
 import java.util.*;
@@ -7,7 +7,6 @@ import java.io.*;
 import java.net.*;
 import java.nio.*;
 import java.nio.channels.*;
-import java.nio.channels.spi.*;
 import java.lang.reflect.*;
 
 /* Ersatz PicoLisp Interpreter (Poor Man's PicoLisp) */
@@ -862,7 +861,7 @@ public class PicoLisp {
    }
 
    final static Any idx(Any var, Any key, int flg) {
-      Any x, y, z, p, tree, tos;
+      Any x, y, z, p;
       boolean ad;
       int i;
       if (key == null)
@@ -1213,6 +1212,8 @@ public class PicoLisp {
          x = ex.Cdr.prog();
          Env.Args = args;
          Env.Arg = arg;
+         Env.ArgC = argc;
+         Env.Next = next;
       }
       for (i = bnd.Cnt; (i -= 2) >= 0;)
          bnd.Data[i+1].Car = bnd.Data[i];
@@ -2375,6 +2376,8 @@ public class PicoLisp {
                   x = z.Cdr.prog();
                   Env.Args = args;
                   Env.Arg = arg;
+                  Env.ArgC = argc;
+                  Env.Next = next;
                }
                for (i = bnd.Cnt; (i -= 2) >= 0;)
                   bnd.Data[i+1].Car = bnd.Data[i];
@@ -2641,6 +2644,8 @@ public class PicoLisp {
             x = Cdr.prog();
             Env.Args = args;
             Env.Arg = arg;
+            Env.ArgC = argc;
+            Env.Next = next;
          }
          for (i = bnd.Cnt; (i -= 2) >= 0;)
             bnd.Data[i+1].Car = bnd.Data[i];
@@ -2685,6 +2690,8 @@ public class PicoLisp {
             x = Cdr.prog();
             Env.Args = args;
             Env.Arg = arg;
+            Env.ArgC = argc;
+            Env.Next = next;
          }
          for (i = bnd.Cnt; (i -= 2) >= 0;)
             bnd.Data[i+1].Car = bnd.Data[i];
