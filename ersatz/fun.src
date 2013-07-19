@@ -1,4 +1,4 @@
-# 17jul13abu
+# 19jul13abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -2999,15 +2999,15 @@ prove (i x y)
          tp1 = x.Cdr;
       }
       else if (x.Car.Car instanceof Number) {
-         e = x.Car.Cdr.eval();
+         e = x.Car.Cdr.prog();
          for (i = ((Number)x.Car.Car).Cnt, x = Pnl;  --i > 0;)
             x = x.Cdr;
          Pnl = new Cell(x.Car, Pnl);
          tp2 = new Cell(tp1.Cdr, tp2);
          tp1 = e;
       }
-      else if (x.Car.Car instanceof Symbol && firstChar(x.Car.Car) == '@') {
-         if ((e = x.Car.Cdr.eval()) != Nil  && unify((Number)Pnl.Car, x.Car.Car, (Number)Pnl.Car, e))
+      else if (x.Car.Car == Up) {
+         if ((e = x.Car.Cdr.Cdr.prog()) != Nil  && unify((Number)Pnl.Car, x.Car.Cdr.Car, (Number)Pnl.Car, e))
             tp1 = x.Cdr;
          else {
             Penv = y.Car.Car;  y.Car = y.Car.Cdr;

@@ -1,4 +1,5 @@
 * DDsep13 picoLisp-3.1.4
+   Pilog Lisp call syntax with '^'
    'read' preserves trailing white space
 
 * 29jun13 picoLisp-3.1.3

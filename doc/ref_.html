@@ -213,7 +213,7 @@ href="refP.html#prove">prove</a></code> and <code><a
 href="refU.html#unify">unify</a></code>.
 
 <pre><code>
-: (? (append (1 2 3) (4 5 6) @X) (@ println 'X '= (-> @X)))
+: (? (append (1 2 3) (4 5 6) @X) (^ @ (println 'X '= (-> @X))))
 X = (1 2 3 4 5 6)
  @X=(1 2 3 4 5 6)
 -> NIL

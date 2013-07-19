@@ -1238,14 +1238,14 @@ sys/x86-64.freeBsd.defs.l,1994
 fillE_FE3274,66981
 unifyCEYZ_F3377,69250
 doProve3543,73614
-lupCE_E3828,82084
-lookupCE_E3885,83475
-uniFillE_E3899,83728
-doArrow3929,84361
-doUnify3951,84771
-doSort3978,85259
-cmpDfltA_F4133,90440
-cmpUserAX_F4138,90591
+lupCE_E3808,81284
+lookupCE_E3865,82675
+uniFillE_E3879,82928
+doArrow3909,83561
+doUnify3931,83971
+doSort3958,84459
+cmpDfltA_F4113,89640
+cmpUserAX_F4118,89791
 
 ./net.l,192
 doPort5,96
