@@ -1,4 +1,4 @@
-# 19jul13abu
+# 22jul13abu
 # (c) Software Lab. Alexander Burger
 
 # (car 'var) -> any
@@ -3905,7 +3905,7 @@
    end
    ret
 
-# (-> sym [num]) -> any
+# (-> any [num]) -> any
 (code 'doArrow 2)
    push Z
    ld E (E CDR)  # E on args

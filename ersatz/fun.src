@@ -1,4 +1,4 @@
-# 19jul13abu
+# 22jul13abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -3035,7 +3035,7 @@ prove (i x y)
    Penv = envSave;  Pnl = nlSave;
    return x;
 
-# (-> sym [num]) -> any
+# (-> any [num]) -> any
 -> (i x)
    if (!(ex.Cdr.Cdr.Car instanceof Number))
       return lookup((Number)Pnl.Car, ex.Cdr.Car);
