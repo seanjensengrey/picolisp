@@ -1,4 +1,4 @@
-# 19jul13abu
+# 23jul13abu
 # (c) Software Lab. Alexander Burger
 
 ### c[ad]*r ###
@@ -496,7 +496,7 @@
 
 ### -> ###
 (test '((@A . 3) (@B . 7))
-   (prove (goal '(@A 3  (^ @B (+ 4 (-> @A)))))) )
+   (prove (goal '(@A 3 (^ @B (+ 4 (-> @A)))))) )
 
 
 ### unify ###
