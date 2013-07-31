@@ -1,4 +1,4 @@
-/* 28dec12abu
+/* 31jul13abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -453,6 +453,7 @@ any doCadr(any);
 any doCall(any);
 any doCar(any);
 any doCase(any);
+any doCasq(any);
 any doCatch(any);
 any doCdaaar(any);
 any doCdaadr(any);

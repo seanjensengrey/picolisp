@@ -1,4 +1,4 @@
-# 05jul13abu
+# 31jul13abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -1990,6 +1990,46 @@
             ld A (At)  # Argument item member?
             ld E (C)
             call equalAE_F
+            if eq  # Yes
+               ld X ((X) CDR)  # Run body
+               prog X
+               pop X
+               ret
+            end
+            ld C (C CDR)  # End of list?
+            atom C
+         until nz  # Yes
+      end
+   loop
+   ld E Nil  # Return NIL
+   pop X
+   ret
+
+# (casq 'any (any1 . prg1) (any2 . prg2) ..) -> any
+(code 'doCasq 2)
+   push X
+   ld X (E CDR)  # Arguments in X
+   ld E (X)  # Eval argument item
+   eval
+   ld (At) E
+   do
+      ld X (X CDR)  # Next clause
+      atom X  # Any?
+   while z  # Yes
+      ld C ((X))  # Item(s) in C
+      cmp C TSym  # Catch-all?
+      jeq 10  # Yes
+      cmp C E  # Equal to argument item?
+      if eq  # Yes
+10       ld X ((X) CDR)  # Run body
+         prog X
+         pop X
+         ret
+      end
+      atom C  # List of items?
+      if z  # Yes
+         do
+            cmp (C) E  # Argument item member?
             if eq  # Yes
                ld X ((X) CDR)  # Run body
                prog X

@@ -1,4 +1,4 @@
-# 19jul13abu
+# 31jul13abu
 # (c) Software Lab. Alexander Burger
 
 (setq *OS (java (java "java.lang.System" "getProperty" "os.name")))
@@ -274,7 +274,7 @@
 
 ### Pretty Printing ###
 (de *PP
-   T NIL if ifn when unless while until do case state for
+   T NIL if ifn when unless while until do case casq state for
    with catch finally ! setq default push bind job use let let?
    prog1 recur redef =: in out tab new )
 (de *PP1 let let? for redef)
@@ -1294,7 +1294,7 @@
 
 (de xmlrpcValue (Lst)
    (let X (caddr Lst)
-      (case (car Lst)
+      (casq (car Lst)
          (string X)
          ((i4 int) (format X))
          (boolean (= "1" X))
@@ -1519,8 +1519,8 @@
 
 (de dbg (Lst)
    (when (pair Lst)
-      (case (pop 'Lst)
-         ((case state)
+      (casq (pop 'Lst)
+         ((case casq state)
             (_dbg Lst)
             (for L (cdr Lst)
                (map _dbg (cdr L)) ) )
@@ -1711,7 +1711,7 @@
                      (push '"*Bnd" "X") ) ) ) ) )
       ((num? (car "X")))
       (T
-         (case (car "X")
+         (casq (car "X")
             ((: ::))
             (; (lint1 (cadr "X")))
             (quote
@@ -1781,7 +1781,7 @@
                            (lintVar (cdar "Y"))
                            (mapc lint1 (cddr "Y"))
                            (lintLoop (cddr "X")) ) ) ) ) )
-            ((case state)
+            ((case casq state)
                (lint1 (cadr "X"))
                (for "X" (cddr "X")
                   (mapc lint1 (cdr "X")) ) )

@@ -1,4 +1,4 @@
-# 22jul13abu
+# 31jul13abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -1334,6 +1334,22 @@ case (x y)
       if (y instanceof Cell) {
          do
             if (At.Car.equal(y.Car))
+               return x.Cdr.prog();
+         while ((y = y.Cdr) instanceof Cell);
+      }
+   }
+   return Nil;
+
+# (casq 'any (any1 . prg1) (any2 . prg2) ..) -> any
+casq (x y)
+   At.Car = (ex = ex.Cdr).Car.eval();
+   while ((ex = ex.Cdr) instanceof Cell) {
+      x = ex.Car;  y = x.Car;
+      if (y == T  ||  y == At.Car)
+         return x.Cdr.prog();
+      if (y instanceof Cell) {
+         do
+            if (y.Car == At.Car)
                return x.Cdr.prog();
          while ((y = y.Cdr) instanceof Cell);
       }

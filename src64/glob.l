@@ -1,4 +1,4 @@
-# 28may13abu
+# 31jul13abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Data)
@@ -284,6 +284,7 @@
    initFun NIL       "cond"      doCond
    initFun NIL       "nond"      doNond
    initFun NIL       "case"      doCase
+   initFun NIL       "casq"      doCasq
    initFun NIL       "state"     doState
    initFun NIL       "while"     doWhile
    initFun NIL       "until"     doUntil

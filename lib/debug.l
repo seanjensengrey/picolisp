@@ -1,4 +1,4 @@
-# 02jul13abu
+# 31jul13abu
 # (c) Software Lab. Alexander Burger
 
 # Prompt
@@ -263,8 +263,8 @@
 
 (de dbg (Lst)
    (when (pair Lst)
-      (case (pop 'Lst)
-         ((case state)
+      (casq (pop 'Lst)
+         ((case casq state)
             (_dbg Lst)
             (for L (cdr Lst)
                (map _dbg (cdr L)) ) )

@@ -1,4 +1,4 @@
-# 20nov12abu
+# 31jul13abu
 # (c) Software Lab. Alexander Burger
 
 (de task (Key . Prg)
@@ -313,7 +313,7 @@
 
 ### Pretty Printing ###
 (de *PP
-   T NIL if ifn when unless while until do case state for
+   T NIL if ifn when unless while until do case casq state for
    with catch finally co ! setq default push bind job use let let?
    prog1 later recur redef =: in out ctl tab new )
 (de *PP1 let let? for redef)
