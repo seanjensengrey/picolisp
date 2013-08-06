@@ -48,13 +48,14 @@
    (csMiterLimit V)
    (csGlobalCompositeOperation V) )
 
-(de canvas (Id DX DY)
-   (prinl
+(de <canvas> (Id DX DY)
+   (prin
       "<canvas id=\"" Id
       "\" width=\"" DX
       "\" height=\"" DY
-      "\">" Id
-      "</canvas>" ) )
+      "\"" )
+   (dfltCss "canvas")
+   (prinl ">" Id "</canvas>" ) )
 
 (de jsDraw (Id Dly)
    (http1 "application/octet-stream" 0)

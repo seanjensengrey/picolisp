@@ -1,4 +1,6 @@
 * DDsep13 picoLisp-3.1.4
+   Changed 'canvas' to '<canvas>'
+   Pass delay-argument to 'drawCanvas'
    'grid' wrap flags
    'ssl' timeout
    'casq' flow function
