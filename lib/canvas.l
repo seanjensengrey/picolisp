@@ -1,4 +1,4 @@
-# 15may13abu
+# 06aug13abu
 # (c) Software Lab. Alexander Burger
 
 (allow "!jsDraw" )
@@ -56,9 +56,9 @@
       "\">" Id
       "</canvas>" ) )
 
-(de jsDraw (Id)
+(de jsDraw (Id Dly)
    (http1 "application/octet-stream" 0)
-   (let Lst (drawCanvas Id)
+   (let Lst (drawCanvas Id Dly)
       (prinl "Content-Length: " (bytes Lst) "^M")
       (prinl "^M")
       (pr Lst) ) )
