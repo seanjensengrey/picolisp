@@ -1,4 +1,4 @@
-# 06aug13abu
+# 07aug13abu
 # (c) Software Lab. Alexander Burger
 
 (allow "!jsDraw" )
@@ -47,14 +47,14 @@
                (cons 'list Opc @)
                (list Opc) ) ) ) ) )
 
-(de <canvas> (Id DX DY)
+(de <canvas> (Id DX DY Alt)
    (prin
       "<canvas id=\"" Id
       "\" width=\"" DX
       "\" height=\"" DY
       "\"" )
    (dfltCss "canvas")
-   (prinl ">" Id "</canvas>" ) )
+   (prinl ">" Alt "</canvas>" ) )
 
 (de jsDraw (Id Dly)
    (http1 "application/octet-stream" 0)
