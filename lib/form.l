@@ -1,4 +1,4 @@
-# 28may13abu
+# 21aug13abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -1084,10 +1084,12 @@
 (dm show> ("Var")
    (<style> (cons 'id (pack "i" *Form '- (: id)))
       (if (able)
-         (let Str (eval (: lbl))
-            ((if (: img) <image> <submit>) Str "Var" NIL (: js)) )
-         (let Str (or (eval (: alt)) (eval (: lbl)))
-            ((if (: img) <image> <submit>) Str "Var" T (: js)) ) ) ) )
+         ((if (: img) <image> <submit>)
+            (eval (: lbl))
+            "Var" NIL (: js) )
+         ((if (: img) <image> <submit>)
+            (or (eval (: alt)) (eval (: lbl)))
+            "Var" T (: js) ) ) ) )
 
 (dm act> ()
    (and (able) (eval (: act))) )
