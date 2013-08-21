@@ -1,4 +1,4 @@
-# 20aug13abu
+# 21aug13abu
 # (c) Software Lab. Alexander Burger
 
 ### Destructive primitives ###
@@ -3036,19 +3036,17 @@
             ld (L II) A
             cmp A ZERO  # Zero?
          until eq  # Yes
-         ld A (L IV)  # Second arg?
-         cmp A Nil
+         ld E (L I)  # Get result
+         cmp (L IV) Nil  # Second arg?
          if ne  # Yes
-            ld E (L III)  # Round?
-            call cmpuAE_F
+            ld A (L III)  # Get number
+            call cmpuAE_F  # Round?
             if gt  # Yes
-               ld A (L I)  # Increment result
-               ld E ONE
+               ld A ONE  # Increment result
                call adduAE_A
-               ld (L I) A
+               ld E A
             end
          end
-         ld E (L I)  # Get result
       end
       drop
    end

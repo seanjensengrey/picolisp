@@ -585,10 +585,10 @@ sys/x86-64.freeBsd.defs.l,1994
 doBitOr2847,68167
 doBitXor2887,68977
 doSqrt2927,69800
-initSeedE_E3060,73256
-doSeed3094,73912
-doHash3109,74254
-doRand3136,74857
+initSeedE_E3058,73224
+doSeed3092,73880
+doHash3107,74222
+doRand3134,74825
 
 ./io.l,2983
 closeAX5,75
