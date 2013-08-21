@@ -1,4 +1,4 @@
-/* 31jul13abu
+/* 19aug13abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -708,6 +708,7 @@ any doSort(any);
 any doSpace(any);
 any doSplit(any);
 any doSpQ(any);
+any doSqrt(any);
 any doState(any);
 any doStem(any);
 any doStr(any);

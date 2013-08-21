@@ -1,4 +1,4 @@
-# 31jul13abu
+# 20aug13abu
 # (c) Software Lab. Alexander Burger
 
 (setq *OS (java (java "java.lang.System" "getProperty" "os.name")))
@@ -243,18 +243,19 @@
    (cond
       ((lt0 N) (quit "Bad argument" N))
       (N
-         (let (A 1  B 0)
-            (while (>= N A)
-               (setq A (>> -2 A)) )
+         (and (num? F) (setq N (* N @)))
+         (let (M 1  R 0)
+            (while (>= N M)
+               (setq M (>> -2 M)) )
             (loop
-               (if (> (inc 'B A) N)
-                  (dec 'B A)
-                  (dec 'N B)
-                  (inc 'B A) )
-               (setq B (>> 1 B)  A (>> 2 A))
-               (T (=0 A)) )
-            (and F (> N B) (inc 'B))
-            B ) ) ) )
+               (if (> (inc 'R M) N)
+                  (dec 'R M)
+                  (dec 'N R)
+                  (inc 'R M) )
+               (setq R (>> 1 R)  M (>> 2 M))
+               (T (=0 M)) )
+            (and F (> N R) (inc 'R))
+            R ) ) ) )
 
 # (Knuth Vol.2, p.442)
 (de ** (X N)  # N th power of X

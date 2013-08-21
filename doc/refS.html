@@ -605,9 +605,12 @@ href="refS.html#stem">stem</a></code>.
 -> ("The" "quick" "brown" "fox")
 </code></pre>
 
-<dt><a name="sqrt"><code>(sqrt 'num ['flg]) -> num</code></a>
+<dt><a name="sqrt"><code>(sqrt 'num ['flg|num]) -> num</code></a>
 <dd>Returns the square root of the <code>num</code> argument. If
 <code>flg</code> is given and non-<code>NIL</code>, the result will be rounded.
+If in addition to that <code>flg</code> is a number, the first argument will be
+multiplied with it before doing the square root calculation. See also <code><a
+href="ref_.html#*/">*/</a></code>.
 
 <pre><code>
 : (sqrt 64)
@@ -618,6 +621,11 @@ href="refS.html#stem">stem</a></code>.
 -> 32
 : (sqrt 10000000000000000000000000000000000000000)
 -> 100000000000000000000
+
+: (scl 6)
+-> 6
+: (sqrt 2.0 1.0)
+-> 1414214
 </code></pre>
 
 <dt><a name="stack"><code>(stack ['cnt]) -> cnt | (.. sym . cnt)</code></a>

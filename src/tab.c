@@ -1,4 +1,4 @@
-/* 31jul13abu
+/* 19aug13abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -308,6 +308,7 @@ static symInit Symbols[] = {
    {doSpace, "space"},
    {doSplit, "split"},
    {doSpQ, "sp?"},
+   {doSqrt, "sqrt"},
    {doState, "state"},
    {doStem, "stem"},
    {doStr, "str"},
