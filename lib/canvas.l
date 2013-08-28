@@ -24,7 +24,7 @@
       (csStroke)
       (csFill)
       (csClip)
-      (csDrawDots Lst)
+      (csDrawDots DX DY Lst)
       (csDrawImage Img DX DY)
       (csTranslate X Y)
       (csRotate A)
