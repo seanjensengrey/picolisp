@@ -947,6 +947,22 @@ href="refT.html#try">try</a></code>.
    ... )             # other things
 </code></pre>
 
+<dt><a name="swap"><code>(swap 'var 'any) -> any</code></a>
+<dd>Set the value of <code>var</code> to <code>any</code>, and return the
+previous value. See also <code><a href="refX.html#xchg">xchg</a></code> and
+<code><a href="refS.html#set">set</a></code>.
+
+<pre><code>
+: (setq A 7  L (1 2 3))
+-> (1 2 3)
+: (swap (cdr L) (swap 'A 'xyz))
+-> 2
+: A
+-> xyz
+: L
+-> (1 7 3)
+</code></pre>
+
 <dt><a name="sym"><code>(sym 'any) -> sym</code></a>
 <dd>Generate the printed representation of <code>any</code> into the name of a
 new symbol <code>sym</code>. This is the reverse operation of <code><a

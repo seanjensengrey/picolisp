@@ -1,4 +1,4 @@
-# 31jul13abu
+# 28aug13abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -1862,6 +1862,13 @@ setq (x y)
       y.Car = (x = x.Cdr).Car.eval();
    } while ((x = x.Cdr) instanceof Cell);
    return y.Car;
+
+# (swap 'var 'any) -> any
+swap (x y)
+   needVar(ex, x = ex.Cdr.Car.eval());
+   y = x.Car;
+   x.Car = ex.Cdr.Cdr.Car.eval();
+   return y;
 
 # (xchg 'var 'var ..) -> any
 xchg (w x y z)

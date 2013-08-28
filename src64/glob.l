@@ -1,4 +1,4 @@
-# 19aug13abu
+# 28aug13abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Data)
@@ -333,6 +333,7 @@
    initFun NIL       "val"       doVal
    initFun NIL       "set"       doSet
    initFun NIL       "setq"      doSetq
+   initFun NIL       "swap"      doSwap
    initFun NIL       "xchg"      doXchg
    initFun NIL       "on"        doOn
    initFun NIL       "off"       doOff

@@ -1,4 +1,4 @@
-# 05jul13abu
+# 28aug13abu
 # (c) Software Lab. Alexander Burger
 
 ### name ###
@@ -162,6 +162,14 @@
       (setq  A 123  B (list A A)) )
    (test 123 A)
    (test (123 123) B) )
+
+
+### swap ###
+(let (A 1  L (1 2 3))
+   (test 1 (swap 'A 7))
+   (test 7 (swap 'A 'xyz))
+   (test 3 (swap (cddr L) A))
+   (test (1 2 xyz) L) )
 
 
 ### xchg ###

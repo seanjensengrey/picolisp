@@ -1,4 +1,4 @@
-/* 19aug13abu
+/* 28aug13abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -718,6 +718,7 @@ any doSub(any);
 any doSubQ(any);
 any doSum(any);
 any doSuper(any);
+any doSwap(any);
 any doSym(any);
 any doSymQ(any);
 any doSync(any);
