@@ -1,4 +1,4 @@
-# 07aug13abu
+# 28aug13abu
 # (c) Software Lab. Alexander Burger
 
 (allow "!jsDraw" )
@@ -24,6 +24,7 @@
       (csStroke)
       (csFill)
       (csClip)
+      (csDrawDots Lst)
       (csDrawImage Img DX DY)
       (csTranslate X Y)
       (csRotate A)
