@@ -1,4 +1,4 @@
-/* 28aug13abu
+/* 30aug13abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -568,6 +568,7 @@ any doSwap(any ex) {
       Touch(ex,data(c1));
    y = val(data(c1));
    x = cdr(x),  val(data(c1)) = EVAL(car(x));
+   drop(c1);
    return y;
 }
 
