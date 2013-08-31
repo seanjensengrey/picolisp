@@ -1,8 +1,8 @@
-# 30jul13abu
+# 31aug13abu
 # (c) Software Lab. Alexander Burger
 
 (allowed ("app/")
-   "!start" "!stop" "@lib.css" "!psh" )
+   "!work" "!stop" "@lib.css" "!psh" )
 
 (scl 2)
 (load
@@ -61,6 +61,6 @@
          (close Sock) ) )
    (forked)
    (rollback)
-   (server 8080 "!start") )
+   (server 8080 "!work") )
 
 # vi:et:ts=3:sw=3
