@@ -1,4 +1,4 @@
-# 30may13abu
+# 06sep13abu
 # (c) Software Lab. Alexander Burger
 
 # *Dbs *Jnl *Blob upd
@@ -111,7 +111,8 @@
                   (iter Tree
                      '((X)
                         (and (isa Cls X) (link (pass get X))) )
-                     X1 X2 ) ) ) ) ) ) )
+                     X1 X2
+                     (isa '+IdxFold This) ) ) ) ) ) ) )
 
 
 (de genKey (Var Cls Hook Min Max)
