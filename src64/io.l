@@ -1,4 +1,4 @@
-# 10jul13abu
+# 12sep13abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -4858,6 +4858,12 @@
          else
             ld C 0
             call symByteCX_FACX  # Get first byte
+            cmp B (char "#")  # Hash?
+            if eq
+               ld B (char "\\")  # Print backslash
+               call (PutB)
+               ld B (char "#")  # Restore Hash
+            end
             do
                cmp B (char "\\")  # Backslash?
                jeq 10  # Yes

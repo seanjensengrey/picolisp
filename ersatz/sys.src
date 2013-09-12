@@ -1,4 +1,4 @@
-// 17jul13abu
+// 12sep13abu
 // (c) Software Lab. Alexander Burger
 
 import java.util.*;
@@ -2469,6 +2469,8 @@ public class PicoLisp {
             if (Name.equals("."))
                return "\\.";
             StringBuilder sb = new StringBuilder();
+            if (Name.charAt(0) == '#')
+               sb.append('\\');
             for (int i = 0; i < Name.length(); ++i) {
                char c = Name.charAt(i);
                if (c == '\\' || Delim.indexOf(c) >= 0)

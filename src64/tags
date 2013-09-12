@@ -716,20 +716,20 @@ sys/x86-64.freeBsd.defs.l,1994
 prNameX4790,121289
 printE_E4800,121444
 printE4809,121580
-prinE_E5022,127196
-prinE5031,127332
-doPrin5086,128594
-doPrinl5100,128864
-doSpace5104,128932
-doPrint5126,129331
-doPrintsp5142,129626
-doPrintln5157,129915
-doFlush5162,130003
-doRewind5170,130140
-doExt5187,130530
-doRd5204,130869
-doPr5270,132649
-doWr5287,132981
+prinE_E5028,127393
+prinE5037,127529
+doPrin5092,128791
+doPrinl5106,129061
+doSpace5110,129129
+doPrint5132,129528
+doPrintsp5148,129823
+doPrintln5163,130112
+doFlush5168,130200
+doRewind5176,130337
+doExt5193,130727
+doRd5210,131066
+doPr5276,132846
+doWr5293,133178
 
 ./apply.l,445
 applyXYZ_E4,51

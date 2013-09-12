@@ -1,4 +1,4 @@
-/* 10jul13abu
+/* 12sep13abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -2416,6 +2416,8 @@ void print1(any x) {
          if (unDig(y) == '.')
             Env.put('\\'),  Env.put('.');
          else {
+            if (c == '#')
+               Env.put('\\');
             do {
                if (c == '\\' || strchr(Delim, c))
                   Env.put('\\');
