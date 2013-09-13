@@ -1,4 +1,4 @@
-# 21aug13abu
+# 13sep13abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -1853,7 +1853,7 @@
 
 (de choTtl (Ttl Var Cls Hook)
    (with (or (get Cls Var) (meta Cls Var))
-      (if (isa '+Idx This)
+      (if (or (isa '+Idx This) (isa '+IdxFold This))
          Ttl
          (pack (count (tree (: var) (: cls) Hook)) " " Ttl) ) ) )
 
