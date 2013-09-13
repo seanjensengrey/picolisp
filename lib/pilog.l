@@ -1,4 +1,4 @@
-# 19jul13abu
+# 13sep13abu
 # (c) Software Lab. Alexander Burger
 
 # *Rule
@@ -368,6 +368,28 @@
             '((Y) ("head" (get Y (car L)) (cdr L)))
             X ) )
       (T ("head" (apply get (car L) X) (cdr L))) ) )
+
+(be hold (@S . @L)
+   (^ @
+      (let S (-> @S)
+         (or
+            (not S)
+            (let L (-> @L)
+               ("hold" (car L) (cdr L)) ) ) ) ) )
+
+(de "hold" (X L)
+   (cond
+      ((not L)
+         (if (atom X)
+            (sub? S X)
+            (find '((Y) (sub? S Y)) X) ) )
+      ((atom X)
+         ("hold" (get X (car L)) (cdr L)) )
+      ((atom (car L))
+         (pick
+            '((Y) ("hold" (get Y (car L)) (cdr L)))
+            X ) )
+      (T ("hold" (apply get (car L) X) (cdr L))) ) )
 
 (be fold (@S . @L)
    (^ @
