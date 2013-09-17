@@ -1,4 +1,4 @@
-# 13sep13abu
+# 15sep13abu
 # (c) Software Lab. Alexander Burger
 
 # *Rule
@@ -397,15 +397,15 @@
          (or
             (not S)
             (let L (-> @L)
+               (setq S (fold S))
                ("fold" (car L) (cdr L)) ) ) ) ) )
 
 (de "fold" (X L)
    (cond
       ((not L)
-         (let P (fold S)
-            (if (atom X)
-               (pre? P (fold X))
-               (find '((Y) (pre? P (fold Y))) X) ) ) )
+         (if (atom X)
+            (pre? S (fold X))
+            (find '((Y) (pre? S (fold Y))) X) ) )
       ((atom X)
          ("fold" (get X (car L)) (cdr L)) )
       ((atom (car L))
@@ -420,15 +420,15 @@
          (or
             (not S)
             (let L (-> @L)
+               (setq S (fold S))
                ("part" (car L) (cdr L)) ) ) ) ) )
 
 (de "part" (X L)
    (cond
       ((not L)
-         (let P (fold S)
-            (if (atom X)
-               (sub? P (fold X))
-               (find '((Y) (sub? P (fold Y))) X) ) ) )
+         (if (atom X)
+            (sub? S (fold X))
+            (find '((Y) (sub? S (fold Y))) X) ) )
       ((atom X)
          ("part" (get X (car L)) (cdr L)) )
       ((atom (car L))
@@ -449,11 +449,16 @@
    (cond
       ((not L)
          (if (atom X)
-            (or (sub? S X) (pre? (ext:Snx S) (ext:Snx X)))
+            (or
+               (sub? (fold S) (fold X))
+               (pre? (ext:Snx S) (ext:Snx X)) )
             (let P (ext:Snx S)
+               (setq S (fold S))
                (find
                   '((Y)
-                     (or (sub? S Y) (pre? P (ext:Snx Y))) )
+                     (or
+                        (sub? S (fold Y))
+                        (pre? P (ext:Snx Y)) ) )
                   X ) ) ) )
       ((atom X)
          ("tolr" (get X (car L)) (cdr L)) )
