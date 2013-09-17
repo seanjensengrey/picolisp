@@ -1,4 +1,4 @@
-# 13sep13abu
+# 17sep13abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -1450,7 +1450,7 @@
 (dm val> ()
    (let S (super)
       (format
-         (if (sub? *Sep0 S) S (pack S *Sep0))
+         (or (sub? *Sep0 S) (pack S *Sep0))
          (: scl)
          *Sep0
          *Sep3 ) ) )
@@ -1615,7 +1615,7 @@
 
 (dm T @
    (pass super
-      '((S) (if (sub? "://" S) S (pack "http://" S))) ) )
+      '((S) (or (sub? "://" S) (pack "http://" S))) ) )
 
 
 (class +MailField +Url +TextField)
