@@ -1,4 +1,4 @@
-# 15sep13abu
+# 18sep13abu
 # (c) Software Lab. Alexander Burger
 
 # *Rule
@@ -449,16 +449,11 @@
    (cond
       ((not L)
          (if (atom X)
-            (or
-               (sub? (fold S) (fold X))
-               (pre? (ext:Snx S) (ext:Snx X)) )
+            (or (sub? S X) (pre? (ext:Snx S) (ext:Snx X)))
             (let P (ext:Snx S)
-               (setq S (fold S))
                (find
                   '((Y)
-                     (or
-                        (sub? S (fold Y))
-                        (pre? P (ext:Snx Y)) ) )
+                     (or (sub? S Y) (pre? P (ext:Snx Y))) )
                   X ) ) ) )
       ((atom X)
          ("tolr" (get X (car L)) (cdr L)) )
