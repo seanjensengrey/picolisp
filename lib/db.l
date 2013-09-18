@@ -1,4 +1,4 @@
-# 06sep13abu
+# 18sep13abu
 # (c) Software Lab. Alexander Burger
 
 # *Dbs *Jnl *Blob upd
@@ -100,19 +100,11 @@
                   (if (pair X1)
                      (setq X1 (append X1 T))
                      (setq X1 (cons X1 T)  X2 (cons X2)) ) )
-               (if (isa '+Idx This)
-                  (iter Tree
-                     '((X)
-                        (and
-                           (isa Cls X)
-                           (not (memq (setq X (pass get X)) (made)))
-                           (link X) ) )
-                     X1 X2 T )
-                  (iter Tree
-                     '((X)
-                        (and (isa Cls X) (link (pass get X))) )
-                     X1 X2
-                     (isa '+IdxFold This) ) ) ) ) ) ) )
+               (iter Tree
+                  '((X)
+                     (and (isa Cls X) (link (pass get X))) )
+                  X1 X2
+                  (or (isa '+Idx This) (isa '+IdxFold This)) ) ) ) ) ) )
 
 
 (de genKey (Var Cls Hook Min Max)
