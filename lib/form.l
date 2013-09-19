@@ -1,4 +1,4 @@
-# 17sep13abu
+# 19sep13abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -2262,9 +2262,11 @@
             ((=T Able) Del)
             ((=T Del) Able)
             ((and Able Del) (list 'and Able Del)) )
-         (list 'text Txt (list ': 'home 'obj Var)) )
+         (let X (list ': 'home 'obj (fin Var))
+            (list 'text Txt
+               (if (pair Var) (list (car Var) X) X) ) ) )
       (choButton Dlg)
-      (stepBtn Var Cls Hook Msg) )
+      (stepBtn (fin Var) Cls Hook Msg) )
    (--) )
 
 # Standard ID form
@@ -2275,13 +2277,13 @@
          (form 'dialog
             (if (pair "Cho")
                (eval @)
-               (choDlg NIL "Cho" (list "Var" "Cls")) ) ) )
+               (choDlg NIL "Cho" (list (fin "Var") "Cls")) ) ) )
       (form NIL
          (<h3> NIL "Entity" ": " (idObj "Lst"))
          (panel "Able" (pack "Entity" " '@1'") "Del"
             (or
                (pair "Cho")
-               (list 'choDlg NIL (lit "Cho") (lit (list "Var" "Cls"))) )
+               (list 'choDlg NIL (lit "Cho") (lit (list (fin "Var") "Cls"))) )
             "Var" "Cls" )
          (run "Prg") ) ) )
 
