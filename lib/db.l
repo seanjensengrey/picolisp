@@ -1,4 +1,4 @@
-# 18sep13abu
+# 20sep13abu
 # (c) Software Lab. Alexander Burger
 
 # *Dbs *Jnl *Blob upd
@@ -1069,46 +1069,36 @@
 
 (dm set> (Val)
    (unless (= Val (val This))
-      (let L
-         (extract
-            '((X)
-               (pop 'X)
-               (and
-                  (meta Val X)
-                  (n== @ (meta (val This) X))
-                  X ) )
-            (getl This) )
-         (for Var L
-            (let V (get This Var)
-               (rel> (meta This Var) This V
-                  (put> (meta This Var) This V NIL) ) ) )
+      (let Lst (make (maps '((X) (link (fin X))) This))
+         (for Var Lst
+            (let? Rel (meta This Var) 
+               (unless (== Rel (meta Val Var))
+                  (let V (get This Var)
+                     (rel> Rel This V (put> Rel This V NIL)) ) ) ) )
          (xchg This 'Val)
-         (for Var L
-            (rel> (meta This Var) This NIL
-               (put> (meta This Var) This NIL (get This Var)) ) ) )
+         (for Var Lst
+            (let? Rel (meta This Var) 
+               (unless (== Rel (meta Val Var))
+                  (rel> Rel This NIL
+                     (put> Rel This NIL (get This Var)) ) ) ) ) )
       (upd> This (val This) Val) )
    (val This) )
 
 (dm set!> (Val)
    (unless (= Val (val This))
       (dbSync)
-      (let L
-         (extract
-            '((X)
-               (pop 'X)
-               (and
-                  (meta Val X)
-                  (n== @ (meta (val This) X))
-                  X ) )
-            (getl This) )
-         (for Var L
-            (let V (get This Var)
-               (rel> (meta This Var) This V
-                  (put> (meta This Var) This V NIL) ) ) )
+      (let Lst (make (maps '((X) (link (fin X))) This))
+         (for Var Lst
+            (let? Rel (meta This Var) 
+               (unless (== Rel (meta Val Var))
+                  (let V (get This Var)
+                     (rel> Rel This V (put> Rel This V NIL)) ) ) ) )
          (xchg This 'Val)
-         (for Var L
-            (rel> (meta This Var) This NIL
-               (put> (meta This Var) This NIL (get This Var)) ) ) )
+         (for Var Lst
+            (let? Rel (meta This Var) 
+               (unless (== Rel (meta Val Var))
+                  (rel> Rel This NIL
+                     (put> Rel This NIL (get This Var)) ) ) ) ) )
       (upd> This (val This) Val)
       (commit 'upd) )
    (val This) )
