@@ -1,4 +1,4 @@
-# 18sep13abu
+# 23sep13abu
 # (c) Software Lab. Alexander Burger
 
 # *Rule
@@ -316,7 +316,7 @@
    (^ @
       (or
          (not (-> @F))
-         (apply get (-> @L)) ) ) )
+         (bool (apply get (-> @L))) ) ) )
 
 (be range (@N . @L)
    (^ @
