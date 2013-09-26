@@ -1,4 +1,4 @@
-# 12sep13abu
+# 26sep13abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -491,53 +491,68 @@
    if z  # No: Direct buffer pointer
       # xxxxx.xxxxxxx.xxxxxxx.xxxxxxx.xxxxxxx.xxxxxxx.xxxxxxx.xxxxxxS010
       #    59      51      43      35      27      19      11       3
-      cmp C 59  # Short digit full?
-      if ne  # No
-         shl A C  # Shift byte to character position
-         or (X) A  # Combine with short number
-         add C 8  # Increment position
+      cmp C 67  # Short full?
+      if eq  # Yes
+         ld C (X)  # Get short number
+         shr C 3  # De-normalize, keep sign bit
+         shl A 4  # New digit
+         or A CNT  # Make short number
+         call consNumCA_C  # Box number
+         ld (X) C
+         ld X C
+         ld C 12  # Next digit in bignum
          ret
       end
-      ld C (X)  # Get short number
-      shr C 3  # De-normalize, keep sign bit
-      shl A 56  # Combine byte with digit
-      or C A
-      call boxNum_A  # Box number
-      ld (A DIG) C
-      ld (X) A
-      ld X A
-      ld C 0  # Start new digit
-      ret
-   end
-   null C  # Last bit of big digit?
-   if z  # Yes
-      ld C (X DIG)
-      shr A 1  # Get lowest bit
-      rcr C 1  # into highest bit of big digit
-      ld (X DIG) C
-      rcl A 1  # Get sign bit into A
-      shl A 3  # Normalize with sign
-      or A CNT  # Make short number
-      ld (X BIG) A
-      ld C 11  # Set up for second byte
-      ret
-   end
-   cmp C 59  # Short digit full?
-   if ne  # No
+      cmp C 59  # Short digit full?
+      if eq  # Yes
+         cmp A 32  # Fit into 5 bits?
+         if ge  # No
+            ld C (X)  # Get short number
+            shr C 3  # De-normalize, keep sign bit
+            shl A 56  # Combine byte with digit
+            or A C
+            call boxNumA_A  # Box number
+            ld (X) A
+            ld X A
+            ld C 4  # Start next digit in bignum
+            ret
+         end
+      end
       shl A C  # Shift byte to character position
-      or (X BIG) A  # Combine with name digit
+      or (X) A  # Combine with short number
       add C 8  # Increment position
       ret
    end
-   ld C (X BIG)  # Get short number
-   shr C 3  # De-normalize, keep sign bit
-   shl A 56  # Combine byte with digit
-   or C A
-   call boxNum_A  # Box number
-   ld (A DIG) C
-   ld (X BIG) A
-   ld X A
-   ld C 0  # Start new digit
+   cmp C 68  # Last short full?
+   if eq  # Yes
+      ld C (X BIG)  # Get short number
+      shr C 4  # De-normalize
+      shl A 4  # New digit
+      or A CNT  # Make short number
+      call consNumCA_C  # Box number
+      ld (X BIG) C
+      ld X C
+      ld C 12  # Next digit in bignum
+      ret
+   end
+   cmp C 60  # Short digit full?
+   if eq  # Yes
+      cmp A 16  # Fit into 4 bits?
+      if ge  # No
+         ld C (X BIG)  # Get short number
+         shr C 4  # De-normalize
+         shl A 56  # Combine byte with digit
+         or A C
+         call boxNumA_A  # Box number
+         ld (X BIG) A
+         ld X A
+         ld C 4  # Next digit in bignum
+         ret
+      end
+   end
+   shl A C  # Shift byte to character position
+   or (X BIG) A  # Combine with name digit
+   add C 8  # Increment position
    ret
 
 # Read binary expression
@@ -628,12 +643,15 @@
          dec E  # Decrement count
       until z
 20    ld E (L I)  # Get result
-      big X  # Big number?
+      big E  # Big number?
       if nz  # Yes
-         ld A (X BIG)  # Get last short
-         and A SIGN  # Sign bit
-         off (X BIG) SIGN
-         or E A  # Set sign bit in result
+         ld X (E DIG)  # Keep lowest digit
+         ld A E  # Half result
+         call halfA_A
+         ld E X  # Sign bit
+         and E 1
+         shl E 3
+         or E A  # Set in result
       end
    else  # INTERN, TRANSIENT or EXTERN
       push A  # Tag
@@ -5237,8 +5255,11 @@
                call byteNumBCX_CX  # Add next byte to number
                dec E  # Done?
             until z  # Yes
-            ld A (L I)  # Double result
-            call twiceA_A
+            ld A (L I)  # Get result
+            cnt A  # Short number?
+            if nz  # Yes
+               call twiceA_A  # Double it
+            end
          else
             ld X E  # Count in X
             do

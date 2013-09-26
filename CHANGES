@@ -1,4 +1,5 @@
 * DDsep13 picoLisp-3.1.4
+   Bug in bignum 'rd' (64-bit)
    'swap' function
    Optimized 'sqrt'
    Changed 'canvas' to '<canvas>'
