@@ -1,4 +1,4 @@
-# 13jul13abu
+# 26sep13abu
 # (c) Software Lab. Alexander Burger
 
 ### Local Backup ###
@@ -198,23 +198,28 @@
                         (let
                            (Tree (tree X (: cls) (get Obj (: hook)))
                               Aux (conc (mapcar '((S) (get Obj S)) (: aux)) Obj) )
-                           (if (isa '+List This)
-                              (when
-                                 (find
-                                    '((Y)
-                                       (and
-                                          (or
-                                             (not (isa '+Fold This))
-                                             (setq V (fold V)) )
-                                          (<> Obj (fetch Tree (cons Y Aux))) ) )
-                                    V )
-                                 (link X) )
-                              (and
-                                 (or
-                                    (not (isa '+Fold This))
-                                    (setq V (fold V)) )
-                                 (<> Obj (fetch Tree (cons V Aux)))
-                                 (link X) ) ) ) )
+                           (cond
+                              ((isa '+UB This)
+                                 (unless (= Obj (fetch Tree (ubZval (cons V Aux) Obj)))
+                                    (link X) ) )
+                              ((isa '+List This)
+                                 (when
+                                    (find
+                                       '((Y)
+                                          (and
+                                             (or
+                                                (not (isa '+Fold This))
+                                                (setq V (fold V)) )
+                                             (<> Obj (fetch Tree (cons Y Aux))) ) )
+                                       V )
+                                    (link X) ) )
+                              (T
+                                 (and
+                                    (or
+                                       (not (isa '+Fold This))
+                                       (setq V (fold V)) )
+                                    (<> Obj (fetch Tree (cons V Aux)))
+                                    (link X) ) ) ) ) )
                      (T
                         (for (N . B) (: bag)
                            (cond

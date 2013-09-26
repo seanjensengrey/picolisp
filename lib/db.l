@@ -1,4 +1,4 @@
-# 20sep13abu
+# 26sep13abu
 # (c) Software Lab. Alexander Burger
 
 # *Dbs *Jnl *Blob upd
@@ -728,6 +728,18 @@
             Lst ) )
       (cons Res X) ) )
 
+(dm has> (Val X)
+   (and Val
+      (or
+         (extra Val X)
+         (extra
+            (let (N (inc (length (: aux)))  M 1  V 0)
+               (until (=0 Val)
+                  (and (bit? 1 Val) (inc 'V M))
+                  (setq M (>> -1 M)  Val (>> N Val)) )
+               V )
+            X ) ) ) )
+
 
 ### Relation prefix classes ###
 (class +Dep)
@@ -1071,13 +1083,13 @@
    (unless (= Val (val This))
       (let Lst (make (maps '((X) (link (fin X))) This))
          (for Var Lst
-            (let? Rel (meta This Var) 
+            (let? Rel (meta This Var)
                (unless (== Rel (meta Val Var))
                   (let V (get This Var)
                      (rel> Rel This V (put> Rel This V NIL)) ) ) ) )
          (xchg This 'Val)
          (for Var Lst
-            (let? Rel (meta This Var) 
+            (let? Rel (meta This Var)
                (unless (== Rel (meta Val Var))
                   (rel> Rel This NIL
                      (put> Rel This NIL (get This Var)) ) ) ) ) )
@@ -1089,13 +1101,13 @@
       (dbSync)
       (let Lst (make (maps '((X) (link (fin X))) This))
          (for Var Lst
-            (let? Rel (meta This Var) 
+            (let? Rel (meta This Var)
                (unless (== Rel (meta Val Var))
                   (let V (get This Var)
                      (rel> Rel This V (put> Rel This V NIL)) ) ) ) )
          (xchg This 'Val)
          (for Var Lst
-            (let? Rel (meta This Var) 
+            (let? Rel (meta This Var)
                (unless (== Rel (meta Val Var))
                   (rel> Rel This NIL
                      (put> Rel This NIL (get This Var)) ) ) ) ) )
