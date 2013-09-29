@@ -1,4 +1,4 @@
-# 18sep13abu
+# 29sep13abu
 # (c) Software Lab. Alexander Burger
 
 # (select [var ..] cls [hook|T] [var val ..])
@@ -43,6 +43,7 @@
                                  (link (pop 'L) Cls)
                                  (and Hook (link Hook))
                                  (link (if L (pop 'L) '(NIL . T))) ) ) ) ) )
+                  (link (list 'isa Cls '@@))
                   (while Lst
                      (let (Var (pop 'Lst)  Val (if Lst (pop 'Lst) '(NIL . T)))
                         (link
