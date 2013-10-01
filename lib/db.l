@@ -1,4 +1,4 @@
-# 26sep13abu
+# 01oct13abu
 # (c) Software Lab. Alexander Burger
 
 # *Dbs *Jnl *Blob upd
@@ -91,8 +91,11 @@
                (iter Tree
                   '((X) (and (isa Cls X) (link (pass get X))))
                   X1 X2 )
-               (when (isa '+Fold This)
-                  (setq X1 (fold X1)  X2 (or (=T X2) (fold X2))) )
+               (cond
+                  ((: ub)
+                     (setq X1 (ubZval X1)  X2 (ubZval X2 T)) )
+                  ((isa '+Fold This)
+                     (setq X1 (fold X1)  X2 (or (=T X2) (fold X2))) ) )
                (if (>= X2 X1)
                   (if (pair X1)
                      (setq X2 (append X2 T))
