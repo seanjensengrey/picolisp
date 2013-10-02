@@ -1,4 +1,4 @@
-# 23sep13abu
+# 02oct13abu
 # (c) Software Lab. Alexander Burger
 
 # *Rule
@@ -184,10 +184,6 @@
                      ((atom (car Val))
                         (and (; Rel ub) (setq Val (ubZval Val)))
                         (init Tree Val (append Val T)) )
-                     ((; Rel ub)
-                        (init Tree
-                           (ubZval (mapcar car Val))
-                           (ubZval (mapcar cdr Val) T) ) )
                      ((>= (cdr Val) (car Val))
                         (init Tree (car Val) (append (cdr Val) T)) )
                      (T (init Tree (append (car Val) T) (cdr Val))) ) )

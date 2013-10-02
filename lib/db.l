@@ -1,4 +1,4 @@
-# 01oct13abu
+# 02oct13abu
 # (c) Software Lab. Alexander Burger
 
 # *Dbs *Jnl *Blob upd
@@ -87,27 +87,42 @@
             X1 (next)
             X2 (if (args) (next) (or X1 T)) )
          (make
-            (if (isa '+Key This)
-               (iter Tree
-                  '((X) (and (isa Cls X) (link (pass get X))))
-                  X1 X2 )
-               (cond
-                  ((: ub)
-                     (setq X1 (ubZval X1)  X2 (ubZval X2 T)) )
-                  ((isa '+Fold This)
-                     (setq X1 (fold X1)  X2 (or (=T X2) (fold X2))) ) )
-               (if (>= X2 X1)
-                  (if (pair X1)
-                     (setq X2 (append X2 T))
-                     (setq X1 (cons X1)  X2 (cons X2 T)) )
-                  (if (pair X1)
-                     (setq X1 (append X1 T))
-                     (setq X1 (cons X1 T)  X2 (cons X2)) ) )
-               (iter Tree
-                  '((X)
-                     (and (isa Cls X) (link (pass get X))) )
-                  X1 X2
-                  (or (isa '+Idx This) (isa '+IdxFold This)) ) ) ) ) ) )
+            (cond
+               ((isa '+Key This)
+                  (iter Tree
+                     '((X) (and (isa Cls X) (link (pass get X))))
+                     X1 X2 ) )
+               ((: ub)
+                  (iter Tree
+                     '((X)
+                        (and
+                           (isa Cls X)
+                           (>= (car X2) (get X (: var)) (car X1))
+                           (not
+                              (find
+                                 '((K V1 V2)
+                                    (not (>= V2 (get X K) V1)) )
+                                 (: aux)
+                                 (cdr X1)
+                                 (cdr X2) ) )
+                           (link (pass get X)) ) )
+                     (ubZval (copy X1))
+                     (ubZval (copy X2) T) ) )
+               (T
+                  (when (isa '+Fold This)
+                     (setq X1 (fold X1)  X2 (or (=T X2) (fold X2))) )
+                  (if (>= X2 X1)
+                     (if (pair X1)
+                        (setq X2 (append X2 T))
+                        (setq X1 (cons X1)  X2 (cons X2 T)) )
+                     (if (pair X1)
+                        (setq X1 (append X1 T))
+                        (setq X1 (cons X1 T)  X2 (cons X2)) ) )
+                  (iter Tree
+                     '((X)
+                        (and (isa Cls X) (link (pass get X))) )
+                     X1 X2
+                     (or (isa '+Idx This) (isa '+IdxFold This)) ) ) ) ) ) ) )
 
 
 (de genKey (Var Cls Hook Min Max)
@@ -722,7 +737,7 @@
 
 (de ubZval (Lst X)
    (let (Res 0  P 1)
-      (while (find gt0 Lst)
+      (while (find n0 Lst)
          (map
             '((L)
                (and (bit? 1 (car L)) (setq Res (| Res P)))
