@@ -1,4 +1,4 @@
-# 02oct13abu
+# 03oct13abu
 # (c) Software Lab. Alexander Burger
 
 # *Rule
@@ -184,6 +184,10 @@
                      ((atom (car Val))
                         (and (; Rel ub) (setq Val (ubZval Val)))
                         (init Tree Val (append Val T)) )
+                     ((; Rel ub)
+                        (init Tree
+                           (ubZval (car Val))
+                           (ubZval (cdr Val) T) ) )
                      ((>= (cdr Val) (car Val))
                         (init Tree (car Val) (append (cdr Val) T)) )
                      (T (init Tree (append (car Val) T) (cdr Val))) ) )
@@ -314,11 +318,25 @@
          (not (-> @F))
          (bool (apply get (-> @L))) ) ) )
 
-(be range (@N . @L)
+(be ub (@A @R . @L)
    (^ @
-      (let N (-> @N)
+      (let R (-> @R)
          (or
-            (not N)
+            (not R)
+            (let X (apply get (-> @L))
+               (not
+                  (find
+                     '((K V1 V2)
+                        (not (>= V2 (get X K) V1)) )
+                     (-> @A)
+                     (car R)
+                     (cdr R) ) ) ) ) ) ) )
+
+(be range (@R . @L)
+   (^ @
+      (let R (-> @R)
+         (or
+            (not R)
             (let L (-> @L)
                ("range" (car L) (cdr L)) ) ) ) ) )
 
@@ -327,13 +345,13 @@
       ((not L)
          (if (atom X)
             (or
-               (<= (car N) X (cdr N))
-               (>= (car N) X (cdr N)) )
+               (<= (car R) X (cdr R))
+               (>= (car R) X (cdr R)) )
             (find
                '((Y)
                   (or
-                     (<= (car N) Y (cdr N))
-                     (>= (car N) Y (cdr N)) ) )
+                     (<= (car R) Y (cdr R))
+                     (>= (car R) Y (cdr R)) ) )
                X ) ) )
       ((atom X)
          ("range" (get X (car L)) (cdr L)) )
