@@ -1,4 +1,4 @@
-# 02oct13abu
+# 03oct13abu
 # (c) Software Lab. Alexander Burger
 
 # *Dbs *Jnl *Blob upd
@@ -104,10 +104,10 @@
                                     (not (>= V2 (get X K) V1)) )
                                  (: aux)
                                  (cdr X1)
-                                 (cdr X2) ) )
+                                 (if (=T X2) '(T .) (cdr X2)) ) )
                            (link (pass get X)) ) )
-                     (ubZval (copy X1))
-                     (ubZval (copy X2) T) ) )
+                     (and X1 (ubZval (copy @)))
+                     (or (=T X2) (ubZval (copy X2) T)) ) )
                (T
                   (when (isa '+Fold This)
                      (setq X1 (fold X1)  X2 (or (=T X2) (fold X2))) )
