@@ -1,4 +1,4 @@
-# 19sep13abu
+# 04oct13abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -2262,9 +2262,10 @@
             ((=T Able) Del)
             ((=T Del) Able)
             ((and Able Del) (list 'and Able Del)) )
-         (let X (list ': 'home 'obj (fin Var))
-            (list 'text Txt
-               (if (pair Var) (list (car Var) X) X) ) ) )
+         (list 'text Txt
+            (if (pair Var)
+               (list 'with '(: home obj) (car Var))
+               (list ': 'home 'obj Var) ) ) )
       (choButton Dlg)
       (stepBtn (fin Var) Cls Hook Msg) )
    (--) )
