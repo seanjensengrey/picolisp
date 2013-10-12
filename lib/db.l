@@ -1,4 +1,4 @@
-# 03oct13abu
+# 12oct13abu
 # (c) Software Lab. Alexander Burger
 
 # *Dbs *Jnl *Blob upd
@@ -93,21 +93,12 @@
                      '((X) (and (isa Cls X) (link (pass get X))))
                      X1 X2 ) )
                ((: ub)
-                  (iter Tree
-                     '((X)
-                        (and
-                           (isa Cls X)
-                           (>= (car X2) (get X (: var)) (car X1))
-                           (not
-                              (find
-                                 '((K V1 V2)
-                                    (not (>= V2 (get X K) V1)) )
-                                 (: aux)
-                                 (cdr X1)
-                                 (if (=T X2) '(T .) (cdr X2)) ) )
-                           (link (pass get X)) ) )
-                     (and X1 (ubZval (copy @)))
-                     (or (=T X2) (ubZval (copy X2) T)) ) )
+                  (if X1
+                     (ubIter Tree (inc (length (: aux)))
+                        '((X) (and (isa Cls X) (link (pass get X))))
+                        X1 X2 )
+                     (iter Tree
+                        '((X) (and (isa Cls X) (link (pass get X)))) ) ) )
                (T
                   (when (isa '+Fold This)
                      (setq X1 (fold X1)  X2 (or (=T X2) (fold X2))) )

@@ -383,6 +383,78 @@
             ("Fun" (or (cddr "X") (fin (car "X")))) )
          (_reti (cadr "X")) ) ) )
 
+# UB-Trees
+(de ub>= (Dim End Val Beg)
+   (let (D (>> (- 1 Dim) 1)  Pat D)
+      (while (> End Pat)
+         (setq Pat (| D (>> (- Dim) Pat))) )
+      (do Dim
+         (NIL
+            (>=
+               (& Pat End)
+               (& Pat Val)
+               (& Pat Beg) ) )
+         (setq Pat (>> 1 Pat)) ) ) )
+
+(de ubIter ("Tree" "Dim" "Fun" "X1" "X2")
+   (let
+      ("Lst" (val (cdr (root "Tree")))
+         "Left" (pop '"Lst")
+         "Beg" (ubZval (copy "X1"))
+         "End" (ubZval (copy "X2") T)
+         "B" (car "Beg")
+         "E" (car "End") )
+      (recur ("Left" "Lst" "Beg" "End"  "X")
+         (while (setq "X" (pop '"Lst"))
+            (cond
+               ((> (car "X") "End")
+                  (setq "Lst" (; "Left" 0 -1)  "Left" (; "Left" 0 1)) )
+               ((> "Beg" (car "X"))
+                  (if "Lst"
+                     (setq "Left" (cadr "X"))
+                     (setq "Left" (; "X" 2 0 1)  "Lst" (; "X" 2 0 -1)) ) )
+               ((ub>= "Dim" "E" (caar "X") "B")
+                  ("Fun" (cdar "X"))
+                  (recurse (; "Left" 0 1) (; "Left" 0 -1) "Beg" (car "X"))
+                  (setq "Beg" (car "X"))
+                  (if "Lst"
+                     (setq "Left" (cadr "X"))
+                     (setq "Left" (; "X" 2 0 1)  "Lst" (; "X" 2 0 -1)) ) )
+               (T
+                  (let ("Msb" 1  "Pat" 0  "N" 0  "Min" "B"  "Max" "E"  "Lo" (caar "X")  "Hi" "Lo")
+                     (while (>= "Max" "Msb")
+                        (setq "Msb" (>> -1 "Msb")  "Pat" (>> -1 "Pat"))  # Msb 100000000
+                        (when (= "Dim" (inc '"N"))                       # Pat 000100100
+                           (inc '"Pat")
+                           (zero "N") ) )
+                     (catch "ub"                                    # Clr 111..111011011
+                        (let (Top "Msb"   Clr (| Top (x| "Pat" (dec "Msb"))))
+                           (loop
+                              (T (=0 (setq "Msb" (>> 1 "Msb"))))
+                              (setq
+                                 "Pat" (>> 1 "Pat")
+                                 Clr (| Top (>> 1 Clr)) )
+                              (ifn (bit? "Msb" (caar "X"))
+                                 (when (bit? "Msb" "Max")
+                                    (ifn (bit? "Msb" "Min")  # 001
+                                       (setq
+                                          "Max" (- (| "Pat" "Max") "Msb")  # 0111(Max)
+                                          "Lo" (| "Msb" (& "Min" Clr)) )   # 1000(Min)
+                                       (setq "Lo" "Min")     # 011
+                                       (throw "ub") ) )
+                                 (unless (bit? "Msb" "Min")
+                                    (if (bit? "Msb" "Max")   # 101
+                                       (setq
+                                          "Hi" (- (| "Pat" "Max") "Msb")   # 0111(Max)
+                                          "Min" (| "Msb" (& "Min" Clr)) )  # 1000(Min)
+                                       (setq "Hi" "Max")     # 100
+                                       (throw "ub") ) ) ) ) ) )
+                     (recurse (; "Left" 0 1) (; "Left" 0 -1) "Beg" (cons "Hi" T))
+                     (setq "Beg" (cons "Lo"))
+                     (if "Lst"
+                        (setq "Left" (cadr "X"))
+                        (setq "Left" (; "X" 2 0 1)  "Lst" (; "X" 2 0 -1)) ) ) ) ) ) ) ) )
+
 (====)
 
 (de prune (Done)
