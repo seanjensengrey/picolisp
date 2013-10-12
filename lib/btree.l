@@ -1,4 +1,4 @@
-# 26dec12abu
+# 12oct13abu
 # (c) Software Lab. Alexander Burger
 
 # *Prune
@@ -292,8 +292,7 @@
             (if ((if F > <) (car X) (cdar L))
                (con (car Q))
                (for (V (cadr X) ((if F val revNode) V) (car @))
-                  (con L (cons (cdr @) (cdr L)))
-                  (wipe V) )
+                  (con L (cons (cdr @) (cdr L))) )
                (unless (and Flg (flg? (fin (car X))))
                   (throw NIL
                      (or (cddr X) (fin (car X))) ) ) ) ) ) ) )
@@ -323,8 +322,7 @@
             ("Fun"
                (car "X")
                (or (cddr "X") (fin (car "X"))) ) )
-         (_scan (cadr "X")) )
-      (wipe "Node") ) )
+         (_scan (cadr "X")) ) ) )
 
 (de _nacs ("Node")
    (let? "V" (revNode "Node")
@@ -342,8 +340,7 @@
             ("Fun"
                (car "X")
                (or (cddr "X") (fin (car "X"))) ) )
-         (_nacs (cadr "X")) )
-      (wipe "Node") ) )
+         (_nacs (cadr "X")) ) ) )
 
 (====)
 
@@ -368,8 +365,7 @@
          (T (> (car "X") "End"))
          (unless (and "Flg" (flg? (fin (car "X"))))
             ("Fun" (or (cddr "X") (fin (car "X")))) )
-         (_iter (cadr "X")) )
-      (wipe "Node") ) )
+         (_iter (cadr "X")) ) ) )
 
 (de _reti ("Node")
    (let? "V" (revNode "Node")
@@ -385,8 +381,7 @@
          (T (> "End" (car "X")))
          (unless (and "Flg" (flg? (fin (car "X"))))
             ("Fun" (or (cddr "X") (fin (car "X")))) )
-         (_reti (cadr "X")) )
-      (wipe "Node") ) )
+         (_reti (cadr "X")) ) ) )
 
 (====)
 
