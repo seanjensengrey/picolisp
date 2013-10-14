@@ -53,7 +53,7 @@
       "<canvas id=\"" Id
       "\" width=\"" DX
       "\" height=\"" DY
-      "\" onclick=\"drawCanvas(this.id, -128, event.pageX-this.offsetLeft, event.pageY-this.offsetTop)\"" )
+      "\" onclick=\"drawCanvas(this.id, -128, event.layerX-this.offsetLeft, event.layerY-this.offsetTop)\"" )
    (dfltCss "canvas")
    (prinl ">" Alt "</canvas>" ) )
 
