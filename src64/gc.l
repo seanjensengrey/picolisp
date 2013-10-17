@@ -446,26 +446,35 @@
    pop A
    ret
 
-# (gc ['cnt]) -> cnt | NIL
+# (gc ['cnt [cnt2]]) -> cnt | NIL
 (code 'doGc 2)
    push X
+   push Y
    ld X E
-   ld E (E CDR)  # Get arg
-   ld E (E)
+   ld Y (E CDR)  # Y on args
+   ld E (Y)  # Eval first
    eval  # Eval
    cmp E Nil  # Nil?
    if eq  # Yes
       call gc  # Collect with default
    else
-      ld X E  # Save return value in X
+      push E  # Save return value
       call xCntEX_FE  # Else get number of megabytes
       shl E 16  # Multiply with CELLS
-      ld C (GcCount)  # Save default
+      ld (GcCount) E  # Set gc count
+      call gc  # Collect
+      ld Y (Y CDR)  # Next arg?
+      atom Y
+      if nz  # No
+         ld E CELLS  # Standard default
+      else
+         call evCntXY_FE  # New default
+         shl E 16  # Multiply with CELLS
+      end
       ld (GcCount) E  # Set new value
-      call gc  # Collect with given count
-      ld (GcCount) C  # Restore default
-      ld E X
+      pop E
    end
+   pop Y
    pop X
    ret
 
