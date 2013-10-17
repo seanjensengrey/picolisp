@@ -1,4 +1,4 @@
-# 25may13abu
+# 17oct13abu
 # (c) Software Lab. Alexander Burger
 
 # Mark data
@@ -411,7 +411,7 @@
    else  # Zero: Try to free heaps
       ld E Heaps  # Heap list link pointer in E
       do
-         ld A (Avail)  # Keep avail list
+         ld A X  # Keep avail list
          ld C CELLS  # Counter
          lea Z (Y (- HEAP II))  # Z on last cell in chunk
          do
@@ -429,13 +429,14 @@
             lea E (Y HEAP)  # Point to link of next heap
             ld Y (E)  # Next heap
          else
-            ld (Avail) A  # Reset avail list
+            ld X A  # Reset avail list
             ld Y (Y HEAP)  # Next heap
             cc free((E))  # Free empty heap
             ld (E) Y  # Store next heap in list link
          end
          null Y  # Next heap?
       until z  # No
+      ld (Avail) X  # Set new Avail
    end
    pop Z
    pop Y
