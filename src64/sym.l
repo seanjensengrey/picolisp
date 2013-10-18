@@ -1,4 +1,4 @@
-# 28aug13abu
+# 18oct13abu
 # (c) Software Lab. Alexander Burger
 
 ### Compare long names ###
@@ -3284,7 +3284,7 @@
    pop X
    ret
 
-# (wipe 'sym|lst) -> sym
+# (wipe 'sym|lst) -> sym|lst
 (code 'doWipe 2)
    ld E ((E CDR))  # Get arg
    eval  # Eval it

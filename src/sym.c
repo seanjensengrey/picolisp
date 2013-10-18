@@ -1,4 +1,4 @@
-/* 30aug13abu
+/* 18oct13abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -1366,7 +1366,7 @@ static void wipe(any x) {
    }
 }
 
-// (wipe 'sym|lst) -> sym
+// (wipe 'sym|lst) -> sym|lst
 any doWipe(any x) {
    any y;
 
