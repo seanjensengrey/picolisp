@@ -1,4 +1,4 @@
-# 12oct13abu
+# 18oct13abu
 # (c) Software Lab. Alexander Burger
 
 # *Prune
@@ -466,7 +466,8 @@
                (recurse (car V))
                (for X (cdr V)
                   (recurse (cadr X))
-                  (wipe (lieu (cddr X))) ) ) ) ) )
+                  (wipe
+                     (lieu (or (cddr X) (fin (car X)))) ) ) ) ) ) )
    (setq *Prune (not Done)) )
 
 # Delete Tree
