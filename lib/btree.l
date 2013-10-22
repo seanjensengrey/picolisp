@@ -1,4 +1,4 @@
-# 18oct13abu
+# 22oct13abu
 # (c) Software Lab. Alexander Burger
 
 # *Prune
@@ -234,6 +234,7 @@
 (de init (Tree Beg End)
    (or Beg End (on End))
    (let (Node (cdr (root Tree))  Q)
+      (and *Prune (idx '*Prune Node T))
       (use (V R X)
          (if (>= End Beg)
             (loop
@@ -303,8 +304,9 @@
 (de scan ("Tree" "Fun" "Beg" "End" "Flg")
    (default "Fun" println)
    (or "Beg" "End" (on "End"))
-   ((if (>= "End" "Beg") _scan _nacs)
-      (cdr (root "Tree")) ) )
+   (let "Node" (cdr (root "Tree"))
+      (and *Prune (idx '*Prune "Node" T))
+      ((if (>= "End" "Beg") _scan _nacs) "Node") ) )
 
 (de _scan ("Node")
    (let? "V" (val "Node")
@@ -348,8 +350,9 @@
 (de iter ("Tree" "Fun" "Beg" "End" "Flg")
    (default "Fun" println)
    (or "Beg" "End" (on "End"))
-   ((if (>= "End" "Beg") _iter _reti)
-      (cdr (root "Tree")) ) )
+   (let "Node" (cdr (root "Tree"))
+      (and *Prune (idx '*Prune "Node" T))
+      ((if (>= "End" "Beg") _iter _reti) "Node") ) )
 
 (de _iter ("Node")
    (let? "V" (val "Node")
@@ -398,12 +401,14 @@
 
 (de ubIter ("Tree" "Dim" "Fun" "X1" "X2")
    (let
-      ("Lst" (val (cdr (root "Tree")))
+      ("Node" (cdr (root "Tree"))
+         "Lst" (val "Node")
          "Left" (pop '"Lst")
          "Beg" (ubZval (copy "X1"))
          "End" (ubZval (copy "X2") T)
          "B" (car "Beg")
          "E" (car "End") )
+      (and *Prune (idx '*Prune "Node" T))
       (recur ("Left" "Lst" "Beg" "End"  "X")
          (while (setq "X" (pop '"Lst"))
             (cond
