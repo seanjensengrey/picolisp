@@ -1,4 +1,4 @@
-# 23feb13abu
+# 25oct13abu
 # (c) Software Lab. Alexander Burger
 
 # *Home *Gate *Host *Port *Port1 *Port% *Http1 *Chunked
@@ -143,13 +143,13 @@
 (de http (S)
    (use (*Post L @U @H @X)
       (off *Post *Port% *ContLen *Cookies "*Cookies" "*HtSet")
-      (catch "http"
+      (catch 'http
          (in S
             (cond
                ((not (setq L (line)))
                   (task (close S))
                   (off S)
-                  (throw "http") )
+                  (throw 'http) )
                ((match '("G" "E" "T" " " "/" @U " " "H" "T" "T" "P" "/" "1" "." @H) L)
                   (_htHead) )
                ((match '("P" "O" "S" "T" " " "/" @U " " "H" "T" "T" "P" "/" "1" "." @H) L)
@@ -168,7 +168,7 @@
                                     (format (car @))
                                     (unless (out (tmp S) (echo @))
                                        (call 'rm "-f" (tmp S)) ) ) ) ) ) )
-                     (T (throw "http")) ) )
+                     (T (throw 'http)) ) )
                (T
                   (out S
                      (if
@@ -186,7 +186,7 @@
                         (httpStat 400 "Bad Request") ) )
                   (task (close S))
                   (off S)
-                  (throw "http") ) )
+                  (throw 'http) ) )
             (if (or (<> *ConId *SesId) (and *SesAdr (<> @ *Adr)))
                (prog (task (close S)) (off S))
                (setq
@@ -274,7 +274,7 @@
       (setq L (line))
       (while (= *MPartLim L)
          (unless (match '(~(chop "Content-Disposition: form-data; name=") . @X) (line))
-            (throw "http") )
+            (throw 'http) )
          (while (line))
          (cond
             ((not (member ";" @X))
@@ -287,7 +287,7 @@
                               (= *MPartLim (setq L (line)))
                               (= *MPartEnd L) )
                            (when (eof)
-                              (throw "http") )
+                              (throw 'http) )
                            (when (made)
                               (link "^J") )
                            (link (trim L)) ) ) ) ) )
@@ -315,11 +315,11 @@
             (cond
                ((= @Z '("." "x")) (cons (format Val)))
                ((= @Z '("." "y")) (cons NIL (format Val)))
-               (T (msg @Z " bad suffix") (throw "http")) ) ) )
+               (T (msg @Z " bad suffix") (throw 'http)) ) ) )
       (cond
          ((and *Allow (not (idx *Allow "Var")))
             (notAllowed "Var" ':)
-            (throw "http") )
+            (throw 'http) )
          ((not @N)
             (nond
                ((= `(char '*) (char "Var")) (put "Var" 'http Val))
@@ -443,7 +443,7 @@
 
 (de forbidden ()
    (httpStat 403 "No Permission")
-   (throw "http") )
+   (throw 'http) )
 
 (de http404 ()
    (httpStat 404 "Not Found") )
