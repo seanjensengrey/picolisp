@@ -1,4 +1,4 @@
-# 03oct13abu
+# 25oct13abu
 # (c) Software Lab. Alexander Burger
 
 # *JS "*JS" *Style *Menu *Tab *ID
@@ -113,7 +113,7 @@
                (prinl @)
                (prinl "</style>") ) ) )
       (mapc javascript *JS)
-      (and *SesId (javascript NIL "SesId=\"" @ "\";"))
+      (and *SesId (javascript NIL "SesId=\"" @ "\""))
       (prinl "</head>")
       (tag 'body Attr 2 Prg)
       (prinl "</html>") ) )

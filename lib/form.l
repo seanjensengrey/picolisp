@@ -1,4 +1,4 @@
-# 04oct13abu
+# 25oct13abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -299,7 +299,7 @@
          (if "*TZO"
             (tim$ (% (- Tim -86400 @) 86400))
             (javascript NIL
-               "lisp(null, 'tzOffs', (new Date()).getTimezoneOffset());" )
+               "lisp(null, 'tzOffs', (new Date()).getTimezoneOffset())" )
             (pack (tim$ (% Tim 86400)) " UTC") ) ) ) )
 
 # Return chart property
