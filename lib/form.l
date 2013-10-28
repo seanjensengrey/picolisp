@@ -1,4 +1,4 @@
-# 25oct13abu
+# 28oct13abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -1123,12 +1123,13 @@
       (extra "Var") ) )
 
 (dm act> ()
-   (=: drop
-      (and
-         (or *Drop (val> (eval (: "drop"))))
-         (tmp @) ) )
-   (extra)
-   (off *Drop) )
+   (when (able)
+      (=: drop
+         (and
+            (or *Drop (val> (eval (: "drop"))))
+            (tmp @) ) )
+      (extra)
+      (off *Drop) ) )
 
 
 (class +JS)
