@@ -1,4 +1,4 @@
-# 25oct13abu
+# 28oct13abu
 # (c) Software Lab. Alexander Burger
 
 # *JS "*JS" *Style *Menu *Tab *ID
@@ -97,7 +97,6 @@
 (de html (Upd Ttl Css Attr . Prg)
    (httpHead NIL Upd)
    (ht:Out *Chunked
-      ## (xml? T)
       (prinl "<!DOCTYPE html>")
       (prinl "<html lang=\"" (or *Lang "en") "\">")
       (prinl "<head>")
@@ -112,8 +111,8 @@
                (prinl "<style type=\"text/css\">")
                (prinl @)
                (prinl "</style>") ) ) )
-      (mapc javascript *JS)
       (and *SesId (javascript NIL "SesId=\"" @ "\""))
+      (mapc javascript *JS)
       (prinl "</head>")
       (tag 'body Attr 2 Prg)
       (prinl "</html>") ) )
@@ -127,6 +126,18 @@
          (prinl "<script type=\"text/javascript\" src=\"" (srcUrl JS) "\"></script>") )
       (when (rest)
          (prinl "<script type=\"text/javascript\">" @ "</script>") ) ) )
+
+(de prelude (Ttl . @)
+   (let Url (pack (baseHRef) *SesId *Url)
+      (html 0
+         (cons (pack "<meta http-equiv=\"refresh\" content=\"0; url=" Url "\">") Ttl)
+         NIL NIL
+         (prinl "<script type=\"text/javascript\">")
+         (while (args)
+            (prinl (next) ";") )
+         (prinl "</script>")
+         (<href> Ttl Url) ) )
+   (throw 'http) )
 
 (de <div> (Attr . Prg)
    (tag 'div Attr 2 Prg)
