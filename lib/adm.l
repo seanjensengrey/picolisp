@@ -1,4 +1,4 @@
-# 13aug13abu
+# 04nov13abu
 # (c) Software Lab. Alexander Burger
 
 # *Salt *Login *Users *Perms
@@ -54,10 +54,10 @@
       (timeout (setq *Timeout `(* 300 1000))) ) )
 
 (de hi (Pid Nm Adr)
-   (if (and (= Nm (get *Login 'nm)) (= Adr *Adr))
+   (if (and Nm (= Nm (; *Login nm)) (= Adr *Adr))
       (bye)
       (hi2 Pid Nm)
-      (tell 'hi2 *Pid (get *Login 'nm)) ) )
+      (tell 'hi2 *Pid (; *Login nm)) ) )
 
 (de hi2 (Pid Nm)
    (if2 Nm (lup *Users Pid)
@@ -89,12 +89,12 @@
       (def (pop 'Lst) (pop 'Lst)) ) )
 
 (de may Args
-   (mmeq Args (get *Login 'role 'perm)) )
+   (mmeq Args (; *Login role perm)) )
 
 (de must Args
    (unless
       (if (cdr Args)
-         (mmeq @ (get *Login 'role 'perm))
+         (mmeq @ (; *Login role perm))
          *Login )
       (msg *Pid " No permission: " (car Args))
       (forbidden) ) )
