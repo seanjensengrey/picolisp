@@ -1,4 +1,4 @@
-# 28oct13abu
+# 05nov13abu
 # (c) Software Lab. Alexander Burger
 
 # *JS "*JS" *Style *Menu *Tab *ID
@@ -126,18 +126,6 @@
          (prinl "<script type=\"text/javascript\" src=\"" (srcUrl JS) "\"></script>") )
       (when (rest)
          (prinl "<script type=\"text/javascript\">" @ "</script>") ) ) )
-
-(de prelude (Ttl . @)
-   (let Url (pack (baseHRef) *SesId *Url)
-      (html 0
-         (cons (pack "<meta http-equiv=\"refresh\" content=\"0; url=" Url "\">") Ttl)
-         NIL NIL
-         (prinl "<script type=\"text/javascript\">")
-         (while (args)
-            (prinl (next) ";") )
-         (prinl "</script>")
-         (<href> Ttl Url) ) )
-   (throw 'http) )
 
 (de <div> (Attr . Prg)
    (tag 'div Attr 2 Prg)
