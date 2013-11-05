@@ -1,4 +1,4 @@
-# 25oct13abu
+# 05nov13abu
 # (c) Software Lab. Alexander Burger
 
 # *Home *Gate *Host *Port *Port1 *Port% *Http1 *Chunked
@@ -377,6 +377,11 @@
          (and (pop 'L) (prin "; HttpOnly"))
          (prinl) )
       "*Cookies" ) )
+
+(de respond (S)
+   (http1 "application/octet-stream" 0)
+   (prinl "Content-Length: " (size S) "^M^J^M")
+   (prin S) )
 
 (de httpHead (Typ Upd File Att)
    (http1 Typ Upd File Att)

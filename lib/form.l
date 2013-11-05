@@ -1,4 +1,4 @@
-# 28oct13abu
+# 05nov13abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -18,7 +18,8 @@
    ("+---" "-+--" "--+-" "---+" "--+-" "-+--" .) )
 
 (de tzOffs (Min)
-   (setq "*TZO" (* Min 60)) )
+   (setq "*TZO" (* Min 60))
+   (respond) )
 
 # Define GUI form
 (de form ("Attr" . "Prg")
