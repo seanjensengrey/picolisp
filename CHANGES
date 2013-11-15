@@ -1,4 +1,5 @@
 * DDdec13 picoLisp-3.1.5
+   'prune' LRU scheme
    Bug in volatile properties
    'cnt2' argument to 'gc' (64-bit)
    Improved UB-Tree support

@@ -1,4 +1,4 @@
-# 22oct13abu
+# 14nov13abu
 # (c) Software Lab. Alexander Burger
 
 # *Prune
@@ -22,6 +22,7 @@
                (and
                   (setq R (rank Key (cdr (val Node))))
                   (= Key (car R)) )
+               (and *Prune (put Node NIL T))
                (or (cddr R) (fin (car R))) )
             (NIL
                (setq Node (if R (cadr R) (car (val Node)))) ) ) ) ) )
@@ -65,6 +66,7 @@
          (con Root
             (def (new (car Dbf))
                (list NIL (cons Key NIL Val)) ) )
+         (and *Prune (put (cdr Root) NIL T))
          (inc Root) ) ) )
 
 (de _put (Top)
@@ -72,7 +74,10 @@
       (cond
          (R
             (if (= Key (car R))
-               (nil (touch Top) (con (cdr R) Val))
+               (nil
+                  (touch Top)
+                  (and *Prune (put Top NIL T))
+                  (con (cdr R) Val) )
                (let X (memq R V)
                   (if (cadr R)
                      (when (_put @)
@@ -83,6 +88,7 @@
                      (touch Top)
                      (con X
                         (cons (cons Key (cons NIL Val)) (cdr X)) )
+                     (and *Prune (put Top NIL T))
                      (touch Base)
                      (inc Root)
                      (_splitBt) ) ) ) )
@@ -96,6 +102,7 @@
             (touch Top)
             (con V
                (cons (cons Key (cons NIL Val)) (cdr V)) )
+            (and *Prune (put Top NIL T))
             (touch Base)
             (inc Root)
             (_splitBt) ) ) ) )
@@ -467,7 +474,9 @@
       (recur (Node)
          (let? V (val (lieu Node))
             (if (nor (car V) (find cadr (cdr V)))
-               (wipe Node)
+               (if (get Node NIL)
+                  (put Node NIL NIL)
+                  (wipe Node) )
                (recurse (car V))
                (for X (cdr V)
                   (recurse (cadr X))
