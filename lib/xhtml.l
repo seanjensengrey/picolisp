@@ -1,4 +1,4 @@
-# 05nov13abu
+# 16nov13abu
 # (c) Software Lab. Alexander Burger
 
 # *JS "*JS" *Style *Menu *Tab *ID
@@ -349,14 +349,16 @@
                      (glue "; "
                         (cons
                            "position:absolute"
-                           (pack "top:" "Y" "px")
-                           (pack "left:" "X" "px")
+                           (pack "top:" (abs "Y") (if (ge0 "Y") "px" "%"))
+                           (pack "left:" (abs "X") (if (ge0 "X") "px" "%"))
                            (cond
                               ((=0 "DX") "min-width:100%")
-                              ("DX" (pack "width:" @ "px")) )
+                              ("DX"
+                                 (pack "width:" (abs @) (if (ge0 "DX") "px" "%")) ) )
                            (cond
                               ((=0 "DY") "min-height:100%")
-                              ("DY" (pack "height:" @ "px")) )
+                              ("DY"
+                                 (pack "height:" (abs @ ) (if (ge0 "DY")"px" "%")) ) )
                            "Args" ) ) ) )
                (prog1 (if "Cls" (list "Cls" "Style") "Style")  # -> '@'
                   (eval (cadr "L")) )
