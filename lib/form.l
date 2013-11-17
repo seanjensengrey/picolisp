@@ -1,4 +1,4 @@
-# 05nov13abu
+# 17nov13abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -582,17 +582,23 @@
 (dm hint> (Str)
    ((: hint) (extra Str)) )
 
-(de queryHint (Var CL)
+(de queryHint (Var CL Str)
    (make
       (for (Q (goal CL) (prove Q))
          (let V (get (asoq '@@ @) -1 Var)
+            (when (pair V)
+               (setq V
+                  (find
+                     '((S) (pre? (fold Str) (fold S)))
+                     V ) ) )
             (unless (member V (made))
                (link V) ) )
          (T (nth (made) 24)) ) ) )
 
 (de dbHint (Str Var Cls Hook)
    (queryHint Var
-      (cons (list 'db Var Cls Hook Str '@@)) ) )
+      (cons (list 'db Var Cls Hook Str '@@))
+      Str ) )
 
 
 (class +DbHint +Hint)
