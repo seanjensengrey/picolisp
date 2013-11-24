@@ -1,4 +1,4 @@
-# 14nov13abu
+# 23nov13abu
 # (c) Software Lab. Alexander Burger
 
 # *Prune
@@ -18,11 +18,11 @@
       (and *Prune (idx '*Prune Node T))
       (use R
          (loop
+            (and *Prune (set (prop Node NIL) 0))
             (T
                (and
                   (setq R (rank Key (cdr (val Node))))
                   (= Key (car R)) )
-               (and *Prune (put Node NIL T))
                (or (cddr R) (fin (car R))) )
             (NIL
                (setq Node (if R (cadr R) (car (val Node)))) ) ) ) ) )
@@ -66,18 +66,16 @@
          (con Root
             (def (new (car Dbf))
                (list NIL (cons Key NIL Val)) ) )
-         (and *Prune (put (cdr Root) NIL T))
+         (and *Prune (set (prop (cdr Root) NIL) 0))
          (inc Root) ) ) )
 
 (de _put (Top)
+   (and *Prune (set (prop Top NIL) 0))
    (let (V (val Top)  R (rank Key (cdr V)))
       (cond
          (R
             (if (= Key (car R))
-               (nil
-                  (touch Top)
-                  (and *Prune (put Top NIL T))
-                  (con (cdr R) Val) )
+               (nil (touch Top) (con (cdr R) Val))
                (let X (memq R V)
                   (if (cadr R)
                      (when (_put @)
@@ -88,7 +86,6 @@
                      (touch Top)
                      (con X
                         (cons (cons Key (cons NIL Val)) (cdr X)) )
-                     (and *Prune (put Top NIL T))
                      (touch Base)
                      (inc Root)
                      (_splitBt) ) ) ) )
@@ -102,7 +99,6 @@
             (touch Top)
             (con V
                (cons (cons Key (cons NIL Val)) (cdr V)) )
-            (and *Prune (put Top NIL T))
             (touch Base)
             (inc Root)
             (_splitBt) ) ) ) )
@@ -122,6 +118,7 @@
 
 # Del
 (de _del (Top)
+   (and *Prune (set (prop Top NIL) 0))
    (let (V (val Top)  R (rank Key (cdr V)))
       (cond
          ((not R)
@@ -241,7 +238,6 @@
 (de init (Tree Beg End)
    (or Beg End (on End))
    (let (Node (cdr (root Tree))  Q)
-      (and *Prune (idx '*Prune Node T))
       (use (V R X)
          (if (>= End Beg)
             (loop
@@ -312,7 +308,6 @@
    (default "Fun" println)
    (or "Beg" "End" (on "End"))
    (let "Node" (cdr (root "Tree"))
-      (and *Prune (idx '*Prune "Node" T))
       ((if (>= "End" "Beg") _scan _nacs) "Node") ) )
 
 (de _scan ("Node")
@@ -358,7 +353,6 @@
    (default "Fun" println)
    (or "Beg" "End" (on "End"))
    (let "Node" (cdr (root "Tree"))
-      (and *Prune (idx '*Prune "Node" T))
       ((if (>= "End" "Beg") _iter _reti) "Node") ) )
 
 (de _iter ("Node")
@@ -415,7 +409,6 @@
          "End" (ubZval (copy "X2") T)
          "B" (car "Beg")
          "E" (car "End") )
-      (and *Prune (idx '*Prune "Node" T))
       (recur ("Left" "Lst" "Beg" "End"  "X")
          (while (setq "X" (pop '"Lst"))
             (cond
@@ -469,20 +462,16 @@
 
 (====)
 
-(de prune (Done)
+(de prune (N)
    (for Node (idx '*Prune)
       (recur (Node)
          (let? V (val (lieu Node))
-            (if (nor (car V) (find cadr (cdr V)))
-               (if (get Node NIL)
-                  (put Node NIL NIL)
-                  (wipe Node) )
+            (if (>= (inc (prop Node NIL)) N)
+               (wipe Node)
                (recurse (car V))
                (for X (cdr V)
-                  (recurse (cadr X))
-                  (wipe
-                     (lieu (or (cddr X) (fin (car X)))) ) ) ) ) ) )
-   (setq *Prune (not Done)) )
+                  (recurse (cadr X)) ) ) ) ) )
+   (or (gt0 N) (setq *Prune N)) )
 
 # Delete Tree
 (de zapTree (Node)
