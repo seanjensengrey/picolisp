@@ -1,4 +1,4 @@
-# 16nov13abu
+# 25nov13abu
 # (c) Software Lab. Alexander Burger
 
 # *JS "*JS" *Style *Menu *Tab *ID
@@ -719,7 +719,7 @@
    (ht:Prin S)
    (prin "\"")
    (when *JS
-      (prin " onmousedown=\"inBtn(1)\" onblur=\"inBtn(0)\"")
+      (prin " onmousedown=\"inBtn(this,1)\" onblur=\"inBtn(this,0)\"")
       (and JS (prin " onclick=\"return doBtn(this)\""))
       (htJs) )
    (dfltCss "submit")
@@ -731,7 +731,7 @@
    (and "Var" (space) (htmlVar "Var"))
    (prin " src=\"" (sesId Src) "\"")
    (when *JS
-      (prin " onmousedown=\"inBtn(1)\" onblur=\"inBtn(0)\"")
+      (prin " onmousedown=\"inBtn(this,1)\" onblur=\"inBtn(this,0)\"")
       (and JS (prin " onclick=\"return doBtn(this)\""))
       (htJs) )
    (dfltCss "image")
