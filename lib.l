@@ -1,4 +1,4 @@
-# 30oct13abu
+# 29nov13abu
 # (c) Software Lab. Alexander Burger
 
 (de task (Key . Prg)
@@ -317,6 +317,8 @@
       (let Z X
          (prin "(")
          (cond
+            ((and (pair (car X)) (> (size @) 12))
+               (pretty (pop 'X) (- -3 N)) )
             ((memq (print (pop 'X)) *PP)
                (cond
                   ((memq (car Z) *PP1)
