@@ -320,7 +320,7 @@ to <code>fun1</code>. Each result of <code>fun1</code> is CONSed with its
 corresponding argument form the original <code>lst</code>, and collected into a
 list which is passed to <code>fun2</code>. For the list returned from
 <code>fun2</code>, the CAR elements returned by <code>fun1</code> are
-(destructively) removed from each element ("decorate-sort-undecorate" idiom).
+(destructively) removed from each element ("decorate-apply-undecorate" idiom).
 
 <pre><code>
 : (let (A 1 B 2 C 3) (by val sort '(C A B)))
