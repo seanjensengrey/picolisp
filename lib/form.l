@@ -1,4 +1,4 @@
-# 17nov13abu
+# 02dec13abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -9,7 +9,7 @@
 (mapc allow
    (quote
       *Gui *Get *Got *Form "!jsForm" *Evt *Drop
-      *JsHint "!jsHint" *JsArgs "!tzOffs" ) )
+      *JsHint "!jsHint" jsUp jsDn *JsArgs "!tzOffs" ) )
 
 (one "*Cnt")
 (off "*Lst" "*Post2" "*Cho" "*TZO")
@@ -307,7 +307,15 @@
 (de chart @
    (pass get "*Chart") )
 
-# Table highlighting
+# Table extensions
+(patch (cdr <table>)
+   'Attr
+   '(if (== Attr 'chart)
+      '(chart
+         ("ontouchstart" . "return tblTouch(event)")
+         ("ontouchmove" . "return tblMove(this,event)") )
+      Attr ) )
+
 (daemon '<table>
    (on "rowF") )
 
@@ -1170,6 +1178,9 @@
       (or Lbl ">")
       (list 'scroll> (lit "*Chart") Exe) ) )
 
+(de jsDn ()
+   (when (> (length (; "*Chart" data)) (; "*Chart" ofs))
+      (scroll> "*Chart" 1) ) )
 
 (class +UpButton +Tiny +Rid +JS +Able +Button)
 
@@ -1178,6 +1189,10 @@
       '(> (chart 'ofs) 1)
       (or Lbl "<")
       (list 'scroll> (lit "*Chart") (list '- Exe)) ) )
+
+(de jsUp ()
+   (when (> (; "*Chart" ofs) 1)
+      (scroll> "*Chart" -1) ) )
 
 (class +GoButton +Tiny +Rid +JS +Able +Button)
 
