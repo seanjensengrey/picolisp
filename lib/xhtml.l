@@ -127,10 +127,8 @@
       (when (rest)
          (prinl "<script type=\"text/javascript\">" @ "</script>") ) ) )
 
-(de <viewport> ()
-   (prinl "<meta name=\"viewport\" \
-      content=\"width=device-width, \
-      user-scalable=no\"/>" ) )
+(de <viewport> .
+   "<meta name=\"viewport\" content=\"width=device-width, user-scalable=no\"/>" )
 
 (de <div> (Attr . Prg)
    (tag 'div Attr 2 Prg)
