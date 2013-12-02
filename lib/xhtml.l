@@ -1,4 +1,4 @@
-# 25nov13abu
+# 02dec13abu
 # (c) Software Lab. Alexander Burger
 
 # *JS "*JS" *Style *Menu *Tab *ID
@@ -126,6 +126,11 @@
          (prinl "<script type=\"text/javascript\" src=\"" (srcUrl JS) "\"></script>") )
       (when (rest)
          (prinl "<script type=\"text/javascript\">" @ "</script>") ) ) )
+
+(de <viewport> ()
+   (prinl "<meta name=\"viewport\" \
+      content=\"width=device-width, \
+      user-scalable=no\"/>" ) )
 
 (de <div> (Attr . Prg)
    (tag 'div Attr 2 Prg)
