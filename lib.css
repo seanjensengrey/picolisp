@@ -1,4 +1,4 @@
-/* 07aug13abu
+/* 03dec13abu
  * 17nov12jk
  * (c) Software Lab. Alexander Burger
  */
@@ -105,6 +105,41 @@ a:hover {
 .menu .sub1, .top1, .sub2, .top2, .sub3, .top3, .sub4, .top4 {
    list-style-position: inside;
    padding: 0 0 0 1em;
+}
+
+.bar {
+   white-space: nowrap;
+}
+
+.bar ul {
+   list-style: none;
+   padding: 0;
+   margin: 0;
+}
+
+.bar li {
+   float: left;
+   //display: block;
+   position: relative;
+   background-color: #d0d0d0;
+}
+
+.bar li ul {
+   //display: block;
+   position: absolute;
+}
+
+.bar li ul li {
+   clear:both;
+}
+
+.bar .cmd, .act, .sub, .top {
+   padding: 1ex;
+}
+
+.bar .act {
+   list-style-position: inside;
+   list-style-type: disc;
 }
 
 #expires {

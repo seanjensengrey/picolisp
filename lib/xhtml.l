@@ -1,4 +1,4 @@
-# 02dec13abu
+# 03dec13abu
 # (c) Software Lab. Alexander Burger
 
 # *JS "*JS" *Style *Menu *Tab *ID
@@ -410,6 +410,30 @@
                               (urlMT *Url (x| M *Menu) *Tab *ID) ) )
                         (setq M (>> -1 M))
                         (recurse (cddr L) (inc N) (inc E)) ) ) ) ) ) ) ) )
+
+(de <bar> Lst
+   (use U
+      (<ul> NIL
+         (for (M . L) Lst
+            (if (= M *Menu)
+               (<li> "top"
+                  (<href>
+                     (eval (car L) 1)
+                     (urlMT *Url 0 *Tab *ID) )
+                  (<ul> NIL
+                     (for L (cdr L)
+                        (if (setq U (eval (cadr L) 1))
+                           (<li> (if (= U *Url) "act" "cmd")
+                              (<href> (eval (car L) 1)
+                                 (urlMT U 0 (if (= U *Url) *Tab 1)
+                                    (eval (caddr L))
+                                    (eval (cadddr L)) ) ) )
+                           (<li> "cmd"
+                              (ht:Prin (eval (car L) 1)) ) ) ) ) )
+               (<li> "sub"
+                  (<href>
+                     (eval (car L) 1)
+                     (urlMT *Url M *Tab *ID) ) ) ) ) ) ) )
 
 # Update link
 (de updLink ()

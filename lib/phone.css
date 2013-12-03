@@ -1,4 +1,4 @@
-/* 02dec13abu
+/* 03dec13abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -12,6 +12,11 @@
 
 body {
    font-size: larger;
+}
+
+/* Main area */
+.main {
+   padding: 0;
 }
 
 /* Charts */
