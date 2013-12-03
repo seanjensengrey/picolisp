@@ -135,7 +135,7 @@ a:hover {
 
 .bar .cmd, .act, .sub, .top {
    z-index: 9999;
-   padding: 1ex;
+   padding: 6px;
 }
 
 .bar .act {
