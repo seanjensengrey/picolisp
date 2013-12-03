@@ -1,4 +1,4 @@
-# 05nov13abu
+# 03dec13abu
 # (c) Software Lab. Alexander Burger
 
 # *Home *Gate *Host *Port *Port1 *Port% *Http1 *Chunked
@@ -9,6 +9,8 @@
 (default
    *HPorts 0
    *Timeout (* 300 1000) )
+
+(mapc allow '(*Adr *Gate *Host))
 
 (zero *Http1)
 
@@ -226,13 +228,6 @@
                      (T (httpEcho *Url "application/octet-stream" 1 T)) ) ) ) ) )
       (and S (=0 *Http1) (task (close S))) ) )
 
-(de _htHost H
-   (setq *Host
-      (cond
-         (*Gate H)
-         ((index ":" H) (head (dec @) H))
-         (T H) ) ) )
-
 (de _htHead ()
    (use (L @X @Y Pil)
       (setq *Http1 (format (car @H))  *Chunked (gt0 *Http1)  Pil)
@@ -245,7 +240,12 @@
       (while (setq L (line))
          (cond
             ((match '(~(chop "Host: ") . @X) L)
-               (fifo 'Pil (cons '_htHost @X)) )
+               (fifo 'Pil
+                  (cons '("*" "H" "o" "s" "t")
+                     (cond
+                        (*Gate @X)
+                        ((index ":" @X) (head (dec @) @X))
+                        (T @X) ) ) ) )
             ((match '(~(chop "Referer: ") . @X) L)
                (setq *Referer @X) )
             ((match '(~(chop "Cookie: ") . @X) L)
@@ -264,9 +264,9 @@
                   *MPartLim (append '(- -) @X)
                   *MPartEnd (append *MPartLim '(- -)) ) )
             ((match '(~(chop "X-Pil: ") @X "=" . @Y) L)
-               (fifo 'Pil (list 'setq (intern (pack @X)) (htArg @Y))) ) ) )
-      (while Pil
-         (eval (fifo 'Pil)) ) ) )
+               (fifo 'Pil (cons @X (pack @Y))) ) ) )
+      (while (fifo 'Pil)
+         (_htSet (car @) (cdr @)) ) ) )
 
 # rfc1867 multipart/form-data
 (de _htMultipart ()
