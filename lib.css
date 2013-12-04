@@ -1,4 +1,4 @@
-/* 03dec13abu
+/* 04dec13abu
  * 17nov12jk
  * (c) Software Lab. Alexander Burger
  */
@@ -131,6 +131,8 @@ a:hover {
 
 .bar li ul li {
    clear:both;
+   width: 100%;
+   margin: 0 1ex;
 }
 
 .bar .cmd, .act, .sub, .top {
