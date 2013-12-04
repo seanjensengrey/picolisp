@@ -1,4 +1,4 @@
-# 03dec13abu
+# 04dec13abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -294,8 +294,7 @@
 
 (span expires
    (pack
-      "TimeOut"
-      " "
+      `(char 8230)  # Ellipsis
       (let Tim (+ (time T) (/ (cadr (assoc -1 *Run)) 1000))
          (if "*TZO"
             (tim$ (% (- Tim -86400 @) 86400))

@@ -1,4 +1,4 @@
-/* 03dec13abu
+/* 04dec13abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -12,6 +12,10 @@
 
 body {
    font-size: larger;
+}
+
+#expires {
+   font-size: smaller;
 }
 
 /* Main area */
