@@ -1,4 +1,4 @@
-/* 04dec13abu
+/* 05dec13abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -26,9 +26,4 @@ body {
 /* Charts */
 .chart {
    font-size: smaller;
-   white-space: normal;
-}
-
-td {
-   white-space: normal;
 }
