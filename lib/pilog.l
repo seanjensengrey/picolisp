@@ -1,4 +1,4 @@
-# 03oct13abu
+# 05dec13abu
 # (c) Software Lab. Alexander Burger
 
 # *Rule
@@ -175,6 +175,8 @@
    (let (Tree (tree Var Cls Hook)  Rel (get Cls Var))
       (when (find '((B) (isa '+index B)) (get Rel 'bag))
          (setq Rel @) )
+      (when (isa '+Fold Rel)
+         (setq Val (fold Val)) )
       (cond
          ((pair Val)
             (cond
@@ -229,13 +231,9 @@
    (^ @Q
       (box
          (with (or (get (-> @Cls) (-> @Var)) (meta (-> @Cls) (-> @Var)))
-            (cond
-               ((: hook)
-                  (initQuery (: var) (: cls) (-> @X) '(NIL . T)) )
-               ((isa '+Fold This)
-                  (initQuery (: var) (: cls) NIL (fold (-> @X))) )
-               (T
-                  (initQuery (: var) (: cls) NIL (-> @X)) ) ) ) ) )
+            (if (: hook)
+               (initQuery (: var) (: cls) (-> @X) '(NIL . T))
+               (initQuery (: var) (: cls) NIL (-> @X)) ) ) ) )
    (_db @Obj) )
 
 # (db var cls hook val obj)
@@ -243,10 +241,7 @@
    (^ @Q
       (box
          (with (or (get (-> @Cls) (-> @Var)) (meta (-> @Cls) (-> @Var)))
-            (initQuery (: var) (: cls) (-> @Hook)
-               (if (isa '+Fold This)
-                  (fold (-> @Val))
-                  (-> @Val) ) ) ) ) )
+            (initQuery (: var) (: cls) (-> @Hook) (-> @Val)) ) ) )
    (_db @Obj) )
 
 (be _db (@Obj)
@@ -511,14 +506,11 @@
 
 (de "initSel" ()
    (with (treeRel Var Cls)
-      (cond
-         ((isa '+Fold This)
-            (initQuery Var (: cls) Hook (fold Val)) )
-         ((isa '+Sn This)
-            (conc
-               (initQuery Var (: cls) Hook Val)
-               (initQuery Var (: cls) Hook (ext:Snx Val)) ) )
-         (T (initQuery Var (: cls) Hook Val)) ) ) )
+      (if (isa '+Sn This)
+         (conc
+            (initQuery Var (: cls) Hook Val)
+            (initQuery Var (: cls) Hook (ext:Snx Val)) )
+         (initQuery Var (: cls) Hook Val) ) ) )
 
 (de _gen (Lst Q)
    (cond
