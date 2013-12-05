@@ -1,4 +1,4 @@
-# 04dec13abu
+# 05dec13abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -595,7 +595,7 @@
          (let V (get (asoq '@@ @) -1 Var)
             (when (pair V)
                (setq V
-                  (find
+                  (fish
                      '((S) (pre? (fold Str) (fold S)))
                      V ) ) )
             (unless (member V (made))
