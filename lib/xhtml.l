@@ -1,4 +1,4 @@
-# 04dec13abu
+# 05dec13abu
 # (c) Software Lab. Alexander Burger
 
 # *JS "*JS" *Style *Menu *Tab *ID
@@ -100,6 +100,7 @@
       (prinl "<!DOCTYPE html>")
       (prinl "<html lang=\"" (or *Lang "en") "\">")
       (prinl "<head>")
+      (prinl "<meta name=\"viewport\" content=\"width=device-width\"/>")
       (and (fin Ttl) (<tag> 'title NIL @) (prinl))
       (mapc prinl Ttl)
       (and *Host *Port (prinl "<base href=\"" (baseHRef) "\"/>"))
@@ -126,9 +127,6 @@
          (prinl "<script type=\"text/javascript\" src=\"" (srcUrl JS) "\"></script>") )
       (when (rest)
          (prinl "<script type=\"text/javascript\">" @ "</script>") ) ) )
-
-(de <viewport> .
-   "<meta name=\"viewport\" content=\"width=device-width, user-scalable=no\"/>" )
 
 (de <div> (Attr . Prg)
    (tag 'div Attr 2 Prg)
