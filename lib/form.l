@@ -1397,7 +1397,7 @@
 # split
 
 (dm T (Lst . @)
-   (=: split Lst)
+   (=: split (or Lst '(" ")))
    (pass super) )
 
 (dm set> (Val Dn)
