@@ -592,12 +592,10 @@
 (de queryHint (Var CL Str)
    (make
       (for (Q (goal CL) (prove Q))
-         (let V (get (asoq '@@ @) -1 Var)
-            (when (pair V)
-               (setq V
-                  (find
-                     '((S) (pre? (fold Str) (fold S)))
-                     V ) ) )
+         (for V
+            (fish
+               '((S) (and (atom S) (sub? (fold Str) (fold S))))
+               (get (asoq '@@ @) -1 Var) )
             (unless (member V (made))
                (link V) ) )
          (T (nth (made) 24)) ) ) )
