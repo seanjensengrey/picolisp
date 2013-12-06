@@ -1,4 +1,4 @@
-# 05dec13abu
+# 06dec13abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -595,7 +595,7 @@
          (let V (get (asoq '@@ @) -1 Var)
             (when (pair V)
                (setq V
-                  (fish
+                  (find
                      '((S) (pre? (fold Str) (fold S)))
                      V ) ) )
             (unless (member V (made))
@@ -1397,7 +1397,7 @@
 # split
 
 (dm T (Lst . @)
-   (=: split (or Lst '(" ")))
+   (=: split (or Lst '(" " "^I" "^J")))
    (pass super) )
 
 (dm set> (Val Dn)
