@@ -1,4 +1,4 @@
-# 06dec13abu
+# 08dec13abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -12,7 +12,7 @@
       *JsHint "!jsHint" jsUp jsDn *JsArgs "!tzOffs" ) )
 
 (one "*Cnt")
-(off "*Lst" "*Post2" "*Cho" "*TZO")
+(off "*Lst" "*Post2" "*Chart" "*Cho" "*TZO")
 
 (de *Throbber
    ("+---" "-+--" "--+-" "---+" "--+-" "-+--" .) )
@@ -50,7 +50,6 @@
             (<hidden> '*Form *Form)
             (<hidden> '*Evt (: evt))
             (zero "*Ix")
-            (off "*Chart")
             (if *PRG
                (let gui
                   '(()
@@ -105,6 +104,7 @@
                               (show> This (cons '*Gui (: id))) ) )
                         This ) )
                   (htPrin "Prg") ) ) )
+         (off "*Chart")
          (--)
          (eval (: show)) ) ) )
 
@@ -114,7 +114,7 @@
 
 # Handle form actions
 (de action "Prg"
-   (off "*Foc")
+   (off "*Chart" "*Foc")
    (or *PRG "*Post2" (off "*Err"))
    (catch "stop"
       (nond
@@ -309,10 +309,11 @@
 # Table extensions
 (patch (cdr <table>)
    'Attr
-   '(if (== Attr 'chart)
-      '(chart
-         ("ontouchstart" . "return tblTouch(event)")
-         ("ontouchmove" . "return tblMove(this,event)") )
+   '(if "*Chart"
+      (list
+         '("ontouchstart" . "return tblTouch(event)")
+         '("ontouchmove" . "return tblMove(this,event)")
+         Attr )
       Attr ) )
 
 (daemon '<table>
