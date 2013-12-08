@@ -1,4 +1,4 @@
-# 04nov13abu
+# 08dec13abu
 # (c) Software Lab. Alexander Burger
 
 # *Salt *Login *Users *Perms
@@ -116,6 +116,6 @@
       (when *Login
          (<nbsp> 4)
          (<span> "bold green"
-            (<big> (ht:Prin "'" (; *Login nm) ,"' logged in")) ) ) ) )
+            (ht:Prin "'" (; *Login nm) ,"' logged in") ) ) ) )
 
 # vi:et:ts=3:sw=3
