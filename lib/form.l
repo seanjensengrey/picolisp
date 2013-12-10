@@ -1,4 +1,4 @@
-# 08dec13abu
+# 10dec13abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -2205,7 +2205,7 @@
 
 # DB query chart
 (class +QueryChart +Chart)
-# iniR iniq query
+# iniR iniQ query
 
 # (iniR iniQ cols [put [get]])
 (dm T (R Q . @)
