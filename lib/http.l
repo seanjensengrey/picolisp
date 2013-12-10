@@ -1,4 +1,4 @@
-# 03dec13abu
+# 09dec13abu
 # (c) Software Lab. Alexander Burger
 
 # *Home *Gate *Host *Port *Port1 *Port% *Http1 *Chunked
@@ -229,8 +229,8 @@
       (and S (=0 *Http1) (task (close S))) ) )
 
 (de _htHead ()
-   (use (L @X @Y Pil)
-      (setq *Http1 (format (car @H))  *Chunked (gt0 *Http1)  Pil)
+   (use (L @X @Y)
+      (setq *Http1 (format (car @H))  *Chunked (gt0 *Http1))
       (if (index "~" @U)
          (setq
             *ConId (head @ @U)
@@ -240,12 +240,7 @@
       (while (setq L (line))
          (cond
             ((match '(~(chop "Host: ") . @X) L)
-               (fifo 'Pil
-                  (cons '("*" "H" "o" "s" "t")
-                     (cond
-                        (*Gate @X)
-                        ((index ":" @X) (head (dec @) @X))
-                        (T @X) ) ) ) )
+               (setq *Host @X) )
             ((match '(~(chop "Referer: ") . @X) L)
                (setq *Referer @X) )
             ((match '(~(chop "Cookie: ") . @X) L)
@@ -264,9 +259,9 @@
                   *MPartLim (append '(- -) @X)
                   *MPartEnd (append *MPartLim '(- -)) ) )
             ((match '(~(chop "X-Pil: ") @X "=" . @Y) L)
-               (fifo 'Pil (cons @X (pack @Y))) ) ) )
-      (while (fifo 'Pil)
-         (_htSet (car @) (cdr @)) ) ) )
+               (_htSet @X (ht:Pack @Y)) ) ) )
+      (unless *Gate
+         (and (member ":" *Host) (con (prior @ *Host))) ) ) )
 
 # rfc1867 multipart/form-data
 (de _htMultipart ()
