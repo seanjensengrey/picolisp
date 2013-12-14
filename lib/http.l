@@ -1,8 +1,8 @@
-# 09dec13abu
+# 14dec13abu
 # (c) Software Lab. Alexander Burger
 
 # *Home *Gate *Host *Port *Port1 *Port% *Http1 *Chunked
-# *Sock *Agent *ContLen *MPartLim *MPartEnd "*HtSet"
+# *Sock *Agent *ContL *ContLen *MPartLim *MPartEnd "*HtSet"
 # *Post *Url *Timeout *SesAdr *SesId *ConId
 # *Referer *Cookies "*Cookies"
 
@@ -10,7 +10,7 @@
    *HPorts 0
    *Timeout (* 300 1000) )
 
-(mapc allow '(*Adr *Gate *Host))
+(mapc allow '(*Adr *Gate *Host *ContL))
 
 (zero *Http1)
 
@@ -144,7 +144,7 @@
 # Handle HTTP-Transaction
 (de http (S)
    (use (*Post L @U @H @X)
-      (off *Post *Port% *ContLen *Cookies "*Cookies" "*HtSet")
+      (off *Post *Port% *ContL *ContLen *Cookies "*Cookies" "*HtSet")
       (catch 'http
          (in S
             (cond
@@ -161,7 +161,7 @@
                   (cond
                      (*MPartLim (_htMultipart))
                      ((=0 *ContLen))
-                     ((if *ContLen (ht:Read @) (line))
+                     ((cond (*ContL (line)) (*ContLen (ht:Read @)))
                         (for L (split @ '&)
                            (when (setq L (split L "="))
                               (let? S (_htSet (car L) (ht:Pack (cadr L)))

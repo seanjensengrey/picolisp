@@ -1,4 +1,4 @@
-# 10dec13abu
+# 14dec13abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -8,7 +8,7 @@
 (push1 '*JS (allow "@lib/form.js"))
 (mapc allow
    (quote
-      *Gui *Get *Got *Form "!jsForm" *Evt *Drop *ContLen
+      *Gui *Get *Got *Form "!jsForm" *Evt *Drop
       *JsHint "!jsHint" jsUp jsDn *JsArgs "!tzOffs" ) )
 
 (one "*Cnt")
