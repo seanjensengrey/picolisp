@@ -1,4 +1,4 @@
-# 08dec13abu
+# 26dec13abu
 # (c) Software Lab. Alexander Burger
 
 # *Salt *Login *Users *Perms
@@ -27,16 +27,16 @@
                         (range (char "a") (char "z")) ) )
                   (inc (& 63 (rd 1))) ) ) ) ) ) )
 
-(de auth (Nm Pw)
-   (with (db 'nm '+User Nm)
+(de auth (Nm Pw Cls)
+   (with (db 'nm (or Cls '+User) Nm)
       (and
          (: pw 0)
          (= @ (passwd Pw @))
          This ) ) )
 
 ### Login ###
-(de login (Nm Pw)
-   (ifn (setq *Login (auth Nm Pw))
+(de login (Nm Pw Cls)
+   (ifn (setq *Login (auth Nm Pw Cls))
       (msg *Pid " ? " Nm)
       (msg *Pid " * " (stamp) " " Nm)
       (tell 'hi *Pid Nm *Adr)
