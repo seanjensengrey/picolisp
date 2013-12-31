@@ -1,4 +1,6 @@
-* DDdec13 picoLisp-3.1.5
+* XXmar14 picoLisp-3.1.6
+
+* 31dec13 picoLisp-3.1.5
    Phone GUI support
    'prune' LRU scheme
    Bug in volatile properties
