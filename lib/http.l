@@ -1,4 +1,4 @@
-# 14dec13abu
+# 01jan14abu
 # (c) Software Lab. Alexander Burger
 
 # *Home *Gate *Host *Port *Port1 *Port% *Http1 *Chunked
@@ -121,9 +121,9 @@
             (and *Tmp (pre? *Tmp *Url))
             (find pre? (cdr *Allow) (circ *Url)) ) ) ) )
 
-(de notAllowed (X S)
+(de notAllowed (X)
    (unless (= X "favicon.ico")
-      (msg X S " [" *Adr "] not allowed") ) )
+      (msg X " [" *Adr "] not allowed") ) )
 
 # Application startup
 (de app ()
@@ -296,44 +296,35 @@
                   (out "/dev/null" (echo (pack "^M^J" *MPartLim))) )
                (setq L (if (= "-" (car (line))) *MPartEnd *MPartLim)) ) ) ) ) )
 
-(de _htSet ("Var" Val)
-   (let (@N NIL  @Z NIL  @V)
-      (setq "Var"
-         (intern
-            (ht:Pack
-               (ifn (match '(@V ":" @N ":" @Z) "Var")
-                  "Var"
-                  (setq @N (format @N))
-                  @V ) ) ) )
-      (when @Z
-         (setq Val
-            (cond
-               ((= @Z '("." "x")) (cons (format Val)))
-               ((= @Z '("." "y")) (cons NIL (format Val)))
-               (T (msg @Z " bad suffix") (throw 'http)) ) ) )
+(de _htSet (L Val)
+   (let "Var" (intern (ht:Pack (car (setq L (split L ":")))))
       (cond
          ((and *Allow (not (idx *Allow "Var")))
-            (notAllowed "Var" ':)
+            (notAllowed "Var")
             (throw 'http) )
-         ((not @N)
-            (nond
-               ((= `(char '*) (char "Var")) (put "Var" 'http Val))
-               ((and @Z (val "Var")) (set "Var" Val))
-               ((car Val) (con (val "Var") (cdr Val)))
-               (NIL (set (val "Var") (car Val))) ) )
-         ((not (memq "Var" "*HtSet"))
-            (push '"*HtSet" "Var")
-            (set "Var" (cons (cons @N Val)))
-            Val )
-         ((assoc @N (val "Var"))
-            (let X @
-               (cond
-                  ((nand @Z (cdr X)) (con X Val))
-                  ((car Val) (set (cdr X) @))
-                  (T (con (cdr X) (cdr Val))) ) ) )
+         ((cadr L)
+            (let? N (format (car (setq L (split @ "."))))
+               (case (caadr L)
+                  ("x" (setq Val (cons (format Val))))
+                  ("y" (setq Val (cons NIL (format Val)))) )
+               (nond
+                  ((memq "Var" "*HtSet")
+                     (push '"*HtSet" "Var")
+                     (set "Var" (cons (cons N Val)))
+                     Val )
+                  ((assoc N (val "Var"))
+                     (queue "Var" (cons N Val))
+                     Val )
+                  (NIL
+                     (let X @
+                        (cond
+                           ((nand (cadr L) (cdr X)) (con X Val))
+                           ((car Val) (set (cdr X) @))
+                           (T (con (cdr X) (cdr Val))) ) ) ) ) ) )
          (T
-            (queue "Var" (cons @N Val))
-            Val ) ) ) )
+            (if (= "*" (caar L))
+               (set "Var" Val)
+               (put "Var" 'http Val) ) ) ) ) )
 
 (de htArg (Lst)
    (case (car Lst)

@@ -1,4 +1,4 @@
-# 05dec13abu
+# 01jan14abu
 # (c) Software Lab. Alexander Burger
 
 # *JS "*JS" *Style *Menu *Tab *ID
@@ -612,7 +612,7 @@
 (de htmlVar ("Var")
    (prin "name=\"")
    (if (pair "Var")
-      (prin (car "Var") ":" (cdr "Var") ":")
+      (prin (car "Var") ":" (cdr "Var"))
       (prin "Var") )
    (prin "\"") )
 
