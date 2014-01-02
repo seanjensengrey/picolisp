@@ -1,4 +1,4 @@
-# 14dec13abu
+# 02jan14abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -172,13 +172,13 @@
                         (= (cdr "*Stat") (get "*Lst" (- "*Cnt" *Get))) )
                      (ht:Out *Chunked
                         (when (: auto)
-                           (prin "i" *Form '- (: auto 1 id) ': (: auto -1))
+                           (prin "i" *Form "-" (: auto 1 id) ":" (: auto -1))
                            (=: auto) )
                         (for S *Spans
-                           (prin '& (car S) '& (run (cdr S))) )
+                           (prin "&" (car S) "&" (run (cdr S))) )
                         (for This (: gui)
                            (if (: id)
-                              (prin '& "i" *Form '- @ '& (js> This))
+                              (prin "&i" *Form "-" @ "&" (js> This))
                               (setq "*Chart" This) ) ) )
                      (setq "*Post2" (cons *Get *Form *PRG))
                      (ht:Out *Chunked (prin T)) ) ) )
@@ -190,7 +190,7 @@
                ((disallowed)
                   (notAllowed *Url)
                   (http404) )
-               ((= '! (car Url))
+               ((= "!" (car Url))
                   ((intern (pack (cdr Url)))) )
                ((tail '("." "l") Url)
                   (load *Url) ) ) ) ) ) )
@@ -269,18 +269,18 @@
 (de url (Url . @)
    (when Url
       (off *PRG)
-      (redirect (baseHRef) *SesId Url '?
+      (redirect (baseHRef) *SesId Url "?"
          (pack
             (make
                (loop
                   (and
                      (sym? (next))
                      (= `(char '*) (char (arg)))
-                     (link (arg) '=)
+                     (link (arg) "=")
                      (next) )
                   (link (ht:Fmt (arg)))
                   (NIL (args))
-                  (link '&) ) ) ) )
+                  (link "&") ) ) ) )
       (throw "stop") ) )
 
 # Actve <span> elements
@@ -498,7 +498,7 @@
 (dm show> ("Var")
    (if (: act)
       (super "Var")
-      (<style> (cons 'id (pack "i" *Form '- (: id)))
+      (<style> (cons 'id (pack "i" *Form "-" (: id)))
          (if (try (: msg) (: obj) 1)
             (<tip> "-->" (<href> "@" (mkUrl @)))
             (<span> *Style "@") ) ) ) )
@@ -576,7 +576,7 @@
                   (car L)
                   (caar L) ) ) )
          (for X (cdr L)
-            (prin '&
+            (prin "&"
                (ht:Fmt (if (atom X) X (car X))) ) ) ) ) )
 
 
@@ -943,7 +943,7 @@
       (eval (: clk))
       (javascript NIL
          "window.setTimeout(\"document.getElementById(\\\""
-         "i" *Form '- (: id)
+         "i" *Form "-" (: id)
          "\\\").click()\","
          @
          ")" ) ) )
@@ -957,7 +957,7 @@
       (on "*Foc")
       (javascript NIL
          "window.setTimeout(\"document.getElementById(\\\""
-         "i" *Form '- (: id)
+         "i" *Form "-" (: id)
          "\\\").focus()\",420)" ) ) )
 
 ### Styles ###
@@ -999,7 +999,7 @@
    (when (: lbl)
       (ht:Prin (eval @))
       (<nbsp>) )
-   (style (cons 'id (pack "i" *Form '- (: id))) "Prg") )
+   (style (cons 'id (pack "i" *Form "-" (: id))) "Prg") )
 
 
 (class +gui)
@@ -1095,7 +1095,7 @@
          (pack (if (: img) (sesId Str) Str) "&=") ) ) )
 
 (dm show> ("Var")
-   (<style> (cons 'id (pack "i" *Form '- (: id)))
+   (<style> (cons 'id (pack "i" *Form "-" (: id)))
       (if (able)
          ((if (: img) <image> <submit>)
             (eval (: lbl))
@@ -1378,7 +1378,7 @@
                   "Var"
                   (not (able)) ) ) )
          (T
-            (<style> (cons 'id (pack "i" *Form '- (: id)))
+            (<style> (cons 'id (pack "i" *Form "-" (: id)))
                (<span> *Style
                   (if (str> This) (ht:Prin @) (<nbsp>)) ) ) ) ) ) )
 
@@ -1539,8 +1539,8 @@
 
 (dm js> ()
    (pack
-      (ht:Fmt (sesId (or (: img) "@img/no.png"))) '&
-      (eval (: alt)) '&
+      (ht:Fmt (sesId (or (: img) "@img/no.png"))) "&"
+      (eval (: alt)) "&"
       (and (eval (: url)) (ht:Fmt (sesId @))) ) )
 
 (dm show> ("Var")
@@ -1569,7 +1569,7 @@
 
 (dm js> ()
    (pack (extra) "&*"
-      (ht:Fmt (sesId (eval (: icon)))) '&
+      (ht:Fmt (sesId (eval (: icon)))) "&"
       (and (eval (: url)) (ht:Fmt (sesId @))) ) )
 
 (dm show> ("Var")
@@ -1612,8 +1612,8 @@
 
 (dm js> ()
    (if2 (or (: dx) (: lst)) (txt> This (val> This))
-      (pack (extra) "&*" (ht:Fmt (sesId "@img/go.png")) '& (ht:Fmt (sesId ((: url) @))))
-      (pack (extra) "&*" (ht:Fmt (sesId "@img/no.png")) '&)
+      (pack (extra) "&*" (ht:Fmt (sesId "@img/go.png")) "&" (ht:Fmt (sesId ((: url) @))))
+      (pack (extra) "&*" (ht:Fmt (sesId "@img/no.png")) "&")
       (pack @ "&+" (ht:Fmt (sesId ((: url) @))))
       (extra) ) )
 
@@ -2094,8 +2094,8 @@
    (if (=T (: msg))
       (extra)
       (if2 (or (: dx) (: lst)) (try (: msg) (: obj) 1)
-         (pack (extra) "&*" (ht:Fmt (sesId "@img/go.png")) '& (ht:Fmt (sesId (mkUrl @))))
-         (pack (extra) "&*" (ht:Fmt (sesId "@img/no.png")) '&)
+         (pack (extra) "&*" (ht:Fmt (sesId "@img/go.png")) "&" (ht:Fmt (sesId (mkUrl @))))
+         (pack (extra) "&*" (ht:Fmt (sesId "@img/no.png")) "&")
          (pack (ht:Fmt (nonblank (str> This))) "&+" (ht:Fmt (sesId (mkUrl @))))
          (extra) ) ) )
 
