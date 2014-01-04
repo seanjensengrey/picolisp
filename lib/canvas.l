@@ -1,4 +1,4 @@
-# 05nov13abu
+# 04jan14abu
 # (c) Software Lab. Alexander Burger
 
 (allow "!jsDraw" )
@@ -24,6 +24,8 @@
       (csStroke)
       (csFill)
       (csClip)
+      (csDef Key DX DY Lst)
+      (csDraw Key X Y)
       (csDrawDots DX DY Lst)
       (csDrawImage Img DX DY)
       (csTranslate X Y)
@@ -53,7 +55,7 @@
       "<canvas id=\"" Id
       "\" width=\"" DX
       "\" height=\"" DY
-      "\" onclick=\"drawCanvas(this.id, -128, event.layerX-this.offsetLeft, event.layerY-this.offsetTop)\"" )
+      "\" onclick=\"drawCanvas(this.id, -99, event.layerX-this.offsetLeft, event.layerY-this.offsetTop)\"" )
    (dfltCss "canvas")
    (prinl ">" Alt "</canvas>" ) )
 
