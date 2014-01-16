@@ -27,7 +27,7 @@
       (csDef Key DX DY Lst)
       (csDraw Key X Y)
       (csDrawDots DX DY Lst)
-      (csDrawImage Img DX DY)
+      (csDrawImage Img X Y)
       (csTranslate X Y)
       (csRotate A)
       (csScale X Y)
