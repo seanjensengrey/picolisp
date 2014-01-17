@@ -1,9 +1,9 @@
-# 14dec13abu
+# 17jan14abu
 # (c) Software Lab. Alexander Burger
 
 ### Local Backup ###
 (de snapshot (Dst . @)
-   (for (L (flip (sort (mapcar format (dir Dst))))  L)
+   (for (L (flip (sort (extract format (dir Dst))))  L)
       (let N (pop 'L)
          (call 'mv (pack Dst '/ N) (pack Dst '/ (inc N)))
          (when (> (car L) (*/ N 9 10))
