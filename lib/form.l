@@ -1,4 +1,4 @@
-# 02jan14abu
+# 18jan14abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -1827,7 +1827,7 @@
 (de choDlg (Dst Ttl Rel . @)
    (let
       (Hook (and (meta (cdr Rel) (car Rel) 'hook) (next))
-         Fld (or (next) '((+TextField) 40))
+         Fld (or (next) (list '(+DbHint +TextField) Rel 40))
          Gui
          (if (next)
             (list '(+ObjView +TextField) @)
