@@ -1,4 +1,4 @@
-# 10feb11abu
+# 20jan14abu
 # (c) Software Lab. Alexander Burger
 
 # "*Glyph" "*PgX" "*PgY"
@@ -21,10 +21,9 @@
    (val (car (idx '"*Glyph" C))) )
 
 (de pdf (Nm . Prg)
-   (let (Ps (tmp Nm ".ps")  Pdf (tmp Nm ".pdf"))
+   (let Ps (tmp Nm ".ps")
       (out Ps (run Prg 1))
-      (_pdf)
-      Pdf ) )
+      (ps2pdf Ps (tmp Nm ".pdf")) ) )
 
 (de psOut (How Nm . Prg)
    (ifn Nm
@@ -32,20 +31,21 @@
       (let (Ps (tmp Nm ".ps")  Pdf (tmp Nm ".pdf"))
          (out Ps (run Prg 1))
          (cond
-            ((not How) (_pdf) (url Pdf "PDF"))
-            ((=0 How) (_pdf) (url Pdf))
-            ((=T How) (_pdf) (httpEcho Pdf "application/pdf" 1))
-            ((fun? How) (How Ps) (_pdf))
-            (T (call 'lpr (pack "-P" How) Ps) (_pdf)) )
+            ((not How) (url (ps2pdf Ps Pdf) "PDF"))
+            ((=0 How) (url (ps2pdf Ps Pdf)))
+            ((=T How) (httpEcho (ps2pdf Ps Pdf) "application/pdf" 1))
+            ((fun? How) (How Ps) (ps2pdf Ps Pdf))
+            (T (call "lpr" (pack "-P" How) Ps) (ps2pdf Ps Pdf)) )
          Pdf ) ) )
 
-(de _pdf ()
+(de ps2pdf (Ps Pdf)
    (if (= *OS "Darwin")
-      (call 'pstopdf Ps)
-      (call 'ps2pdf
+      (call "pstopdf" Ps)
+      (call "ps2pdf"
          (pack "-dDEVICEWIDTHPOINTS=" "*PgX")
          (pack "-dDEVICEHEIGHTPOINTS=" "*PgY")
-         Ps Pdf ) ) )
+         Ps Pdf ) )
+   Pdf )
 
 (de psHead (DX DY Ttl)
    (prinl "%!PS-Adobe-2.0")
