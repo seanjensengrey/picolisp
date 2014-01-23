@@ -1,4 +1,4 @@
-# 20jan14abu
+# 23jan14abu
 # (c) Software Lab. Alexander Burger
 
 (allow "!jsDraw" )
@@ -27,7 +27,7 @@
       (csDef Key DX DY Lst)
       (csDraw Key X Y)
       (csDrawDots DX DY Lst)
-      (csDrawImage Img X Y Lst)
+      (csDrawImage Img X Y Lst DX DY)
       (csTranslate X Y)
       (csRotate A)
       (csScale X Y)
