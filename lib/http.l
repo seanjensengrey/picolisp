@@ -1,4 +1,4 @@
-# 01jan14abu
+# 22jan14abu
 # (c) Software Lab. Alexander Burger
 
 # *Home *Gate *Host *Port *Port1 *Port% *Http1 *Chunked
@@ -10,7 +10,7 @@
    *HPorts 0
    *Timeout (* 300 1000) )
 
-(mapc allow '(*Adr *Gate *Host *ContL))
+(mapc allow '(*Adr *Gate *Cipher *Host *ContL))
 
 (zero *Http1)
 

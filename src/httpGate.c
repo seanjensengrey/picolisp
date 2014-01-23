@@ -1,4 +1,4 @@
-/* 04feb13abu
+/* 23jan14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -254,6 +254,8 @@ int main(int ac, char *av[]) {
                Http1 = *(p-3) - '0';
             inet_ntop(AF_INET6, &addr.sin6_addr, s, INET6_ADDRSTRLEN);
             wrBytes(srv, buf2, sprintf(buf2, gate, s));
+            if (ssl)
+               wrBytes(srv, buf2, sprintf(buf2, "X-Pil: *Cipher=%s\r\n", SSL_get_cipher(ssl)));
             wrBytes(srv, p, buf + n - p);
 
             signal(SIGALRM, doSigAlarm);
