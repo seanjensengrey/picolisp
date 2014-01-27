@@ -1,4 +1,4 @@
-# 17jan14abu
+# 27jan14abu
 # (c) Software Lab. Alexander Burger
 
 ### Local Backup ###
@@ -468,13 +468,13 @@
                            (out (tmp B)
                               (in (blob Obj X) (echo)) ) )
                         (T (print X T)) ) ) )
-                  Obj )
+               Obj )
             (prinl " )")
             Obj ) ) ) )
 
 (de _dmp (Obj Flg)
-   (cond
-      ((pair Obj)
+   (nond
+      ((atom Obj)
          (prin "(")
          (_dmp (pop 'Obj) T)
          (while (pair Obj)
@@ -485,6 +485,15 @@
             (_dmp Obj T) )
          (prin ")") )
       ((ext? Obj)
+         (print Obj) )
+      ((type Obj)
+         (prin
+            "`(new "
+            (car (id Obj T))
+            " "
+            (val Obj)
+            ")" ) )
+      (NIL
          (when Flg
             (prin "`(obj ") )
          (prin "(")
@@ -511,8 +520,7 @@
                Obj ) )
          (when Flg
             (prin ")") )
-         (prin ")") )
-      (T (print Obj)) ) )
+         (prin ")") ) ) )
 
 ### Debug ###
 `*Dbg
