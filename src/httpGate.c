@@ -1,4 +1,4 @@
-/* 23jan14abu
+/* 27jan14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -25,6 +25,7 @@
 typedef enum {NO,YES} bool;
 
 static int Http1;
+static char Ciphers[] = "ECDHE-RSA-RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH";
 
 static char Head_410[] =
    "HTTP/1.0 410 Gone\r\n"
@@ -86,6 +87,18 @@ static void wrBytes(int fd, char *p, int cnt) {
 static void sslWrite(SSL *ssl, void *p, int cnt) {
    if (SSL_write(ssl, p, cnt) <= 0)
       exit(1);
+}
+
+static bool setDH(SSL_CTX *ctx) {
+   EC_KEY *ecdh;
+
+   if (!(ecdh = EC_KEY_new_by_curve_name(NID_X9_62_prime256v1)))
+      return NO;
+   if (!SSL_CTX_set_tmp_ecdh(ctx, ecdh))
+      return NO;
+   EC_KEY_free(ecdh);
+   SSL_CTX_set_cipher_list(ctx, Ciphers);
+   return YES;
 }
 
 static int gatePort(unsigned short port) {
@@ -157,7 +170,7 @@ int main(int ac, char *av[]) {
       if (!(ctx = SSL_CTX_new(SSLv23_server_method())) ||
             !SSL_CTX_use_certificate_file(ctx, av[3], SSL_FILETYPE_PEM) ||
                !SSL_CTX_use_PrivateKey_file(ctx, av[3], SSL_FILETYPE_PEM) ||
-                                          !SSL_CTX_check_private_key(ctx) ) {
+                           !SSL_CTX_check_private_key(ctx) || !setDH(ctx) ) {
          ERR_print_errors_fp(stderr);
          giveup("SSL init");
       }
