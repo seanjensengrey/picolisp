@@ -1,4 +1,4 @@
-# 16nov12abu
+# 28jan14abu
 # (c) Software Lab. Alexander Burger
 
 # Exit on error
@@ -28,7 +28,7 @@
 
 # Extend 'app' function
 (conc (last app)
-   '((msg *Pid " + " (stamp) " [" *Adr " " (host *Adr) "] " *Agent)) )
+   '((msg *Pid " + " (stamp) " [" *Adr " " (host *Adr) (and *Cipher (pack " / " @)) "] " *Agent)) )
 
 # Bye message
 (push1 '*Bye '(and *SesId (msg *Pid " - " (stamp))))
