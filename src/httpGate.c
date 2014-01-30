@@ -1,4 +1,4 @@
-/* 27jan14abu
+/* 30jan14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -222,7 +222,7 @@ int main(int ac, char *av[]) {
             if (q == p  ||  *q != ' ' && *q != '/')
                port = ports[0],  q = p;
             else if (port < cnt) {
-               if ((port = ports[port]) < 0)
+               if (port < 0 || (port = ports[port]) < 0)
                   return 1;
             }
             else if (port < 1024)
