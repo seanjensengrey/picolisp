@@ -1,4 +1,4 @@
-/* 03feb14abu
+/* 04feb14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -31,7 +31,7 @@ typedef struct name {
    int port;
    uid_t uid;
    gid_t gid;
-   char *dir, *log, *ev[3], *av[1];
+   char *dir, *log, *ev[4], *av[1];
 } name;
 
 static int Http1;
@@ -67,6 +67,8 @@ static int readNames(char *nm) {
          np = malloc(sizeof(name));
          np->key = strdup(strtok(p, delim));
          np->less = np->more = NULL;
+         p = np->ev[0] = malloc(5 + strlen(np->key) + 1);
+         strcpy(p, "NAME="), strcpy(p+5, np->key);
          np->port = atoi(ps = strtok(NULL, delim));
          if (!(pw = getpwnam(strtok(NULL, delim)))) {
             free(np);
@@ -74,11 +76,11 @@ static int readNames(char *nm) {
          }
          np->uid = pw->pw_uid;
          np->gid = pw->pw_gid;
-         p = np->ev[0] = malloc(5 + strlen(pw->pw_dir) + 1);
+         p = np->ev[1] = malloc(5 + strlen(pw->pw_dir) + 1);
          strcpy(p, "HOME="), strcpy(p+5, pw->pw_dir);
-         p = np->ev[1] = malloc(5 + strlen(ps) + 1);
+         p = np->ev[2] = malloc(5 + strlen(ps) + 1);
          strcpy(p, "PORT="), strcpy(p+5, ps);
-         np->ev[2] = NULL;
+         np->ev[3] = NULL;
          np->dir = strdup(strtok(NULL, delim));
          np->log = *(p = strtok(NULL, delim)) == '^'? NULL : strdup(p);
          cnt = 0;
