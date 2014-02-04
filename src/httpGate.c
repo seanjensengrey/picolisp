@@ -1,4 +1,4 @@
-/* 30jan14abu
+/* 03feb14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -11,6 +11,7 @@
 #include <string.h>
 #include <signal.h>
 #include <time.h>
+#include <pwd.h>
 #include <sys/time.h>
 #include <sys/stat.h>
 #include <netdb.h>
@@ -24,7 +25,17 @@
 
 typedef enum {NO,YES} bool;
 
+typedef struct name {
+   char *key;
+   struct name *less, *more;
+   int port;
+   uid_t uid;
+   gid_t gid;
+   char *dir, *log, *ev[3], *av[1];
+} name;
+
 static int Http1;
+static name *Names;
 static char Ciphers[] = "ECDHE-RSA-RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH";
 
 static char Head_410[] =
@@ -36,6 +47,77 @@ static char Head_410[] =
 static void giveup(char *msg) {
    fprintf(stderr, "httpGate: %s\n", msg);
    exit(2);
+}
+
+static int readNames(char *nm) {
+   FILE *fp;
+   name *np, **t;
+   int port, cnt;
+   struct passwd *pw;
+   char *p, *ps, line[4096];
+   static char delim[] = " \n";
+
+   if (!(fp = fopen(nm, "r")))         // Lines ordered by
+      giveup("Can't open name file");  // bin/balance -sort
+   port = 8080;
+   while (p = fgets(line, 4096, fp)) {
+      while (*p == ' ')
+         ++p;
+      if (*p  &&  *p != '\n'  &&  *p != '#') {
+         np = malloc(sizeof(name));
+         np->key = strdup(strtok(p, delim));
+         np->less = np->more = NULL;
+         np->port = atoi(ps = strtok(NULL, delim));
+         if (!(pw = getpwnam(strtok(NULL, delim)))) {
+            free(np);
+            continue;
+         }
+         np->uid = pw->pw_uid;
+         np->gid = pw->pw_gid;
+         p = np->ev[0] = malloc(5 + strlen(pw->pw_dir) + 1);
+         strcpy(p, "HOME="), strcpy(p+5, pw->pw_dir);
+         p = np->ev[1] = malloc(5 + strlen(ps) + 1);
+         strcpy(p, "PORT="), strcpy(p+5, ps);
+         np->ev[2] = NULL;
+         np->dir = strdup(strtok(NULL, delim));
+         np->log = *(p = strtok(NULL, delim)) == '^'? NULL : strdup(p);
+         cnt = 0;
+         while (p = strtok(NULL, delim)) {
+            if (*p == '^')
+               np->av[cnt] = "";
+            else {
+               p = np->av[cnt] = strdup(p);
+               while (p = strchr(p, '^'))
+                  *p++ = ' ';
+            }
+            np = realloc(np, sizeof(name) + ++cnt * sizeof(char*));
+         }
+         np->av[cnt] = NULL;
+         p = np->key;
+         if (p[0] == '@'  &&  p[1] == '\0')
+            port = np->port;
+         for (t = &Names;  *t;  t = strcmp(p, (*t)->key) >= 0? &(*t)->more : &(*t)->less);
+         *t = np;
+      }
+   }
+   fclose(fp);
+   return port;
+}
+
+static name *findName(char *p, char *q) {
+   name *np;
+   int n, c;
+
+   if (p == q)
+      p = "@";
+   c = *q,  *q = '\0';
+   for (np = Names;  np;  np = n > 0? np->more : np->less)
+      if ((n = strcmp(p, np->key)) == 0) {
+         *q = c;
+         return np;
+      }
+   *q = c;
+   return NULL;
 }
 
 static inline bool pre(char *p, char *s) {
@@ -124,7 +206,7 @@ static int gatePort(unsigned short port) {
    return sd;
 }
 
-static int gateConnect(unsigned short port) {
+static int gateConnect(int port, name *np) {
    int sd;
    struct sockaddr_in6 addr;
 
@@ -133,8 +215,31 @@ static int gateConnect(unsigned short port) {
    memset(&addr, 0, sizeof(addr));
    addr.sin6_family = AF_INET6;
    addr.sin6_addr = in6addr_loopback;
-   addr.sin6_port = htons(port);
-   return connect(sd, (struct sockaddr*)&addr, sizeof(addr)) < 0? -1 : sd;
+   addr.sin6_port = htons((unsigned short)port);
+   if (connect(sd, (struct sockaddr*)&addr, sizeof(addr)) >= 0)
+      return sd;
+   if (np) {
+      pid_t pid;
+
+      if ((pid = fork()) == 0) {
+         if (setgid(np->gid) == 0 && setuid(np->uid) == 0 && chdir(np->dir) == 0) {
+            if (np->log)
+               freopen(np->log, "a", stdout);
+            dup2(STDOUT_FILENO, STDERR_FILENO);
+            execve(np->av[0], np->av, np->ev);
+            giveup("Can't start server");
+         }
+      }
+      if (pid > 0) {
+         int i = 200;
+         do {
+            usleep(100000);  // 100 ms
+            if (connect(sd, (struct sockaddr*)&addr, sizeof(addr)) >= 0)
+               return sd;
+         } while (--i);
+      }
+   }
+   return -1;
 }
 
 
@@ -153,7 +258,7 @@ int main(int ac, char *av[]) {
    int cnt = ac>4? ac-3 : 1, ports[cnt], n, sd, cli, srv;
    struct sockaddr_in6 addr;
    char s[INET6_ADDRSTRLEN];
-   char *gate;
+   char *p, *q, *gate;
    SSL_CTX *ctx;
    SSL *ssl;
 
@@ -161,7 +266,9 @@ int main(int ac, char *av[]) {
       giveup("port dflt [pem [alt ..]]");
 
    sd = gatePort(atoi(av[1]));  // e.g. 80 or 443
-   ports[0] = atoi(av[2]);  // e.g. 8080
+   ports[0] = (int)strtol(p = av[2], &q, 10);  // e.g. 8080
+   if (q == p  ||  *q != '\0')
+      ports[0] = readNames(p);
    if (ac == 3 || *av[3] == '\0')
       ssl = NULL,  gate = "X-Pil: *Gate=http\r\nX-Pil: *Adr=%s\r\n";
    else {
@@ -190,8 +297,9 @@ int main(int ac, char *av[]) {
       socklen_t len = sizeof(addr);
       if ((cli = accept(sd, (struct sockaddr*)&addr, &len)) >= 0 && (n = fork()) >= 0) {
          if (!n) {
+            name *np;
             int fd, port, i;
-            char *p, *q, buf[4096], buf2[64];
+            char buf[4096], buf2[64];
 
             close(sd);
 
@@ -218,9 +326,14 @@ int main(int ac, char *av[]) {
             else
                return 1;
 
+            np = NULL;
             port = (int)strtol(p, &q, 10);
-            if (q == p  ||  *q != ' ' && *q != '/')
-               port = ports[0],  q = p;
+            if (q == p  ||  *q != ' ' && *q != '/') {
+               if ((q = strpbrk(p, " /")) && (np = findName(p, q)))
+                  port = np->port;
+               else
+                  port = ports[0],  q = p;
+            }
             else if (port < cnt) {
                if (port < 0 || (port = ports[port]) < 0)
                   return 1;
@@ -232,7 +345,7 @@ int main(int ac, char *av[]) {
                   if (port == -ports[i])
                      return 1;
 
-            if ((srv = gateConnect((unsigned short)port)) < 0) {
+            if ((srv = gateConnect(port, np)) < 0) {
                if (!memchr(q,'~', buf + n - q))
                   return 1;
                if ((fd = open("void", O_RDONLY)) < 0)
