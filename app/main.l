@@ -1,4 +1,4 @@
-# 04feb14abu
+# 05feb14abu
 # (c) Software Lab. Alexander Burger
 
 (allowed ("app/")
@@ -60,6 +60,6 @@
          (close Sock) ) )
    (forked)
    (rollback)
-   (server 8080 "!work") )
+   (server (or (format (sys "PORT")) 8080) "!work") )
 
 # vi:et:ts=3:sw=3
