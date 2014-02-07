@@ -1,7 +1,7 @@
-# 22jan14abu
+# 07feb14abu
 # (c) Software Lab. Alexander Burger
 
-# *Home *Gate *Host *Port *Port1 *Port% *Http1 *Chunked
+# *HPorts *Home *Gate *Host *Port *Port1 *Port% *Http1 *Chunked
 # *Sock *Agent *ContL *ContLen *MPartLim *MPartEnd "*HtSet"
 # *Post *Url *Timeout *SesAdr *SesId *ConId
 # *Referer *Cookies "*Cookies"
@@ -99,6 +99,15 @@
    (task *Sock
       (when (accept *Sock)
          (task @ (http @)) ) ) )
+
+(de retire (Min)
+   (when (sys "PORT")
+      (task -60000 60000  X (cons Min Min)
+         (cond
+            (*Adr (off *Adr) (set X (cdr X)))
+            ((kids) (set X (cdr X)))
+            ((=0 (dec X)) (bye)) ) )
+      (forked) ) )
 
 (de baseHRef (Port . @)
    (pass pack
