@@ -1,4 +1,4 @@
-# 23jun13abu
+# 06feb14abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -506,6 +506,30 @@
    shl E 4  # Return fd
    or E CNT
    pop Y
+   pop X
+   ret
+
+# (kids) -> lst
+(code 'doKids 2)
+   push X
+   ld E Nil  # Result
+   ld X (Child)  # Iterate children
+   ld C (Children)  # Count
+   do
+      sub C VI  # More?
+   while ge  # Yes
+      null (X)  # 'pid'?
+      if nz  # Yes
+         call consE_A  # Cons result
+         ld (A CDR) E
+         ld E (X)  # with short number
+         shl E 4
+         or E CNT
+         ld (A) E
+         ld E A
+      end
+      add X VI  # Increment by sizeof(child)
+   loop
    pop X
    ret
 

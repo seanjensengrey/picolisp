@@ -1,4 +1,4 @@
-/* 28aug13abu
+/* 06feb14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -172,6 +172,7 @@ static symInit Symbols[] = {
    {doJob, "job"},
    {doJournal, "journal"},
    {doKey, "key"},
+   {doKids, "kids"},
    {doKill, "kill"},
    {doLast, "last"},
    {doLe, "<="},

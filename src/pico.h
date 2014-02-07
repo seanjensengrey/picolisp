@@ -1,4 +1,4 @@
-/* 28aug13abu
+/* 06feb14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -570,6 +570,7 @@ any doIsa(any);
 any doJob(any);
 any doJournal(any);
 any doKey(any);
+any doKids(any);
 any doKill(any);
 any doLast(any);
 any doLe(any);

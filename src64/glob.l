@@ -1,4 +1,4 @@
-# 28aug13abu
+# 06feb14abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Data)
@@ -185,6 +185,7 @@
    initFun NIL       "raw"       doRaw
    initFun NIL       "alarm"     doAlarm
    initFun NIL       "sigio"     doSigio
+   initFun NIL       "kids"      doKids
    initFun NIL       "protect"   doProtect
    initFun NIL       "heap"      doHeap
    initFun NIL       "stack"     doStack

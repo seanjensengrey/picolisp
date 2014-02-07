@@ -1,4 +1,4 @@
-/* 23jun13abu
+/* 06feb14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -212,6 +212,17 @@ any doSigio(any ex) {
    Sigio = cddr(ex);
    fcntl(fd, F_SETOWN, unBox(val(Pid)));
    fcntl(fd, F_SETFL, fcntl(fd, F_GETFL, 0) | O_NONBLOCK|O_ASYNC);
+   return x;
+}
+
+// (kids) -> lst
+any doKids(any ex __attribute__((unused))) {
+   int i;
+   any x;
+
+   for (i = 0, x = Nil; i < Children; ++i)
+      if (Child[i].pid)
+         x = cons(box(Child[i].pid * 2), x);
    return x;
 }
 
