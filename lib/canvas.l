@@ -57,7 +57,7 @@
       "\" height=\"" DY
       "\" onmousedown=\"csMouseDn(this, event)"
       "\" onmousemove=\"csMouseMv(this, event)"
-      "\" onmouseout=\"csMouseUp(this)"
+      "\" onmouseout=\"csMouseOut(this)"
       "\" onmouseup=\"csMouseUp(this)\"" )
    (dfltCss "canvas")
    (prinl ">" Alt "</canvas>" ) )
