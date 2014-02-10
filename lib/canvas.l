@@ -1,4 +1,4 @@
-# 23jan14abu
+# 10feb14abu
 # (c) Software Lab. Alexander Burger
 
 (allow "!jsDraw" )
@@ -55,8 +55,9 @@
       "<canvas id=\"" Id
       "\" width=\"" DX
       "\" height=\"" DY
-      "\" onmousedown=\"csMouseDn(this, event)\""
-      "\" onmousemove=\"csMouseMv(this, event)\""
+      "\" onmousedown=\"csMouseDn(this, event)"
+      "\" onmousemove=\"csMouseMv(this, event)"
+      "\" onmouseout=\"csMouseUp(this)"
       "\" onmouseup=\"csMouseUp(this)\"" )
    (dfltCss "canvas")
    (prinl ">" Alt "</canvas>" ) )
