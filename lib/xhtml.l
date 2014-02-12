@@ -1,4 +1,4 @@
-# 02jan14abu
+# 12feb14abu
 # (c) Software Lab. Alexander Burger
 
 # *JS "*JS" *Style *Menu *Tab *ID
@@ -271,9 +271,9 @@
                      (pop 'H) )
                   (setq C
                      (if2 C (> N 1)
-                        (list C (cons 'colspan N))
+                        (list C (cons "colspan" N))
                         C
-                        (cons 'colspan N) ) )
+                        (cons "colspan" N) ) )
                   (tag 'td
                      (if (== 'align (car (pop 'H)))
                         (list '(align . right) C)
@@ -302,15 +302,23 @@
                   (use X
                      (let L (and (sym? X) (chop X))
                         (do (or (num? X) (length X))
-                           (tag 'td
-                              (cond
-                                 ((pair X) (pop 'X))
-                                 ((= "." (pop 'L)) 'align) )
-                              1
-                              (quote
-                                 (if (atom (car Lst))
-                                    (ht:Prin (eval (pop 'Lst) 1))
-                                    (eval (pop 'Lst) 1) ) ) ) ) ) ) ) ) ) ) )
+                           (let
+                              (C
+                                 (cond
+                                    ((pair X) (pop 'X))
+                                    ((= "." (pop 'L)) 'align) )
+                                 E (pop 'Lst) )
+                              (unless (== '- E)
+                                 (when (== '- (car Lst))
+                                    (let N 0
+                                       (find '((S) (inc 'N) (n== '- S)) Lst)
+                                       (push 'N "colspan")
+                                       (setq C (if C (list C N) N)) ) )
+                                 (tag 'td C 1
+                                    (quote
+                                       (if (atom E)
+                                          (ht:Prin (eval E 1))
+                                          (eval E 1) ) ) ) ) ) ) ) ) ) ) ) ) )
    (prinl) )
 
 (de <trident> Lst
