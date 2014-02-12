@@ -1,4 +1,4 @@
-# 20jan14abu
+# 12feb14abu
 # (c) Software Lab. Alexander Burger
 
 # "*Glyph" "*PgX" "*PgY"
@@ -129,7 +129,12 @@
    (prinl (if F "fill" "stroke")) )
 
 (de rect (X1 Y1 X2 Y2 F)
-   (poly F X1 Y1  X2 Y1  X2 Y2  X1 Y2  X1 Y1) )
+   (poly F
+      (pack X1 " currentlinewidth 2 div sub") Y1
+      X2 Y1
+      X2 Y2
+      X1 Y2
+      X1 Y1 ) )
 
 (de arc (X Y R F A B)
    (prinl
