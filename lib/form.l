@@ -1,4 +1,4 @@
-# 18jan14abu
+# 16feb14abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -2308,6 +2308,30 @@
                (list 'choDlg NIL (lit "Cho") (lit (list (fin "Var") "Cls"))) )
             "Var" "Cls" )
          (run "Prg") ) ) )
+
+### Undo / Redo ###
+# *Undo *Redo
+
+(de change ("Msg" "Env" . "X")
+   (push '*Undo (cons "Msg" "Env" "X"))
+   (off *Redo)
+   (bind "Env" (run (cdr "X"))) )
+
+(de undoButton ()
+   (gui '(+Able +Tip +Button) '*Undo
+      '(and *Undo (text ,"Undo: '@1'" (caar @)))
+      ,"Undo"
+      '(let "E" (push '*Redo (pop '*Undo))
+         (bind (cadr "E")
+            (eval (caddr "E")) ) ) ) )
+
+(de redoButton ()
+   (gui '(+Able +Tip +Button) '*Redo
+      '(and *Redo (text ,"Redo: '@1'" (caar @)))
+      ,"Redo"
+      '(let "E" (push '*Undo (pop '*Redo))
+         (bind (cadr "E")
+            (run (cdddr "E")) ) ) ) )
 
 ### Debug ###
 `*Dbg

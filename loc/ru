@@ -37,6 +37,10 @@
 "Delete" "Удалить"
 "Delete @1?" "Удалить @1?"
 "Data not found" "Данные не найдены"
+"Undo" "Undo"
+"Undo: '@1'" "Undo: '@1'"
+"Redo" "Redo"
+"Redo: '@1'" "Redo: '@1'"
 
 # General
 "login" "Войти"
