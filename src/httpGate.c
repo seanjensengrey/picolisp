@@ -1,4 +1,4 @@
-/* 04feb14abu
+/* 16feb14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -225,6 +225,7 @@ static int gateConnect(int port, name *np) {
 
       if ((pid = fork()) == 0) {
          if (setgid(np->gid) == 0 && setuid(np->uid) == 0 && chdir(np->dir) == 0) {
+            setpgid(0,0);
             if (np->log)
                freopen(np->log, "a", stdout);
             dup2(STDOUT_FILENO, STDERR_FILENO);
@@ -233,6 +234,7 @@ static int gateConnect(int port, name *np) {
          }
       }
       if (pid > 0) {
+         setpgid(pid,0);
          int i = 200;
          do {
             usleep(100000);  // 100 ms
