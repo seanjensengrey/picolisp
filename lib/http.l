@@ -1,4 +1,4 @@
-# 07feb14abu
+# 16feb14abu
 # (c) Software Lab. Alexander Burger
 
 # *HPorts *Home *Gate *Host *Port *Port1 *Port% *Http1 *Chunked
@@ -85,7 +85,7 @@
 (de server (P H)
    (setq
       *Port P
-      *Port1 P
+      *Port1 (or (sys "NAME") P)
       *Home (cons H (chop H))
       P (port *Port) )
    (gc)
