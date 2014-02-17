@@ -1,4 +1,4 @@
-/* 06feb14abu
+/* 17feb14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -171,6 +171,7 @@ void setRaw(void) {
    if (Tio && !Termio) {
       *(Termio = malloc(sizeof(struct termios))) = OrgTermio;
       Termio->c_iflag = 0;
+      Termio->c_oflag = OPOST+ONLCR;
       Termio->c_lflag = ISIG;
       Termio->c_cc[VMIN] = 1;
       Termio->c_cc[VTIME] = 0;

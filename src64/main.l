@@ -1,4 +1,4 @@
-# 06feb14abu
+# 17feb14abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -430,6 +430,8 @@
          movn (C) (OrgTermio) TERMIOS  # Copy original termio structure
          ld A 0  # Clear c_iflag
          st4 (C C_IFLAG)
+         ld A (+ OPOST ONLCR)  # Set ONLCR in c_oflag
+         st4 (C C_OFLAG)
          ld A ISIG  # ISIG in c_lflag
          st4 (C C_LFLAG)
          set (C (+ C_CC VMIN)) 1
