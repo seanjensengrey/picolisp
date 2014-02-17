@@ -1,4 +1,4 @@
-# 16feb14abu
+# 17feb14abu
 # (c) Software Lab. Alexander Burger
 
 # *HPorts *Home *Gate *Host *Port *Port1 *Port% *Http1 *Chunked
@@ -112,7 +112,9 @@
 (de baseHRef (Port . @)
    (pass pack
       (or *Gate "http") "://" *Host
-      (if *Gate "/" ":") (or Port *Port) "/" ) )
+      (if *Gate "/" ":")
+      (or Port (if *SesId *Port *Port1))
+      "/" ) )
 
 (de https @
    (pass pack "https://" *Host "/" *Port "/" *SesId) )
