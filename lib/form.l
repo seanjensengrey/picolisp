@@ -1,4 +1,4 @@
-# 16feb14abu
+# 19feb14abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -1237,7 +1237,8 @@
          (ask (if (: del) (eval @) ,"Delete row?")
             (with (: home btn)
                (=: home del T)
-               (_delRow (: exe)) ) ) ) ) )
+               (_delRow (: exe)) ) ) ) )
+   (=: chg T) )
 
 (de _delRow (Exe)
    (eval Exe)
@@ -1258,7 +1259,8 @@
                (cut (row -2) 'L)
                (cons (cadr L))
                (cons (car L))
-               (cddr L) ) ) ) ) )
+               (cddr L) ) ) ) )
+   (=: chg T) )
 
 
 (class +ClrButton +JS +Tip +Button)
