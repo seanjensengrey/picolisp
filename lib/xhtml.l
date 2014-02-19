@@ -1,4 +1,4 @@
-# 12feb14abu
+# 19feb14abu
 # (c) Software Lab. Alexander Burger
 
 # *JS "*JS" *Style *Menu *Tab *ID
@@ -550,12 +550,20 @@
    "Lst" )
 
 (de <+> (Str Obj Msg Tab)
-   (<$> Str Obj Msg Tab)
-   (and "*CSV" (out @ (prin Str "^I"))) )
+   (if (sub? "^J" Str)
+      (let L (split (chop Str) "^J")
+         (<span> (cons 'title Str) (ht:Prin (car L)))
+         (and "*CSV" (out @ (prin (glue " " L) "^I"))) )
+      (<$> Str Obj Msg Tab)
+      (and "*CSV" (out @ (prin Str "^I"))) ) )
 
 (de <-> (Str Obj Msg Tab)
-   (<$> Str Obj Msg Tab)
-   (<0> Str) )
+   (if (sub? "^J" Str)
+      (let L (split (chop Str) "^J")
+         (<span> (cons 'title Str) (ht:Prin (car L)))
+         (<0> (glue " " L)) )
+      (<$> Str Obj Msg Tab)
+      (<0> Str) ) )
 
 # Interactive tree
 (de <tree> ("Url" "Path" "Tree" "Able?" "Excl?" "Expand" "Print")
