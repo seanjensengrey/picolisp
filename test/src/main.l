@@ -1,4 +1,4 @@
-# 06feb14abu
+# 19feb14abu
 # (c) Software Lab. Alexander Burger
 
 ### Evaluation ###
@@ -28,10 +28,10 @@
 
 ### kids ###
 (test
-   (sort
-      (make
-         (do 4 (if (fork) (link @) (wait 2000) (bye))) ) )
-   (sort (kids)) )
+   (make
+      (do 7
+         (link (or (fork) (wait 2000) (bye))) ) )
+   (flip (kids)) )
 
 ### protect ###
 (test NIL (pipe (prog (kill *Pid) (pr 7)) (rd)))
