@@ -1,4 +1,4 @@
-# 10feb14abu
+# 20feb14abu
 # (c) Software Lab. Alexander Burger
 
 (allow "!jsDraw" )
@@ -34,6 +34,7 @@
       (csSave)
       (csRestore)
       ### Variables ###
+      (csCursor Lst)
       (csFillStyle V)
       (csStrokeStyle V)
       (csGlobalAlpha V)
