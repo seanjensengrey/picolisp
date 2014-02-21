@@ -1,4 +1,4 @@
-/* 16feb14abu
+/* 20feb14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -98,7 +98,7 @@ static int readNames(char *nm) {
          p = np->key;
          if (p[0] == '@'  &&  p[1] == '\0')
             port = np->port;
-         for (t = &Names;  *t;  t = strcmp(p, (*t)->key) >= 0? &(*t)->more : &(*t)->less);
+         for (t = &Names;  *t;  t = strcasecmp(p, (*t)->key) >= 0? &(*t)->more : &(*t)->less);
          *t = np;
       }
    }
@@ -114,7 +114,7 @@ static name *findName(char *p, char *q) {
       p = "@";
    c = *q,  *q = '\0';
    for (np = Names;  np;  np = n > 0? np->more : np->less)
-      if ((n = strcmp(p, np->key)) == 0) {
+      if ((n = strcasecmp(p, np->key)) == 0) {
          *q = c;
          return np;
       }
