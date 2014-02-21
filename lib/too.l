@@ -1,4 +1,4 @@
-# 27jan14abu
+# 20feb14abu
 # (c) Software Lab. Alexander Burger
 
 ### Local Backup ###
@@ -487,12 +487,7 @@
       ((ext? Obj)
          (print Obj) )
       ((type Obj)
-         (prin
-            "`(new "
-            (car (id Obj T))
-            " "
-            (val Obj)
-            ")" ) )
+         (print (val Obj)) )
       (NIL
          (when Flg
             (prin "`(obj ") )
