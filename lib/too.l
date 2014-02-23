@@ -1,4 +1,4 @@
-# 20feb14abu
+# 22feb14abu
 # (c) Software Lab. Alexander Burger
 
 ### Local Backup ###
@@ -191,12 +191,12 @@
                         (and
                            (<> Obj
                               (fetch
-                                 (tree X (: cls) (get Obj (: hook)))
+                                 (tree X (: cls) (and (: hook) (get Obj @)))
                                  V ) )
                            (link X) ) )
                      ((isa '+Ref This)
                         (let
-                           (Tree (tree X (: cls) (get Obj (: hook)))
+                           (Tree (tree X (: cls) (and (: hook) (get Obj @)))
                               Aux (conc (mapcar '((S) (get Obj S)) (: aux)) Obj) )
                            (cond
                               ((isa '+UB This)
@@ -232,12 +232,11 @@
                                                 (<> Obj
                                                    (fetch
                                                       (tree (: var) (: cls)
-                                                         (get
-                                                            (if (sym? (: hook)) Obj L)
-                                                            (: hook) ) )
+                                                         (when (: hook)
+                                                            (get (if (sym? @) Obj L) (: hook)) ) )
                                                       Val ) ) ) )
-                                             V )
-                                          (link X) ) ) )
+                                          V )
+                                       (link X) ) ) )
                               ((isa '+Ref B)
                                  (with B
                                     (when
@@ -249,12 +248,11 @@
                                                 (<> Obj
                                                    (fetch
                                                       (tree (: var) (: cls)
-                                                         (get
-                                                            (if (sym? (: hook)) Obj L)
-                                                            (: hook) ) )
+                                                         (when (: hook)
+                                                            (get (if (sym? @) Obj L) (: hook)) ) )
                                                       (cons Val Obj) ) ) ) )
-                                             V )
-                                          (link X) ) ) ) ) ) ) ) ) ) ) )
+                                          V )
+                                       (link X) ) ) ) ) ) ) ) ) ) ) )
       (cons Obj @) ) )
 
 ### Rebuild tree ###
