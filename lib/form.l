@@ -1,4 +1,4 @@
-# 19feb14abu
+# 24feb14abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -960,6 +960,7 @@
          "i" *Form "-" (: id)
          "\\\").focus()\",420)" ) ) )
 
+
 ### Styles ###
 (class +Style)
 # style
@@ -993,6 +994,7 @@
 
 (dm js> ()
    (pack (extra) "&#" (and (lt0 (val> This)) "red")) )
+
 
 ### Form field classes ###
 (de showFld "Prg"
@@ -1689,6 +1691,7 @@
 (dm set> (Val Dn)
    (=: str Val) )
 
+
 ### GUI charts ###
 (class +Chart)
 # home gui rows cols ofs lock put get data clip
@@ -1817,6 +1820,7 @@
 # (cols)
 (dm T (N)
    (super N list car) )
+
 
 ### DB GUI ###
 (de newUrl @
@@ -2311,29 +2315,57 @@
             "Var" "Cls" )
          (run "Prg") ) ) )
 
-### Undo / Redo ###
-# *Undo *Redo
 
+### Undo / Redo ###
 (de change ("Msg" "Env" . "X")
-   (push '*Undo (cons "Msg" "Env" "X"))
-   (off *Redo)
+   (set> (: home undo)
+      (cons
+         (cons "Msg" "Env" "X")
+         (val> (: home undo)) ) )
+   (set> (: home redo))
    (bind "Env" (run (cdr "X"))) )
 
-(de undoButton ()
-   (gui '(+Able +Tip +Button) '*Undo
-      '(and *Undo (text ,"Undo: '@1'" (caar @)))
-      ,"Undo"
-      '(let "E" (push '*Redo (pop '*Undo))
-         (bind (cadr "E")
-            (eval (caddr "E")) ) ) ) )
 
-(de redoButton ()
-   (gui '(+Able +Tip +Button) '*Redo
-      '(and *Redo (text ,"Redo: '@1'" (caar @)))
-      ,"Redo"
-      '(let "E" (push '*Undo (pop '*Redo))
-         (bind (cadr "E")
-            (run (cdddr "E")) ) ) ) )
+(class +todoButton +Able +Tip +Button)
+# todo
+
+(dm T (Tip Lbl Exe)
+   (super '(val> This)
+      (list 'and '(val> This) (list 'text Tip '(caar @)))
+      Lbl
+      Exe ) )
+
+(dm set> (Val Dn)
+   (=: todo Val) )
+
+(dm val> ()
+   (: todo) )
+
+
+(class +UndoButton +todoButton)
+
+(dm T ()
+   (super ,"Undo: '@1'" ,"Undo"
+      '(let U (val> This)
+         (set> (: home redo)
+            (cons (car U) (val> (: home redo))) )
+         (set> This (cdr U))
+         (bind (cadar U)
+            (eval (caddar U)) ) ) )
+   (=: home undo This) )
+
+
+(class +RedoButton +todoButton)
+
+(dm T ()
+   (super ,"Redo: '@1'" ,"Redo"
+      '(let R (val> This)
+         (set> (: home undo)
+            (cons (car R) (val> (: home undo))) )
+         (set> This (cdr R))
+         (bind (cadar R)
+            (run (cdddar R)) ) ) )
+   (=: home redo This) )
 
 ### Debug ###
 `*Dbg
