@@ -1,4 +1,4 @@
-# 19feb14abu
+# 24feb14abu
 # (c) Software Lab. Alexander Burger
 
 # *JS "*JS" *Style *Menu *Tab *ID
@@ -310,8 +310,9 @@
                                  E (pop 'Lst) )
                               (unless (== '- E)
                                  (when (== '- (car Lst))
-                                    (let N 0
-                                       (find '((S) (inc 'N) (n== '- S)) Lst)
+                                    (let N 1
+                                       (for (P Lst (and P (== '- (pop 'P))))
+                                          (inc 'N) )
                                        (push 'N "colspan")
                                        (setq C (if C (list C N) N)) ) )
                                  (tag 'td C 1
