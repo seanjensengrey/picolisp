@@ -1,4 +1,4 @@
-# 28aug13abu
+# 25feb14abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -1638,7 +1638,7 @@ $ (i x)
    return x;
 
 # (call 'any ..) -> flg
-call (x)
+call (i x)
    ArrayList<String> cmd = new ArrayList<String>();
    for (x = ex.Cdr; x instanceof Cell; x = x.Cdr)
       cmd.add(x.Car.eval().name());
@@ -1650,10 +1650,12 @@ call (x)
       String line;
       while ((line = in.readLine()) != null)
          System.out.println(line);
-      return p.waitFor() == 0? T : Nil;
+      At2.Car = new Number(i = p.waitFor());
+      return i == 0? T : Nil;
    }
    catch (IOException e) {System.err.println(cmd.get(0) + ": Can't exec");}
    catch (InterruptedException e) {}  //#! sighandler()
+   At2.Car = new Number(127);
    return Nil;
 
 # (ipid) -> pid | NIL

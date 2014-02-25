@@ -1,4 +1,6 @@
 * XXmar14 picoLisp-3.1.6
+   'call' exit status code in '@@'
+   Undo / Redo buttons
    PostScript 'psAlign' function
    Bug in PostScript 'rect'
    'kids' function

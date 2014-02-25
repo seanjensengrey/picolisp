@@ -1130,15 +1130,15 @@ sys/x86-64.freeBsd.defs.l,2062
 doTrace3065,74173
 traceCY3137,76088
 doCall3165,76576
-doTick3252,78768
-doIpid3284,79765
-doOpid3300,80053
-doKill3316,80348
-doFork3339,80783
-forkLispX_FE3352,81004
-doBye3513,85564
-byeE3525,85736
-finishE3537,86047
+doTick3255,78867
+doIpid3287,79864
+doOpid3303,80152
+doKill3319,80447
+doFork3342,80882
+forkLispX_FE3355,81103
+doBye3516,85663
+byeE3528,85835
+finishE3540,86146
 
 ./subr.l,2147
 doCar5,71

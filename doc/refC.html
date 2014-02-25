@@ -63,12 +63,16 @@ calculation. See also <code><a href="refH.html#hash">hash</a></code>.
 <dt><a name="call"><code>(call 'any ..) -> flg</code></a>
 <dd>Calls an external system command. The <code>any</code> arguments specify the
 command and its arguments. Returns <code>T</code> if the command was executed
-successfully.
+successfully. The (system dependent) exit status code of the child process is
+stored in the global variable <code><a href="ref_.html#@@">@@</a></code>.
 
 <pre><code>
 : (when (call 'test "-r" "file.l")  # Test if file exists and is readable
    (load "file.l")  # Load it
    (call 'rm "file.l") )  # Remove it
+
+: (cons (call "sh" "-c" "kill -SEGV $$") @@ (hex @@))
+-> (NIL 11 . "B")
 </code></pre>
 
 <dt><a name="call/1"><code>call/1</code></a>
