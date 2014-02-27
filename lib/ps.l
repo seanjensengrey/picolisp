@@ -1,8 +1,14 @@
-# 13feb14abu
+# 27feb14abu
 # (c) Software Lab. Alexander Burger
 
 # "*Glyph" "*PgX" "*PgY"
 # "*DX" "*DY" "*Pos" "*Fonts" "*Size" "*Font" "*Pag" "*Lim" "*FF" "*UL"
+
+(de *A4-DX . 595)
+(de *A4-DY . 842)
+
+(de *A5-DX . 420)
+(de *A5-DY . 595)
 
 (once
    (balance '"*Glyph"
@@ -60,16 +66,16 @@
    (setq "*Size" 12) )
 
 (de a4 (Ttl)
-   (psHead 595 842 Ttl) )
+   (psHead *A4-DX *A4-DY Ttl) )
 
 (de a4L (Ttl)
-   (psHead 842 595 Ttl) )
+   (psHead *A4-DY *A4-DX Ttl) )
 
 (de a5 (Ttl)
-   (psHead 420 595 Ttl) )
+   (psHead *A5-DX *A5-DY Ttl) )
 
 (de a5L (Ttl)
-   (psHead 595 420 Ttl) )
+   (psHead *A5-DY *A5-DX Ttl) )
 
 (de _font ()
    (prinl "/" "*Font" " findfont  " "*Size" " scalefont  setfont") )
