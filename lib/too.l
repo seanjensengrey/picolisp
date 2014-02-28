@@ -305,7 +305,13 @@
                (pair Rel)
                (or
                   (isa '+index (car Rel))
-                  (find '((B) (isa '+index B)) (; Rel 1 bag)) )
+                  (isa '+Swap (car Rel))
+                  (find
+                     '((B)
+                        (or
+                           (isa '+index B)
+                           (isa '+Swap B) ) )
+                     (; Rel 1 bag) ) )
                (not (; @ dbf))
                (println 'dbfCheck (cdr Rel) "Cls") ) ) ) ) )
 
@@ -406,7 +412,12 @@
                (or
                   (get Cls Var 'dbf)
                   (and
-                     (find '((B) (isa '+index B)) (get Cls Var 'bag))
+                     (find
+                        '((B)
+                           (or
+                              (isa '+index B)
+                              (isa '+Swap B) ) )
+                        (get Cls Var 'bag) )
                      (get @ 'dbf) ) ) )
             (dbfRelocTree Base Root Base) ) ) )
    (dbgc) )
