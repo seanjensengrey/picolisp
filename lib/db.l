@@ -1,4 +1,4 @@
-# 22feb14abu
+# 28feb14abu
 # (c) Software Lab. Alexander Burger
 
 # *Dbs *Jnl *Blob upd
@@ -21,7 +21,10 @@
                   (for Var (cdr Cls)
                      (unless (get Cls 1 Var)
                         (quit "Bad relation" (cons Var (car Cls))) )
-                     (put (get (car Cls) Var) 'dbf Dbf) ) ) ) )
+                     (when (isa '+index (get (car Cls) Var))
+                        (put @ 'dbf Dbf) )
+                     (for B (get Cls 1 Var 'bag)
+                        (and (isa '+index B) (put @ 'dbf Dbf)) ) ) ) ) )
          (inc 'N)
          (car L) )
       Lst ) )

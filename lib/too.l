@@ -1,4 +1,4 @@
-# 22feb14abu
+# 28feb14abu
 # (c) Software Lab. Alexander Burger
 
 ### Local Backup ###
@@ -306,8 +306,8 @@
                (or
                   (isa '+index (car Rel))
                   (find '((B) (isa '+index B)) (; Rel 1 bag)) )
-               (unless (; Rel 1 dbf)
-                  (println 'dbfCheck (cdr Rel) "Cls") ) ) ) ) ) )
+               (not (; @ dbf))
+               (println 'dbfCheck (cdr Rel) "Cls") ) ) ) ) )
 
 (de dbfMigrate (Pool Dbs)
    (let
@@ -401,7 +401,13 @@
             (commit) ) )
       '((Base Root Var Cls Hook)
          (if Var
-            (dbfRelocTree Base Root (tree Var Cls Hook) (get Cls Var 'dbf))
+            (dbfRelocTree Base Root
+               (tree Var Cls Hook)
+               (or
+                  (get Cls Var 'dbf)
+                  (and
+                     (find '((B) (isa '+index B)) (get Cls Var 'bag))
+                     (get @ 'dbf) ) ) )
             (dbfRelocTree Base Root Base) ) ) )
    (dbgc) )
 
