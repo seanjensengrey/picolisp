@@ -1,4 +1,4 @@
-# 28feb14abu
+# 02mar14abu
 # (c) Software Lab. Alexander Burger
 
 # *Dbs *Jnl *Blob upd
@@ -931,7 +931,9 @@
 
 (dm has> (Var Val)
    (or
-      (nor Val (get This Var))
+      (nor
+         Val
+         (if2 (get This Var) (ext? @) (val @) @) )
       (has> (meta This Var) Val (get This Var)) ) )
 
 (dm put> (Var Val)
