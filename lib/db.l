@@ -1,4 +1,4 @@
-# 02mar14abu
+# 03mar14abu
 # (c) Software Lab. Alexander Burger
 
 # *Dbs *Jnl *Blob upd
@@ -860,6 +860,19 @@
       (extra Obj Old Val)
       (set @ (extra Obj (val Old) Val))
       @ ) )
+
+(dm rel> (Obj Old New Hook)
+   (extra
+      Obj
+      (if (ext? Old) (val @) Old)
+      (if (ext? New) (val @) New)
+      Hook ) )
+
+(dm lose> (Obj Val Hook)
+   (extra Obj (if (ext? Val) (val @) Val) Hook) )
+
+(dm keep> (Obj Val Hook)
+   (extra Obj (if (ext? Val) (val @) Val) Hook) )
 
 
 ### Entities ###
