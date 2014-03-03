@@ -1,4 +1,4 @@
-# 17feb14abu
+# 03mar14abu
 # (c) Software Lab. Alexander Burger
 
 # *HPorts *Home *Gate *Host *Port *Port1 *Port% *Http1 *Chunked
@@ -419,7 +419,8 @@
          (pre? "http:" Url)
          (pre? "https:" Url)
          (pre? "mailto:" Url)
-         (pre? "javascript:" Url) )
+         (pre? "javascript:" Url)
+         (pre? "tel:" Url) )
       Url
       (pack *SesId Url) ) )
 
