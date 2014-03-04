@@ -1,4 +1,4 @@
-# 24feb14abu
+# 04mar14abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -1627,12 +1627,12 @@
          (prin "<table cellspacing=\"0\" cellpadding=\"0\"><td>")
          (extra "Var")
          (prin "</td><td title=\"-->\">")
-         (if (val> This)
-            (<img> "@img/go.png" 'url ((: url) (txt> This @)))
+         (if (txt> This (val> This))
+            (<img> "@img/go.png" 'url ((: url) @))
             (<img> "@img/no.png") )
          (prinl "</td></table>") )
-      ((val> This)
-         (showFld (<href> @ ((: url) (txt> This @)))) )
+      ((txt> This (val> This))
+         (showFld (<href> @ ((: url) @))) )
       (T (extra "Var")) ) )
 
 
@@ -1649,7 +1649,10 @@
    (pass super '((S) (pack "mailto:" S))) )
 
 
-(class +TelField +TextField)
+(class +TelField +Url +TextField)
+
+(dm T @
+   (pass super '((S) (pack "tel:" S))) )
 
 (dm txt> (Val)
    (telStr Val) )
