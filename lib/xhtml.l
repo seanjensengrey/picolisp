@@ -1,4 +1,4 @@
-# 24feb14abu
+# 06mar14abu
 # (c) Software Lab. Alexander Burger
 
 # *JS "*JS" *Style *Menu *Tab *ID
@@ -241,7 +241,9 @@
    (and Url (prin "</a>")) )
 
 (de <this> (Var Val . Prg)
-   (prin "<a href=\"" (sesId *Url) "?" Var "=" (ht:Fmt Val) "\"")
+   (prin "<a href=\""
+      (urlMT (sesId *Url) *Menu *Tab *ID
+         (pack "&" Var "=" (ht:Fmt Val) "\"") ) )
    (and *Style (htStyle @))
    (prin ">")
    (htPrin Prg 2)
