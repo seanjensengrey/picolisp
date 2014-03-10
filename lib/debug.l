@@ -420,16 +420,23 @@
 
 # Backtrace
 (de bt ()
-   (for (L (trail T)  L)
-      (if (pair (car L))
-         (println (pop 'L))
-         (space 3)
-         (println (pop 'L) (pop 'L)) )
-      (T (== '^ (car L)))
-      (T
-         (and
-            (pair (car L))
-            (or (== 'bt (caar L)) (line)) )
-         T ) ) )
+   (let *Dbg NIL
+      (for (L (trail T)  L)
+         (if (pair (car L))
+            (pretty (pop 'L))
+            (space 3)
+            (print (pop 'L))
+            (space)
+            (if (>= 12 (size (car L)))
+               (print (pop 'L))
+               (pretty (pop 'L) -3) ) )
+         (prinl)
+         (T (== '^ (car L)))
+         (T
+            (and
+               (pair (car L))
+               (or (== 'bt (caar L)) (line)) )
+            T )
+         (and (pair (car L)) (println '=======)) ) ) )
 
 # vi:et:ts=3:sw=3
