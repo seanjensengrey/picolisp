@@ -1,4 +1,4 @@
-# 31jul13abu
+# 09mar14abu
 # (c) Software Lab. Alexander Burger
 
 # Prompt
@@ -415,5 +415,17 @@
             (prinl
                (format (*/ (- (usec) U) 1000) 3)
                " sec" ) ) ) ) )
+
+`(== 64 64)  # Only in the 64-bit version
+
+# Backtrace
+(de bt ()
+   (for (L (trail T)  L)
+      (if (pair (car L))
+         (println (pop 'L))
+         (space 3)
+         (println (pop 'L) (pop 'L)) )
+      (T (== '^ (car L)))
+      (T (and (pair (car L)) (line)) T) ) )
 
 # vi:et:ts=3:sw=3

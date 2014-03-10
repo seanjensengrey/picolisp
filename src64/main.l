@@ -1,4 +1,4 @@
-# 17feb14abu
+# 10mar14abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -643,13 +643,8 @@
    if nz  # No
       push Y
       ld Y (EnvBind)  # Bindings
-      null Y  # Any?
-      if nz  # Yes
-         null (Break)  # In breakpoint?
-         ldnz Y ((Y) I)  # Yes: Skip frame
-      end
       do
-         null Y  # Bindings?
+         null Y  # Any?
       while nz  # Yes
          ld C (Y)  # End of bindings
          null (Y -I)  # Env swap zero?
@@ -739,11 +734,6 @@
    eval
    ld Z E  # Keep 'flg' in Z
    ld X (EnvBind)  # Bindings
-   null X  # Any?
-   if nz  # Yes
-      null (Break)  # In breakpoint?
-      ldnz X ((X) I)  # Yes: Skip frame
-   end
    ld E Nil  # Result
    do
       null X  # Bindings?
@@ -814,13 +804,8 @@
    cmp X Nil  # NIL?
    if eq  # Yes
       ld X (EnvBind)  # Bindings
-      null X  # Any?
-      if nz  # Yes
-         null (Break)  # In breakpoint?
-         ldnz X ((X) I)  # Yes: Skip frame
-      end
       do
-         null X  # Bindings?
+         null X  # Any?
       while nz  # Yes
          ld A (X)  # End of bindings in A
          cmp (A -II) At  # Lambda frame?
@@ -842,11 +827,6 @@
    push Z
    ld E (E CDR)  # Last arg
    ld Y (EnvBind)  # Bindings
-   null Y  # Any?
-   if nz  # Yes
-      null (Break)  # In breakpoint?
-      ldnz Y ((Y) I)  # Yes: Skip frame
-   end
    ld Z X  # Value pointer
    do
       null Y  # Bindings?
