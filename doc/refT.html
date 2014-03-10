@@ -494,6 +494,7 @@ program execution. The list elements are either list expressions (denoting
 function or method calls), or symbols followed by their corresponding values. If
 <code>flg</code> is <code>NIL</code>, the symbols and their values are omitted,
 and only the expressions are returned. See also <code><a
+href="refB.html#bt">bt</a></code>, <code><a
 href="refU.html#up">up</a></code> and <code><a
 href="refE.html#env">env</a></code>.
 
@@ -506,20 +507,6 @@ href="refE.html#env">env</a></code>.
 -> g
 : (f 3 4)
 -> ((f 3 4) A 3 B 4 (g (inc A) (dec B)) X 4 Y 3)
-
-: (for (L (f 3 4)  L)  # Pretty-print trail
-   (if (pair (car L))
-      (println (pop 'L))
-      (space 3)
-      (println (pop 'L) (pop 'L)) ) )
-
-   L NIL
-(f 3 4)
-   A 3
-   B 4
-(g (inc A) (dec B))
-   X 4
-   Y 3
 </code></pre>
 
 <dt><a name="tree"><code>(tree 'var 'cls ['hook]) -> tree</code></a>

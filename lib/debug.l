@@ -1,4 +1,4 @@
-# 09mar14abu
+# 10mar14abu
 # (c) Software Lab. Alexander Burger
 
 # Prompt
@@ -426,6 +426,10 @@
          (space 3)
          (println (pop 'L) (pop 'L)) )
       (T (== '^ (car L)))
-      (T (and (pair (car L)) (line)) T) ) )
+      (T
+         (and
+            (pair (car L))
+            (or (== 'bt (caar L)) (line)) )
+         T ) ) )
 
 # vi:et:ts=3:sw=3
