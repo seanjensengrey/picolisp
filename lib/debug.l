@@ -1,4 +1,4 @@
-# 10mar14abu
+# 11mar14abu
 # (c) Software Lab. Alexander Burger
 
 # Prompt
@@ -425,11 +425,7 @@
          (if (pair (car L))
             (pretty (pop 'L))
             (space 3)
-            (print (pop 'L))
-            (space)
-            (if (>= 12 (size (car L)))
-               (print (pop 'L))
-               (pretty (pop 'L) -3) ) )
+            (print (pop 'L) (pop 'L)) )
          (prinl)
          (T (== '^ (car L)))
          (T
