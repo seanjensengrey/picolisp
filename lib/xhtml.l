@@ -3,7 +3,7 @@
 
 # *JS "*JS" *Style *Menu *Tab *ID
 
-(mapc allow '(*JS *Menu *Tab *ID))
+(mapc allow '(*JS *Menu *Tab *ID "!ping"))
 (setq *Menu 0  *Tab 1)
 (off "*JS")
 
@@ -127,6 +127,10 @@
          (prinl "<script type=\"text/javascript\" src=\"" (srcUrl JS) "\"></script>") )
       (when (rest)
          (prinl "<script type=\"text/javascript\">" @ "</script>") ) ) )
+
+(de ping ()
+   (timeout (setq *Timeout `(* 60 1000)))
+   (respond) )
 
 (de <div> (Attr . Prg)
    (tag 'div Attr 2 Prg)
