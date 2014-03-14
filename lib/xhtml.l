@@ -128,8 +128,8 @@
       (when (rest)
          (prinl "<script type=\"text/javascript\">" @ "</script>") ) ) )
 
-(de ping ()
-   (timeout (setq *Timeout `(* 60 1000)))
+(de ping (Min)
+   (timeout (setq *Timeout (* Min `(* 60 1000))))
    (respond) )
 
 (de <div> (Attr . Prg)
