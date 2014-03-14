@@ -1,4 +1,4 @@
-# 06mar14abu
+# 14mar14abu
 # (c) Software Lab. Alexander Burger
 
 # *JS "*JS" *Style *Menu *Tab *ID
@@ -443,6 +443,15 @@
                   (<href>
                      (eval (car M) 1)
                      (urlMT *Url I *Tab *ID) ) ) ) ) ) ) )
+
+(de bar? (Attr)
+   (ifn (gt0 *Menu)
+      Attr
+      (cons
+         (cons
+            "onclick"
+            (pack "window.location.href='" (urlMT (sesId *Url) 0 *Tab *ID) "'") )
+         (if (pair (cdr Attr)) Attr (cons Attr)) ) ) )
 
 # Update link
 (de updLink ()
