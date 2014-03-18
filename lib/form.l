@@ -1,4 +1,4 @@
-# 04mar14abu
+# 18mar14abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -1909,7 +1909,6 @@
 # save
 
 (dm T (Exe)
-   (=: save Exe)
    (super
       '(nor (: home able) (lock (: home obj)))
       '(if (: home able)
@@ -1922,7 +1921,10 @@
             (unless (pair "*Err")
                (rollback)
                (off *Lock) ) )
-         (tryLock (: home obj)) ) ) )
+         (tryLock (: home obj)) ) )
+   (when (=: save Exe)
+      (for This (: home gui)
+         (and (isa '+Edit This) (=: save Exe)) ) ) )
 
 (de tryLock (Obj)
    (if (lock Obj)
