@@ -1,4 +1,4 @@
-# 03mar14abu
+# 17mar14abu
 # (c) Software Lab. Alexander Burger
 
 # *Dbs *Jnl *Blob upd
@@ -166,6 +166,9 @@
 # Maintain relations
 (dm rel> (Obj Old New))
 
+(dm rel?> (Obj Val)
+   T )
+
 (dm lose> (Obj Val))
 
 (dm keep> (Obj Val))
@@ -239,6 +242,18 @@
                   (get (if (sym? @) Obj New) (: hook)) ) ) )
          (: bag)
          New ) ) )
+
+(dm rel?> (Obj Val)
+   (not
+      (find
+         '((This V)
+            (and V
+               (not
+                  (rel?> This Obj V
+                     (when (: hook)
+                        (get (if (sym? @) Obj Val) (: hook)) ) ) ) ) )
+         (: bag)
+         Val ) ) )
 
 (dm lose> (Obj Val)
    (mapc
@@ -368,6 +383,10 @@
       (not (get Obj T))
       (put> New (: slot) Obj) ) )
 
+(dm rel?> (Obj Val)
+   (let X (get Val (: slot))
+      (or (== Obj X) (memq Obj X)) ) )
+
 (dm lose> (Obj Val)
    (when Val
       (put Val (: slot)
@@ -448,6 +467,7 @@
    (=: hook (car Lst))
    (extra Var (cdr Lst)) )
 
+(dm rel?> (Obj Val Hook))
 
 # (+Key +relation) [hook]
 (class +Key +index)
@@ -473,6 +493,12 @@
          (not (fetch Tree New))
          (store Tree New Obj (: dbf)) ) )
    (extra Obj Old New Hook) )
+
+(dm rel?> (Obj Val Hook)
+   (== Obj
+      (fetch
+         (tree (: var) (: cls) (or Hook (and (: hook) (get Obj @))))
+         Val ) ) )
 
 (dm lose> (Obj Val Hook)
    (store
@@ -513,6 +539,15 @@
                Obj
                (: dbf) ) ) ) )
    (extra Obj Old New Hook) )
+
+(dm rel?> (Obj Val Hook)
+   (let Key (cons Val (mapcar '((S) (get Obj S)) (: aux)))
+      (== Obj
+         (fetch
+            (tree (: var) (: cls) (or Hook (and (: hook) (get Obj @))))
+            (if (: ub)
+               (ubZval Key Obj)
+               (append Key Obj) ) ) ) ) )
 
 (dm lose> (Obj Val Hook)
    (let Key (cons Val (mapcar '((S) (get Obj S)) (: aux)))
@@ -555,6 +590,15 @@
             (store Tree (cons New Obj) Obj (: dbf)) ) ) )
    (extra Obj Old New Hook) )
 
+(dm rel?> (Obj Val Hook)
+   (and
+      (with (meta (: cls) (: var))
+         (== Obj
+            (fetch
+               (tree (: var) (: cls))
+               (cons Val Obj) ) ) )
+      (extra Obj Val Hook) ) )
+
 (dm lose> (Obj Val Hook)
    (with (meta (: cls) (: var))
       (store (tree (: var) (: cls)) (cons Val Obj) NIL (: dbf)) )
@@ -593,12 +637,35 @@
                (store Tree (cons (pack S) Aux2) Obj (: dbf))
                (pop 'S) ) ) ) ) )
 
+(de idxRel? (Obj Val Vals Hook)
+   (let
+      (Tree (tree (: var) (: cls) (or Hook (and (: hook) (get Obj @))))
+         Aux (mapcar '((S) (get Obj S)) (: aux))
+         Aux2 (append Aux (cons Obj)) )
+      (setq Aux (conc Aux Obj))
+      (nor
+         (n== Obj (fetch Tree (cons Val Aux)))
+         (find
+            '((S)
+               (loop
+                  (NIL (nth S (: min)))
+                  (NIL (== Obj (fetch Tree (cons (pack S) Aux2))) T)
+                  (nil (pop 'S)) ) )
+            Vals ) ) ) )
+
 (dm rel> (Obj Old New Hook)
    (idxRel Obj
       Old (split (cdr (chop Old)) " " "^J")
       New (split (cdr (chop New)) " " "^J")
       Hook )
    (extra Obj Old New Hook) )
+
+(dm rel?> (Obj Val Hook)
+   (and
+      (idxRel? Obj
+         Val (split (cdr (chop Val)) " " "^J")
+         Hook )
+      (extra Obj Val Hook) ) )
 
 (dm lose> (Obj Val Hook)
    (idxRel Obj
@@ -627,6 +694,14 @@
          (store Tree (cons (ext:Snx New) Obj T) Obj (: dbf)) ) )
    (extra Obj Old New Hook) )
 
+(dm rel?> (Obj Val Hook)
+   (and
+      (== Obj
+         (fetch
+            (tree (: var) (: cls) (or Hook (and (: hook) (get Obj @))))
+            (cons (ext:Snx Val) Obj T) ) )
+      (extra Obj Val Hook) ) )
+
 (dm lose> (Obj Val Hook)
    (store
       (tree (: var) (: cls) (or Hook (and (: hook) (get Obj @))))
@@ -652,6 +727,10 @@
 (dm rel> (Obj Old New Hook)
    (extra Obj (fold Old) (fold New) Hook) )
 
+(dm rel?> (Obj Val Hook)
+   (let V (fold Val)
+      (or (not V) (extra Obj V Hook)) ) )
+
 (dm lose> (Obj Val Hook)
    (extra Obj (fold Val) Hook) )
 
@@ -676,6 +755,15 @@
          (split (cdr (chop New)) " " "^J") )
       Hook )
    (extra Obj Old New Hook) )
+
+(dm rel?> (Obj Val Hook)
+   (and
+      (idxRel? Obj
+         (fold Val)
+         (extract '((L) (extract fold L))
+            (split (cdr (chop Val)) " " "^J") )
+         Hook )
+      (extra Obj Val Hook) ) )
 
 (dm lose> (Obj Val Hook)
    (idxRel Obj
@@ -800,8 +888,13 @@
       (extra Obj Old New Hook)
       (for O (diff Old New)
          (extra Obj O NIL Hook) )
-      (for N New
+      (for N (diff New Old)
          (extra Obj NIL N Hook) ) ) )
+
+(dm rel?> (Obj Val Hook)
+   (for V Val
+      (NIL (or (not V) (extra Obj V Hook)))
+      T ) )
 
 (dm lose> (Obj Val Hook)
    (if (ele> This Val)
@@ -867,6 +960,9 @@
       (if (ext? Old) (val @) Old)
       (if (ext? New) (val @) New)
       Hook ) )
+
+(dm rel?> (Obj Val Hook)
+   (extra Obj (if (ext? Val) (val @) Val) Hook) )
 
 (dm lose> (Obj Val Hook)
    (extra Obj (if (ext? Val) (val @) Val) Hook) )
@@ -948,6 +1044,12 @@
          Val
          (if2 (get This Var) (ext? @) (val @) @) )
       (has> (meta This Var) Val (get This Var)) ) )
+
+(dm rel?> (Var Val)
+   (nond
+      (Val T)
+      ((meta This Var) T)
+      (NIL (rel?> @ This Val)) ) )
 
 (dm put> (Var Val)
    (unless (has> This Var Val)
