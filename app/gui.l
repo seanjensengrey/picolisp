@@ -1,10 +1,11 @@
-# 14mar14abu
+# 18mar14abu
 # (c) Software Lab. Alexander Burger
 
 ### GUI ###
 (de menu (Ttl . Prg)
    (action
-      (html 0 Ttl *Css '(onload . "ping(2)")
+      (html 0 Ttl *Css NIL
+         (<ping> 2)
          (<layout>
             ((180 0 'menu)
                (<div> @

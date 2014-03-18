@@ -132,6 +132,9 @@
    (timeout (setq *Timeout (* Min `(* 60 1000))))
    (respond) )
 
+(de <ping> (Min)
+   (javascript NIL "onload=ping(" Min ")") )
+
 (de <div> (Attr . Prg)
    (tag 'div Attr 2 Prg)
    (prinl) )
