@@ -1,4 +1,4 @@
-# 18mar14abu
+# 19mar14abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -283,7 +283,7 @@
                   (link "&") ) ) ) )
       (throw "stop") ) )
 
-# Actve <span> elements
+# Active <span> elements
 (de span Args
    (def (car Args)
       (list NIL
