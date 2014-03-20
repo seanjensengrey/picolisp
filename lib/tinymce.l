@@ -10,7 +10,7 @@
          mode : 'textareas',
          theme : 'advanced',
          plugins : 'safari',
-         theme_advanced_buttons1 : 'forecolor,bold,italic,underline,strikethrough,hr,|,removeformat',
+         theme_advanced_buttons1 : 'forecolor,bold,italic,underline,strikethrough,hr,|,undo,redo,removeformat',
          theme_advanced_buttons2 : '',
          theme_advanced_buttons3 : '',
          theme_advanced_toolbar_location : 'top',
