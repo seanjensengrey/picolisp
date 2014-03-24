@@ -1,4 +1,4 @@
-# 29nov13abu
+# 24mar14abu
 # (c) Software Lab. Alexander Burger
 
 (de task (Key . Prg)
@@ -117,15 +117,14 @@
                   (con "Lst" (run "Prg")) ) )
             (setq "Lst" (cdr "Lst")) ) ) ) )
 
-(====)
-
-(de cache ("Var" "Str" . Prg)
-   (nond
-      ((setq "Var" (car (idx "Var" "Str" T)))
-         (set "Str" "Str"  "Str" (run Prg 1)) )
-      ((n== "Var" (val "Var"))
-         (set "Var" (run Prg 1)) )
-      (NIL (val "Var")) ) )
+(de cache (Var X . Prg)
+   (let K (cons (char (hash X)) X)
+      (nond
+         ((setq Var (caar (idx Var K T)))
+            (set (car K) (run Prg 1)) )
+         ((n== Var (val Var))
+            (set Var (run Prg 1)) )
+         (NIL (val Var)) ) ) )
 
 (====)
 
