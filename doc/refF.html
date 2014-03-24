@@ -190,12 +190,13 @@ Done!
 
 <dt><a name="find"><code>(find 'fun 'lst ..) -> any</code></a>
 <dd>Applies <code>fun</code> to successive elements of <code>lst</code> until
-non-<code>NIL</code> is returned. Returns that element, or <code>NIL</code> if
-<code>fun</code> did not return non-<code>NIL</code> for any element of
-<code>lst</code>. When additional <code>lst</code> arguments are given, their
-elements are also passed to <code>fun</code>. See also <code><a
-href="refS.html#seek">seek</a></code>, <code><a
-href="refP.html#pick">pick</a></code> and <code><a
+non-<code>NIL</code> is returned. Returns that element (and stores the
+non-<code>NIL</code> value in the global variable <code><a
+href="ref_.html#@@">@@</a></code>), or <code>NIL</code> if <code>fun</code> did
+not return non-<code>NIL</code> for any element of <code>lst</code>. When
+additional <code>lst</code> arguments are given, their elements are also passed
+to <code>fun</code>. See also <code><a href="refS.html#seek">seek</a></code>,
+<code><a href="refP.html#pick">pick</a></code> and <code><a
 href="refF.html#filter">filter</a></code>.
 
 <pre><code>

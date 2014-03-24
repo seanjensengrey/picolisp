@@ -1,4 +1,4 @@
-# 10mar14abu
+# 24mar14abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -701,8 +701,10 @@ seek (i j w x v)
          v = append(v, i++, x.Car.eval());
       while ((x = x.Cdr) instanceof Cell);
       while (v[0] instanceof Cell) {
-         if (w.apply(ex, false, v, i) != Nil)
+         if ((x = w.apply(ex, false, v, i)) != Nil) {
+            At2.Car = x;
             return v[0];
+         }
          for (j = i; --j >= 0;)
             v[j] = v[j].Cdr;
       }
@@ -719,8 +721,10 @@ find (i j w x v)
          v = append(v, i++, x.Car.eval());
       while ((x = x.Cdr) instanceof Cell);
       while (v[0] instanceof Cell) {
-         if (w.apply(ex, true, v, i) != Nil)
+         if ((x = w.apply(ex, true, v, i)) != Nil) {
+            At2.Car = x;
             return v[0].Car;
+         }
          for (j = i; --j >= 0;)
             v[j] = v[j].Cdr;
       }
@@ -802,6 +806,7 @@ maxi (i j w x y z v)
             v[j] = v[j].Cdr;
       }
    }
+   At2.Car = y;
    return z;
 
 # (mini 'fun 'lst ..) -> any
@@ -824,6 +829,7 @@ mini (i j w x y z v)
             v[j] = v[j].Cdr;
       }
    }
+   At2.Car = y;
    return z;
 
 # (fish 'fun 'any) -> lst

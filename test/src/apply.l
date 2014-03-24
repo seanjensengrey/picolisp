@@ -1,4 +1,4 @@
-# 21may10abu
+# 24mar14abu
 # (c) Software Lab. Alexander Burger
 
 ### apply ###
@@ -56,12 +56,18 @@
 
 ### seek ###
 (test (12 19 22) (seek '((X) (> (car X) 9)) (1 5 8 12 19 22)))
+(let (A -1  B 2  C 3)
+   (test '(B C) (seek '((L) (gt0 (val (car L)))) '(A B C)))
+   (test 2 @@) )
 
 
 ### find ###
 (test '(B) (find pair (1 A 2 (B) 3 CDE)))
 (test 4 (find > (1 2 3 4 5 6) (6 5 4 3 2 1)))
 (test 4 (find '((A B) (> A B)) (1 2 3 4 5 6) (6 5 4 3 2 1)))
+(let (A -1  B 2  C 3)
+   (test 'B (find '((X) (gt0 (val X))) '(A B C)))
+   (test 2 @@) )
 
 
 ### pick ###
@@ -81,7 +87,9 @@
 ### maxi mini ###
 (let (A 1 B 2 C 3)
    (test 'C (maxi val '(A B C)))
+   (test 3 @@)
    (test 'A (mini val '(A B C)))
+   (test 1 @@)
    (test '(A B C) (by val sort '(C A B))) )
 
 

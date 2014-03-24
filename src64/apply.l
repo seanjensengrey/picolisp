@@ -1,4 +1,4 @@
-# 13nov12abu
+# 24mar14abu
 # (c) Software Lab. Alexander Burger
 
 (code 'applyXYZ_E 0)
@@ -1302,6 +1302,7 @@
       pop Y
       cmp E Nil  # NIL?
       if ne  # No
+         ld (At2) E  # Value in '@@'
          ld E (Y -I)  # Return first 'lst'
          break T
       end
@@ -1349,6 +1350,7 @@
       pop Y
       cmp E Nil  # NIL?
       if ne  # No
+         ld (At2) E  # Value in '@@'
          ld E ((Y -I))  # Return CAR of first 'lst'
          break T
       end
@@ -1551,6 +1553,7 @@
          cmp Z Y  # Reached 'fun'?
       until eq  # Yes
    loop
+   ld (At2) (L II)  # Maximum in '@@'
    ld E (L I)  # Result
    drop
    pop Z
@@ -1602,6 +1605,7 @@
          cmp Z Y  # Reached 'fun'?
       until eq  # Yes
    loop
+   ld (At2) (L II)  # Minimum in '@@'
    ld E (L I)  # Result
    drop
    pop Z

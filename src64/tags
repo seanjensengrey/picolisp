@@ -751,15 +751,15 @@ sys/x86-64.freeBsd.defs.l,2062
 doFilter1161,31231
 doExtract1218,32508
 doSeek1275,33750
-doFind1322,34688
-doPick1369,35638
-doCnt1413,36511
-doSum1460,37455
-doMaxi1511,38512
-doMini1562,39596
-doFish1613,40678
-fishAXY1640,41196
-doBy1669,41750
+doFind1323,34725
+doPick1371,35712
+doCnt1415,36585
+doSum1462,37529
+doMaxi1513,38586
+doMini1565,39708
+doFish1617,40828
+fishAXY1644,41346
+doBy1673,41900
 
 ./err.l,1928
 dbgS5,73
