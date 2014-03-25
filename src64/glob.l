@@ -1,4 +1,4 @@
-# 06feb14abu
+# 25mar14abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Data)
@@ -235,6 +235,7 @@
    initFun NIL       "seek"      doSeek
    initFun NIL       "find"      doFind
    initFun NIL       "pick"      doPick
+   initFun NIL       "fully"     doFully
    initFun NIL       "cnt"       doCnt
    initFun NIL       "sum"       doSum
    initFun NIL       "maxi"      doMaxi

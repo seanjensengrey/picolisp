@@ -1,4 +1,4 @@
-# 24mar14abu
+# 25mar14abu
 # (c) Software Lab. Alexander Burger
 
 (code 'applyXYZ_E 0)
@@ -1398,6 +1398,50 @@
       pop Y
       cmp E Nil  # NIL?
       break ne  # No
+      lea Z (L I)  # Last arg
+      do
+         ld (Z) ((Z) CDR)  # Pop all lists
+         add Z I
+         cmp Z Y  # Reached 'fun'?
+      until eq  # Yes
+   loop
+   drop
+   pop Z
+   pop Y
+   pop X
+   ret
+
+# (fully 'fun 'lst ..) -> flg
+(code 'doFully 2)
+   push X
+   push Y
+   push Z
+   ld X E  # Keep expression in X
+   ld Z (E CDR)  # Z on args
+   ld E (Z)
+   ld Z (Z CDR)
+   eval  # Eval 'fun'
+   link
+   push E  # Push 'fun'
+   ld Y S  # Pointer to 'fun' in Y
+   do  # 'lst' args
+      ld E (Z)
+      eval+  # Eval next 'lst'
+      push E
+      ld Z (Z CDR)
+      atom Z  # More 'lst' args?
+   until nz  # No
+   link  # <L I> Last argument
+   do
+      ld E TSym  # Preset return value
+      atom (Y -I)  # First 'lst' done?
+   while z  # No
+      push Y
+      lea Z (L I)  # Last arg
+      call applyVarXYZ_E  # Apply
+      pop Y
+      cmp E Nil  # NIL?
+      break eq  # Yes
       lea Z (L I)  # Last arg
       do
          ld (Z) ((Z) CDR)  # Pop all lists

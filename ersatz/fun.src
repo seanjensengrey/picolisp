@@ -1,4 +1,4 @@
-# 24mar14abu
+# 25mar14abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -748,6 +748,24 @@ pick (i j w x v)
       }
    }
    return Nil;
+
+# (fully 'fun 'lst ..) -> flg
+fully (i j w x v)
+   w = (x = ex.Cdr).Car.eval();
+   if ((x = x.Cdr) instanceof Cell) {
+      v = new Any[6];
+      i = 0;
+      do
+         v = append(v, i++, x.Car.eval());
+      while ((x = x.Cdr) instanceof Cell);
+      while (v[0] instanceof Cell) {
+         if (w.apply(ex, true, v, i) == Nil)
+            return Nil;
+         for (j = i; --j >= 0;)
+            v[j] = v[j].Cdr;
+      }
+   }
+   return T;
 
 # (cnt 'fun 'lst ..) -> cnt
 cnt (i j n w x v)

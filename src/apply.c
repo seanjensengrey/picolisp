@@ -1,4 +1,4 @@
-/* 24mar14abu
+/* 25mar14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -508,6 +508,32 @@ any doPick(any ex) {
    }
    drop(foo);
    return Nil;
+}
+
+// (fully 'fun 'lst ..) -> flg
+any doFully(any ex) {
+   any x = cdr(ex);
+   cell foo;
+
+   Push(foo, EVAL(car(x)));
+   if (isCell(x = cdr(x))) {
+      int i, n = 0;
+      cell c[length(x)];
+
+      do
+         Push(c[n], EVAL(car(x))), ++n;
+      while (isCell(x = cdr(x)));
+      while (isCell(data(c[0]))) {
+         if (isNil(apply(ex, data(foo), YES, n, c))) {
+            drop(foo);
+            return Nil;
+         }
+         for (i = 0; i < n; ++i)
+            data(c[i]) = cdr(data(c[i]));
+      }
+   }
+   drop(foo);
+   return T;
 }
 
 // (cnt 'fun 'lst ..) -> cnt

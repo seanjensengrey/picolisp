@@ -1,4 +1,4 @@
-/* 06feb14abu
+/* 25mar14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -141,6 +141,7 @@ static symInit Symbols[] = {
    {doFree, "free"},
    {doFrom, "from"},
    {doFull, "full"},
+   {doFully, "fully"},
    {doFunQ, "fun?"},
    {doGc, "gc"},
    {doGe, ">="},

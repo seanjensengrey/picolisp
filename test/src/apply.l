@@ -1,4 +1,4 @@
-# 24mar14abu
+# 25mar14abu
 # (c) Software Lab. Alexander Burger
 
 ### apply ###
@@ -75,6 +75,10 @@
    (pick '((X) (get X 'str))
       (list (box) (prog1 (box) (put @ 'str "Hello")) (box)) ) )
 
+
+### fully ###
+(test T (fully gt0 (1 2 3)))
+(test NIL (fully gt0 (1 -2 3)))
 
 ### cnt ###
 (test 2 (cnt cdr '((1 . T) (2) (3 4) (5))))
