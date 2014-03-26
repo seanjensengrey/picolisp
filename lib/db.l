@@ -1,4 +1,4 @@
-# 17mar14abu
+# 26mar14abu
 # (c) Software Lab. Alexander Burger
 
 # *Dbs *Jnl *Blob upd
@@ -244,16 +244,15 @@
          New ) ) )
 
 (dm rel?> (Obj Val)
-   (not
-      (find
-         '((This V)
-            (and V
-               (not
-                  (rel?> This Obj V
-                     (when (: hook)
-                        (get (if (sym? @) Obj Val) (: hook)) ) ) ) ) )
-         (: bag)
-         Val ) ) )
+   (fully
+      '((This V)
+         (or
+            (not V)
+            (rel?> This Obj V
+               (when (: hook)
+                  (get (if (sym? @) Obj Val) (: hook)) ) ) ) )
+      (: bag)
+      Val ) )
 
 (dm lose> (Obj Val)
    (mapc
@@ -334,16 +333,14 @@
    (and
       (pair Val)
       (pair (car Val))
-      (not
-         (find
-            '((L)
-               (not
-                  (find
-                     '((Cls)
-                        (get Cls
-                           ((if (lst? (car L)) cadr car) L) ) )
-                     (: type) ) ) )
-            Val ) ) ) )
+      (fully
+         '((L)
+            (find
+               '((Cls)
+                  (get Cls
+                     ((if (lst? (car L)) cadr car) L) ) )
+               (: type) ) )
+         Val ) ) )
 
 (dm mis> (Val Obj)
    (and
