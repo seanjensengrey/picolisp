@@ -1,4 +1,4 @@
-# 24mar14abu
+# 28mar14abu
 # (c) Software Lab. Alexander Burger
 
 (setq *OS (java (java "java.lang.System" "getProperty" "os.name")))
@@ -103,14 +103,16 @@
                   (con "Lst" (run "Prg")) ) )
             (setq "Lst" (cdr "Lst")) ) ) ) )
 
-(de cache (Var X . Prg)
+(====)
+
+(de cache ("Var" X . Prg)
    (let K (cons (char (hash X)) X)
       (nond
-         ((setq Var (caar (idx Var K T)))
+         ((setq "Var" (caar (idx "Var" K T)))
             (set (car K) (run Prg 1)) )
-         ((n== Var (val Var))
-            (set Var (run Prg 1)) )
-         (NIL (val Var)) ) ) )
+         ((n== "Var" (val "Var"))
+            (set "Var" (run Prg 1)) )
+         (NIL (val "Var")) ) ) )
 
 (====)
 
