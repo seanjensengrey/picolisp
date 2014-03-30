@@ -1,4 +1,4 @@
-# 29mar14abu
+# 27feb14abu
 # (c) Software Lab. Alexander Burger
 
 # "*Glyph" "*PgX" "*PgY"
@@ -81,51 +81,49 @@
    (prinl "/" "*Font" " findfont  " "*Size" " scalefont  setfont") )
 
 (de font ("F" . "Prg")
-   (prog1
-      (use "N"
-         (cond
-            ((pair "F")
-               (setq "N" (pop '"F")) )
-            ((num? "F")
-               (setq "N" "F"  "F" "*Font") )
-            (T (setq "N" "*Size")) )
-         (unless (member "F" "*Fonts")
-            (push '"*Fonts" "F")
-            (prinl "/" "F" " isoLatin1 def") )
-         (ifn "Prg"
-            (setq "*Size" "N"  "*Font" "F")
-            (let ("*Size" "N" "*Font" "F")
-               (_font)
-               (psEval "Prg") ) ) )
-      (_font) ) )
+   (use "N"
+      (cond
+         ((pair "F")
+            (setq "N" (pop '"F")) )
+         ((num? "F")
+            (setq "N" "F"  "F" "*Font") )
+         (T (setq "N" "*Size")) )
+      (unless (member "F" "*Fonts")
+         (push '"*Fonts" "F")
+         (prinl "/" "F" " isoLatin1 def") )
+      (ifn "Prg"
+         (setq "*Size" "N"  "*Font" "F")
+         (let ("*Size" "N" "*Font" "F")
+            (_font)
+            (psEval "Prg") ) ) )
+   (_font) )
 
 (de bold "Prg"
-   (prog1
-      (let "*Font" (pack "*Font" "-Bold")
-         (_font)
-         (psEval "Prg") )
-      (_font) ) )
+   (let "*Font" (pack "*Font" "-Bold")
+      (_font)
+      (psEval "Prg") )
+   (_font) )
 
 (de width ("N" . "Prg")
    (and "Prg" (prinl "currentlinewidth"))
    (prinl "N" " setlinewidth")
    (when "Prg"
-      (prog1 (psEval "Prg")
-         (prinl "setlinewidth") ) ) )
+      (psEval "Prg")
+      (prinl "setlinewidth") ) )
 
 (de gray ("N" . "Prg")
    (and "Prg" (prinl "currentgray"))
    (prinl (- 100 "N") " 100 div setgray")
    (when "Prg"
-      (prog1 (psEval "Prg")
-         (prinl "setgray") ) ) )
+      (psEval "Prg")
+      (prinl "setgray") ) )
 
 (de color ("R" "G" "B" . "Prg")
    (and "Prg" (prinl "currentrgbcolor"))
    (prinl "R" " 100 div " "G" " 100 div " "B" " 100 div setrgbcolor")
    (when "Prg"
-      (prog1 (psEval "Prg")
-         (prinl "setrgbcolor") ) ) )
+      (psEval "Prg")
+      (prinl "setrgbcolor") ) )
 
 (de poly (F X Y . @)
    (prin "newpath " X " " (- "*PgY" Y) " moveto  ")
@@ -173,8 +171,8 @@
    (prinl "gsave")
    (prinl "*X" " " (- "*Y") " translate")
    (let "*Pos" 0
-      (prog1 (psEval "Prg")
-         (prinl "grestore") ) ) )
+      (psEval "Prg") )
+   (prinl "grestore") )
 
 (de ?ps ("X" "H" "V")
    (and "X" (ps "X" "H" "V")) )
