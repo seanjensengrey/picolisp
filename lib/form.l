@@ -1,4 +1,4 @@
-# 01apr14abu
+# 02apr14abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -2375,6 +2375,12 @@
 
 ### Debug ###
 `*Dbg
+
+(allow "!console")
+(de console @
+   (msg (cons 'console (rest)))
+   (respond) )
+
 (noLint 'gui)
 (noLint 'choDlg 'gui)
 (noLint 'jsForm 'action)
