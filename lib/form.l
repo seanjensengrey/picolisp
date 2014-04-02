@@ -1228,11 +1228,11 @@
 
 # Delete row
 (class +DelRowButton +Tiny +JS +Able +Tip +Button)
-# del exe
+# exe del
 
-(dm T (Txt Exe)
-   (=: del Txt)
+(dm T (Exe Txt)
    (=: exe Exe)
+   (=: del Txt)
    (super '(nth (: chart 1 data) (row)) ,"Delete row" "x"
       '(if (or (: home del) (not (curr)))
          (_delRow (: exe))
@@ -1249,13 +1249,16 @@
 
 # Move row up
 (class +BubbleButton +Tiny +JS +Able +Tip +Button)
+# exe
 
-(dm T ()
+(dm T (Exe)
+   (=: exe Exe)
    (super
       '(> (: chart 2) 1)
       ,"Shift row up"
       "\^"
       '(let L (val> (: chart 1))
+         (eval (: exe))
          (set> (: chart 1)
             (conc
                (cut (row -2) 'L)
