@@ -1,4 +1,4 @@
-# 19mar14abu
+# 01apr14abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -1733,7 +1733,8 @@
                      ((: get)
                         (mapcar 'val> (car G))
                         (car D)
-                        (car G) ) ) )
+                        (car G)
+                        I ) ) )
                (mapc 'set>
                   (car G)
                   ((: put) (car D) I)
