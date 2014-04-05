@@ -1,4 +1,4 @@
-# 13mar14abu
+# 05apr14abu
 # (c) Software Lab. Alexander Burger
 
 # Prompt
@@ -44,11 +44,12 @@
    (if (atom X)
       X
       (cons
-         (less (car X))
-         (when (cdr X)
+         (less (pop 'X))
+         (if (atom X)
+            X
             (cons
-               (less (cadr X))
-               (and (cddr X) '(..)) ) ) ) ) )
+               (less (pop 'X))
+               (and X '(..)) ) ) ) ) )
 
 (de what (S)
    (let *Dbg NIL
