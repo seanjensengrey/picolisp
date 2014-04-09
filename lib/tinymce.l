@@ -1,4 +1,4 @@
-# 04apr14abu
+# 09apr14abu
 # (c) Software Lab. Alexander Burger
 
 ### TinyMCE Interface ###
@@ -14,6 +14,7 @@
          statusbar: false,
          toolbar_items_size: 'small',
          language: '" (or *Lang "en") "',
+         entity_encoding: 'raw',
          setup: function(ed) {
             ed.on('init', function(e) {
                var fld = ed.getElement();
