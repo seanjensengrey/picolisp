@@ -1,4 +1,4 @@
-# 01apr14abu
+# 06apr14abu
 # (c) Software Lab. Alexander Burger
 
 # *Dbs *Jnl *Blob upd
@@ -1020,7 +1020,28 @@
             (pack (glue "/" (chop Obj)) "." Var)
             (pack (name Obj) "." Var) ) ) ) )
 
+(de incECnt (Obj)
+   (for Cls (type Obj)
+      (recur (Cls)
+         (or
+            (== '+Entity Cls)
+            (for C (type Cls)
+               (T (recurse C)
+                  (if (get *DB Cls)
+                     (inc @)
+                     (put *DB Cls (new T 1)) ) ) ) ) ) ) )
+
+(de decECnt (Obj)
+   (for Cls (type Obj)
+      (recur (Cls)
+         (or
+            (== '+Entity Cls)
+            (for C (type Cls)
+               (T (recurse C)
+                  (and (get *DB Cls) (dec @)) ) ) ) ) ) )
+
 (dm T @
+   (incECnt This)
    (while (args)
       (cond
          ((=T (next)) (put This T T))
@@ -1031,7 +1052,8 @@
 (dm zap> ()
    (for X (getl This)
       (let V (or (atom X) (pop 'X))
-         (and (meta This X) (zap> @ This V)) ) ) )
+         (and (meta This X) (zap> @ This V)) ) )
+   (unless (: T) (decECnt This)) )
 
 (dm url> (Tab))
 
@@ -1153,6 +1175,7 @@
                (not (memq X Lst))
                (meta This X)
                (lose> @ This V) ) ) )
+      (decECnt This)
       (=: T T)
       (upd> This) ) )
 
@@ -1174,6 +1197,7 @@
 (dm keep> (Lst)
    (when (: T)
       (=: T)
+      (incECnt This)
       (for X (getl This)
          (let V (or (atom X) (pop 'X))
             (and
@@ -1205,6 +1229,7 @@
 
 (dm set> (Val)
    (unless (= Val (val This))
+      (decECnt This)
       (let Lst (make (maps '((X) (link (fin X))) This))
          (for Var Lst
             (let? Rel (meta This Var)
@@ -1217,12 +1242,14 @@
                (unless (== Rel (meta Val Var))
                   (rel> Rel This NIL
                      (put> Rel This NIL (get This Var)) ) ) ) ) )
+      (incECnt This)
       (upd> This (val This) Val) )
    (val This) )
 
 (dm set!> (Val)
    (unless (= Val (val This))
       (dbSync)
+      (decECnt This)
       (let Lst (make (maps '((X) (link (fin X))) This))
          (for Var Lst
             (let? Rel (meta This Var)
@@ -1235,6 +1262,7 @@
                (unless (== Rel (meta Val Var))
                   (rel> Rel This NIL
                      (put> Rel This NIL (get This Var)) ) ) ) ) )
+      (incECnt This)
       (upd> This (val This) Val)
       (commit 'upd) )
    (val This) )
