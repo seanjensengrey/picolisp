@@ -1,4 +1,4 @@
-# 02apr14abu
+# 10apr14abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -1885,11 +1885,16 @@
                         Val ) ) ) )
             (cancelButton) ) ) ) )
 
-(de choTtl (Ttl Var Cls Hook)
-   (with (or (get Cls Var) (meta Cls Var))
-      (if (or (isa '+Idx This) (isa '+IdxFold This))
-         Ttl
-         (pack (count (tree (: var) (: cls) Hook)) " " Ttl) ) ) )
+(de choTtl (Ttl X . @)
+   (pack
+      (if (next)
+         (with (or (get @ X) (meta @ X))
+            (if (or (isa '+Idx This) (isa '+IdxFold This))
+               (get *DB (: cls) 0)
+               (count (tree (: var) (: cls) (next))) ) )
+         (get *DB X 0) )
+      " "
+      Ttl ) )
 
 (de cho ()
    (if (: diaform) 16 8) )
