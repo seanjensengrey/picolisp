@@ -1,5 +1,8 @@
 * XXjun14 picoLisp-3.1.7
+   Generalized 'style' propagation
+   Bug in "lib/plio.js"
    Entity-Count in DB root objects
+   'console' JavaScript callback
 
 * 30mar14 picoLisp-3.1.6
    'fully' map function

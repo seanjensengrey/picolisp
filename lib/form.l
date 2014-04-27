@@ -1,4 +1,4 @@
-# 10apr14abu
+# 25apr14abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -1001,7 +1001,8 @@
    (when (: lbl)
       (ht:Prin (eval @))
       (<nbsp>) )
-   (style (cons 'id (pack "i" *Form "-" (: id))) "Prg") )
+   (let *Style (style (cons 'id (pack "i" *Form "-" (: id))) *Style)
+      (run "Prg") ) )
 
 
 (class +gui)
