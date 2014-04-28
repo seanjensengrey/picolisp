@@ -1002,7 +1002,7 @@
       (ht:Prin (eval @))
       (<nbsp>) )
    (let *Style (style (cons 'id (pack "i" *Form "-" (: id))) *Style)
-      (run Prg  1 '(*Style)) ) )
+      (run Prg 1 '(*Style)) ) )
 
 
 (class +gui)
