@@ -1,4 +1,4 @@
-# 25apr14abu
+# 28apr14abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -997,12 +997,12 @@
 
 
 ### Form field classes ###
-(de showFld "Prg"
+(de showFld Prg
    (when (: lbl)
       (ht:Prin (eval @))
       (<nbsp>) )
    (let *Style (style (cons 'id (pack "i" *Form "-" (: id))) *Style)
-      (run "Prg") ) )
+      (run Prg  1 '(*Style)) ) )
 
 
 (class +gui)
