@@ -1,4 +1,4 @@
-# 25mar14abu
+# 01may14abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -455,6 +455,7 @@ version (i x)
 ############ gc ############
 # (gc) -> NIL
 gc T
+   At.Car = At2.Car = Nil;
    System.gc();
    return Nil;
 

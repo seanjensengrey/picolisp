@@ -1,4 +1,4 @@
-# 30apr14abu
+# 01may14abu
 # (c) Software Lab. Alexander Burger
 
 # Mark data
@@ -456,6 +456,8 @@
    ld Y (E CDR)  # Y on args
    ld E (Y)  # Eval first
    eval  # Eval
+   ld (At) Nil  # Clear '@'
+   ld (At2) Nil  # and '@@'
    cmp E Nil  # Nil?
    if eq  # Yes
       call gc  # Collect with default
