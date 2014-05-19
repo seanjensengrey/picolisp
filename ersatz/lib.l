@@ -1,4 +1,4 @@
-# 28mar14abu
+# 19may14abu
 # (c) Software Lab. Alexander Burger
 
 (setq *OS (java (java "java.lang.System" "getProperty" "os.name")))
@@ -1920,8 +1920,8 @@
       (make
          (for "X" (all)
             (cond
-               ((= `(char "+") (char "X"))
-                  (for "Y" (val "X")
+               ((and (= `(char "+") (char "X")) (pair (val "X")))
+                  (for "Y" @
                      (and
                         (pair "Y")
                         (fun? (cdr "Y"))
