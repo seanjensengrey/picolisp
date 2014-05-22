@@ -1,4 +1,4 @@
-# 28apr14abu
+# 22may14abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -1263,8 +1263,8 @@
          (set> (: chart 1)
             (conc
                (cut (row -2) 'L)
-               (cons (cadr L))
-               (cons (car L))
+               (and (cadr L) (cons @))
+               (and (car L) (cons @))
                (cddr L) ) ) ) )
    (=: chg T) )
 
