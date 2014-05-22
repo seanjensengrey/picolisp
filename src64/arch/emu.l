@@ -1,4 +1,4 @@
-# 23jun13abu
+# 22may14abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -621,7 +621,7 @@
             ((baseCode Adr)
                (genCode (Adr Opc Test) (list Opc Adr) ((baseCode Adr) Test)
                   "if (@2)"
-                  "   PC = Code + @1;") )
+                  "   PC = Code + @1;" ) )
             (*FPic
                (genCode (Adr Opc Test) (list Opc Adr) ((absCode Adr) Test)
                   "if (@2)"
@@ -629,7 +629,7 @@
             (T
                (genCode (Adr Opc Test) (list Opc Adr) ((absCode Adr) Test)
                   "if (@2)"
-                  "   PC = Code + @1;") ) ) )
+                  "   PC = Code + @1;" ) ) ) )
       ((=T A)  # Indexed: Ignore SUBR
          (genCode (Adr Opc Test) (list Opc Adr) (Adr Test)
             "if (@2)"
