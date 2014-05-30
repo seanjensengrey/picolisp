@@ -1,4 +1,4 @@
-# 22may14abu
+# 30may14abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -1351,7 +1351,6 @@
                      ((pre? ".+" X)
                         (let N (+ (cadr D) (format (cddr (chop X))))
                            (for ((J . L) (cddr D)  (> I J)  (cdr L))
-                              (NIL (> I J))  # Temporary (03oct12abu)
                               (inc 'N (if (num? (car L)) 1 8)) )
                            (prin
                               " {.p = (uint8_t*)"
