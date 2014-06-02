@@ -1,4 +1,4 @@
-# 25apr14abu
+# 02jun14abu
 # (c) Software Lab. Alexander Burger
 
 # *JS "*JS" *Style *Menu *Tab *ID
@@ -377,7 +377,8 @@
                               ("DY"
                                  (pack "height:" (abs @ ) (if (ge0 "DY")"px" "%")) ) )
                            "Args" ) ) ) )
-               (prog1 (if "Cls" (list "Cls" "Style") "Style")  # -> '@'
+               (prog1
+                  (if "Cls" (list "Cls" "Style") "Style")  # -> '@'
                   (eval (cadr "L")) )
                (let "X" (+ "X" "DX")
                   (recurse (cddr "L") "Y") )
@@ -552,7 +553,8 @@
          (prinl "^M") ) ) )
 
 (de <%> @
-   (prog1 (pass pack)
+   (prog1
+      (pass pack)
       (ht:Prin @)
       (prinl "<br/>")
       (<0> @) ) )
