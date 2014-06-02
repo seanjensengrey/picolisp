@@ -1,4 +1,4 @@
-# 06apr14abu
+# 02jun14abu
 # (c) Software Lab. Alexander Burger
 
 # *Dbs *Jnl *Blob upd
@@ -1005,7 +1005,8 @@
 (de inc! (Obj Var Val)
    (when (num? (get Obj Var))
       (dbSync)
-      (prog1 (inc (prop Obj Var) (or Val 1))
+      (prog1
+         (inc (prop Obj Var) (or Val 1))
          (commit 'upd) ) ) )
 
 (de blob! (Obj Var File)

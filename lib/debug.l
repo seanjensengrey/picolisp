@@ -1,4 +1,4 @@
-# 05apr14abu
+# 02jun14abu
 # (c) Software Lab. Alexander Burger
 
 # Prompt
@@ -419,7 +419,8 @@
 # Benchmarking
 (de bench Prg
    (let U (usec)
-      (prog1 (run Prg 1)
+      (prog1
+         (run Prg 1)
          (out 2
             (prinl
                (format (*/ (- (usec) U) 1000) 3)
