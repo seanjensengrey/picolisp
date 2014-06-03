@@ -1,4 +1,4 @@
-# 02jun14abu
+# 03jun14abu
 # (c) Software Lab. Alexander Burger
 
 (de task (Key . Prg)
@@ -306,9 +306,7 @@
    (cond
       ((atom X) (print X))
       ((memq (car X) '(let let?))
-         (prin "(")
-         (let Z X
-            (print (pop 'X))
+         (_pretty
             (cond
                ((atom (car X))
                   (spPrt (pop 'X))
@@ -321,12 +319,9 @@
                   (let Z (pop 'X)
                      (prtty2 Z (+ N 3) Z) )
                   (prin " )") ) )
-            (prtty1 X N Z) )
-         (prin " )") )
+            (prtty1 X N Z) ) )
       ((== 'for (car X))
-         (prin "(")
-         (let Z X
-            (print (pop 'X))
+         (_pretty
             (cond
                ((or (atom (car X)) (atom (cdar X)))
                   (spPrt (pop 'X))
@@ -336,40 +331,39 @@
                (T
                   (nlPrt N)
                   (prtty0 (pop 'X) (+ 3 N)) ) )
-            (prtty1 X N Z) )
-         (prin " )") )
+            (prtty1 X N Z) ) )
       ((== 'if2 (car X))
-         (prin "(")
-         (let Z X
-            (print (pop 'X))
+         (_pretty
             (when (>= 12 (size (head 2 X)))
                (spPrt (pop 'X))
                (spPrt (pop 'X)) )
-            (prtty1 X N Z) )
-         (prin " )") )
+            (prtty1 X N Z) ) )
       ((memq (car X) '(while until do state finally co))
          (prtty3 X N) )
       ((>= 12 (size X)) (print X))
       ((memq (car X) '(=: use later recur tab new))
-         (prin "(")
-         (let Z X
-            (print (pop 'X) (pop 'X))
-            (prtty1 X N Z) )
-         (prin " )") )
-      ((memq (car X) '(setq default))
-         (prin "(")
-         (let Z X
+         (_pretty
+            (space)
             (print (pop 'X))
+            (prtty1 X N Z) ) )
+      ((memq (car X) '(setq default))
+         (_pretty
             (if (cdddr X)
                (prog
                   (nlPrt N)
                   (prtty2 X N Z) )
                (spPrt (pop 'X))
-               (nlPrt1 (pop 'X) N) ) )
-         (prin " )") )
+               (nlPrt1 (pop 'X) N) ) ) )
       ((memq (car X) '(T NIL if ifn when unless case casq with catch push bind job in out ctl))
          (prtty3 X N) )
       (T (prtty0 X N)) ) )
+
+(de _pretty "Prg"
+   (prin "(")
+   (let Z X
+      (print (pop 'X))
+      (run "Prg") )
+   (prin " )") )
 
 (de prtty0 (X N)
    (prin "(")
