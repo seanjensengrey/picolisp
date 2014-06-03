@@ -515,5 +515,7 @@
    (load "@lib/led.l" "@lib/edit.l") )
 (load "@lib/debug.l" "@lib/lint.l")
 (noLint 'later (loc "@Prg" later))
+(noLint 'pretty 'Z)
+(noLint '_pretty 'Z)
 
 # vi:et:ts=3:sw=3
