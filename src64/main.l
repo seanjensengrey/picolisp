@@ -1,4 +1,4 @@
-# 10mar14abu
+# 04jun14abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -226,12 +226,12 @@
    ld E A  # Heap pointer
    ld (A HEAP) (Heaps)  # Set heap link
    ld (Heaps) A
-   add A (- HEAP 16)  # A on last cell in chunk
+   add A (- HEAP II)  # A on last cell in chunk
    ld X (Avail)  # Initialize free list
    do
       ld (A) X  # Link avail
       ld X A
-      sub A 16
+      sub A II
       cmp A E  # Done?
    until lt  # Yes
    ld (Avail) X  # Set new Avail
