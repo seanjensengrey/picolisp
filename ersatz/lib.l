@@ -1,4 +1,4 @@
-# 03jun14abu
+# 05jun14abu
 # (c) Software Lab. Alexander Burger
 
 (setq *OS (java (java "java.lang.System" "getProperty" "os.name")))
@@ -333,7 +333,7 @@
                   (prtty2 X N Z) )
                (spPrt (pop 'X))
                (nlPrt1 (pop 'X) N) ) ) )
-      ((memq (car X) '(T NIL if ifn when unless case casq with catch push bind job in out ctl))
+      ((memq (car X) '(T NIL ! if ifn when unless case casq with catch push bind job in out ctl))
          (prtty3 X N) )
       (T (prtty0 X N)) ) )
 
