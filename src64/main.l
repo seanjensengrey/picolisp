@@ -568,7 +568,8 @@
       inc E  # Increment count
       ld C (C)  # Follow link
    loop
-   shr E (- 20 4 4)  # Divide by CELLS (1M/16), make short number
+   shr E (- 20 4)  # Divide by CELLS (1M/16), clear tags
+   shl E 4  # Make short number
    or E CNT
    ret
 
