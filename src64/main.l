@@ -1,4 +1,4 @@
-# 04jun14abu
+# 10jun14abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -560,17 +560,15 @@
       until z  # Yes
       ret
    end
-   ld A 0  # Init count
+   ld E 0  # Init count
    ld C (Avail)  # Get avail list
    do
       null C  # Any?
    while nz  # Yes
-      inc A  # Increment count
+      inc E  # Increment count
       ld C (C)  # Follow link
    loop
-   div CELLS  # (C is zero)
-   ld E A
-   shl E 4  # Make short number
+   shr E (- 20 4 4)  # Divide by CELLS (1M/16), make short number
    or E CNT
    ret
 
