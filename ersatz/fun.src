@@ -1,4 +1,4 @@
-# 01may14abu
+# 14jun14abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -3294,7 +3294,7 @@ hash (i j n)
 rand (x)
    Seed = Seed * 6364136223846793005L + 1;
    if ((x = (ex = ex.Cdr).Car.eval()) == Nil)
-      return new Number(Seed);
+      return new Number((int)Seed);
    if (x == T)
       return (Seed & 0x100000000L) == 0? Nil : T;
    return new Number(((Number)x).Cnt + (int)(Seed >>> 33) % (evInt(ex.Cdr) + 1 - ((Number)x).Cnt));
