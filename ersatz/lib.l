@@ -1,4 +1,4 @@
-# 05jun14abu
+# 15jun14abu
 # (c) Software Lab. Alexander Burger
 
 (setq *OS (java (java "java.lang.System" "getProperty" "os.name")))
@@ -291,7 +291,10 @@
                   (spPrt (pop 'X))
                   (prtty? (pop 'X) N) )
                ((>= 12 (size (car X)))
-                  (spPrt (pop 'X)) )
+                  (prin " (")
+                  (let Z (pop 'X)
+                     (prtty2 Z NIL Z) )
+                  (prin ")") )
                (T
                   (nlPrt N)
                   (prin "(")
@@ -319,13 +322,20 @@
             (prtty1 X N Z) ) )
       ((memq (car X) '(while until do state finally co))
          (prtty3 X N) )
-      ((>= 12 (size X)) (print X))
+      ((>= 12 (size X))
+         (ifn (memq (car X) '(set setq default))
+            (print X)
+            (prin "(")
+            (let Z X
+               (printsp (pop 'X))
+               (prtty2 X NIL Z) )
+            (prin ")") ) )
       ((memq (car X) '(=: use later recur tab new))
          (_pretty
             (space)
             (print (pop 'X))
             (prtty1 X N Z) ) )
-      ((memq (car X) '(setq default))
+      ((memq (car X) '(set setq default))
          (_pretty
             (if (cdddr X)
                (prog
@@ -364,11 +374,16 @@
       (NIL X)
       (T (== Z X) (prin " ."))
       (T (atom X) (prin " . ") (print X))
-      (prtty? (pop 'X) N)
+      (if N
+         (prtty? (pop 'X) N)
+         (space)
+         (print (pop 'X)) )
       (NIL X)
       (T (== Z X) (prin " ."))
       (T (atom X) (prin " . ") (print X))
-      (nlPrt N) ) )
+      (if N
+         (nlPrt N)
+         (space 2) ) ) )
 
 (de prtty3 (X N)
    (prin "(")
