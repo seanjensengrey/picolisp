@@ -1,4 +1,4 @@
-/* 18jun14abu
+/* 19jun14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -37,13 +37,6 @@ static char Get[] =
 static void giveup(char *msg) {
    fprintf(stderr, "ssl: %s\n", msg);
    exit(1);
-}
-
-static void sslChk(int n) {
-   if (n < 0) {
-      ERR_print_errors_fp(stderr);
-      exit(1);
-   }
 }
 
 static int sslConnect(SSL *ssl, char *node, char *service) {
@@ -136,6 +129,7 @@ static void doSigTerm(int n __attribute__((unused))) {
 // ssl host port url key file
 // ssl host port url key file dir sec
 int main(int ac, char *av[]) {
+   bool dbg;
    SSL_CTX *ctx;
    SSL *ssl;
    int n, sec, getLen, lenLen, fd, sd;
@@ -144,6 +138,8 @@ int main(int ac, char *av[]) {
    struct stat st;
    char get[1024], buf[4096], nm[4096], len[64];
 
+   if (dbg = strcmp(av[ac-1], "+") == 0)
+      --ac;
    if (!(ac >= 4 && ac <= 6  ||  ac == 8))
       giveup("host port url [[key] file] | host port url key file dir sec");
    if (strlen(Get)+strlen(av[1])+strlen(av[2])+strlen(av[3]) >= sizeof(get))
@@ -160,9 +156,14 @@ int main(int ac, char *av[]) {
    ssl = SSL_new(ctx);
 
    if (ac <= 6) {
-      if (sslConnect(ssl, av[1], av[2]) < 0)
+      if (sslConnect(ssl, av[1], av[2]) < 0) {
+         ERR_print_errors_fp(stderr);
          giveup("Can't connect");
-      sslChk(SSL_write(ssl, get, getLen));
+      }
+      if (SSL_write(ssl, get, getLen) < 0) {
+         ERR_print_errors_fp(stderr);
+         giveup("SSL GET");
+      }
       if (ac > 4) {
          if (*av[4]  &&  !sslFile(ssl,av[4]))
             giveup(av[4]);
@@ -171,16 +172,18 @@ int main(int ac, char *av[]) {
       }
       while ((n = SSL_read(ssl, buf, sizeof(buf))) > 0)
          write(STDOUT_FILENO, buf, n);
+      if (dbg)
+         ERR_print_errors_fp(stderr);
       return 0;
    }
-
-   signal(SIGCHLD,SIG_IGN);  /* Prevent zombies */
-   if ((n = fork()) < 0)
-      giveup("detach");
-   if (n)
-      return 0;
-   setsid();
-
+   if (!dbg) {
+      signal(SIGCHLD,SIG_IGN);  /* Prevent zombies */
+      if ((n = fork()) < 0)
+         giveup("detach");
+      if (n)
+         return 0;
+      setsid();
+   }
    File = av[5];
    Dir = av[6];
    sec = atoi(av[7]);
@@ -222,6 +225,8 @@ int main(int ac, char *av[]) {
                   alarm(0);
                   sslClose(ssl,sd);
                }
+               if (dbg)
+                  ERR_print_errors_fp(stderr);
                sleep(sec);
             }
             free(Data);
@@ -241,6 +246,8 @@ int main(int ac, char *av[]) {
                      unlink(nm);
                   sslClose(ssl,sd);
                }
+               if (dbg)
+                  ERR_print_errors_fp(stderr);
             }
          }
          closedir(dp);
