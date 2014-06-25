@@ -1,4 +1,4 @@
-# 15jun14abu
+# 25jun14abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -2433,6 +2433,8 @@ make (x y z)
 
 # (made ['lst1 ['lst2]]) -> lst
 made (x y)
+   if (Env.Make == null)
+      makeError(ex);
    if ((x = ex.Cdr) instanceof Cell) {
       Env.Yoke = x.Car.eval();
       x = x.Cdr;
@@ -2444,6 +2446,8 @@ made (x y)
 
 # (chain 'lst ..) -> lst
 chain (x y)
+   if (Env.Make == null)
+      makeError(ex);
    ex = ex.Cdr;
    do {
       x = ex.Car.eval();
@@ -2458,6 +2462,8 @@ chain (x y)
 
 # (link 'any ..) -> any
 link (x)
+   if (Env.Make == null)
+      makeError(ex);
    ex = ex.Cdr;
    do {
       x = ex.Car.eval();
@@ -2470,6 +2476,8 @@ link (x)
 
 # (yoke 'any ..) -> any
 yoke (x)
+   if (Env.Make == null)
+      makeError(ex);
    ex = ex.Cdr;
    do {
       x = ex.Car.eval();
