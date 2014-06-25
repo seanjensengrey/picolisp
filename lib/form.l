@@ -1,4 +1,4 @@
-# 02jun14abu
+# 25jun14abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -28,7 +28,7 @@
       (if *PRG
          (get "*Lst" (- "*Cnt" *Get) *Form)
          (prog1
-            (setq *Top (new NIL NIL  'able T  'evt 0))
+            (setq *Top (new NIL NIL 'able T 'evt 0))
             (queue (nth "*Lst" (- "*Cnt" *Get)) *Top) ) )
       (let "Lst" (get "*Lst" (- "*Cnt" *Get) 1)
          (for ("F" . "L") "Lst"
