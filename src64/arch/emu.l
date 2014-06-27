@@ -1,4 +1,4 @@
-# 30may14abu
+# 27jun14abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -1057,7 +1057,7 @@
          "   E = *(ptr)@2.p;"
          "   if (!(E.b[0] & 14)) {"
          "      S.p -= 8,  *(uint16_t**)S.p = PC;"
-         "      S.p -= 8,  *(uint16_t**)S.p = Code + 1;"  # <exec>
+         "      S.p -= 8,  *(uint16_t**)S.p = Code + @3;"  # <execN>
          "      PC = Code + @1;"
          "         break;"
          "   }"
