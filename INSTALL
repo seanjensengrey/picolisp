@@ -1,4 +1,4 @@
-26apr13abu
+28jun14abu
 (c) Software Lab. Alexander Burger
 
 
@@ -45,18 +45,18 @@ installation, and invoke them explicitly as desired.
    or - if you have an x86-64 system (under Linux, FreeBSD or SunOS), or a ppc64
    system (under Linux) - build the 64-bit version
 
-      $ (cd src64; make)
+      $ (cd src64; make) && (cd src; make tools gate)
 
    To use the 64-bit version also on systems which are not natively supported,
    you can build the emulator
 
-      $ (cd src64; make emu)
+      $ (cd src64; make emu) && (cd src; make tools gate)
 
    Note that the emulator's execution speed is 10 to 20 times slower than the
    native versions.
 
    In all three cases (32-bits, 64-bits, or emulator), the executable
-   bin/picolisp will be created.
+   bin/picolisp with related binaries and libraries will be created.
 
 
    To build the 64-bit version the first time (bootstrapping), you have the
