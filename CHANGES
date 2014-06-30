@@ -1,4 +1,7 @@
-* XXjun14 picoLisp-3.1.7
+* XXsep14 picoLisp-3.1.8
+
+* 30jun14 picoLisp-3.1.7
+   'pretty' print enhancements
    Generalized 'style' propagation
    Bug in "lib/plio.js"
    Entity-Count in DB root objects
