@@ -1,4 +1,4 @@
-/* 06feb13abu
+/* 07jul14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -70,7 +70,7 @@ static any tcpAccept(int sd) {
    struct sockaddr_in6 addr;
 
    f = nonblocking(sd);
-   i = 200; do {
+   i = 200; do {  // 20 s
       socklen_t len = sizeof(addr);
       if ((sd2 = accept(sd, (struct sockaddr*)&addr, &len)) >= 0) {
          fcntl(sd, F_SETFL, f);
@@ -83,7 +83,7 @@ static any tcpAccept(int sd) {
          return boxCnt(sd2);
       }
       usleep(100000);  // 100 ms
-   } while (errno == EAGAIN  &&  --i >= 0);
+   } while (errno == EAGAIN  &&  --i);
    fcntl(sd, F_SETFL, f);
    return NULL;
 }
