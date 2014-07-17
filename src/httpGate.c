@@ -1,4 +1,4 @@
-/* 07jul14abu
+/* 17jul14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -218,10 +218,10 @@ static int gateConnect(int port, name *np) {
    addr.sin6_family = AF_INET6;
    addr.sin6_addr = in6addr_loopback;
    addr.sin6_port = htons((unsigned short)port);
-   i = 5; do {  // 200 ms
+   i = 5; do {  // 500 ms
       if (connect(sd, (struct sockaddr*)&addr, sizeof(addr)) >= 0)
          return sd;
-      usleep(40000);  // 40 ms
+      usleep(100000);  // 100 ms
    } while (--i);
    if (np) {
       pid_t pid;
