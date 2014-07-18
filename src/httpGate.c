@@ -1,4 +1,4 @@
-/* 19jun14abu
+/* 18jul14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -221,8 +221,32 @@ static int gateConnect(int port, name *np) {
    if (connect(sd, (struct sockaddr*)&addr, sizeof(addr)) >= 0)
       return sd;
    if (np) {
+      int fd;
       pid_t pid;
 
+      if (np->log) {
+         struct flock fl;
+         char log[strlen(np->dir) + 1 + strlen(np->log) + 1];
+
+         if (np->log[0] == '/')
+            strcat(log, np->log);
+         else
+            sprintf(log, "%s/%s", np->dir, np->log);
+         if ((fd = open(log, O_RDWR)) >= 0) {
+            fl.l_type = F_WRLCK;
+            fl.l_whence = SEEK_SET;
+            fl.l_start = 0;
+            fl.l_len = 0;
+            if (fcntl(fd, F_SETLK, &fl) < 0) {
+               if (errno != EACCES  &&  errno != EAGAIN  ||
+                           fcntl(fd, F_SETLKW, &fl) < 0  ||
+                           connect(sd, (struct sockaddr*)&addr, sizeof(addr)) < 0)
+                  return -1;
+               close(fd);
+               return sd;
+            }
+         }
+      }
       if ((pid = fork()) == 0) {
          if (setgid(np->gid) == 0 && setuid(np->uid) == 0 && chdir(np->dir) == 0) {
             setpgid(0,0);
@@ -238,8 +262,11 @@ static int gateConnect(int port, name *np) {
          int i = 200;
          do {
             usleep(100000);  // 100 ms
-            if (connect(sd, (struct sockaddr*)&addr, sizeof(addr)) >= 0)
+            if (connect(sd, (struct sockaddr*)&addr, sizeof(addr)) >= 0) {
+               if (np->log  &&  fd >= 0)
+                  close(fd);
                return sd;
+            }
          } while (--i);
       }
    }
