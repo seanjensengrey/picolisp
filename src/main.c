@@ -1,4 +1,4 @@
-/* 10mar14abu
+/* 21jul14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -1098,7 +1098,10 @@ any doCtty(any ex) {
          bufString(x, tty);
          if (!freopen(tty,"r",stdin) || !freopen(tty,"w",stdout) || !freopen(tty,"w",stderr))
             return Nil;
+         InFiles[STDIN_FILENO]->ix = InFiles[STDIN_FILENO]->cnt = InFiles[STDIN_FILENO]->next = 0;
+         Tio = tcgetattr(STDIN_FILENO, &OrgTermio) == 0;
          OutFiles[STDOUT_FILENO]->tty = YES;
+         OutFiles[STDOUT_FILENO]->ix = 0;
       }
    }
    return T;

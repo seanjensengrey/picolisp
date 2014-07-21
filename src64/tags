@@ -531,13 +531,13 @@ sys/x86-64.freeBsd.defs.l,2062
 doPwd2988,73807
 doCd2999,74062
 doCtty3024,74678
-doInfo3061,75619
-doFile3115,76877
-doDir3168,78113
-doCmd3238,79731
-doArgv3256,80190
-doOpt3359,82736
-doVersion3373,83067
+doInfo3070,75990
+doFile3124,77248
+doDir3177,78484
+doCmd3247,80102
+doArgv3265,80561
+doOpt3368,83107
+doVersion3382,83438
 
 ./big.l,1078
 zapZeroA_A6,106

@@ -1,4 +1,4 @@
-# 10jun14abu
+# 21jul14abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -3046,7 +3046,16 @@
             cc freopen(S _w_ (stderr))  # Re-open standard error
             null A  # OK?
             if nz  # Yes
-               ld (((OutFiles) I) II) 1  # (stdout) OutFiles[1]->tty
+               ld A ((InFiles))  # InFiles[0] (stdin)
+               ld (A I) 0  # Clear 'ix'
+               ld (A II) 0  # Clear 'cnt'
+               ld (A III) 0  # Clear 'next'
+               cc tcgetattr(0 OrgTermio)  # Save terminal I/O
+               not B
+               ld (Tio) B  # and flag
+               ld A ((OutFiles) I)  # OutFiles[1] (stdout)
+               ld (A II) 1  # Set 'tty'
+               ld (A I) 0  # Clear 'ix'
                ld E TSym  # Return T
             end
          end
