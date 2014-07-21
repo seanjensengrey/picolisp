@@ -1,5 +1,6 @@
 * XXsep14 picoLisp-3.1.8
    Improved 'ctty' initialization
+   'httpGate' auto-start race condition
 
 * 30jun14 picoLisp-3.1.7
    'pretty' print enhancements
