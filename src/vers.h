@@ -1,1 +1,1 @@
-static byte Version[4] = {3,1,7,5};
+static byte Version[4] = {3,1,7,6};

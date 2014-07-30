@@ -1,4 +1,4 @@
-/* 18jul14abu
+/* 29jul14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -70,7 +70,7 @@ static int readNames(char *nm) {
          p = np->ev[0] = malloc(5 + strlen(np->key) + 1);
          strcpy(p, "NAME="), strcpy(p+5, np->key);
          np->port = atoi(ps = strtok(NULL, delim));
-         if (!(pw = getpwnam(strtok(NULL, delim)))) {
+         if (!(pw = getpwnam(strtok(NULL, delim))) || pw->pw_uid == 0 || pw->pw_gid == 0) {
             free(np);
             continue;
          }
