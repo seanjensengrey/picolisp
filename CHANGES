@@ -1,4 +1,6 @@
 * XXsep14 picoLisp-3.1.8
+   Added 'vim' plugin and syntax files
+   Handling 32-bit PIDs in 'tell'
    Improved 'ctty' initialization
    'httpGate' auto-start race condition
 
