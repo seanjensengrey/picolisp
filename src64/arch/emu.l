@@ -1,4 +1,4 @@
-# 27jun14abu
+# 09aug14abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -1462,7 +1462,7 @@
             "   PC = Code + i;"
             "   for (;;) {"
             "      switch (*PC++) {"
-            "      case 0: // nop"
+            "      case 0:  // nop"
             "         break;" ) ) )
    (for (C . L) *AsmOpcodes
       (prinl
