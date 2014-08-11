@@ -1,4 +1,4 @@
-# 25feb14abu
+# 11aug14abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -3539,6 +3539,6 @@
    call flushAll  # Flush all output channels
 (code 'finishE)
    call setCooked  # Set terminal to cooked mode
-   cc exit(E)
+   stop  # Exit
 
 # vi:et:ts=3:sw=3

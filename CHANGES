@@ -1,4 +1,5 @@
 * XXsep14 picoLisp-3.1.8
+   'stop' instruction (64-bit)
    Added 'vim' plugin and syntax files
    Handling 32-bit PIDs in 'tell'
    Improved 'ctty' initialization

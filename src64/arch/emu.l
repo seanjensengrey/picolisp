@@ -1,4 +1,4 @@
-# 10aug14abu
+# 11aug14abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -1086,6 +1086,10 @@
 (asm initLib ()
    (genCode NIL '(initLib) NIL
       "A.n = (uint64_t)(unsigned long)*(uint8_t**)A.p;" ) )
+
+(asm stop ()
+   (genCode NIL '(stop) NIL
+      "exit((int)E.n);" ) )
 
 ### Optimizer ###
 # Replace the the next 'cnt' elements with 'lst'

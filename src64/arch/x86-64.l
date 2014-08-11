@@ -1,4 +1,4 @@
-# 05jan13abu
+# 11aug14abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -970,6 +970,10 @@
    (prinst "lea" "-8(%rsi,%rdi,8)" "%r15") )  # pointer to last argument in Z
 
 (asm initLib ())
+
+(asm stop ()
+   (prinst "mov" "%rbx" "%rdi")  # Return 'E'
+   (prinst "jmp" "exit") )
 
 ### Optimizer ###
 # Replace the the next 'cnt' elements with 'lst'
