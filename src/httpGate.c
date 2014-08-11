@@ -1,4 +1,4 @@
-/* 29jul14abu
+/* 11aug14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -96,7 +96,7 @@ static int readNames(char *nm) {
          }
          np->av[cnt] = NULL;
          p = np->key;
-         if (p[0] == '@'  &&  p[1] == '\0')
+         if (!Names  ||  p[0] == '@' && p[1] == '\0')
             port = np->port;
          for (t = &Names;  *t;  t = strcasecmp(p, (*t)->key) >= 0? &(*t)->more : &(*t)->less);
          *t = np;
