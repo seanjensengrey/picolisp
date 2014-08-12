@@ -1,4 +1,4 @@
-# 18feb14abu
+# 12aug14abu
 # (c) Software Lab. Alexander Burger
 
 ### Destructive primitives ###
@@ -926,9 +926,9 @@
    # A is big
    cnt E  # E short?
    if nz  # Yes
-      cmp E ZERO  # Multiply with zero?
-      jeq ret  # Yes: Return zero
       xchg A E  # Exchange args
+      cmp A ZERO  # Multiply with zero?
+      jeq ret  # Yes: Return zero
       shr A 4  # Normalize
       jmp 10
    end
