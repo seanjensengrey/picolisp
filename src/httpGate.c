@@ -1,4 +1,4 @@
-/* 11aug14abu
+/* 12aug14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -110,8 +110,11 @@ static name *findName(char *p, char *q) {
    name *np;
    int n, c;
 
-   if (p == q)
+   if (p == q) {
+      if (Names && !Names->more && !Names->less)
+         return Names;
       p = "@";
+   }
    c = *q,  *q = '\0';
    for (np = Names;  np;  np = n > 0? np->more : np->less)
       if ((n = strcasecmp(p, np->key)) == 0) {
