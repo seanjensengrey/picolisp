@@ -362,8 +362,8 @@ int main(int ac, char *av[]) {
 
             np = NULL;
             port = (int)strtol(p, &q, 10);
-            if (q == p  ||  *q != ' ' && *q != '/') {
-               if ((q = strpbrk(p, " /")) && (np = findName(p, q)))
+            if (q == p  ||  *q != ' ' && *q != '/' && *q != '?') {
+               if ((q = strpbrk(p, " /?")) && (np = findName(p, q)))
                   port = np->port;
                else
                   port = ports[0],  q = p;
