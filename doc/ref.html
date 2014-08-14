@@ -1219,8 +1219,8 @@ without a function definition, but with a name of the form
 tries to locate a shared object file with the name <code>lib</code> and a
 function <code>sym</code>, and stores a pointer to this code in the symbol's
 value. From that point, this symbol <code>lib:sym</code> keeps that function
-definition, and is undistinguishable from built-in functions. Especially, future
-calls to this function do not require another library search.
+definition, and is undistinguishable from built-in functions. Future calls to
+this function do not require another library search.
 
 <p>A consequence of this lookup mechanism, however, is the fact that such
 symbols cannot be used directly in a function-passing context (i.e.
