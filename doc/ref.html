@@ -68,8 +68,8 @@ href="faq.html">Frequently Asked Questions (FAQ)</a>.
       <li><a href="#macro-io">Read-Macros</a>
       </ul>
    <li><a href="#ev">Evaluation</a>
-   <li><a href="#int">Interrupt</a>
    <li><a href="#coroutines">Coroutines</a>
+   <li><a href="#int">Interrupt</a>
    <li><a href="#errors">Error Handling</a>
    <li><a href="#atres">@ Result</a>
    <li><a href="#cmp">Comparing</a>
@@ -1758,11 +1758,13 @@ functionalities, like:
 
 <p><ul>
 <li>Transient symbols are enclosed in double quotes (see <a
-href="#transient-io">Transient Symbols</a>) <li>External symbols are enclosed in
-braces (see <a href="#external-io">External Symbols</a>) <li>Pattern-Wildcards
-start with an at-mark "<code>@</code>" (see <a href="refM.html#match">match</a>
-and <a href="refF.html#fill">fill</a>) <li>Symbols referring to a shared library
-contain a colon "<code>lib:sym</code>" </ul>
+href="#transient-io">Transient Symbols</a>)
+<li>External symbols are enclosed in braces (see <a href="#external-io">External
+Symbols</a>)
+<li>Pattern-Wildcards start with an at-mark "<code>@</code>" (see <a
+href="refM.html#match">match</a> and <a href="refF.html#fill">fill</a>)
+<li>Symbols referring to a shared library contain a colon "<code>lib:sym</code>"
+</ul>
 
 <p>With that, the last of the above conventions (local functions start with an
 underscore) is not really necessary, because true local scope can be enforced
