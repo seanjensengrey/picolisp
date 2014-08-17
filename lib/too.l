@@ -1,4 +1,4 @@
-# 16aug14abu
+# 17aug14abu
 # (c) Software Lab. Alexander Burger
 
 ### Local Backup ###
@@ -455,19 +455,19 @@
          (dumpVal (car @))
          (prin ")") ) ) )
 
-(de dumpVal (Obj)
+(de dumpVal (X)
    (nond
-      ((atom Obj)
+      ((atom X)
          (prin "(")
-         (dumpVal (pop 'Obj))
-         (while (pair Obj)
+         (dumpVal (pop 'X))
+         (while (pair X)
             (space)
-            (dumpVal (pop 'Obj)) )
-         (when Obj (prin " . ") (dumpVal Obj))
+            (dumpVal (pop 'X)) )
+         (when X (prin " . ") (dumpVal X))
          (prin ")") )
-      ((ext? Obj) (print Obj))
-      ((type Obj) (print (val Obj)))
-      (NIL (prin "`") (dumpExt Obj) (prin ")")) ) )
+      ((ext? X) (print X))
+      ((type X) (print (val X)))
+      (NIL (prin "`") (dumpExt X) (prin ")")) ) )
 
 ### Debug ###
 `*Dbg
