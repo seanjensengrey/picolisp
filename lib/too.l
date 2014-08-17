@@ -417,27 +417,28 @@
       (commit) ) )
 
 ### Dump Objects ###
+(zero *DumpBlob)
+
 (de dump CL
-   (let B 0
-      (for ("Q" (goal CL) (asoq '@@ (prove "Q")))
-         (let (Obj (cdr @)  K (dumpExt Obj))
-            (maps
-               '((X)
-                  (unless (or (= X K) (= `(char "+") (char (fin X))))
-                     (prinl)
-                     (space 3)
-                     (cond
-                        ((pair X)
-                           (printsp (cdr X))
-                           (dumpVal (car X)) )
-                        ((isa '+Blob (meta Obj X))
-                           (prin X " `(tmp " (inc 'B) ")")
-                           (out (tmp B)
-                              (in (blob Obj X) (echo)) ) )
-                        (T (print X T)) ) ) )
-               Obj )
-            (prinl " )")
-            Obj ) ) ) )
+   (for ("Q" (goal CL) (asoq '@@ (prove "Q")))
+      (let (Obj (cdr @)  K (dumpExt Obj))
+         (maps
+            '((X)
+               (unless (or (= X K) (= `(char "+") (char (fin X))))
+                  (prinl)
+                  (space 3)
+                  (cond
+                     ((pair X)
+                        (printsp (cdr X))
+                        (dumpVal (car X)) )
+                     ((isa '+Blob (meta Obj X))
+                        (prin X " `(tmp " (inc '*DumpBlob) ")")
+                        (out (tmp *DumpBlob)
+                           (in (blob Obj X) (echo)) ) )
+                     (T (print X T)) ) ) )
+            Obj )
+         (prinl " )")
+         Obj ) ) )
 
 (de dumpExt (Obj)
    (prin "(obj ")
