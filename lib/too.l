@@ -1,4 +1,4 @@
-# 17aug14abu
+# 18aug14abu
 # (c) Software Lab. Alexander Burger
 
 ### Local Backup ###
@@ -436,7 +436,10 @@
                      (space 3)
                      (cond
                         ((pair X)
-                           (printsp (cdr Y))
+                           (if (atom (cdr Y))
+                              (printsp (cdr Y))
+                              (printsp (cadr Y))
+                              (prin "`") )
                            (dumpVal (car Y)) )
                         ((isa '+Blob (meta Obj X))
                            (prin Y " `(tmp " (inc '*DumpBlob) ")")
