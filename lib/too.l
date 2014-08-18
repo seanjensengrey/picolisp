@@ -419,23 +419,30 @@
 ### Dump Objects ###
 (zero *DumpBlob)
 
+(dm (dumpType> . +Entity) ()
+   (type This) )
+
+(dm (dumpValue> . +Entity) (X)
+   X )
+
 (de dump CL
    (for ("Q" (goal CL) (asoq '@@ (prove "Q")))
       (let (Obj (cdr @)  K (dumpExt Obj))
          (maps
             '((X)
                (unless (or (= X K) (= `(char "+") (char (fin X))))
-                  (prinl)
-                  (space 3)
-                  (cond
-                     ((pair X)
-                        (printsp (cdr X))
-                        (dumpVal (car X)) )
-                     ((isa '+Blob (meta Obj X))
-                        (prin X " `(tmp " (inc '*DumpBlob) ")")
-                        (out (tmp *DumpBlob)
-                           (in (blob Obj X) (echo)) ) )
-                     (T (print X T)) ) ) )
+                  (let? Y (dumpValue> Obj X)
+                     (prinl)
+                     (space 3)
+                     (cond
+                        ((pair X)
+                           (printsp (cdr Y))
+                           (dumpVal (car Y)) )
+                        ((isa '+Blob (meta Obj X))
+                           (prin Y " `(tmp " (inc '*DumpBlob) ")")
+                           (out (tmp *DumpBlob)
+                              (in (blob Obj X) (echo)) ) )
+                        (T (print Y T)) ) ) ) )
             Obj )
          (prinl " )")
          Obj ) ) )
@@ -450,9 +457,9 @@
                (isa '+Key (meta Obj (cdr X))) ) )
          (getl Obj) )
       (ifn @
-         (print (type Obj) (id Obj T))
+         (print (dumpType> Obj) (id Obj T))
          (prin "(")
-         (printsp (type Obj) (cdr @))
+         (printsp (dumpType> Obj) (cdr @))
          (dumpVal (car @))
          (prin ")") ) ) )
 
