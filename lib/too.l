@@ -1,4 +1,4 @@
-# 18aug14abu
+# 19aug14abu
 # (c) Software Lab. Alexander Burger
 
 ### Local Backup ###
@@ -419,6 +419,14 @@
 ### Dump Objects ###
 (zero *DumpBlob)
 
+(dm (dumpKey> . +Entity) ()
+   (pick
+      '((X)
+         (and
+            (isa '+Key (meta Obj (fin X)))
+            (cons (fin X) X) ) )
+      (getl This) ) )
+
 (dm (dumpType> . +Entity) ()
    (type This) )
 
@@ -427,10 +435,10 @@
 
 (de dump CL
    (for ("Q" (goal CL) (asoq '@@ (prove "Q")))
-      (let (Obj (cdr @)  K (dumpExt Obj))
+      (let (Obj (cdr @)  K (fin (dumpExt Obj)))
          (maps
             '((X)
-               (unless (or (= X K) (= `(char "+") (char (fin X))))
+               (unless (or (= K (fin X)) (= `(char "+") (char (fin X))))
                   (let? Y (dumpValue> Obj X)
                      (prinl)
                      (space 3)
@@ -453,17 +461,12 @@
 (de dumpExt (Obj)
    (prin "(obj ")
    (prog1
-      (find
-         '((X)
-            (and
-               (pair X)
-               (isa '+Key (meta Obj (cdr X))) ) )
-         (getl Obj) )
+      (dumpKey> Obj)
       (ifn @
          (print (dumpType> Obj) (id Obj T))
          (prin "(")
-         (printsp (dumpType> Obj) (cdr @))
-         (dumpVal (car @))
+         (printsp (dumpType> Obj) (car @))
+         (dumpVal (cadr @))
          (prin ")") ) ) )
 
 (de dumpVal (X)
