@@ -1,4 +1,5 @@
 * XXsep14 picoLisp-3.1.8
+   'has' debug function
    Bug in bignum '*' (64-bit)
    'stop' instruction (64-bit)
    Added 'vim' plugin and syntax files

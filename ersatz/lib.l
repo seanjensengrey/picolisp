@@ -1,4 +1,4 @@
-# 15jun14abu
+# 20aug14abu
 # (c) Software Lab. Alexander Burger
 
 (setq *OS (java (java "java.lang.System" "getProperty" "os.name")))
@@ -1541,6 +1541,11 @@
          (not "*Prg")
          (let *Dbg (up 2 *Dbg) (run "*Prg")) ) ) )
 
+(de has ("X")
+   (let *Dbg NIL
+      (filter
+         '(("S") (= "X" (val "S")))
+         (all) ) ) )
 
 (de can (X)
    (let *Dbg NIL

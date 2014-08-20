@@ -1,4 +1,4 @@
-# 19aug14abu
+# 20aug14abu
 # (c) Software Lab. Alexander Burger
 
 # Prompt
@@ -109,6 +109,12 @@
       (or
          (not "*Prg")
          (let *Dbg (up 2 *Dbg) (run "*Prg")) ) ) )
+
+(de has ("X")
+   (let *Dbg NIL
+      (filter
+         '(("S") (= "X" (val "S")))
+         (all) ) ) )
 
 (de can (X)
    (let *Dbg NIL
@@ -438,7 +444,7 @@
                   (cons
                      (or
                         (and (sym? (car X)) (car X))
-                        (find '(("S") (== (car X) (val "S"))) (all))
+                        (has (car X))
                         (car X) )
                      (less (cdr X)) ) )
                (space 3)
