@@ -444,7 +444,7 @@
                   (cons
                      (or
                         (and (sym? (car X)) (car X))
-                        (has (car X))
+                        (less (has (car X)))
                         (car X) )
                      (less (cdr X)) ) )
                (space 3)
