@@ -1,4 +1,4 @@
-# 25aug14abu
+# 26aug14abu
 # (c) Software Lab. Alexander Burger
 
 ### Local Backup ###
@@ -420,12 +420,13 @@
 (zero *DumpBlob)
 
 (dm (dumpKey> . +Entity) ()
-   (pick
-      '((X)
-         (and
-            (isa '+Key (meta Obj (fin X)))
-            (cons (fin X) X) ) )
-      (getl This) ) )
+   (unless (: T)
+      (pick
+         '((X)
+            (and
+               (isa '+Key (meta Obj (fin X)))
+               (cons (fin X) X) ) )
+         (getl This) ) ) )
 
 (dm (dumpType> . +Entity) ()
    (type This) )

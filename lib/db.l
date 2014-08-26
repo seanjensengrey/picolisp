@@ -1,4 +1,4 @@
-# 16aug14abu
+# 25aug14abu
 # (c) Software Lab. Alexander Burger
 
 # *Dbs *Jnl *Blob upd
@@ -1360,7 +1360,10 @@
             (cache '*ObjIdx (pop 'Lst)
                (new (or (meta L 'Dbf 1) 1) L) ) ) )
       (while Lst
-         (put> Obj (pop 'Lst) (pop 'Lst)) )
+         (let (K (pop 'Lst)  V (pop 'Lst))
+            (if (=T K)
+               (lose> Obj)
+               (put> Obj K V) ) ) )
       Obj ) )
 
 # vi:et:ts=3:sw=3
