@@ -1,4 +1,4 @@
-# 15jun14abu
+# 27aug14abu
 # (c) Software Lab. Alexander Burger
 
 (de task (Key . Prg)
@@ -214,7 +214,8 @@
 (de uniq (Lst)
    (let R NIL
       (filter
-         '((X) (not (idx 'R X T)))
+         '((X)
+            (not (idx 'R (cons (hash X) X) T)) )
          Lst ) ) )
 
 (de group (Lst)

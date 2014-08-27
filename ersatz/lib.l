@@ -1,4 +1,4 @@
-# 20aug14abu
+# 27aug14abu
 # (c) Software Lab. Alexander Burger
 
 (setq *OS (java (java "java.lang.System" "getProperty" "os.name")))
@@ -175,7 +175,8 @@
 (de uniq (Lst)
    (let R NIL
       (filter
-         '((X) (not (idx 'R X T)))
+         '((X)
+            (not (idx 'R (cons (hash X) X) T)) )
          Lst ) ) )
 
 (de group (Lst)
@@ -997,7 +998,9 @@
    (permute @D @Y) )
 
 (be uniq (@B @X)
-   (^ @ (not (idx (-> @B) (-> @X) T))) )
+   (^ @
+      (let X (-> @X)
+         (not (idx (-> @B) (cons (hash X) X) T)) ) ) )
 
 (be asserta (@C) (^ @ (asserta (-> @C))))
 
