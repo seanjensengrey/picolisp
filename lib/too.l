@@ -1,4 +1,4 @@
-# 26aug14abu
+# 27aug14abu
 # (c) Software Lab. Alexander Burger
 
 ### Local Backup ###
@@ -451,9 +451,11 @@
                               (prin "`") )
                            (dumpVal (car Y)) )
                         ((isa '+Blob (meta Obj X))
-                           (prin Y " `(tmp " (inc '*DumpBlob) ")")
-                           (out (tmp *DumpBlob)
-                              (in (blob Obj X) (echo)) ) )
+                           (let F (blob Obj X)
+                              (ifn (info F)
+                                 (msg F " no blob")
+                                 (prin Y " `(tmp " (inc '*DumpBlob) ")")
+                                 (call 'cp "-a" F (tmp *DumpBlob)) ) ) )
                         (T (print Y T)) ) ) ) )
             (prinl " )") )
          (at "C" (println '(commit))) )
