@@ -1,4 +1,4 @@
-/* 13may14abu
+/* 30aug14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -1297,42 +1297,28 @@ any doAsoq(any x) {
    return Nil;
 }
 
-static any Rank;
-
-any rank1(any lst, int n) {
-   int i;
-
-   if (isCell(car(lst)) && compare(caar(lst), Rank) > 0)
-      return NULL;
-   if (n == 1)
-      return car(lst);
-   i = n / 2;
-   return rank1(nCdr(i,lst), n-i) ?: rank1(lst, i);
-}
-
-any rank2(any lst, int n) {
-   int i;
-
-   if (isCell(car(lst)) && compare(Rank, caar(lst)) > 0)
-      return NULL;
-   if (n == 1)
-      return car(lst);
-   i = n / 2;
-   return rank2(nCdr(i,lst), n-i) ?: rank2(lst, i);
-}
-
 // (rank 'any 'lst ['flg]) -> lst
 any doRank(any x) {
-   any y;
+   any y, z;
    cell c1, c2;
 
    x = cdr(x),  Push(c1, EVAL(car(x)));
    x = cdr(x),  Push(c2, y = EVAL(car(x)));
-   x = cdr(x),  x = EVAL(car(x));
-   Rank = Pop(c1);
-   if (isCell(y))
-      return (isNil(x)? rank1(y, length(y)) : rank2(y, length(y))) ?: Nil;
-   return Nil;
+   z = Nil;
+   x = cdr(x);
+   if (isNil(EVAL(car(x))))
+      for (x = Pop(c1);  isCell(y);  y = cdr(y)) {
+         if (compare(caar(y), x) > 0)
+            break;
+         z = y;
+      }
+   else
+      for (x = Pop(c1);  isCell(y);  y = cdr(y)) {
+         if (compare(x, caar(y)) > 0)
+            break;
+         z = y;
+      }
+   return car(z);
 }
 
 /* Pattern matching */
