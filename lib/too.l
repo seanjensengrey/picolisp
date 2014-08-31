@@ -1,4 +1,4 @@
-# 27aug14abu
+# 31aug14abu
 # (c) Software Lab. Alexander Burger
 
 ### Local Backup ###
@@ -441,10 +441,10 @@
             (for X (getl Obj)
                (unless (or (= K (fin X)) (= `(char "+") (char (fin X))))
                   (let? Y (dumpValue> Obj X)
-                     (prinl)
-                     (space 3)
                      (cond
                         ((pair X)
+                           (prinl)
+                           (space 3)
                            (if (atom (cdr Y))
                               (printsp (cdr Y))
                               (printsp (cadr Y))
@@ -454,9 +454,14 @@
                            (let F (blob Obj X)
                               (ifn (info F)
                                  (msg F " no blob")
+                                 (prinl)
+                                 (space 3)
                                  (prin Y " `(tmp " (inc '*DumpBlob) ")")
                                  (call 'cp "-a" F (tmp *DumpBlob)) ) ) )
-                        (T (print Y T)) ) ) ) )
+                        (T
+                           (prinl)
+                           (space 3)
+                           (print Y T) ) ) ) ) )
             (prinl " )") )
          (at "C" (println '(commit))) )
       (println '(commit)) ) )
