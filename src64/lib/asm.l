@@ -1,4 +1,4 @@
-# 18aug14abu
+# 01sep14abu
 # (c) Software Lab. Alexander Burger
 
 # *LittleEndian *AlignedCode *Registers optimize
@@ -527,7 +527,6 @@
       (sym (source) "*Mode")
       (test (destination) "*Mode" (source) "*Mode")
       (tuck (source) "*Mode")
-      (wait)
       (word (operand (read)))
       (xchg (destination) "*Mode" (destination) "*Mode")
       (xor (destination) "*Mode" (source) "*Mode")
