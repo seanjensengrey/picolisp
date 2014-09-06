@@ -1,4 +1,4 @@
-# 06aug14abu
+# 06sep14abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -4256,8 +4256,7 @@
    push X
    push Y
    ld X E  # Expression in X
-   ld E (E CDR)
-   ld E (E)  # Eval 'any'
+   ld E ((E CDR))  # Eval 'any'
    eval
    sub S IV  # InFrame
    ld Y S
@@ -4276,8 +4275,7 @@
    push X
    push Y
    ld X E  # Expression in X
-   ld E (E CDR)
-   ld E (E)  # Eval 'any'
+   ld E ((E CDR))  # Eval 'any'
    eval
    sub S IV  # OutFrame
    ld Y S
@@ -4296,8 +4294,7 @@
    push X
    push Y
    ld X E  # Expression in X
-   ld E (E CDR)
-   ld E (E)  # Eval 'any'
+   ld E ((E CDR))  # Eval 'any'
    eval
    sub S II  # ErrFrame
    ld Y S
@@ -4316,8 +4313,7 @@
    push X
    push Y
    ld X E  # Expression in X
-   ld E (E CDR)
-   ld E (E)  # Eval 'any'
+   ld E ((E CDR))  # Eval 'any'
    eval
    sub S II  # CtlFrame
    ld Y S
