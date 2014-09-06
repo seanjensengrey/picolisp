@@ -1,4 +1,4 @@
-/* 21jul14abu
+/* 06sep14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -612,6 +612,8 @@ void err(any ex, any x, char *fmt, ...) {
    Env.task = Nil;
    Env.make = Env.yoke = NULL;
    Env.parser = NULL;
+   Env.put = putStdout;
+   Env.get = getStdin;
    longjmp(ErrRst, +1);
 }
 
