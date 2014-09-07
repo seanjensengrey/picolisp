@@ -1,4 +1,4 @@
-# 04jun14abu
+# 06sep14abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Data)
@@ -61,11 +61,11 @@
 : Signal       skip  (* I SIGNALS)
 
 # Database
-: DBs          word  0           # Scaled number of DB files
-: DbFile       word  0           # DB file
-: DbFiles      word  0           # DB files
+:: DBs         word  0           # Scaled number of DB files
+:: DbFile      word  0           # DB file
+:: DbFiles     word  0           # DB files
+:: MaxBlkSize  word  0           # Maximum block size
 : DbBlock      word  0           # Block buffer
-: MaxBlkSize   word  0           # Maximum block size
 : BlkIndex     word  0           # Block index
 : BlkLink      word  0           # Next block
 : DbJnl        word  0           # Journal file
