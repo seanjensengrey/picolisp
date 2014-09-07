@@ -1,4 +1,4 @@
-# 30aug14abu
+# 07sep14abu
 # (c) Software Lab. Alexander Burger
 
 # (car 'var) -> any
@@ -1074,8 +1074,7 @@
 
 # (full 'any) -> bool
 (code 'doFull 2)
-   ld E (E CDR)  # Get arg
-   ld E (E)  # Eval it
+   ld E ((E CDR))  # Eval arg
    eval
    do
       atom E  # Pair?
