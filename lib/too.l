@@ -1,4 +1,4 @@
-# 31aug14abu
+# 07sep14abu
 # (c) Software Lab. Alexander Burger
 
 ### Local Backup ###
@@ -424,7 +424,7 @@
       (pick
          '((X)
             (and
-               (isa '+Key (meta Obj (fin X)))
+               (isa '+Key (meta This (fin X)))
                (cons (fin X) X) ) )
          (getl This) ) ) )
 
@@ -468,14 +468,14 @@
 
 (de dumpExt (Obj)
    (prin "(obj ")
-   (prog1
-      (dumpKey> Obj)
-      (ifn @
+   (let K (dumpKey> Obj)
+      (ifn (cadr K)
          (print (dumpType> Obj) (id Obj T))
          (prin "(")
-         (printsp (dumpType> Obj) (car @))
-         (dumpVal (cadr @))
-         (prin ")") ) ) )
+         (printsp (dumpType> Obj) (car K))
+         (dumpVal @)
+         (prin ")") )
+      K ) )
 
 (de dumpVal (X)
    (nond
