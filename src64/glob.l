@@ -65,7 +65,7 @@
 :: DbFile      word  0           # DB file
 :: DbFiles     word  0           # DB files
 :: MaxBlkSize  word  0           # Maximum block size
-: DbBlock      word  0           # Block buffer
+:: DbBlock     word  0           # Block buffer
 : BlkIndex     word  0           # Block index
 : BlkLink      word  0           # Next block
 : DbJnl        word  0           # Journal file
