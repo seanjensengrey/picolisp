@@ -1,4 +1,4 @@
-# 11aug14abu
+# 08sep14abu
 # (c) Software Lab. Alexander Burger
 
 # Byte order
@@ -227,7 +227,10 @@
          (prinst "mov" (cdr Src) (highWord Dst)) )
       ((or (pre? "%" Src) (pre? "%" Dst))
          (prinst "mov" Src Dst) )
-      ((pre? "$" Src)
+      ((and
+            (pre? "$" Src)
+            (let N (immediate Src)
+               (or (not N) (>= 2147483647 N -2147483648)) ) )
          (prinst "movq" Src Dst) )
       (T
          (prinst "mov" Src "%r10")
