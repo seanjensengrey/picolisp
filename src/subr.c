@@ -1,4 +1,4 @@
-/* 30aug14abu
+/* 10sep14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -1423,7 +1423,7 @@ static bool unify(any n1, any x1, any n2, any x2) {
 lookup1:
    if (isSym(x1)  &&  firstByte(x1) == '@')
       for (x = data(*Penv);  isCell(car(x));  x = cdr(x))
-         if (unDig(n1) == unDig(caaar(x))  &&  x1 == cdaar(x)) {
+         if (equal(n1, caaar(x))  &&  x1 == cdaar(x)) {
             n1 = cadar(x);
             x1 = cddar(x);
             goto lookup1;
@@ -1431,12 +1431,12 @@ lookup1:
 lookup2:
    if (isSym(x2)  &&  firstByte(x2) == '@')
       for (x = data(*Penv);  isCell(car(x));  x = cdr(x))
-         if (unDig(n2) == unDig(caaar(x))  &&  x2 == cdaar(x)) {
+         if (equal(n2, caaar(x))  &&  x2 == cdaar(x)) {
             n2 = cadar(x);
             x2 = cddar(x);
             goto lookup2;
          }
-   if (unDig(n1) == unDig(n2)  &&  equal(x1, x2))
+   if (equal(n1, n2)  &&  equal(x1, x2))
       return YES;
    if (isSym(x1)  &&  firstByte(x1) == '@') {
       if (x1 != At) {
@@ -1468,7 +1468,7 @@ static any lup(any n, any x) {
 lup:
    if (isSym(x)  &&  firstByte(x) == '@')
       for (y = data(*Penv);  isCell(car(y));  y = cdr(y))
-         if (unDig(n) == unDig(caaar(y))  &&  x == cdaar(y)) {
+         if (equal(n, caaar(y))  &&  x == cdaar(y)) {
             n = cadar(y);
             x = cddar(y);
             goto lup;
@@ -1593,7 +1593,7 @@ any doProve(any x) {
       }
    }
    for (data(e) = Nil,  x = data(env);  isCell(cdr(x));  x = cdr(x))
-      if (!unDig(caaar(x)))
+      if (isNum(caaar(x)) && IsZero(caaar(x)))
          data(e) = cons(cons(cdaar(x), lookup(Zero, cdaar(x))), data(e));
    val(At) = data(at);
    drop(q);

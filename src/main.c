@@ -1,4 +1,4 @@
-/* 06sep14abu
+/* 12sep14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -7,6 +7,13 @@
 
 #ifdef __CYGWIN__
 #define O_ASYNC FASYNC
+#endif
+
+#ifdef __SVR4
+#define O_ASYNC 0
+#define GETCWDLEN 1024
+#else
+#define GETCWDLEN 0
 #endif
 
 /* Globals */
@@ -1063,7 +1070,7 @@ any doUsec(any ex) {
 any doPwd(any x) {
    char *p;
 
-   if ((p = getcwd(NULL,0)) == NULL)
+   if ((p = getcwd(NULL, GETCWDLEN)) == NULL)
       return Nil;
    x = mkStr(p);
    free(p);
@@ -1077,9 +1084,9 @@ any doCd(any x) {
       char *p, path[pathSize(x)];
 
       pathString(x, path);
-      if ((p = getcwd(NULL,0)) == NULL  ||  path[0] && chdir(path) < 0)
+      if ((p = getcwd(NULL, GETCWDLEN)) == NULL)
          return Nil;
-      x = mkStr(p);
+      x = path[0] && chdir(path) < 0? Nil : mkStr(p);
       free(p);
       return x;
    }

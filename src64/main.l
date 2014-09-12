@@ -1,4 +1,4 @@
-# 21jul14abu
+# 11sep14abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -2986,7 +2986,7 @@
 
 # (pwd) -> sym
 (code 'doPwd 2)
-   cc getcwd(0 MAXPATHLEN)  # Get current working directory
+   cc getcwd(0 GETCWDLEN)  # Get current working directory
    null A  # OK?
    jz retNil  # No
    push A  # Save buffer pointer
@@ -3002,7 +3002,7 @@
    call evSymE_E  # Evaluate to a symbol
    call pathStringE_SZ  # Write to stack buffer
    ld E Nil  # Preload return value
-   cc getcwd(0 MAXPATHLEN)  # Get current working directory
+   cc getcwd(0 GETCWDLEN)  # Get current working directory
    null A  # OK?
    if nz  # Yes
       push A  # Save buffer pointer

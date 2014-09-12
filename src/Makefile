@@ -1,4 +1,4 @@
-# 02jun13abu
+# 11sep14abu
 # 27feb08rdo
 # (c) Software Lab. Alexander Burger
 
@@ -8,7 +8,7 @@ lib = ../lib
 picoFiles = main.c gc.c apply.c flow.c sym.c subr.c big.c io.c net.c tab.c
 
 CFLAGS = -c -O2 -m32 -pipe \
-	-falign-functions -fomit-frame-pointer -fno-strict-aliasing \
+	-falign-functions=32 -fomit-frame-pointer -fno-strict-aliasing \
 	-W -Wimplicit -Wreturn-type -Wunused -Wformat \
 	-Wuninitialized -Wstrict-prototypes \
 	-D_GNU_SOURCE  -D_FILE_OFFSET_BITS=64
@@ -54,6 +54,14 @@ ifeq ($(shell uname), Darwin)
 	LCRYPT = -lcrypto
 	STRIP = strip -x
 else
+ifeq ($(shell uname), SunOS)
+	OS = SunOS
+	PICOLISP-FLAGS =
+	LIB-FLAGS = -lc -lm -lnsl -lsocket
+	DYNAMIC-LIB-FLAGS = -G
+	LCRYPT = -lcrypt
+	STRIP = strip
+else
 ifeq ($(shell uname -o), Cygwin)
 	OS = Cygwin
 	DYNAMIC-LIB-FLAGS = -shared
@@ -63,6 +71,7 @@ ifeq ($(shell uname -o), Cygwin)
 	STRIP = strip
 	exe = .exe
 	dll = .dll
+endif
 endif
 endif
 endif

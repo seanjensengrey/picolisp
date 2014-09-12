@@ -1,4 +1,4 @@
-# 06sep14abu
+# 11sep14abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -4899,7 +4899,7 @@
          atom (Tsm)  # Transient symbol markup?
          if z  # Yes
             cmp (PutB) putStdoutB  # to stdout?
-            if eq  # No
+            if eq  # Yes
                ld Y ((OutFile) II)  # and 'tty'? -> Y
             end
          end
