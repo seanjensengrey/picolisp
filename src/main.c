@@ -1,4 +1,4 @@
-/* 12sep14abu
+/* 15sep14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -9,7 +9,7 @@
 #define O_ASYNC FASYNC
 #endif
 
-#ifdef __SVR4
+#if defined (__SVR4) || defined (_AIX)
 #define O_ASYNC 0
 #define GETCWDLEN 1024
 #else

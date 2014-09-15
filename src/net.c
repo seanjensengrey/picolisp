@@ -1,4 +1,4 @@
-/* 07jul14abu
+/* 14sep14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -8,6 +8,15 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
+
+#ifdef __OpenBSD__
+#define sockaddr_in6 sockaddr_in
+#define AF_INET6 AF_INET
+#define sin6_port sin_port
+#define sin6_family sin_family
+#define sin6_addr sin_addr.s_addr
+#define in6addr_any htonl(INADDR_ANY)
+#endif
 
 static void ipErr(any ex, char *s) {
    err(ex, NULL, "IP %s error: %s", s, strerror(errno));
@@ -28,8 +37,10 @@ any doPort(any ex) {
       ipErr(ex, "socket");
    closeOnExec(ex, sd);
    n = 0;
+#ifndef __OpenBSD__
    if (setsockopt(sd, IPPROTO_IPV6, IPV6_V6ONLY, &n, sizeof(n)) < 0)
       ipErr(ex, "IPV6_V6ONLY");
+#endif
    memset(&addr, 0, sizeof(addr));
    addr.sin6_family = AF_INET6;
    addr.sin6_addr = in6addr_any;
