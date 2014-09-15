@@ -1,4 +1,4 @@
-/* 14sep14abu
+/* 15sep14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -10,7 +10,6 @@
 #include <sys/socket.h>
 
 #ifdef __OpenBSD__
-#define sockaddr_in6 sockaddr_in
 #define AF_INET6 AF_INET
 #define sin6_port sin_port
 #define sin6_family sin_family
