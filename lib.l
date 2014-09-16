@@ -1,4 +1,4 @@
-# 05sep14abu
+# 16sep14abu
 # (c) Software Lab. Alexander Burger
 
 (de task (Key . Prg)
@@ -306,7 +306,7 @@
       (pop 'X) )
    (cond
       ((atom X) (print X))
-      ((memq (car X) '(de dm))
+      ((memq (car X) '(de dm redef))
          (_pretty
             (spPrt (pop 'X))
             (spPrt (pop 'X))
