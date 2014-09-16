@@ -9,14 +9,6 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 
-#ifdef __OpenBSD__
-#define AF_INET6 AF_INET
-#define sin6_port sin_port
-#define sin6_family sin_family
-#define sin6_addr sin_addr.s_addr
-#define in6addr_any htonl(INADDR_ANY)
-#endif
-
 static void ipErr(any ex, char *s) {
    err(ex, NULL, "IP %s error: %s", s, strerror(errno));
 }
