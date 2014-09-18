@@ -1,4 +1,4 @@
-# 05sep14abu
+# 18sep14abu
 # (c) Software Lab. Alexander Burger
 
 (setq *OS (java (java "java.lang.System" "getProperty" "os.name")))
@@ -336,7 +336,7 @@
                (printsp (pop 'X))
                (prtty2 X NIL Z) )
             (prin ")") ) )
-      ((memq (car X) '(=: use later recur tab new))
+      ((memq (car X) '(=: use recur tab new))
          (_pretty
             (space)
             (print (pop 'X))
@@ -1815,6 +1815,8 @@
                         (lintVar (pop '"Y"))
                         (pop '"Y") )
                      (mapc lint1 "Y") ) ) )
+            (macro
+               (lint2 (cdr "X")) )
             (let?
                (use "*L"
                   (lintVar (cadr "X"))

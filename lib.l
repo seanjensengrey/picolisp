@@ -1,4 +1,4 @@
-# 16sep14abu
+# 18sep14abu
 # (c) Software Lab. Alexander Burger
 
 (de task (Key . Prg)
@@ -514,7 +514,6 @@
    (load (pil "editor"))
    (load "@lib/led.l" "@lib/edit.l") )
 (load "@lib/debug.l" "@lib/lint.l")
-(noLint 'later (loc "@Prg" later))
 (noLint 'pretty 'Z)
 (noLint '_pretty 'Z)
 
