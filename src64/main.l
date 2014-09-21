@@ -1,4 +1,4 @@
-# 11sep14abu
+# 21sep14abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -584,20 +584,20 @@
       if z  # No
          ld E (E)  # Eval 'cnt'
          call evCntEX_FE
-         shl E 22  # Main stack segment size [times 4 MB]
+         shl E 12  # Main stack segment size [times 4 kB]
          ld A (Stack0)  # Get stack top
          sub A E  # Decrement by main segment size
          ld (Stack1) A  # New coroutine stack base
-         shr E 2  # [to MB]
+         shr E 2  # [to bytes]
          ld (StkSize) E  # Set new stack size
-         shr E 16  # Make short number [MB]
+         shr E 6  # Make short number [kB]
          or E CNT
          pop X
          ret
       end
    end
    ld E (StkSize)  # Return current stack size
-   shr E 16  # Make short number [MB]
+   shr E 6  # Make short number [kB]
    or E CNT
    ld X (Stack1)  # Collect coroutines
    ld C (Stacks)  # Segment bitmask

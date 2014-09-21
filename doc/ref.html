@@ -1293,16 +1293,14 @@ environment is executed
 <p>Reentrant coroutines are not supported: A coroutine cannot resume itself
 directly or indirectly.
 
-<p>Before using coroutines, make sure you have sufficient stack space, e.g. by
-calling
+<p>Before using many coroutines, make sure you have sufficient stack space, e.g.
+by calling
 
 <pre><code>
 $ ulimit -s unlimited
 </code></pre>
 
-<p>Without that, the stack limit in Linux is typically 8 MB. This gives only
-room - with a default coroutine <a href="refS.html#stack">stack</a> segment size
-of 1 MB - for the main segment (4 MB) plus four coroutines.
+<p>Without that, the stack limit in Linux is typically 8 MB.
 
 
 <p><hr>
