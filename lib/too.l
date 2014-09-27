@@ -1,4 +1,4 @@
-# 14sep14abu
+# 27sep14abu
 # (c) Software Lab. Alexander Burger
 
 ### Local Backup ###
@@ -443,7 +443,7 @@
                (unless (or (= K (fin X)) (= `(char "+") (char (fin X))))
                   (let? Y (dumpValue> Obj X)
                      (cond
-                        ((pair X)
+                        ((pair Y)
                            (prinl)
                            (space 3)
                            (if (atom (cdr Y))
