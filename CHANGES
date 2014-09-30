@@ -1,4 +1,6 @@
-* XXsep14 picoLisp-3.1.8
+* XXdec14 picoLisp-3.1.9
+
+* 30sep14 picoLisp-3.1.8
    'stack' size unit MB -> kB
    'has' debug function
    Bug in bignum '*' (64-bit)
