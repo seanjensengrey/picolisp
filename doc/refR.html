@@ -303,14 +303,14 @@ symbol <code>recurse</code> is bound to the function definition
    (when (lt0 N)
       (quit "Bad fibonacci" N) )
    (recur (N)
-      (if (> 2 N)
+      (if (>= 2 N)
          1
          (+
             (recurse (dec N))
             (recurse (- N 2)) ) ) ) )
 -> fibonacci
 : (fibonacci 22)
--> 28657
+-> 17711
 : (fibonacci -7)
 -7 -- Bad fibonacci
 </code></pre>
