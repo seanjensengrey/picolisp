@@ -1629,7 +1629,7 @@ href="refR.html#rel">rel</a></code> function. Predefined relation classes
 include
 
 <p><ul>
-<li>Primitive types like
+<li>Scalar relations like
    <dl>
    <dt><code><a href="refS.html#+Symbol">+Symbol</a></code>
    <dd>Symbolic data
@@ -1643,6 +1643,8 @@ include
    <dd>Time-of-the-day values, represented by a number
    <dt><code><a href="refB.html#+Blob">+Blob</a></code>
    <dd>"Binary large objects" stored in separate files
+   <dt><code><a href="refB.html#+Bool">+Bool</a></code>
+   <dd><code>T</code> or <code>NIL</code>
    </dl>
 <li>Object-to-object relations
    <dl>
@@ -1668,13 +1670,12 @@ include
    <dd>A unique index with other primitives or entities as key
    <dt><code><a href="refI.html#+Idx">+Idx</a></code>
    <dd>A full-text index, typically for strings
+   <dt><code><a href="refF.html#+Fold">+Fold</a></code>
+   <dd>A folded text index
+   <dt><code><a href="refI.html#+IdxFold">+IdxFold</a></code>
+   <dd>Folded substring index
    <dt><code><a href="refS.html#+Sn">+Sn</a></code>
    <dd>Tolerant index, using a modified Soundex-Algorithm
-   </dl>
-<li>Booleans
-   <dl>
-   <dt><code><a href="refB.html#+Bool">+Bool</a></code>
-   <dd><code>T</code> or <code>NIL</code>
    </dl>
 <li>And a catch-all class
    <dl>
