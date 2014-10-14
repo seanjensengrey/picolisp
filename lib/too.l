@@ -1,4 +1,4 @@
-# 27sep14abu
+# 14oct14abu
 # (c) Software Lab. Alexander Burger
 
 ### Local Backup ###
@@ -235,7 +235,7 @@
             (for Obj X
                (re-index Obj Var Hook) ) )
          (NIL
-            (for (Obj X Obj (seq Obj))
+            (for (Obj (seq X) Obj (seq Obj))
                (and (isa Cls Obj) (re-index Obj Var Hook)) ) ) )
       (commit) ) )
 
