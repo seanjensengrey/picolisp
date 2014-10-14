@@ -1,4 +1,4 @@
-# 27aug14abu
+# 13oct14abu
 # (c) Software Lab. Alexander Burger
 
 # *Rule
@@ -403,11 +403,10 @@
 
 (be fold (@S . @L)
    (^ @
-      (let S (-> @S)
+      (let S (fold (-> @S))
          (or
             (not S)
             (let L (-> @L)
-               (setq S (fold S))
                ("fold" (car L) (cdr L)) ) ) ) ) )
 
 (de "fold" (X L)
@@ -426,11 +425,10 @@
 
 (be part (@S . @L)
    (^ @
-      (let S (-> @S)
+      (let S (fold (-> @S))
          (or
             (not S)
             (let L (-> @L)
-               (setq S (fold S))
                ("part" (car L) (cdr L)) ) ) ) ) )
 
 (de "part" (X L)
@@ -449,7 +447,7 @@
 
 (be tolr (@S . @L)
    (^ @
-      (let S (-> @S)
+      (let S (fold (-> @S))
          (or
             (not S)
             (let L (-> @L)
@@ -459,11 +457,11 @@
    (cond
       ((not L)
          (if (atom X)
-            (or (sub? S X) (pre? (ext:Snx S) (ext:Snx X)))
+            (or (sub? S (fold X)) (pre? (ext:Snx S) (ext:Snx X)))
             (let P (ext:Snx S)
                (find
                   '((Y)
-                     (or (sub? S Y) (pre? P (ext:Snx Y))) )
+                     (or (sub? S (fold Y)) (pre? P (ext:Snx Y))) )
                   X ) ) ) )
       ((atom X)
          ("tolr" (get X (car L)) (cdr L)) )
@@ -510,7 +508,10 @@
       (if (isa '+Sn This)
          (conc
             (initQuery Var (: cls) Hook Val)
-            (initQuery Var (: cls) Hook (ext:Snx Val)) )
+            (init
+               (tree Var (: cls) Hook)
+               (cons (setq Val (ext:Snx Val)))
+               (cons (pack Val `(char T)) T) ) )
          (initQuery Var (: cls) Hook Val) ) ) )
 
 (de _gen (Lst Q)
