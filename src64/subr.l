@@ -1,4 +1,4 @@
-# 07sep14abu
+# 15oct14abu
 # (c) Software Lab. Alexander Burger
 
 # (car 'var) -> any
@@ -273,6 +273,9 @@
    ld X E
    ld E ((E CDR))  # Get arg
    eval
+   num E  # Need variable
+   jnz varErrEX
+   ld E (E)  # Take CAR
    num E  # Need variable
    jnz varErrEX
    ld E (E)  # Take CAR
