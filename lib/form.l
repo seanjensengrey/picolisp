@@ -1,4 +1,4 @@
-# 04sep14abu
+# 15oct14abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -2301,9 +2301,10 @@
          ((== *Lock (: obj)) T)
          (*Lock (rollback) (off *Lock)) ) ) )
 
-(de panel (Able Txt Del Dlg Var Cls Hook Msg Exe)
+(de panel (Able Txt Del Dlg Var Cls Hook Msg Exe . Prg)
    (<spread>
       (editButton Able Exe)
+      (run Prg 1)
       (delButton
          (cond
             ((=T Able) Del)
