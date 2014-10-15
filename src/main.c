@@ -1,4 +1,4 @@
-/* 15sep14abu
+/* 15oct14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -79,12 +79,12 @@ void execError(char *s) {
 
 /* Install interrupting signal */
 static void iSignal(int n, void (*foo)(int)) {
-   struct sigaction act, old;
+   struct sigaction act;
 
    act.sa_handler = foo;
    sigemptyset(&act.sa_mask);
    act.sa_flags = 0;
-   sigaction(n, &act, &old);
+   sigaction(n, &act, NULL);
 }
 
 /* Signal handler */

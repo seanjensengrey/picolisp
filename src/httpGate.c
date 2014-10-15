@@ -1,4 +1,4 @@
-/* 12aug14abu
+/* 15oct14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -288,6 +288,15 @@ static void doSigUsr1(int n __attribute__((unused))) {
    alarm(420);
 }
 
+static void iSignal(int n, void (*foo)(int)) {
+   struct sigaction act;
+
+   act.sa_handler = foo;
+   sigemptyset(&act.sa_mask);
+   act.sa_flags = 0;
+   sigaction(n, &act, NULL);
+}
+
 int main(int ac, char *av[]) {
    int cnt = ac>4? ac-3 : 1, ports[cnt], n, sd, cli, srv;
    struct sockaddr_in6 addr;
@@ -418,8 +427,8 @@ int main(int ac, char *av[]) {
                wrBytes(srv, buf2, sprintf(buf2, "X-Pil: *Cipher=%s\r\n", SSL_get_cipher(ssl)));
             wrBytes(srv, p, buf + n - p);
 
-            signal(SIGALRM, doSigAlarm);
-            signal(SIGUSR1, doSigUsr1);
+            iSignal(SIGALRM, doSigAlarm);
+            iSignal(SIGUSR1, doSigUsr1);
             if (Buddy = fork()) {
                for (;;) {
                   alarm(420);

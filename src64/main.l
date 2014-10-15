@@ -1,4 +1,4 @@
-# 21sep14abu
+# 15oct14abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -193,12 +193,12 @@
 
 # Install interrupting signal
 (code 'iSignalCE)
-   sub S (%% (* 2 SIGACTION))  # 'sigaction' and 'oldact'
+   sub S (%% SIGACTION)  # 'sigaction' and 'oldact'
    ld (S SA_HANDLER) E  # Function pointer
    cc sigemptyset(&(S SA_MASK))
    ld (S SA_FLAGS) 0
-   cc sigaction(C S &(S SIGACTION))  # Install handler
-   add S (%% (* 2 SIGACTION))
+   cc sigaction(C S 0)  # Install handler
+   add S (%% SIGACTION)
    ret
 
 # Allocate memory

@@ -1,4 +1,4 @@
-/* 19jun14abu
+/* 15oct14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -97,6 +97,9 @@ static void lockFile(int fd) {
       giveup("Can't lock");
 }
 
+static void doSigAlarm(int n __attribute__((unused))) {
+}
+
 static void doSigTerm(int n __attribute__((unused))) {
    int fd;
    struct stat st;
@@ -122,6 +125,15 @@ static void doSigTerm(int n __attribute__((unused))) {
          giveup("Can't final write (2)");
    }
    exit(0);
+}
+
+static void iSignal(int n, void (*foo)(int)) {
+   struct sigaction act;
+
+   act.sa_handler = foo;
+   sigemptyset(&act.sa_mask);
+   act.sa_flags = 0;
+   sigaction(n, &act, NULL);
 }
 
 // ssl host port url
@@ -187,10 +199,10 @@ int main(int ac, char *av[]) {
    File = av[5];
    Dir = av[6];
    sec = atoi(av[7]);
-   signal(SIGINT, doSigTerm);
-   signal(SIGTERM, doSigTerm);
+   iSignal(SIGALRM, doSigAlarm);
+   iSignal(SIGINT, doSigTerm);
+   iSignal(SIGTERM, doSigTerm);
    signal(SIGPIPE, SIG_IGN);
-   signal(SIGALRM, SIG_IGN);
    for (;;) {
       if (*File && (fd = open(File, O_RDWR)) >= 0) {
          if (fstat(fd,&st) < 0  ||  st.st_size == 0)
