@@ -82,6 +82,12 @@ href="refM.html#meta">meta</a></code>, <code><a href="ref_.html#:">:</a></code>,
 href="ref_.html#::">::</a></code>.
 
 <pre><code>
+: (class +A)
+-> +A
+: (var a . 1)
+-> 1
+: (var b . 2)
+-> 2
 : (object 'O '(+A) 'a 9 'b 8)
 -> O
 : (with 'O (list (: a) (: b) (var: a) (var: b)))
