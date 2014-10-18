@@ -1,4 +1,4 @@
-/* 15oct14abu
+/* 18oct14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -317,7 +317,7 @@ int main(int ac, char *av[]) {
    else {
       SSL_library_init();
       SSL_load_error_strings();
-      if (!(ctx = SSL_CTX_new(SSLv23_server_method())) ||
+      if (!(ctx = SSL_CTX_new(TLSv1_server_method())) ||
             !SSL_CTX_use_certificate_file(ctx, av[3], SSL_FILETYPE_PEM) ||
                !SSL_CTX_use_PrivateKey_file(ctx, av[3], SSL_FILETYPE_PEM) ||
                            !SSL_CTX_check_private_key(ctx) || !setDH(ctx) ) {

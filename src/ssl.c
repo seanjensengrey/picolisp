@@ -1,4 +1,4 @@
-/* 15oct14abu
+/* 18oct14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -160,7 +160,7 @@ int main(int ac, char *av[]) {
 
    SSL_library_init();
    SSL_load_error_strings();
-   if (!(ctx = SSL_CTX_new(SSLv23_client_method()))) {
+   if (!(ctx = SSL_CTX_new(TLSv1_client_method()))) {
       ERR_print_errors_fp(stderr);
       giveup("SSL init");
    }
