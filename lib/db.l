@@ -1,4 +1,4 @@
-# 25aug14abu
+# 18oct14abu
 # (c) Software Lab. Alexander Burger
 
 # *Dbs *Jnl *Blob upd
@@ -757,11 +757,13 @@
 
 (dm rel?> (Obj Val Hook)
    (and
-      (idxRel? Obj
-         (fold Val)
-         (extract '((L) (extract fold L))
-            (split (cdr (chop Val)) " " "^J") )
-         Hook )
+      (let V (fold Val)
+         (or (not V)
+            (idxRel? Obj
+               V
+               (extract '((L) (extract fold L))
+                  (split (cdr (chop Val)) " " "^J") )
+               Hook ) ) )
       (extra Obj Val Hook) ) )
 
 (dm lose> (Obj Val Hook)
