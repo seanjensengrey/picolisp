@@ -1,5 +1,6 @@
 * XXdec14 picoLisp-3.1.9
    'ssl' peer certificate verification
+   'httpGate' and 'ssl' TLS-only
    Bug in 'caaaar'
 
 * 30sep14 picoLisp-3.1.8
