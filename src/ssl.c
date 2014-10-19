@@ -1,4 +1,4 @@
-/* 18oct14abu
+/* 19oct14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -24,7 +24,7 @@ typedef enum {NO,YES} bool;
 
 static char *File, *Dir, *Data;
 static off_t Size;
-static bool Hot;
+static bool Safe, Hot;
 
 static char Ciphers[] = "ECDHE-RSA-RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH";
 
@@ -52,8 +52,17 @@ static int sslConnect(SSL *ssl, char *node, char *service) {
             if (connect(sd, p->ai_addr, p->ai_addrlen) == 0) {
                SSL_set_fd(ssl, sd);
                if (SSL_connect(ssl) >= 0) {
+                  X509 *cert;
+
                   freeaddrinfo(lst);
-                  return sd;
+                  if (Safe)
+                     return sd;
+                  if (cert = SSL_get_peer_certificate(ssl)) {
+                     X509_free(cert);
+                     if (SSL_get_verify_result(ssl) == X509_V_OK)
+                        return sd;
+                  }
+                  return -1;
                }
             }
             close(sd);
@@ -154,13 +163,15 @@ int main(int ac, char *av[]) {
       --ac;
    if (!(ac >= 4 && ac <= 6  ||  ac == 8))
       giveup("host port url [[key] file] | host port url key file dir sec");
+   if (*av[2] == '-')
+      ++av[2],  Safe = YES;
    if (strlen(Get)+strlen(av[1])+strlen(av[2])+strlen(av[3]) >= sizeof(get))
       giveup("Names too long");
    getLen = sprintf(get, Get, av[3], av[1], av[2]);
 
    SSL_library_init();
    SSL_load_error_strings();
-   if (!(ctx = SSL_CTX_new(TLSv1_client_method()))) {
+   if (!(ctx = SSL_CTX_new(TLSv1_client_method())) || !SSL_CTX_set_default_verify_paths(ctx)) {
       ERR_print_errors_fp(stderr);
       giveup("SSL init");
    }
