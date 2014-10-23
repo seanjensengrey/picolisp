@@ -340,6 +340,20 @@ and <code><a href="refU.html#up">up</a></code>.
 -> 7
 : (eval X)
 -> 7
+
+: (de f (A)
+   (list
+      (eval 'A)
+      (eval 'A 1)
+      (eval 'A 2) ) )
+-> f
+: (de g (A)
+   (f (inc A)) )
+-> g
+: (one A)
+-> 1
+: (g (inc A))
+-> (3 2 1)
 </code></pre>
 
 <dt><a name="expDat"><code>(expDat 'sym) -> dat</code></a>
