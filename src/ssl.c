@@ -1,4 +1,4 @@
-/* 19oct14abu
+/* 28oct14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -51,7 +51,7 @@ static int sslConnect(SSL *ssl, char *node, char *service) {
          if ((sd = socket(p->ai_family, p->ai_socktype, 0)) >= 0) {
             if (connect(sd, p->ai_addr, p->ai_addrlen) == 0) {
                SSL_set_fd(ssl, sd);
-               if (SSL_connect(ssl) >= 0) {
+               if (SSL_connect(ssl) == 1) {
                   X509 *cert;
 
                   freeaddrinfo(lst);
@@ -104,9 +104,6 @@ static void lockFile(int fd) {
    fl.l_len = 0;
    if (fcntl(fd, F_SETLKW, &fl) < 0)
       giveup("Can't lock");
-}
-
-static void doSigAlarm(int n __attribute__((unused))) {
 }
 
 static void doSigTerm(int n __attribute__((unused))) {
@@ -210,7 +207,6 @@ int main(int ac, char *av[]) {
    File = av[5];
    Dir = av[6];
    sec = atoi(av[7]);
-   iSignal(SIGALRM, doSigAlarm);
    iSignal(SIGINT, doSigTerm);
    iSignal(SIGTERM, doSigTerm);
    signal(SIGPIPE, SIG_IGN);
@@ -233,7 +229,6 @@ int main(int ac, char *av[]) {
             close(fd);
             for (;;) {
                if ((sd = sslConnect(ssl, av[1], av[2])) >= 0) {
-                  alarm(420);
                   if (SSL_write(ssl, get, getLen) == getLen  &&
                            (!*av[4] || sslFile(ssl,av[4]))  &&       // key
                            SSL_write(ssl, len, lenLen) == lenLen  && // length
@@ -241,11 +236,9 @@ int main(int ac, char *av[]) {
                            SSL_write(ssl, "T", 1) == 1  &&           // ack
                            SSL_read(ssl, buf, 1) == 1  &&  buf[0] == 'T' ) {
                      Hot = NO;
-                     alarm(0);
                      sslClose(ssl,sd);
                      break;
                   }
-                  alarm(0);
                   sslClose(ssl,sd);
                }
                if (dbg)
