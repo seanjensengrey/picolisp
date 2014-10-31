@@ -1,4 +1,4 @@
-/* 18oct14abu
+/* 31oct14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -306,7 +306,7 @@ int main(int ac, char *av[]) {
    SSL *ssl;
 
    if (ac < 3)
-      giveup("port dflt [pem [alt ..]]");
+      giveup("port dflt [pem [deny ..]]");
 
    sd = gatePort(atoi(av[1]));  // e.g. 80 or 443
    ports[0] = (int)strtol(p = av[2], &q, 10);  // e.g. 8080
@@ -377,15 +377,15 @@ int main(int ac, char *av[]) {
                else
                   port = ports[0],  q = p;
             }
-            else if (port < cnt) {
-               if (port < 0 || (port = ports[port]) < 0)
+            else if (port < 1024) {
+               if (np = findName(p, q))
+                  port = np->port;
+               else
                   return 1;
             }
-            else if (port < 1024)
-               return 1;
             else
                for (i = 1; i < cnt; ++i)
-                  if (port == -ports[i])
+                  if (port == ports[i])
                      return 1;
 
             if ((srv = gateConnect(port, np)) < 0) {
