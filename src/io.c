@@ -1,4 +1,4 @@
-/* 07aug14abu
+/* 01nov14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -1955,11 +1955,13 @@ static any parse(any x, bool skp, any s) {
       cell c2;
 
       if (!(x = token(s,0)))
-         return Nil;
-      Push(c2, y = cons(x,Nil));
-      while (x = token(s,0))
-         y = cdr(y) = cons(x,Nil);
-      x = Pop(c2);
+         x = Nil;
+      else {
+         Push(c2, y = cons(x,Nil));
+         while (x = token(s,0))
+            y = cdr(y) = cons(x,Nil);
+         x = Pop(c2);
+      }
    }
    drop(c1);
    Chr = c,  Env.get = getSave,  Env.parser = save;
