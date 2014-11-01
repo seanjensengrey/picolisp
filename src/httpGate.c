@@ -1,4 +1,4 @@
-/* 31oct14abu
+/* 01nov14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -36,7 +36,7 @@ typedef struct name {
 
 static int Http1;
 static name *Names;
-static char Ciphers[] = "ECDHE-RSA-RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH";
+static char Ciphers[] = "ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:AES128-GCM-SHA256:AES128-SHA256:AES128-SHA:DES-CBC3-SHA";
 
 static char Head_410[] =
    "HTTP/1.0 410 Gone\r\n"
