@@ -26,7 +26,7 @@ static char *File, *Dir, *Data;
 static off_t Size;
 static bool Safe, Hot;
 
-static char Ciphers[] = "ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:AES128-GCM-SHA256:AES128-SHA256:AES128-SHA:DES-CBC3-SHA";
+static char Ciphers[] = "ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:AES128-SHA256:AES128-SHA:DES-CBC3-SHA";
 
 static char Get[] =
    "GET /%s HTTP/1.0\r\n"

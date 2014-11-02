@@ -36,7 +36,7 @@ typedef struct name {
 
 static int Http1;
 static name *Names;
-static char Ciphers[] = "ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:AES128-GCM-SHA256:AES128-SHA256:AES128-SHA:DES-CBC3-SHA";
+static char Ciphers[] = "ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:AES128-SHA256:AES128-SHA:DES-CBC3-SHA";
 
 static char Head_410[] =
    "HTTP/1.0 410 Gone\r\n"
@@ -324,6 +324,7 @@ int main(int ac, char *av[]) {
          ERR_print_errors_fp(stderr);
          giveup("SSL init");
       }
+      SSL_CTX_set_options(ctx, SSL_OP_CIPHER_SERVER_PREFERENCE | SSL_OP_NO_COMPRESSION);
       ssl = SSL_new(ctx),  gate = "X-Pil: *Gate=https\r\nX-Pil: *Adr=%s\r\n";
    }
    for (n = 1; n < cnt; ++n)
