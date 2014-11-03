@@ -1,4 +1,4 @@
-/* 01nov14abu
+/* 03nov14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -36,7 +36,7 @@ typedef struct name {
 
 static int Http1;
 static name *Names;
-static char Ciphers[] = "ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:AES128-SHA256:AES128-SHA:DES-CBC3-SHA";
+static char Ciphers[] = "ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:AES128-GCM-SHA256:AES128-SHA256:AES128-SHA:DES-CBC3-SHA";
 
 static char Head_410[] =
    "HTTP/1.0 410 Gone\r\n"
@@ -317,14 +317,16 @@ int main(int ac, char *av[]) {
    else {
       SSL_library_init();
       SSL_load_error_strings();
-      if (!(ctx = SSL_CTX_new(TLSv1_server_method())) ||
+      if (!(ctx = SSL_CTX_new(SSLv23_server_method())) ||
             !SSL_CTX_use_certificate_file(ctx, av[3], SSL_FILETYPE_PEM) ||
                !SSL_CTX_use_PrivateKey_file(ctx, av[3], SSL_FILETYPE_PEM) ||
                            !SSL_CTX_check_private_key(ctx) || !setDH(ctx) ) {
          ERR_print_errors_fp(stderr);
          giveup("SSL init");
       }
-      SSL_CTX_set_options(ctx, SSL_OP_CIPHER_SERVER_PREFERENCE | SSL_OP_NO_COMPRESSION);
+      SSL_CTX_set_options(ctx,
+         SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3 | SSL_OP_ALL |
+         SSL_OP_CIPHER_SERVER_PREFERENCE | SSL_OP_NO_COMPRESSION );
       ssl = SSL_new(ctx),  gate = "X-Pil: *Gate=https\r\nX-Pil: *Adr=%s\r\n";
    }
    for (n = 1; n < cnt; ++n)

@@ -1,4 +1,4 @@
-/* 01nov14abu
+/* 03nov14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -26,7 +26,7 @@ static char *File, *Dir, *Data;
 static off_t Size;
 static bool Safe, Hot;
 
-static char Ciphers[] = "ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:AES128-SHA256:AES128-SHA:DES-CBC3-SHA";
+static char Ciphers[] = "ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:AES128-GCM-SHA256:AES128-SHA256:AES128-SHA:DES-CBC3-SHA";
 
 static char Get[] =
    "GET /%s HTTP/1.0\r\n"
@@ -168,7 +168,7 @@ int main(int ac, char *av[]) {
 
    SSL_library_init();
    SSL_load_error_strings();
-   if (!(ctx = SSL_CTX_new(TLSv1_client_method())) || !SSL_CTX_set_default_verify_paths(ctx)) {
+   if (!(ctx = SSL_CTX_new(SSLv23_client_method())) || !SSL_CTX_set_default_verify_paths(ctx)) {
       ERR_print_errors_fp(stderr);
       giveup("SSL init");
    }
