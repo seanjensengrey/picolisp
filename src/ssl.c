@@ -1,4 +1,4 @@
-/* 03nov14abu
+/* 04nov14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -172,6 +172,8 @@ int main(int ac, char *av[]) {
       ERR_print_errors_fp(stderr);
       giveup("SSL init");
    }
+   SSL_CTX_set_options(ctx,
+      SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3 | SSL_OP_ALL | SSL_OP_NO_COMPRESSION );
    SSL_CTX_set_cipher_list(ctx, Ciphers);
    ssl = SSL_new(ctx);
 
