@@ -571,9 +571,7 @@ href="refG.html#getd">getd</a></code>.
 <pre><code>
 : (fun? 1000000000)              # Might be a code pointer
 -> 1000000000
-: (fun? 100000000000000)         # Too big for a code pointer
--> NIL
-: (fun? 1000000001)              # Cannot be a code pointer (odd)
+: (fun? 10000000000000000000)    # Too big for a code pointer
 -> NIL
 : (fun? '((A B) (* A B)))        # Lambda expression
 -> (A B)
