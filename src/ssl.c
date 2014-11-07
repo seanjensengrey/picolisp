@@ -1,4 +1,4 @@
-/* 04nov14abu
+/* 07nov14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -143,14 +143,13 @@ static void iSignal(int n, void (*foo)(int)) {
 }
 
 // ssl host port url
-// ssl host port url file
-// ssl host port url key file
-// ssl host port url key file dir sec
+// ssl host port url [key] file
+// ssl host port url key file dir sec [min]
 int main(int ac, char *av[]) {
    bool dbg;
    SSL_CTX *ctx;
    SSL *ssl;
-   int n, sec, getLen, lenLen, fd, sd;
+   int n, sec, lim, getLen, lenLen, fd, sd;
    DIR *dp;
    struct dirent *p;
    struct stat st;
@@ -158,8 +157,8 @@ int main(int ac, char *av[]) {
 
    if (dbg = strcmp(av[ac-1], "+") == 0)
       --ac;
-   if (!(ac >= 4 && ac <= 6  ||  ac == 8))
-      giveup("host port url [[key] file] | host port url key file dir sec");
+   if (!(ac >= 4 && ac <= 6  ||  ac >= 8 && ac <= 9))
+      giveup("host port url [[key] file] | host port url key file dir sec [min]");
    if (*av[2] == '-')
       ++av[2],  Safe = YES;
    if (strlen(Get)+strlen(av[1])+strlen(av[2])+strlen(av[3]) >= sizeof(get))
@@ -212,11 +211,17 @@ int main(int ac, char *av[]) {
    iSignal(SIGINT, doSigTerm);
    iSignal(SIGTERM, doSigTerm);
    signal(SIGPIPE, SIG_IGN);
+   lim = 0;
+   if (ac > 8) {
+      iSignal(SIGALRM, doSigTerm);
+      alarm(lim = 60 * atoi(av[8]));
+   }
    for (;;) {
       if (*File && (fd = open(File, O_RDWR)) >= 0) {
          if (fstat(fd,&st) < 0  ||  st.st_size == 0)
             close(fd);
          else {
+            alarm(lim);
             lockFile(fd);
             if (fstat(fd,&st) < 0  ||  (Size = st.st_size) == 0)
                giveup("Can't access");
