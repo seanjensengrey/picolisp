@@ -1,4 +1,4 @@
-/* 07nov14abu
+/* 08nov14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -149,7 +149,7 @@ int main(int ac, char *av[]) {
    bool dbg;
    SSL_CTX *ctx;
    SSL *ssl;
-   int n, sec, lim, getLen, lenLen, fd, sd;
+   int n, sec, lim, to, getLen, lenLen, fd, sd;
    DIR *dp;
    struct dirent *p;
    struct stat st;
@@ -212,16 +212,14 @@ int main(int ac, char *av[]) {
    iSignal(SIGTERM, doSigTerm);
    signal(SIGPIPE, SIG_IGN);
    lim = 0;
-   if (ac > 8) {
-      iSignal(SIGALRM, doSigTerm);
-      alarm(lim = 60 * atoi(av[8]));
-   }
+   if (ac > 8)
+      to = lim = 60 * atoi(av[8]);
    for (;;) {
       if (*File && (fd = open(File, O_RDWR)) >= 0) {
          if (fstat(fd,&st) < 0  ||  st.st_size == 0)
             close(fd);
          else {
-            alarm(lim);
+            to = lim;
             lockFile(fd);
             if (fstat(fd,&st) < 0  ||  (Size = st.st_size) == 0)
                giveup("Can't access");
@@ -259,15 +257,17 @@ int main(int ac, char *av[]) {
          while (p = readdir(dp)) {
             if (p->d_name[0] != '.') {
                snprintf(nm, sizeof(nm), "%s%s", Dir, p->d_name);
-               if ((n = readlink(nm, buf, sizeof(buf))) > 0  &&
-                        (sd = sslConnect(ssl, av[1], av[2])) >= 0 ) {
-                  if (SSL_write(ssl, get, getLen) == getLen  &&
-                        (!*av[4] || sslFile(ssl,av[4]))  &&       // key
-                        SSL_write(ssl, buf, n) == n  &&           // path
-                        SSL_write(ssl, "\n", 1) == 1  &&          // nl
-                        sslFile(ssl, nm) )                        // file
-                     unlink(nm);
-                  sslClose(ssl,sd);
+               if ((n = readlink(nm, buf, sizeof(buf))) > 0) {
+                  to = lim;
+                  if ((sd = sslConnect(ssl, av[1], av[2])) >= 0 ) {
+                     if (SSL_write(ssl, get, getLen) == getLen  &&
+                           (!*av[4] || sslFile(ssl,av[4]))  &&       // key
+                           SSL_write(ssl, buf, n) == n  &&           // path
+                           SSL_write(ssl, "\n", 1) == 1  &&          // nl
+                           sslFile(ssl, nm) )                        // file
+                        unlink(nm);
+                     sslClose(ssl,sd);
+                  }
                }
                if (dbg)
                   ERR_print_errors_fp(stderr);
@@ -276,5 +276,7 @@ int main(int ac, char *av[]) {
          closedir(dp);
       }
       sleep(sec);
+      if (lim && (to -= sec) <= 0)
+         exit(0);
    }
 }
