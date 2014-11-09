@@ -591,9 +591,9 @@ sys/x86-64.freeBsd.defs.l,2061
 doBitXor2878,68827
 doSqrt2918,69650
 initSeedE_E3049,73074
-doSeed3083,73730
-doHash3097,74052
-doRand3123,74635
+doSeed3092,73958
+doHash3106,74280
+doRand3132,74863
 
 ./io.l,2983
 closeAX5,75
