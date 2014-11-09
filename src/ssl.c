@@ -1,4 +1,4 @@
-/* 08nov14abu
+/* 09nov14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -275,8 +275,8 @@ int main(int ac, char *av[]) {
          }
          closedir(dp);
       }
-      sleep(sec);
-      if (lim && (to -= sec) <= 0)
+      if (lim && (to -= sec) < 0)
          exit(0);
+      sleep(sec);
    }
 }
