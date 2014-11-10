@@ -1,4 +1,4 @@
-# 15oct14abu
+# 10nov14abu
 # (c) Software Lab. Alexander Burger
 
 # (car 'var) -> any
@@ -2825,6 +2825,7 @@
             add C (hex "10")  # Increment count
          loop
       else  # Big number
+         off E SIGN  # Make positive
          ld C (hex "82")  # Count '8' significant bytes
          do
             ld A (E DIG)  # Keep digit

@@ -1,4 +1,4 @@
-# 15oct14abu
+# 10nov14abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -1221,6 +1221,7 @@
    end
    big X  # Big number?
    if nz  # Yes
+      off X SIGN  # Make positive
       ld A 9  # Count 8 significant bytes plus 1
       do
          ld C (X DIG)  # Keep digit
