@@ -1,4 +1,4 @@
-/* 15oct14abu
+/* 14nov14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -1020,7 +1020,7 @@ any doDate(any ex) {
 }
 
 any mkTime(int h, int m, int s) {
-   if (h < 0 || h > 23  ||  m < 0 || m > 59  ||  s < 0 || s > 60)
+   if (h < 0  ||  m < 0 || m > 59  ||  s < 0 || s > 60)
       return Nil;
    return boxCnt(h * 3600 + m * 60 + s);
 }

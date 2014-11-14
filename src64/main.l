@@ -1,4 +1,4 @@
-# 10nov14abu
+# 14nov14abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -2892,11 +2892,15 @@
             if z  # Yes
                ld A (E)  # Extract hour
                call xCntAX_FA
+               js noTime
                mul 3600
                ld Y A
                ld E (E CDR)
                ld A (E)  # minute
                call xCntAX_FA
+               js noTime
+               cmp A 59
+               jgt noTime
                mul 60
                add Y A
                ld E (E CDR)  # and second
@@ -2905,6 +2909,9 @@
                if z  # Yes
                   ld E (E)
                   call xCntEX_FE
+                  js noTime
+                  cmp E 60
+                  jgt noTime
                   add E Y  # add minutes and hours
                end
                shl E 4  # Make short number
@@ -2942,10 +2949,14 @@
                   ld (E CDR) X
                else
                   call xCntEX_FE  # Extract hour
+                  js noTime
                   ld A E
                   mul 3600
                   push A  # Save hour
                   call evCntXY_FE  # Eval minute
+                  js noTime2
+                  cmp E 59
+                  jgt noTime2
                   ld A E
                   mul 60
                   add (S) A  # Add to hour
@@ -2953,6 +2964,9 @@
                   atom Y  # Any?
                   if z  # Yes
                      call evCntXY_FE
+                     js noTime2
+                     cmp E 60
+                     jgt noTime2
                      add (S) E
                   end
                   pop E  # Get result
@@ -2963,6 +2977,13 @@
          end
       end
    end
+   pop Y
+   pop X
+   ret
+: noTime2
+   add S I  # Drop partial result
+: noTime
+   ld E Nil  # Can't convert time
    pop Y
    pop X
    ret

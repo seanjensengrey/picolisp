@@ -417,7 +417,7 @@ sys/x86-64.freeBsd.defs.l,2061
 UndefErr1252,85698
 DlErr1253,85727
 
-./main.l,2279
+./main.l,2318
 Code4,51
 Ret8,106
 Retc10,127
@@ -527,17 +527,19 @@ sys/x86-64.freeBsd.defs.l,2061
 doDate2734,66478
 tmTimeY_E2850,70089
 doTime2867,70422
-doUsec2971,73400
-doPwd2989,73817
-doCd3000,74071
-doCtty3025,74686
-doInfo3071,75998
-doFile3125,77256
-doDir3178,78492
-doCmd3248,80110
-doArgv3266,80569
-doOpt3369,83115
-doVersion3383,83446
+noTime22983,73769
+noTime2985,73813
+doUsec2992,73905
+doPwd3010,74322
+doCd3021,74576
+doCtty3046,75191
+doInfo3092,76503
+doFile3146,77761
+doDir3199,78997
+doCmd3269,80615
+doArgv3287,81074
+doOpt3390,83620
+doVersion3404,83951
 
 ./big.l,1078
 zapZeroA_A6,106
