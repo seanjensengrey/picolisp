@@ -892,16 +892,16 @@ Calls</a>.
 href="refI.html#index">index</a></code>.
 
 <pre><code>
-: (sub? "def" "abcdef")
--> "abcdef"
-: (sub? "abb" "abcdef")
--> NIL
-: (sub? NIL "abcdef")
--> "abcdef"
-
-: (sub? "def" '(a b c d e f))
+: (sub? "def" "abcdefg")
 -> "abcdefg"
-: (sub? '(d e f) "abcdef")
+: (sub? "abb" "abcdefg")
+-> NIL
+: (sub? NIL "abcdefg")
+-> "abcdefg"
+
+: (sub? "def" '(a b c d e f g))
+-> "abcdefg"
+: (sub? '(d e f) "abcdefg")
 -> "abcdefg"
 </code></pre>
 

@@ -525,19 +525,19 @@ See also <code><a href="refS.html#sub?">sub?</a></code> and <code><a
 href="refH.html#head">head</a></code>.
 
 <pre><code>
-: (pre? "abc" "abcdef")
+: (pre? "abc" "abcdefg")
 -> "abcdef"
-: (pre? "def" "abcdef")
+: (pre? "def" "abcdefg")
 -> NIL
 : (pre? (+ 3 4) "7fach")
 -> "7fach"
-: (pre? NIL "abcdef")
--> "abcdef"
+: (pre? NIL "abcdefg")
+-> "abcdefg"
 
-: (pre? "abc" '(a b c d e f))
--> "abcdef"
-: (pre? '(a b c) "abcdef")
--> "abcdef"
+: (pre? "abc" '(a b c d e f g))
+-> "abcdefg"
+: (pre? '(a b c) "abcdefg")
+-> "abcdefg"
 </code></pre>
 
 <dt><a name="pretty"><code>(pretty 'any 'cnt)</code></a>
