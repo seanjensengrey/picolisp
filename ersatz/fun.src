@@ -1,4 +1,4 @@
-# 14nov14abu
+# 15nov14abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -345,7 +345,8 @@ date (i j x z)
       return Nil;
    if (z instanceof Cell)
       return date(xInt(z.Car), xInt(z.Cdr.Car), xInt(z.Cdr.Cdr.Car));
-   i = xInt(z);
+   if ((i = xInt(z)) < 0)
+      return Nil;
    if (!((x = x.Cdr) instanceof Cell))
       return date(i);
    j = evInt(x);
@@ -364,7 +365,8 @@ time (i j x z)
       return Nil;
    if (z instanceof Cell)
       return time(xInt(z.Car), xInt(z.Cdr.Car), z.Cdr.Cdr instanceof Cell? xInt(z.Cdr.Cdr.Car) : 0);
-   i = xInt(z);
+   if ((i = xInt(z)) < 0)
+      return Nil;
    if (!((x = x.Cdr) instanceof Cell))
       return new Cell(new Number(i / 3600), new Cell(new Number(i / 60 % 60), new Cell(new Number(i % 60), Nil)));
    j = evInt(x);

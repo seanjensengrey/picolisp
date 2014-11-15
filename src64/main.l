@@ -1,4 +1,4 @@
-# 14nov14abu
+# 15nov14abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -2671,6 +2671,8 @@
    ld Z A
 # Date function
 (code 'dateXYZ_E 0)
+   null Z  # Year <= 0?
+   jsz retNil
    null Y  # Month <= 0?
    jsz retNil
    cmp Y 12  # Month > 12?
@@ -2775,6 +2777,7 @@
                atom Y
                if nz  # No
                   call xCntEX_FE  # Get date
+                  js noTime2
                   ld A E  # 100 * n
                   mul 100
                   sub A 20  # minus 20
@@ -2921,6 +2924,7 @@
                atom Y
                if nz  # No
                   call xCntEX_FE  # Get time in total seconds
+                  js noTime
                   ld A E
                   ld C 0
                   div 60  # Seconds in C

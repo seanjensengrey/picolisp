@@ -1,4 +1,4 @@
-/* 14nov14abu
+/* 15nov14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -968,7 +968,7 @@ any mkDat(int y, int m, int d) {
    int n;
    static char mon[13] = {31,31,28,31,30,31,30,31,31,30,31,30,31};
 
-   if (m<1 || m>12 || d<1 || d>mon[m] && (m!=2 || d!=29 || y%4 || !(y%100) && y%400))
+   if (y<0 || m<1 || m>12 || d<1 || d>mon[m] && (m!=2 || d!=29 || y%4 || !(y%100) && y%400))
       return Nil;
    n = (12*y + m - 3) / 12;
    return boxCnt((4404*y+367*m-1094)/12 - 2*n + n/4 - n/100 + n/400 + d);
@@ -998,7 +998,8 @@ any doDate(any ex) {
    if (isCell(z))
       return mkDat(xCnt(ex, car(z)),  xCnt(ex, cadr(z)),  xCnt(ex, caddr(z)));
    if (!isCell(x = cdr(x))) {
-      n = xCnt(ex,z);
+      if ((n = xCnt(ex,z)) < 0)
+         return Nil;
       y = (100*n - 20) / 3652425;
       n += (y - y/4);
       y = (100*n - 20) / 36525;
@@ -1047,7 +1048,8 @@ any doTime(any ex) {
    if (isCell(z))
       return mkTime(xCnt(ex, car(z)), xCnt(ex, cadr(z)), isCell(cddr(z))? xCnt(ex, caddr(z)) : 0);
    if (!isCell(x = cdr(x))) {
-      s = xCnt(ex,z);
+      if ((s = xCnt(ex,z)) < 0)
+         return Nil;
       Push(c1, cons(boxCnt(s % 60), Nil));
       data(c1) = cons(boxCnt(s / 60 % 60), data(c1));
       data(c1) = cons(boxCnt(s / 3600), data(c1));

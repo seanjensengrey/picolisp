@@ -1,4 +1,4 @@
-// 14nov14abu
+// 15nov14abu
 // (c) Software Lab. Alexander Burger
 
 import java.util.*;
@@ -250,7 +250,7 @@ public class PicoLisp {
    final static Any date(int y, int m, int d) {
       int n;
 
-      if (m<1 || m>12 || d<1 || d>MonLen[m] && (m!=2 || d!=29 || y%4!=0 || y%100==0 && y%400!=0))
+      if (y<0 || m<1 || m>12 || d<1 || d>MonLen[m] && (m!=2 || d!=29 || y%4!=0 || y%100==0 && y%400!=0))
          return Nil;
       n = (12*y + m - 3) / 12;
       return new Number((4404*y+367*m-1094)/12 - 2*n + n/4 - n/100 + n/400 + d);
