@@ -1,4 +1,4 @@
-# 30oct14abu
+# 15nov14abu
 # (c) Software Lab. Alexander Burger
 
 # Prompt
@@ -417,10 +417,11 @@
                   (trace "X") ) ) ) ) ) )
 
 # Process Listing
-(de proc @
-   (apply call
-      (make (while (args) (link "-C" (next))))
-      'ps "-H" "-o" "pid,ppid,start,size,pcpu,wchan,cmd" ) )
+(when (= *OS "Linux")
+   (de proc @
+      (apply call
+         (make (while (args) (link "-C" (next))))
+         'ps "-H" "-o" "pid,ppid,start,size,pcpu,wchan,cmd" ) ) )
 
 # Benchmarking
 (de bench Prg
