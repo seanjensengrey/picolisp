@@ -861,7 +861,7 @@ sys/x86-64.freeBsd.defs.l,2061
 retT756,14917
 retE_E759,14952
 
-./sym.l,1795
+./sym.l,1796
 cmpLongAX_F5,78
 isInternEXY_F37,682
 internEXY_FE75,1602
@@ -942,16 +942,16 @@ sys/x86-64.freeBsd.defs.l,2061
 doPutl3162,73425
 doGetl3244,75126
 doWipe3302,76234
-wipeE3324,76668
-doMeta3347,77175
-metaCX_E3389,77951
-caseDataA_AC3415,78550
-doLowQ3427,78853
-doUppQ3442,79212
-doLowc3457,79565
-doUppc3509,81073
-doFold3561,82588
-isLetterOrDigitA_F3629,84621
+wipeEX3327,76699
+doMeta3351,77242
+metaCX_E3393,78018
+caseDataA_AC3419,78617
+doLowQ3431,78920
+doUppQ3446,79279
+doLowc3461,79632
+doUppc3513,81140
+doFold3565,82655
+isLetterOrDigitA_F3633,84688
 
 ./db.l,1153
 getAdrZ_A6,117
