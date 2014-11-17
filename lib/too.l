@@ -1,4 +1,4 @@
-# 14oct14abu
+# 17nov14abu
 # (c) Software Lab. Alexander Burger
 
 ### Local Backup ###
@@ -133,7 +133,9 @@
 
 ### DB Check ###
 (de dbCheck ()
-   (and (lock) (quit 'lock @))  # Lock whole database
+   (while (lock)  # Lock whole database
+      (tell 'bye 2)
+      (wait 200) )
    (for (F . N) (or *Dbs (2))  # Low-level integrity check
       (unless (pair (println F N (dbck F T)))
          (quit 'dbck @) ) )
