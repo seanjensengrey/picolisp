@@ -1,4 +1,4 @@
-# 13oct14abu
+# 17nov14abu
 # (c) Software Lab. Alexander Burger
 
 # *Rule
@@ -506,12 +506,13 @@
 (de "initSel" ()
    (with (treeRel Var Cls)
       (if (isa '+Sn This)
-         (conc
-            (initQuery Var (: cls) Hook Val)
-            (init
-               (tree Var (: cls) Hook)
-               (cons (setq Val (ext:Snx Val)))
-               (cons (pack Val `(char T)) T) ) )
+         (let Tree (tree Var (: cls) Hook)
+            (conc
+               (init Tree (cons Val) (cons (pack Val `(char T)) T))
+               (initQuery Var (: cls) Hook Val)
+               (init Tree
+                  (cons (setq Val (ext:Snx Val)))
+                  (cons (pack Val `(char T)) T) ) ) )
          (initQuery Var (: cls) Hook Val) ) ) )
 
 (de _gen (Lst Q)
