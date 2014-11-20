@@ -1,4 +1,4 @@
-# 17nov14abu
+# 20nov14abu
 # (c) Software Lab. Alexander Burger
 
 ### Local Backup ###
@@ -183,7 +183,7 @@
 # Entity Counts
 (de badECnt ()
    (let Cnt NIL
-      (for (F . @) *Dbs
+      (for (F . @) (or *Dbs (2))
          (for (This (seq F) This (seq This))
             (and
                (isa '+Entity This)
