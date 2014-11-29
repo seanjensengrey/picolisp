@@ -1,4 +1,4 @@
-# 17nov14abu
+# 29nov14abu
 # (c) Software Lab. Alexander Burger
 
 # *Rule
@@ -216,8 +216,9 @@
             (let Q (init Tree (cons Val) (cons (pack Val `(char T)) T))
                (if (cdr Q)
                   Q
-                  (setq Val (pack (car (split (chop Val) " "))))
-                  (init Tree (cons Val) (cons (pack Val `(char T)) T)) ) ) )
+                  (when (cdr (setq Val (split (chop Val) " ")))
+                     (setq Val (pack (car Val)))
+                     (init Tree (cons Val) (cons (pack Val `(char T)) T)) ) ) ) )
          (T (init Tree (cons Val) (cons (pack Val `(char T)) T))) ) ) )
 
 # (db var cls obj)
@@ -505,15 +506,18 @@
 
 (de "initSel" ()
    (with (treeRel Var Cls)
-      (if (isa '+Sn This)
-         (let Tree (tree Var (: cls) Hook)
-            (conc
-               (init Tree (cons Val) (cons (pack Val `(char T)) T))
-               (initQuery Var (: cls) Hook Val)
+      (let Tree (tree Var (: cls) Hook)
+         (conc
+            (and
+               (isa '+IdxFold This)
+               (<> Val (fold Val))
+               (init Tree (cons Val) (cons (pack Val `(char T)) T)) )
+            (initQuery Var (: cls) Hook Val)
+            (and
+               (isa '+Sn This)
                (init Tree
                   (cons (setq Val (ext:Snx Val)))
-                  (cons (pack Val `(char T)) T) ) ) )
-         (initQuery Var (: cls) Hook Val) ) ) )
+                  (cons (pack Val `(char T)) T) ) ) ) ) ) )
 
 (de _gen (Lst Q)
    (cond
