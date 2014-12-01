@@ -1,4 +1,4 @@
-# 29nov14abu
+# 01dec14abu
 # (c) Software Lab. Alexander Burger
 
 # *Rule
@@ -216,9 +216,8 @@
             (let Q (init Tree (cons Val) (cons (pack Val `(char T)) T))
                (if (cdr Q)
                   Q
-                  (when (cdr (setq Val (split (chop Val) " ")))
-                     (setq Val (pack (car Val)))
-                     (init Tree (cons Val) (cons (pack Val `(char T)) T)) ) ) ) )
+                  (setq Val (pack (car (split (chop Val) " "))))
+                  (init Tree (cons Val) (cons (pack Val `(char T)) T)) ) ) )
          (T (init Tree (cons Val) (cons (pack Val `(char T)) T))) ) ) )
 
 # (db var cls obj)
