@@ -1,5 +1,20 @@
-# 20nov14abu
+# 02dec14abu
 # (c) Software Lab. Alexander Burger
+
+(de admin "Prg"
+   (out 2
+      (prinl *Pid " + Admin " (stamp))
+      (loop
+         (tell 'bye 2)
+         (NIL (lock))
+         (wait 200) )
+      (for (F . @) (or *Dbs (2))
+         (when (dbck F)
+            (quit "DB Check" (cons F @)) ) )
+      (when (dbgc)
+         (println 'dbgc @) )
+      (run "Prg")
+      (prinl *Pid " - Admin " (stamp)) ) )
 
 ### Local Backup ###
 (de snapshot (Dst . @)
