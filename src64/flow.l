@@ -1,4 +1,4 @@
-# 07sep14abu
+# 08dec14abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -3160,12 +3160,9 @@
    pop E
    ret
 
-# (call 'any ..) -> flg
-(code 'doCall 2)
-   push X
-   push Z
+(code 'execArgsE_SXZ)  # Y
+   pop Y  # Get return address
    ld X (E CDR)  # X on args
-   push E  # Save expression
    push 0  # End-of-buffers marker
    call evSymX_E  # Pathname
    call pathStringE_SZ  # Write to stack buffer
@@ -3187,8 +3184,24 @@
       ld X (X)  # Follow chain
       null (X)  # Done?
    until z  # Yes
-   ld X (X I)  # Retrieve expression
    call flushAll  # Flush all output channels
+   jmp (Y)  # Return
+
+# (exec 'any ..)
+(code 'doExec 2)
+   call execArgsE_SXZ  # Prepare arguments
+   cc setpgid(0 0)  # Set process group
+   cc execvp((S) S)  # Execute program
+   jmp execErrS  # Error if failed
+
+# (call 'any ..) -> flg
+(code 'doCall 2)
+   push X
+   push Y
+   push Z
+   push E  # Save expression
+   call execArgsE_SXZ  # Prepare arguments
+   ld X (X I)  # Retrieve expression
    cc fork()  # Fork child process
    nul4  # In child?
    if z  # Yes
@@ -3237,6 +3250,7 @@
          ld (At2) A  # Exit status in '@@'
          add S I  # Drop expression
          pop Z
+         pop Y
          pop X
          ret
       end

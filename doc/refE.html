@@ -393,6 +393,24 @@ href="refE.html#expTel">expTel</a></code>.
 -> 733133
 </code></pre>
 
+<dt><a name="exec"><code>(exec 'any ..)</code></a>
+<dd>Executes an external system command. The <code>any</code> arguments specify
+the command and its arguments. Does not return to the caller; the current
+process is replaced with a new process image. See also <code><a
+href="refF.html#fork">fork</a></code> and <code><a
+href="refC.html#call">call</a></code>.
+
+<pre><code>
+: (pipe (exec 'echo 123 "abc")
+   (list (read) (read)) )
+-> (123 abc)
+
+(unless (fork)
+   (exec "@bin/ssl"  # Start replication process
+      "10.11.12.13" 443
+      "app/!replica" "key/app" "fifo/app" "db/app/blob/" 20 ) )
+</code></pre>
+
 <dt><a name="expTel"><code>(expTel 'sym) -> sym</code></a>
 <dd>Expands a telephone number string. Multiple spaces or hyphens are coalesced.
 A leading <code>+</code> or <code>00</code> is removed, a leading <code>0</code>

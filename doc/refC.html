@@ -64,7 +64,8 @@ internally to build the index key.
 <dd>Calls an external system command. The <code>any</code> arguments specify the
 command and its arguments. Returns <code>T</code> if the command was executed
 successfully. The (system dependent) exit status code of the child process is
-stored in the global variable <code><a href="ref_.html#@@">@@</a></code>.
+stored in the global variable <code><a href="ref_.html#@@">@@</a></code>. See
+also <code><a href="refE.html#exec">exec</a></code>.
 
 <pre><code>
 : (when (call 'test "-r" "file.l")  # Test if file exists and is readable
