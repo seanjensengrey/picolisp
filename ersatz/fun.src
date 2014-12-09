@@ -1,4 +1,4 @@
-# 15nov14abu
+# 09dec14abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -209,8 +209,8 @@ java (num i j k x y z s v o)
    }
    try {
       if (z == T)
-         return new Symbol(javaConstructor(ex, java.lang.Class.forName(y.name()), par).newInstance(arg));
-      Method m = javaMethod(ex, (s = (Symbol)y).Obj == null? java.lang.Class.forName(s.Name) : s.Obj.getClass(), z.name(), par);
+         return new Symbol(javaConstructor(java.lang.Class.forName(y.name()), par).newInstance(arg));
+      Method m = javaMethod((s = (Symbol)y).Obj == null? java.lang.Class.forName(s.Name) : s.Obj.getClass(), z.name(), par);
       o = m.invoke(s.Obj, arg);
       if (m.getReturnType() == Void.TYPE)
          return Nil;
