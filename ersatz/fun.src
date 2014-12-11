@@ -1,4 +1,4 @@
-# 09dec14abu
+# 11dec14abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -965,7 +965,7 @@ dm (x y s t)
    }
    for (y = t.Car; y instanceof Cell && y.Car instanceof Cell; y = y.Cdr)
       if (y.Car.Car == s) {
-         if (!x.Cdr.equal(y.Cdr.Car))
+         if (!x.Cdr.equal(y.Car.Cdr))
             redefMsg(s, t);
          y.Car.Cdr = x.Cdr;
          putSrc(t, s);
