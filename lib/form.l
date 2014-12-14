@@ -1,4 +1,4 @@
-# 31oct14abu
+# 14dec14abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -107,7 +107,8 @@
                   (htPrin "Prg") ) ) )
          (off "*Chart")
          (--)
-         (eval (: show)) ) ) )
+         (eval (: show))
+         (=: show) ) ) )
 
 # Disable form
 (de disable (Flg)
