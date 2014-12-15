@@ -1,4 +1,4 @@
-# 08sep14abu
+# 15dec14abu
 # (c) Software Lab. Alexander Burger
 
 # 6 bytes in little endian format
@@ -1299,6 +1299,7 @@
       ld Z (Ext)  # Extended databases?
       atom Z
       jnz dbfErrX  # No
+      inc A  # File is zero-based
       ld C ((Z))  # First offset
       shr C 4  # Normalize
       cmp A C  # First offset too big?

@@ -1003,13 +1003,13 @@ sys/x86-64.freeBsd.defs.l,2061
 doLock1185,32219
 dbFetchEX1224,33169
 dbAEX1236,33396
-dbTouchEX1350,36703
-dbZapE1382,37291
-doCommit1403,37726
-doRollback1803,50573
-doMark1880,52468
-doFree1962,54514
-doDbck2020,55980
+dbTouchEX1351,36737
+dbZapE1383,37325
+doCommit1404,37760
+doRollback1804,50607
+doMark1881,52502
+doFree1963,54548
+doDbck2021,56014
 
 ./gc.l,842
 markE5,63
