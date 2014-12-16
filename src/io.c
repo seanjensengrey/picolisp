@@ -1,4 +1,4 @@
-/* 01nov14abu
+/* 16dec14abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -2925,7 +2925,7 @@ bool isLife(any x) {
             }
          }
       }
-      else if (!isNil(val(Ext)))
+      else if (isCell(val(Ext)))
          return YES;
    }
    return NO;
@@ -3511,7 +3511,7 @@ any doRollback(any x) {
    int i;
    any y, z;
 
-   if (!Files)
+   if (!Files && !isCell(val(Ext)))
       return Nil;
    for (i = 0; i < EHASH; ++i) {
       for (x = Extern[i];  isCell(x);  x = cdr(x)) {
@@ -3526,7 +3526,8 @@ any doRollback(any x) {
    }
    if (isCell(x = val(Zap)))
       car(x) = Nil;
-   rwUnlock(0);  // Unlock all
+   if (Files)
+      rwUnlock(0);  // Unlock all
    unsync();
    return T;
 }
