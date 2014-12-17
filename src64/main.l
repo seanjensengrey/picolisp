@@ -1,4 +1,4 @@
-# 15nov14abu
+# 17dec14abu
 # (c) Software Lab. Alexander Burger
 
 (code 'Code)
@@ -748,8 +748,8 @@
             if eq  # Yes
                cmp X C  # Last entry?
                if eq  # Yes
-                  call cons_A  # Cons 'exe'
-                  ld (A) (C II)  # Cons 'exe'
+                  call consE_A  # Cons 'exe'
+                  ld (A) (C II)
                   ld (A CDR) E
                   ld E A
                   break T
@@ -757,7 +757,7 @@
             end
             cmp Z Nil  # 'flg'?
             if ne  # Yes
-               call cons_A  # Cons value
+               call consE_A  # Cons value
                ld (A) (Y)
                ld (A CDR) E
                call consA_E  # Cons symbol
