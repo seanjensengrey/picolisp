@@ -1,4 +1,4 @@
-# 14dec14abu
+# 17dec14abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -926,7 +926,7 @@
    (<tip> (eval (: tip)) (extra "Var")) )
 
 (dm js> ()
-   (pack (extra) "&?" (ht:Fmt (eval (: tip)))) )
+   (pack (extra) "&?" (ht:Fmt (glue "^J" (eval (: tip))))) )
 
 
 (class +Tiny)
