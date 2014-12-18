@@ -1,4 +1,5 @@
 * XXdec14 picoLisp-3.1.9
+   'purge' backup function
    'exec' flow function
    Reversed 'bt' output
    'ssl' peer certificate verification

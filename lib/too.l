@@ -1,4 +1,4 @@
-# 02dec14abu
+# 18dec14abu
 # (c) Software Lab. Alexander Burger
 
 (de admin "Prg"
@@ -56,6 +56,11 @@
                      (pack Old '/ (cadr Lst))
                      (pack New '/ (cadr Lst)) )
                   (call 'touch "-r" Src New) ) ) ) ) ) )
+
+(de purge (Dst N)
+   (for D (dir Dst)
+      (when (>= (format D) N)
+         (call 'rm "-rf" (pack Dst '/ D)) ) ) )
 
 ### DB Garbage Collection ###
 (de dbgc ()
