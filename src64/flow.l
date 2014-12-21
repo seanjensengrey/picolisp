@@ -1,4 +1,4 @@
-# 08dec14abu
+# 20dec14abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -739,11 +739,11 @@
    link  # Close bind frame
    ld Y L  # Y on frame
    push 0  # Init env swap
-   push (EnvNext)   # Save current 'next'
-   push (EnvArgs)  # and varArgs base
+   push (EnvArgs)  # Save varArgs base
    atom X  # Any args?
    if nz  # No
       ld (EnvArgs) 0
+      push (EnvNext)   # Save current 'next'
       ld (EnvNext) 0
    else
       link  # Build varArgs frame
@@ -755,8 +755,9 @@
          atom X  # More args?
       until nz  # No
       ld (EnvArgs) S  # Set new varArgs base
-      ld (EnvNext) L  # Set new 'next'
       link  # Close varArgs frame
+      push (EnvNext)   # Save current 'next'
+      ld (EnvNext) (L)  # Set new 'next'
    end
    ld (EnvBind) Y  # Close bind frame
    xchg (EnvCls) ((Y) IV)  # 'cls'
@@ -773,12 +774,12 @@
       cmp Y C  # End?
    until eq  # Yes
    prog Z  # Run body
+   pop (EnvNext)   # Restore 'next'
    null (EnvArgs)  # VarArgs?
    if nz  # Yes
       drop  # Drop varArgs
    end
    pop (EnvArgs)  # Restore varArgs base
-   pop (EnvNext)   # and 'next'
    add S I  # Drop env swap
    pop L  # Get link
    do  # Unbind symbols
