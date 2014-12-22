@@ -1,4 +1,4 @@
-# 17dec14abu
+# 22dec14abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -107,8 +107,10 @@
                   (htPrin "Prg") ) ) )
          (off "*Chart")
          (--)
-         (eval (: show))
-         (=: show) ) ) )
+         (and
+            (: show)
+            (info @)
+            (in (: show) (echo)) ) ) ) )
 
 # Disable form
 (de disable (Flg)
@@ -1290,9 +1292,10 @@
 (class +ShowButton +Button)
 
 (dm T (Flg Exe)
-   (super ,"Show"
-      (list '=: 'home 'show (lit Exe)) )
-   (and Flg (=: home show Exe)) )
+   (let F (tmp (basename *Url) "=")
+      (super ,"Show" (list 'out F Exe))
+      (=: home show F)
+      (and Flg (out F (eval Exe))) ) )
 
 
 (class +Checkbox +field)
