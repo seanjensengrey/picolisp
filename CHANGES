@@ -1,4 +1,6 @@
-* XXdec14 picoLisp-3.1.9
+* XXmar15 picoLisp-3.1.10
+
+* 28dec14 picoLisp-3.1.9
    'purge' backup function
    'exec' flow function
    Reversed 'bt' output
