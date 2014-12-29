@@ -179,9 +179,9 @@ Hello world
 
 <dt><a name="let?"><code>(let? sym 'any . prg) -> any</code></a>
 <dd>Conditional local variable binding and execution: If <code>any</code>
-evalutes to <code>NIL</code>, <code>NIL</code> is returned. Otherwise, the value
-of the symbol <code>sym</code> is saved and <code>sym</code> is bound to the
-evaluated <code>any</code> argument. <code>prg</code> is executed, then
+evaluates to <code>NIL</code>, <code>NIL</code> is returned. Otherwise, the
+value of the symbol <code>sym</code> is saved and <code>sym</code> is bound to
+the evaluated <code>any</code> argument. <code>prg</code> is executed, then
 <code>sym</code> is restored to its original value. The result of
 <code>prg</code> is returned. It is an error condition to pass <code>NIL</code>
 as the <code>sym</code> argument. <code>(let? sym 'any ..)</code> is equivalent
