@@ -119,6 +119,13 @@ href="refF.html#fun?">fun?</a></code>.
 -> ((File . @) (load File))
 : (getd 1)
 -> NIL
+
+: ht:Fmt             # Initially undefined
+-> NIL
+: (getd 'ht:Fmt)     # Check shared library
+-> 8790207171188
+: ht:Fmt             # Now defined
+-> 8790207171188
 </code></pre>
 
 <dt><a name="getl"><code>(getl 'sym1|lst1 ['sym2|cnt ..]) -> lst</code></a>
