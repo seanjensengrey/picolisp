@@ -156,9 +156,9 @@ may consist only of symbols and sublists, and match the <code>any</code>
 argument (destructuring bind). <code>prg</code> is executed, then the symbols
 are restored to their original values. The result of <code>prg</code> is
 returned. It is an error condition to pass <code>NIL</code> as a
-<code>sym</code> argument. See also <code><a
-href="refL.html#let?">let?</a></code>, <code><a
-href="refB.html#bind">bind</a></code>, <code><a
+<code>sym</code> argument. In destructuring patterns, <code>NIL</code> denotes a
+"don't care" position. See also <code><a href="refL.html#let?">let?</a></code>,
+<code><a href="refB.html#bind">bind</a></code>, <code><a
 href="refR.html#recur">recur</a></code>, <code><a
 href="refW.html#with">with</a></code>, <code><a
 href="refF.html#for">for</a></code>, <code><a
@@ -188,7 +188,7 @@ Hello world
    (list A B C D) )
 -> (1 (2 3) 4 (7 8 9))
 
-: (let (((A . @) @ @ D) '((1 2 3) (4 5 6) 7 8 9))
+: (let (((A . NIL) NIL NIL D) '((1 2 3) (4 5 6) 7 8 9))
    (trail T) )
 -> (A 1 D 8)
 </code></pre>

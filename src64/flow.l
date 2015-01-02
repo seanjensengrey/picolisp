@@ -1,4 +1,4 @@
-# 01jan15abu
+# 02jan15abu
 # (c) Software Lab. Alexander Burger
 
 (code 'redefMsgEC)
@@ -1484,7 +1484,7 @@
       end
       atom (A)  # Structure symbol in CAR?
       if nz  # Yes
-         cmp (A) At  # Skip '@'
+         cmp (A) Nil  # Skip NIL
          if ne
             ld ((A)) (E)  # Set new value
          end
@@ -1502,10 +1502,7 @@
       if nz  # No
          cmp (A CDR) Nil  # Dotted structure symbol?
          if ne  # Yes
-            cmp (A CDR) At  # Skip '@'
-            if ne
-               ld ((A CDR)) E  # Set new value
-            end
+            ld ((A CDR)) E  # Set new value
          end
          ret
       end
@@ -1570,7 +1567,7 @@
                ld (C) Z  # TOS
                ld Z C
             loop
-            cmp (A) At  # Skip '@'
+            cmp (A) Nil  # Skip NIL
             if ne
                push ((A))  # Save old value
                push (A)  # and sym
@@ -1580,11 +1577,8 @@
                if nz  # No
                   cmp (A CDR) Nil  # Dotted structure symbol?
                   if ne  # Yes
-                     cmp (A CDR) At  # Skip '@'
-                     if ne
-                        push ((A CDR))  # Save old value
-                        push (A CDR)  # and sym
-                     end
+                     push ((A CDR))  # Save old value
+                     push (A CDR)  # and sym
                   end
                else
                   ld C A  # Go right

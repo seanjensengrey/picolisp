@@ -1,4 +1,4 @@
-# 01jan15abu
+# 02jan15abu
 # (c) Software Lab. Alexander Burger
 
 ### quote ###
@@ -171,7 +171,7 @@
       (let (((A . B) (C) . D) '((1 2 3) (4 5 6) 7 8 9))
          (list A B C D) ) )
    (test '(A 1 D 8)
-      (let (((A . @) @ @ D) '((1 2 3) (4 5 6) 7 8 9))
+      (let (((A . NIL) NIL NIL D) '((1 2 3) (4 5 6) 7 8 9))
          (trail T) ) ) )
 
 ### and ###
