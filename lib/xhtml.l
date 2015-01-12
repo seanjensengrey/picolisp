@@ -115,7 +115,7 @@
                (prinl "</style>") ) ) )
       (and *SesId (javascript NIL "SesId=\"" @ "\""))
       (mapc javascript *JS)
-      (when Upd
+      (when (=0 Upd)
          (javascript NIL
             "document.addEventListener('visibilitychange', function() {if (!document.hidden) window.location.reload(true)})" ) )
       (prinl "</head>")
