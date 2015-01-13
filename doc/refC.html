@@ -701,7 +701,7 @@ href="refR.html#root">root</a></code>.
 <dd>Waits until a write (exclusive) lock (or a read (shared) lock if the first
 character of <code>sym</code> is "<code>+</code>") can be set on the file
 <code>sym</code>, then executes <code>prg</code> and releases the lock. If the
-files does not exist, it will be created. When <code>sym</code> is
+file does not exist, it will be created. When <code>sym</code> is
 <code>NIL</code>, a shared lock is tried on the current innermost I/O channel,
 and when it is <code>T</code>, an exclusive lock is tried instead. See also
 <code><a href="refI.html#in">in</a></code>, <code><a
