@@ -1,4 +1,4 @@
-# 30dec14abu
+# 14jan15abu
 # (c) Software Lab. Alexander Burger
 
 # *Dbs *Jnl *Blob upd
@@ -747,7 +747,7 @@
 
 
 # (+IdxFold +relation) [cnt [hook]]
-(class +IdxFold +Fold +Ref)
+(class +IdxFold +Ref)
 
 (dm T (Var Lst)
    (=: min (or (car Lst) 3))
