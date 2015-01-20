@@ -1743,8 +1743,8 @@ successful bindings), and the application level functions <code><a
 href="refP.html#pilog">pilog</a></code> and <code><a
 href="refS.html#solve">solve</a></code>.
 
-<li>When the CAR of a Pilog clause is a Pilog variable, the CDR is executed as a
-Lisp expression and the result unified with that variable.
+<li>When the CAR of a Pilog clause is the symbol <code>^</code>, the the CDDR is
+executed as a Lisp expression and the result unified with the CADR.
 
 <li>Within such a Lisp expression in a Pilog clause, the current bindings of
 Pilog variables can be accessed with the <code><a
