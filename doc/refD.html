@@ -257,11 +257,11 @@ href="refS.html#strDat">strDat</a></code>.
 -> "Fr"
 </code></pre>
 
-<dt><a name="db"><code>(db 'var 'cls ['hook] 'any ['var 'any ..]) -> sym | NIL</code></a>
+<dt><a name="db"><code>(db 'sym 'cls ['hook] 'any ['sym 'any ..]) -> sym | NIL</code></a>
 <dd>Returns a database object of class <code>cls</code>, where the values for
-the <code>var</code> arguments correspond to the <code>any</code> arguments. If
+the <code>sym</code> arguments correspond to the <code>any</code> arguments. If
 a matching object cannot be found, <code>NIL</code> is returned.
-<code>var</code>, <code>cls</code> and <code>hook</code> should specify a
+<code>sym</code>, <code>cls</code> and <code>hook</code> should specify a
 <code><a href="refT.html#tree">tree</a></code> for <code>cls</code> or one of
 its superclasses. See also <code><a href="refA.html#aux">aux</a></code>,
 <code><a href="refC.html#collect">collect</a></code>, <code><a

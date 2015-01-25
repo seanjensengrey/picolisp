@@ -365,8 +365,8 @@ After 2
 
 </code></pre>
 
-<dt><a name="rel"><code>(rel var lst [any ..]) -> any</code></a>
-<dd>Defines a relation for <code>var</code> in the current class <code><a
+<dt><a name="rel"><code>(rel sym lst [any ..]) -> any</code></a>
+<dd>Defines a relation for <code>sym</code> in the current class <code><a
 href="refC.html#*Class">*Class</a></code>, using <code>lst</code> as the list of
 classes for that relation, and possibly additional arguments <code>any</code>
 for its initialization. See also <a href="ref.html#dbase">Database</a>, <code><a
@@ -537,7 +537,7 @@ href="refP.html#place">place</a></code>.
 -> (B A A B)
 </code></pre>
 
-<dt><a name="request"><code>(request 'typ 'var ['hook] 'val ..) -> obj</code></a>
+<dt><a name="request"><code>(request 'typ 'sym ['hook] 'val ..) -> obj</code></a>
 <dd>Returns a database object. If a matching object cannot be found (using
 <code><a href="refD.html#db">db</a></code>), a new object of the given type is
 created (using <code><a href="refN.html#new">new</a></code>). See also <code><a

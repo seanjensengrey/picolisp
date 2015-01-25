@@ -40,11 +40,11 @@ and <code><a href="refV.html#version">version</a></code>.
 -> "Linux"
 </code></pre>
 
-<dt><a name="obj"><code>(obj (typ var [hook] val ..) [var1 val1 ..]) -> obj</code></a>
+<dt><a name="obj"><code>(obj (typ sym [hook] val ..) [var1 val1 ..]) -> obj</code></a>
 <dt><code>(obj typ any [var1 val1 ..]) -> obj</code>
 <dd>Finds or creates a database object, and initializes additional properties
 using the <code>varN</code> and <code>valN</code> arguments. In the first form,
-a <code><a href="refR.html#request">request</a></code> for <code>(typ var [hook]
+a <code><a href="refR.html#request">request</a></code> for <code>(typ sym [hook]
 val ..)</code> is called, while the second form uses <code><a
 href="refC.html#cache">cache</a></code> to maintain objects without unique
 <code><a href="refK.html#+Key">+Key</a></code>s by indexing <code><a

@@ -602,10 +602,10 @@ number or a symbol). See also <code><a href="refP.html#pair">pair</a></code>.
 -> NIL
 </code></pre>
 
-<dt><a name="aux"><code>(aux 'var 'cls ['hook] 'any ..) -> sym</code></a>
+<dt><a name="aux"><code>(aux 'sym 'cls ['hook] 'any ..) -> sym</code></a>
 <dd>Returns a database object of class <code>cls</code>, where the value for
-<code>var</code> corresponds to <code>any</code> and the following arguments.
-<code>var</code>, <code>cls</code> and <code>hook</code> should specify a
+<code>sym</code> corresponds to <code>any</code> and the following arguments.
+<code>sym</code>, <code>cls</code> and <code>hook</code> should specify a
 <code><a href="refT.html#tree">tree</a></code> for <code>cls</code> or one of
 its superclasses, for a relation with auxiliary keys. For multi-key accesses,
 <code>aux</code> is similar to - but faster than - <code>db</code>, because it
