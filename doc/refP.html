@@ -775,6 +775,7 @@ also <code><a href="refL.html#lieu">lieu</a></code>.
 <dd>Implements a stack using a list in <code>var</code>. The <code>any</code>
 arguments are cons'ed in front of the value list. See also <code><a
 href="refP.html#push1">push1</a></code>, <code><a
+href="refP.html#push1q">push1q</a></code>, <code><a
 href="refP.html#pop">pop</a></code>, <code><a
 href="refQ.html#queue">queue</a></code> and <code><a
 href="refF.html#fifo">fifo</a></code>.
@@ -803,6 +804,7 @@ href="refF.html#fifo">fifo</a></code>.
 is cons'ed in front of the value list only if it is not already a <code><a
 href="refM.html#member">member</a></code> of that list. See also <code><a
 href="refP.html#push">push</a></code>, <code><a
+href="refP.html#push1q">push1q</a></code>, <code><a
 href="refP.html#pop">pop</a></code> and <code><a
 href="refQ.html#queue">queue</a></code>.
 
@@ -815,6 +817,26 @@ href="refQ.html#queue">queue</a></code>.
 -> 4
 : S
 -> (4 3 2 1)
+</code></pre>
+
+<dt><a name="push1q"><code>(push1q 'var 'any ..) -> any</code></a>
+<dd>Maintains a unique list in <code>var</code>. Each <code>any</code> argument
+is cons'ed in front of the value list only if it is not already <code><a
+href="refM.html#memq">memq</a></code> of that list (pointer equality). See also
+<code><a href="refP.html#push">push</a></code>, <code><a
+href="refP.html#push1">push1</a></code>, <code><a
+href="refP.html#pop">pop</a></code> and <code><a
+href="refQ.html#queue">queue</a></code>.
+
+<pre><code>
+: (push1q 'S 'a 'b 'c)
+-> c
+: S
+-> (c b a)
+: (push1 'S 'b 'd)
+-> d
+: S
+-> (d c b a)
 </code></pre>
 
 <dt><a name="put"><code>(put 'sym1|lst ['sym2|cnt ..] 'sym|0 'any) ->

@@ -1,4 +1,4 @@
-# 16nov14abu
+# 26jan15abu
 # (c) Software Lab. Alexander Burger
 
 ### Compare long names ###
@@ -1926,6 +1926,50 @@
    until nz  # No
    drop
    pop Z
+   pop Y
+   pop X
+   ret
+
+# (push1q 'var 'any ..) -> any
+(code 'doPush1q 2)
+   push X
+   push Y
+   ld X E
+   ld Y (E CDR)  # Y on args
+   ld E (Y)  # Eval first
+   eval
+   call needVarEX  # Need variable
+   sym E  # Symbol?
+   if nz  # Yes
+      sym (E TAIL)  # External symbol?
+      if nz  # Yes
+         call dbTouchEX  # Touch it
+      end
+   end
+   link
+   push E  # <L I> 'var'
+   link
+   ld Y (Y CDR)  # Second arg
+   do
+      ld E (Y)
+      eval  # Eval next arg
+      ld C ((L I))  # Value of 'var'
+      do  # 'memq'
+         atom C  # List?
+      while z  # Yes
+         cmp E (C)  # Member?
+         jeq 10  # Yes
+         ld C (C CDR)
+      loop
+      call consE_A  # Cons into value
+      ld (A) E
+      ld C (L I)  # 'var'
+      ld (A CDR) (C)
+      ld (C) A
+10    ld Y (Y CDR)  # Next arg
+      atom Y  # Any?
+   until nz  # No
+   drop
    pop Y
    pop X
    ret

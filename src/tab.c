@@ -1,4 +1,4 @@
-/* 08dec14abu
+/* 26jan15abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -275,6 +275,7 @@ static symInit Symbols[] = {
    {doProve, "prove"},
    {doPush, "push"},
    {doPush1, "push1"},
+   {doPush1q, "push1q"},
    {doPut, "put"},
    {doPutl, "putl"},
    {doPwd, "pwd"},

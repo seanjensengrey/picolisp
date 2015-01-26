@@ -1,4 +1,4 @@
-/* 08dec14abu
+/* 26jan15abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -674,6 +674,7 @@ any doProtect(any);
 any doProve(any);
 any doPush(any);
 any doPush1(any);
+any doPush1q(any);
 any doPut(any);
 any doPutl(any);
 any doPwd(any);

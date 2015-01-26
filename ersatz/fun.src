@@ -1,4 +1,4 @@
-# 11dec14abu
+# 26jan15abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -1974,6 +1974,15 @@ push1 (x y z)
    needVar(ex, y = (x = ex.Cdr).Car.eval());
    do
       if (member(z = (x = x.Cdr).Car.eval(), y.Car) == null)
+         y.Car = new Cell(z, y.Car);
+   while (x.Cdr instanceof Cell);
+   return z;
+
+# (push1q 'var 'any ..) -> any
+push1q (x y z)
+   needVar(ex, y = (x = ex.Cdr).Car.eval());
+   do
+      if (memq(z = (x = x.Cdr).Car.eval(), y.Car) == null)
          y.Car = new Cell(z, y.Car);
    while (x.Cdr instanceof Cell);
    return z;

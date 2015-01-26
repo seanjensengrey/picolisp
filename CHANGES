@@ -1,4 +1,5 @@
 * XXmar15 picoLisp-3.1.10
+   'push1q' function
    Destructuring 'let' (64-bit)
 
 * 28dec14 picoLisp-3.1.9
