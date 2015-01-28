@@ -829,14 +829,14 @@ href="refP.html#pop">pop</a></code> and <code><a
 href="refQ.html#queue">queue</a></code>.
 
 <pre><code>
-: (push1q 'S 'a 'b 'c)
+: (push1q 'S 'a (1) 'b (2) 'c)
 -> c
 : S
--> (c b a)
-: (push1 'S 'b 'd)
+-> (c (2) b (1) a)
+: (push1q 'S 'b (1) 'd)       # (1) is not pointer equal to the previous one
 -> d
 : S
--> (d c b a)
+->  (d (1) c (2) b (1) a)     # (1) is twice in the list
 </code></pre>
 
 <dt><a name="put"><code>(put 'sym1|lst ['sym2|cnt ..] 'sym|0 'any) ->
