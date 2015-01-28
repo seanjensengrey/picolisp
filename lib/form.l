@@ -1,4 +1,4 @@
-# 22dec14abu
+# 28jan15abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -232,12 +232,13 @@
                   ((chk> This) (error @))
                   ((or (: rid) (: home able))
                      (set> This (val> This) T) ) ) )
-            (for This (: gui)
-               (cond
-                  ((: id))
-                  ((chk> (setq "*Chart" This)) (error @))
-                  ((or (: rid) (: home able))
-                     (set> This (val> This)) ) ) )
+            (unless "*Err"
+               (for This (: gui)
+                  (cond
+                     ((: id))
+                     ((chk> (setq "*Chart" This)) (error @))
+                     ((or (: rid) (: home able))
+                        (set> This (val> This)) ) ) ) )
             (if (pair "*Err")
                (and *Lock (with (caar "*Err") (tryLock *Lock)))
                (finally
