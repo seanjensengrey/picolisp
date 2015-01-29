@@ -1,4 +1,4 @@
-/* 16dec14abu
+/* 29jan15abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -2186,7 +2186,8 @@ any doPipe(any ex) {
       close(pfd[0]);
       if (pfd[1] != STDOUT_FILENO)
          dup2(pfd[1], STDOUT_FILENO),  close(pfd[1]);
-      wrOpen(ex, Nil, &f.out);
+      signal(SIGPIPE, SIG_DFL);
+      f.out.pid = 0,  f.out.fd = STDOUT_FILENO;
       pushOutFiles(&f.out);
       OutFile->tty = NO;
       val(Run) = Nil;

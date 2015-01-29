@@ -1,4 +1,4 @@
-# 15dec14abu
+# 29jan15abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -4359,8 +4359,9 @@
          ld4 (S 4)  # Close write pipe
          call closeAX
       end
-      ld E Nil  # Standard output
-      call wrOpenEXY
+      cc signal(SIGPIPE SIG_DFL)  # Default SIGPIPE
+      ld (Y I) 1  # fd = stdout
+      ld (Y II) 0  # pid = 0
       call pushOutFilesY
       ld ((OutFile) II) 0  # Clear 'tty'
       ld (Run) Nil  # Switch off all tasks
