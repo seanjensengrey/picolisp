@@ -1,4 +1,4 @@
-/* 26jan15abu
+/* 30jan15abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -27,6 +27,10 @@
 #ifndef NOWAIT
 #include <sys/wait.h> // tcc doen't like it
 #endif
+#include <netdb.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
 
 #ifndef __CYGWIN__
 #define MAIN main

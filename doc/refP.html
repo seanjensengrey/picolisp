@@ -306,24 +306,38 @@ NIL - (a b c)
 <dd>Executes <code>exe</code> in a <code><a
 href="refF.html#fork">fork</a></code>'ed child process (which terminates
 thereafter). In the first form, <code>pipe</code> just returns a file descriptor
-to read from the standard output of that process. In the second form, it opens
-the standard output of that process as input channel during the execution of
-<code>prg</code>. The current input channel will be saved and restored
-appropriately. See also <code><a href="refL.html#later">later</a></code>,
-<code><a href="refI.html#ipid">ipid</a></code>, <code><a
+to write to the standard input and read from the standard output of that
+process. In the second form, it opens the standard output of that process as
+input channel during the execution of <code>prg</code>. The current input
+channel will be saved and restored appropriately. See also <code><a
+href="refL.html#later">later</a></code>, <code><a
+href="refI.html#ipid">ipid</a></code>, <code><a
 href="refI.html#in">in</a></code> and <code><a
 href="refO.html#out">out</a></code>.
 
 <pre><code>
 : (pipe                                # equivalent to 'any'
-   (prinl "(a b # Comment^Jc d)")         # (child process)
-   (read) )                               # (parent process)
+   (prinl "(a b # Comment^Jc d)")         # Child
+   (read) )                               # Parent
 -> (a b c d)
+
 : (pipe                                # pipe through an external program
-   (out '(tr "[a-z]" "[A-Z]")             # (child process)
+   (out '(tr "[a-z]" "[A-Z]")             # Child
       (prinl "abc def ghi") )
-   (line T) )                             # (parent process)
+   (line T) )                             # Parent
 -> "ABC DEF GHI"
+
+: (setq P
+     (pipe
+        (in NIL                           # Child: Read stdin
+           (while (line T)
+              (prinl (uppc @))            # and write to stdout
+              (flush) ) ) ) )
+-> 3
+:  (out P (prinl "abc def"))              # Parent: Send line to child
+-> "abc def"
+:  (in P (line))                          # Parent: Read reply
+-> ("A" "B" "C" " " "D" "E" "F")
 </code></pre>
 
 <dt><a name="place"><code>(place 'cnt 'lst 'any) -> lst</code></a>

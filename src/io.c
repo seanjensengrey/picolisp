@@ -1,4 +1,4 @@
-/* 29jan15abu
+/* 30jan15abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -2177,27 +2177,31 @@ any doPipe(any ex) {
    } f;
    int pfd[2];
 
-   if (pipe(pfd) < 0)
+   if ((isCell(cddr(ex))? pipe(pfd) : socketpair(AF_UNIX, SOCK_STREAM, 0, pfd)) < 0  ||  pfd[1] < 2)
       err(ex, NULL, "Can't pipe");
    closeOnExec(ex, pfd[0]), closeOnExec(ex, pfd[1]);
    if ((f.in.pid = forkLisp(ex)) == 0) {
+      close(pfd[0]);
       if (isCell(cddr(ex)))
          setpgid(0,0);
-      close(pfd[0]);
-      if (pfd[1] != STDOUT_FILENO)
-         dup2(pfd[1], STDOUT_FILENO),  close(pfd[1]);
+      else
+         dup2(pfd[1], STDIN_FILENO);
+      dup2(pfd[1], STDOUT_FILENO);
+      close(pfd[1]);
       signal(SIGPIPE, SIG_DFL);
       f.out.pid = 0,  f.out.fd = STDOUT_FILENO;
       pushOutFiles(&f.out);
       OutFile->tty = NO;
-      val(Run) = Nil;
+      val(Led) = val(Run) = Nil;
       EVAL(cadr(ex));
       bye(0);
    }
    close(pfd[1]);
    initInFile(f.in.fd = pfd[0], NULL);
-   if (!isCell(cddr(ex)))
+   if (!isCell(cddr(ex))) {
+      initOutFile(pfd[0]);
       return boxCnt(pfd[0]);
+   }
    setpgid(f.in.pid,0);
    pushInFiles(&f.in);
    x = prog(cddr(ex));
