@@ -1,4 +1,4 @@
-# 30jan15abu
+# 03feb15abu
 # (c) Software Lab. Alexander Burger
 
 # *Java
@@ -43,7 +43,8 @@
                65535  # External symbol offset
                (pipe (exec 'java "-cp" Path "Reflector" Rqst Rply)) ) )
          (queue '*Ext
-            (cons (car *Java) reflect) ) ) )
+            (cons (car *Java) reflect) )
+         (con jre (cddr jre)) ) )
    (ext (car *Java)
       (out (cdr *Java) (pr (rest)))
       (in (cdr *Java) (rd)) ) )
