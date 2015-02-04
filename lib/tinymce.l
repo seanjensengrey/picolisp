@@ -12,6 +12,7 @@
          toolbar: 'forecolor bold italic underline strikethrough | hr | removeformat',
          menubar: false,
          statusbar: false,
+         min_height: 12,
          toolbar_items_size: 'small',
          language: '" (or *Lang "en") "',
          entity_encoding: 'raw',
