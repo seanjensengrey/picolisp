@@ -1,4 +1,4 @@
-# 04feb15abu
+# 08feb15abu
 # (c) Software Lab. Alexander Burger
 
 ### TinyMCE Interface ###
@@ -135,7 +135,7 @@ Using the TinyMCE 4.x Javascript/HTML WYSIWYG editor in PicoLisp applications
 
 1. Get 'tinymce'
 
-   $ (cd /some/path; unzip tinymce_4.0.21.zip)
+   $ (cd /some/path; unzip tinymce_4.1.7.zip)
 
 2. In the application's runtime directory, create a link to the tinymce
    installation, e.g.:
