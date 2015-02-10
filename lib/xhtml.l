@@ -1,4 +1,4 @@
-# 12jan15abu
+# 10feb15abu
 # (c) Software Lab. Alexander Burger
 
 # *JS "*JS" *Style *Menu *Tab *ID
@@ -710,6 +710,19 @@
       (prin " onchange=\"return fldChg(this)\"")
       (htJs) )
    (dfltCss "upload")
+   (and Flg (prin " disabled=\"disabled\""))
+   (prinl "/>") )
+
+(de <rgb> ("Var" Flg)
+   (prin "<input type=\"color\" ")
+   (htmlVar "Var")
+   (prin " value=\"")
+   (ht:Prin (htmlVal "Var"))
+   (prin "\"")
+   (when *JS
+      (prin " onchange=\"return fldChg(this)\"")
+      (htJs) )
+   (dfltCss "rgb")
    (and Flg (prin " disabled=\"disabled\""))
    (prinl "/>") )
 

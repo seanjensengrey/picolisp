@@ -1,4 +1,4 @@
-# 28jan15abu
+# 10feb15abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -1439,6 +1439,14 @@
 (dm show> ("Var")
    (showFld
       (<upload> (: dx) "Var" (not (able))) ) )
+
+
+# Color picker
+(class +RgbPicker +field)
+
+(dm show> ("Var")
+   (showFld
+      (<rgb> "Var" (not (able))) ) )
 
 
 # Symbol fields
