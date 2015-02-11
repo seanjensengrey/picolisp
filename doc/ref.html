@@ -1154,19 +1154,19 @@ body.
 </code></pre>
 
 <pre><code>
-: (de foo X                         # CAR is a single symbol
-   X )                              # Return the argument
--> foo
-: (foo (+ 1 2) (+ 3 4) (+ 5 6))
--> ((+ 1 2) (+ 3 4) (+ 5 6))        # the whole unevaluated list is returned
-</code></pre>
-
-<pre><code>
 : (de foo @                         # CAR is the symbol '@'
    (list (next) (next) (next)) )    # Return the first three arguments
 -> foo
 : (foo (+ 1 2) (+ 3 4) (+ 5 6))
 -> (3 7 11)                         # all arguments are evaluated
+</code></pre>
+
+<pre><code>
+: (de foo X                         # CAR is a single symbol
+   X )                              # Return the argument
+-> foo
+: (foo (+ 1 2) (+ 3 4) (+ 5 6))
+-> ((+ 1 2) (+ 3 4) (+ 5 6))        # the whole unevaluated list is returned
 </code></pre>
 
 <p>Note that these forms can also be combined. For example, to evaluate only the
