@@ -1,4 +1,4 @@
-# 10feb15abu
+# 11feb15abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -708,9 +708,9 @@
 
 (dm val> ()
    (let Val (extra)
-      (if (= (: old) Val)
-         Val
-         ((: new) Val) ) ) )
+      (if (and (<> (: old) Val) (able))
+         ((: new) Val)
+         Val ) ) )
 
 
 (class +Upd)
