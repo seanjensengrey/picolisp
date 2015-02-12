@@ -1,4 +1,4 @@
-# 11feb15abu
+# 12feb15abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -1264,7 +1264,7 @@
 (dm T (Exe)
    (=: exe Exe)
    (super
-      '(> (: chart 2) 1)
+      '(>= (length (: chart 1 data)) (row) 2)
       ,"Shift row up"
       "\^"
       '(let L (val> (: chart 1))
