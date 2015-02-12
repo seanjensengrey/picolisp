@@ -1,4 +1,4 @@
-# 08feb15abu
+# 12feb15abu
 # (c) Software Lab. Alexander Burger
 
 ### TinyMCE Interface ###
@@ -10,6 +10,7 @@
          selector: 'textarea',
          plugins: 'textcolor hr directionality paste',
          toolbar: 'forecolor bold italic underline strikethrough | hr | removeformat',
+         nowrap: true,
          menubar: false,
          statusbar: false,
          min_height: 12,
