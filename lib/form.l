@@ -1,4 +1,4 @@
-# 12feb15abu
+# 13feb15abu
 # (c) Software Lab. Alexander Burger
 
 # *PRG *Top *Gui *Btn *Get *Got *Form *Evt *Lock *Spans
@@ -190,7 +190,7 @@
          (use @X
             (cond
                ((match '("-" @X "." "h" "t" "m" "l") Url)
-                  (try 'html> (extern (ht:Pack @X))) )
+                  (try 'html> (extern (ht:Pack @X T))) )
                ((disallowed)
                   (notAllowed *Url)
                   (http404) )
