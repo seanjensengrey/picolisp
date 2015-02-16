@@ -1,4 +1,4 @@
-# 12feb15abu
+# 16feb15abu
 # (c) Software Lab. Alexander Burger
 
 ### TinyMCE Interface ###
@@ -9,7 +9,7 @@
       tinymce.init({
          selector: 'textarea',
          plugins: 'textcolor hr directionality paste',
-         toolbar: 'forecolor bold italic underline strikethrough | hr | removeformat',
+         toolbar: 'forecolor bold italic superscript underline strikethrough | hr | removeformat',
          nowrap: true,
          menubar: false,
          statusbar: false,
@@ -59,16 +59,23 @@
                         (and (made) (link 0))
                         (recurse S)
                         (and (find bool Lst) (link 0)) )
-                     ((= S '`(chop "em"))
-                        (let Font (pack Font "-Italic")
-                           (link (cons 'F Size Font))
-                           (recurse S)
-                           (link '(F)) ) )
                      ((= S '`(chop "strong"))
                         (let Font (pack Font "-Bold")
-                           (link (cons 'F Size Font))
+                           (link (cons 'F Font))
                            (recurse S)
                            (link '(F)) ) )
+                     ((= S '`(chop "em"))
+                        (let Font (pack Font "-Italic")
+                           (link (cons 'F Font))
+                           (recurse S)
+                           (link '(F)) ) )
+                     ((= S '`(chop "sup"))
+                        (let D (*/ Size 1 3)
+                           (link (cons 'S D))
+                           (link (cons 'F (*/ Size 2 3) Font))
+                           (recurse S)
+                           (link '(F))
+                           (link (cons 'S (- D))) ) )
                      ((= S '`(chop "span style=\"text-decoration: underline;\""))
                         (link (list 'U (/ Size 6)))
                         (recurse '("s" "p" "a" "n"))
