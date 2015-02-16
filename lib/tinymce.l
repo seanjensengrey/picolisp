@@ -8,7 +8,7 @@
    (javascript "tinymce/tinymce.min.js" "
       tinymce.init({
          selector: 'textarea',
-         plugins: 'textcolor hr directionality paste',
+         plugins: 'textcolor colorpicker hr directionality paste',
          toolbar: 'forecolor bold italic superscript underline strikethrough | hr | removeformat',
          nowrap: true,
          menubar: false,
