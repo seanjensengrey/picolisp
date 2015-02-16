@@ -55,9 +55,9 @@
                         (link 0) )
                      ((= S '`(chop "hr /"))
                         (link '(H 0)) )
-                     ((= S '`(chop "p"))
+                     ((and (= "p" (car S)) (sp? (cadr S)))
                         (and (made) (link 0))
-                        (recurse S)
+                        (recurse '("p"))
                         (and (find bool Lst) (link 0)) )
                      ((= S '`(chop "strong"))
                         (let Font (pack Font "-Bold")
@@ -93,7 +93,7 @@
                               (*/ 100 (hex (head 2 S)) 255) ) )
                         (recurse '("s" "p" "a" "n"))
                         (link '(C)) )
-                     (T (msg S " -- " Text " ?")) ) ) ) ) ) ) )
+                     (T (recurse (car (split S " ")))) ) ) ) ) ) ) )
 
 # Remove markup
 (de unmarkup (Text)
