@@ -1,4 +1,4 @@
-# 16feb15abu
+# 17feb15abu
 # (c) Software Lab. Alexander Burger
 
 ### TinyMCE Interface ###
@@ -77,11 +77,11 @@
                            (link '(F))
                            (link (cons 'S (- D))) ) )
                      ((= S '`(chop "span style=\"text-decoration: underline;\""))
-                        (link (list 'U (/ Size 6)))
+                        (link (cons 'U (/ Size 6)))
                         (recurse '("s" "p" "a" "n"))
                         (link '(U)) )
                      ((= S '`(chop "span style=\"text-decoration: line-through;\""))
-                        (link (list 'U (/ Size -4)))
+                        (link (cons 'U (/ Size -4)))
                         (recurse '("s" "p" "a" "n"))
                         (link '(U)) )
                      ((head '`(chop "span style=\"color: ") S)
