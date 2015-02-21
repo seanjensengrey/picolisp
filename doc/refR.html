@@ -191,6 +191,22 @@ href="ref.html#cmp">Comparing</a>.
 -> (100 . b)
 </code></pre>
 
+<dt><a name="rassoc"><code>(rassoc 'any 'lst) -> lst</code></a>
+<dd>Reverse <code><a href="refA.html#assoc">assoc</a></code>. Returns the first
+element from <code>lst</code> with its CDR equal to <code>any</code>, or
+<code>NIL</code> if no match is found. See also <code><a
+href="refA.html#assoc">assoc</a></code> and <code><a
+href="refA.html#asoq">asoq</a></code>.
+
+<pre><code>
+: (rassoc 7 '((999 1 2 3) ("b" . 7) ("ok" "Hello")))
+-> ("b" . 7)
+: (rassoc (1 2 3) '((999 1 2 3) ("b" . 7) ("ok" "Hello")))
+-> (999 1 2 3)
+: (rassoc 'u '((999 1 2 3) ("b" . 7) ("ok" "Hello")))
+-> NIL
+</code></pre>
+
 <dt><a name="raw"><code>(raw ['flg]) -> flg</code></a>
 <dd>Console mode control function. When called without arguments, it returns the
 current console mode (<code>NIL</code> for "cooked mode"). Otherwise, the

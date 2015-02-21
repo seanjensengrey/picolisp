@@ -1,4 +1,4 @@
-# 26jan15abu
+# 21feb15abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -2971,6 +2971,15 @@ assoc (x y z)
    x = x.Cdr.Car.eval();
    for (; x instanceof Cell; x = x.Cdr)
       if ((z = x.Car) instanceof Cell && y.equal(z.Car))
+         return z;
+   return Nil;
+
+# (rassoc 'any 'lst) -> lst
+rassoc (x y z)
+   y = (x = ex.Cdr).Car.eval();
+   x = x.Cdr.Car.eval();
+   for (; x instanceof Cell; x = x.Cdr)
+      if ((z = x.Car) instanceof Cell && y.equal(z.Cdr))
          return z;
    return Nil;
 

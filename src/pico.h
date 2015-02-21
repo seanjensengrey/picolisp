@@ -1,4 +1,4 @@
-/* 30jan15abu
+/* 21feb15abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -688,6 +688,7 @@ any doQuote(any);
 any doRand(any);
 any doRange(any);
 any doRank(any);
+any doRassoc(any);
 any doRaw(any);
 any doRd(any);
 any doRead(any);

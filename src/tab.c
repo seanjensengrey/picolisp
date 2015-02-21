@@ -1,4 +1,4 @@
-/* 26jan15abu
+/* 21feb15abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -284,6 +284,7 @@ static symInit Symbols[] = {
    {doRand, "rand"},
    {doRange, "range"},
    {doRank, "rank"},
+   {doRassoc, "rassoc"},
    {doRaw, "raw"},
    {doRd, "rd"},
    {doRead, "read"},

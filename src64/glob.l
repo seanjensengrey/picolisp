@@ -1,4 +1,4 @@
-# 26jan15abu
+# 21feb15abu
 # (c) Software Lab. Alexander Burger
 
 (data 'Data)
@@ -467,6 +467,7 @@
    initFun NIL       "size"      doSize
    initFun NIL       "bytes"     doBytes
    initFun NIL       "assoc"     doAssoc
+   initFun NIL       "rassoc"    doRassoc
    initFun NIL       "asoq"      doAsoq
    initFun NIL       "rank"      doRank
    initFun NIL       "match"     doMatch

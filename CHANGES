@@ -1,4 +1,5 @@
 * XXmar15 picoLisp-3.1.10
+   'rassoc' function
    Java Interoperability
    'pipe' bidirectional
    'push1q' function

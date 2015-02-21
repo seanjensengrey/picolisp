@@ -561,10 +561,11 @@ href="refR.html#retract/1">retract/1</a></code>.
 -> a
 </code></pre>
 
-<dt><a name="assoc"><code>(assoc 'any 'lst) -> lst</code></a> <dd>Searches an
-association list. Returns the first element from <code>lst</code> with its CAR
-equal to <code>any</code>, or <code>NIL</code> if no match is found. See also
-<code><a href="refA.html#asoq">asoq</a></code>.
+<dt><a name="assoc"><code>(assoc 'any 'lst) -> lst</code></a>
+<dd>Searches an association list. Returns the first element from
+<code>lst</code> with its CAR equal to <code>any</code>, or <code>NIL</code> if
+no match is found. See also <code><a href="refA.html#asoq">asoq</a></code> and
+<code><a href="refR.html#rassoc">rassoc</a></code>.
 
 <pre><code>
 : (assoc "b" '((999 1 2 3) ("b" . 7) ("ok" "Hello")))
