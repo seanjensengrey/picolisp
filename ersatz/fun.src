@@ -1,4 +1,4 @@
-# 21feb15abu
+# 25feb15abu
 # (c) Software Lab. Alexander Burger
 
 # Ersatz PicoLisp Functions
@@ -3323,13 +3323,15 @@ hash (i j n)
    return new Number(j + 1);
 
 # (rand ['cnt1 'cnt2] | ['T]) -> cnt | flg
-rand (x)
+rand (x n)
    Seed = Seed * 6364136223846793005L + 1;
    if ((x = (ex = ex.Cdr).Car.eval()) == Nil)
       return new Number((int)Seed);
    if (x == T)
       return (Seed & 0x100000000L) == 0? Nil : T;
-   return new Number(((Number)x).Cnt + (int)(Seed >>> 33) % (evInt(ex.Cdr) + 1 - ((Number)x).Cnt));
+   if ((n = evInt(ex.Cdr) + 1 - ((Number)x).Cnt) != 0)
+      n = (int)(Seed >>> 33) % n;
+   return new Number(((Number)x).Cnt + n);
 
 ############ io ############
 # (path 'any) -> sym
