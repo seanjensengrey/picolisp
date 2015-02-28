@@ -1,4 +1,4 @@
-# 10dec14abu
+# 28feb15abu
 # (c) Software Lab. Alexander Burger
 
 (setq
@@ -351,7 +351,7 @@
                   (prtty2 X N Z) )
                (spPrt (pop 'X))
                (nlPrt1 (pop 'X) N) ) ) )
-      ((memq (car X) '(T NIL ! if ifn when unless case casq with catch push bind job in out ctl))
+      ((memq (car X) '(T NIL ! if ifn when unless case casq with catch push bind job in out))
          (prtty3 X N) )
       (T (prtty0 X N)) ) )
 
