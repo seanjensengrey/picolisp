@@ -1,4 +1,4 @@
-# 23jan15abu
+# 11mar15abu
 # (c) Software Lab. Alexander Burger
 
 (de admin "Prg"
@@ -513,6 +513,22 @@
       ((ext? X) (print X))
       ((type X) (print (val X)))
       (NIL (prin "`") (dumpExt X) (prin ")")) ) )
+
+# Dump/load data and blobs
+(de dumpDB ("Name" . "Prg")
+   (out (pack "Name" ".l") (run "Prg"))
+   (when (dir (tmp))
+      (out (pack "Name" ".tgz")
+         (chdir (tmp)
+            (in (append '("tar" "cfz" "-") @) (echo)) ) ) ) )
+
+(de loadDB ("Name")
+   (let Tgz (pack "Name" ".tgz")
+      (when (and (info Tgz) (n0 (car @)))
+         (in Tgz
+            (chdir (tmp)
+               (out '("tar" "xfz" "-") (echo)) ) ) ) )
+   (load (pack "Name" ".l") ) )
 
 ### Debug ###
 `*Dbg
