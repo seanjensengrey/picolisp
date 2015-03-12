@@ -1,4 +1,4 @@
-/* 30jan15abu
+/* 12mar15abu
  * (c) Software Lab. Alexander Burger
  */
 
@@ -1310,9 +1310,9 @@ any token(any x, int c) {
       }
       if (!testEsc())
          return Nil;
-      Push(c1, y =  cons(mkChar(Chr), Nil));
+      Push(c1, y =  cons(mkChar(getChar()), Nil));
       while (Env.get(), Chr != '"' && testEsc())
-         y = cdr(y) = cons(mkChar(Chr), Nil);
+         y = cdr(y) = cons(mkChar(getChar()), Nil);
       Env.get();
       return Pop(c1);
    }

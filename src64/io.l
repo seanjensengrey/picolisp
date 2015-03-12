@@ -1,4 +1,4 @@
-# 30jan15abu
+# 12mar15abu
 # (c) Software Lab. Alexander Burger
 
 # Close file descriptor
@@ -2559,6 +2559,7 @@
       end
       call testEscA_F
       jnc retNil
+      call getChar_A  # Get next character
       call mkCharA_A  # Make single character
       call consA_X  # Cons it
       ld (X) A
@@ -2575,6 +2576,7 @@
          end
          call testEscA_F
       while c
+         call getChar_A  # Get next character
          call mkCharA_A  # Make char
          call consA_C  # Cons it
          ld (C) A
