@@ -1,4 +1,4 @@
-# 11mar15abu
+# 12mar15abu
 # (c) Software Lab. Alexander Burger
 
 (de admin "Prg"
@@ -520,7 +520,8 @@
    (when (dir (tmp))
       (out (pack "Name" ".tgz")
          (chdir (tmp)
-            (in (append '("tar" "cfz" "-") @) (echo)) ) ) ) )
+            (in (append '("tar" "cfz" "-") (filter format @))
+               (echo) ) ) ) ) )
 
 (de loadDB ("Name")
    (let Tgz (pack "Name" ".tgz")
