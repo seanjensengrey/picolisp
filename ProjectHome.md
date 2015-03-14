@@ -1,0 +1,1 @@
+Minimalist-lisp interpreter implementation for UNIX-like systems. With a built-in database, HTTP server and OOP support.
